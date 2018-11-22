@@ -1,0 +1,1 @@
+settings set frame-format "Frame #${frame.index}:${file.basename} -> ${line.file.fullpath}:${line.number} ${function.name-with-args}\n"
