@@ -2,20 +2,37 @@
 
 """
 Created by Furkan Uzumcu.
+
+As of now, it is only tested on macOS and with the output of Makefiles created
+by QMake.
+
+CMake already has an option to create compile_commands.json file.
+Just put `set(CMAKE_EXPORT_COMPILE_COMMANDS ON)` in your CMakeLists.txt file.
 """
 
 # Python
-import json
-import sys
 import os
+import sys
+import json
 
+from subprocess import Popen, PIPE
 
 def print_usage():
     print(
         """
 Call this from the build directory.
-Usage:
-    c_cmd.py compiler.output path/to/compile_commands.json
+
+To generate compile commands from the output file:
+   ${THIS_SCRIPT}.py compiler.output path/to/compile_commands.json
+
+To run the compiler using this script and use the output to generate the
+compile commands:
+   ${THIS_SCRIPT}.py /path/to/compile_commands.json (optional) -c ${COMPILE_COMMAND}
+   Example:
+       ${THIS_SCRIPT}.py ./compile_commands.json -c make -j12
+
+       // compile_commands.json is created in the working directory.
+       ${THIS_SCRIPT}.py -c make -j12
         """
     )
 
@@ -38,30 +55,32 @@ def get_file_index(file_path, commands):
     return found_index
 
 
-def parse_file():
-    compiler_output = sys.argv[1]
-    if os.path.exists(compiler_output) is False:
+def parse_file(compiler_output, compiler_commands_path):
+    is_using_internal_output = isinstance(compiler_output, list)
+    if not is_using_internal_output and os.path.exists(compiler_output) is False:
         print('Given file does not exist: %s' % (compiler_output, ))
         return
 
     commands = []
     # If the file exists, read the existing compile_commands.
-    compiler_commands_path = os.path.abspath(sys.argv[2])
     if os.path.exists(compiler_commands_path):
         file_handle = open(compiler_commands_path, 'r')
         commands = json.loads(file_handle.read())
         file_handle.close()
 
     build_dir = os.getcwd()
-    file_handle = open(compiler_output, 'r')
+    if isinstance(compiler_output, list):
+        file_handle = compiler_output
+    else:
+        file_handle = open(compiler_output, 'r')
+
     for line in file_handle:
-        split_line = line.split(' ')  # type: list
+        split_line = line.split(' ')  # type: list[str]
         file_path = os.path.abspath(
             split_line[len(split_line) - 1].strip()
         )  # type: str
-        if os.path.exists(file_path) is False:
-            continue
-        if os.path.isfile(file_path) is False:
+
+        if os.path.exists(file_path) is False or os.path.isfile(file_path) is False:
             continue
 
         split_line[len(split_line) - 1] = file_path
@@ -90,15 +109,42 @@ def parse_file():
         else:
             commands[found_index] = command
 
-    file_handle.close()
+    if not is_using_internal_output:
+        file_handle.close()
+
     file_handle = open(compiler_commands_path, 'w')
     file_handle.write(
         json.dumps(commands, sort_keys=True, indent=4, separators=(',', ': '))
     )
     file_handle.close()
 
+
+def run_compile_program():
+    compile_program = sys.argv[sys.argv.index('-c') + 1:]
+    if not compile_program:
+        print('No compile program is given after the -c option.')
+        print_usage()
+        return
+
+    process = Popen(compile_program, stdout=PIPE, bufsize=1)
+    compile_output = []
+    with process.stdout:
+        for line in iter(process.stdout.readline, b''):
+            print(line)  # Output the process to the terminal.
+            compile_output.append(line)
+
+    process.wait()  # wait for the subprocess to exit
+    compile_commands_path = './compile_commands.json'
+    if sys.argv[1] != '-c':
+        compile_commands_path = sys.argv[1]
+
+    parse_file(compile_output, compile_commands_path)
+
+
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
+    if '-c' in sys.argv:
+        run_compile_program()
+    elif len(sys.argv) != 3 or '--help' in sys.argv or '-h' in sys.argv:
         print_usage()
     else:
-        parse_file()
+        parse_file(sys.argv[1], os.path.abspath(sys.argv[2]))
