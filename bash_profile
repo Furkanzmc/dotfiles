@@ -1,6 +1,7 @@
 # General
 # -----
 
+bind "set completion-ignore-case on"
 alias vim=nvim
 export EDITOR='nvim'
 
@@ -33,6 +34,10 @@ downloads() {
     open ~/Downloads -a "Finder"
 }
 
+install-git-completion() {
+    curl https://raw.githubusercontent.com/git/git/53f9a3e157dbbc901a02ac2c73346d375e24978c/contrib/completion/git-completion.bash -o ~/.git-completion.bash
+}
+
 # -----
 
 # macOS Commands
@@ -52,7 +57,9 @@ branch_recency() {
 
 # Enable Git completion
 if [ -f /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash ]; then
-  source "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash"
+    source "/Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash"
+elif [ -f ~/.git-completion.bash ]; then
+    source ~/.git-completion.bash
 fi
 
 # Create an alias for `git stage`
