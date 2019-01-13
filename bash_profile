@@ -5,6 +5,10 @@ bind "set completion-ignore-case on"
 alias vim=nvim
 export EDITOR='nvim'
 
+alias ls=exa
+alias find=fd
+alias cat=bat
+
 # -----
 
 # Functions
