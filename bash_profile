@@ -84,4 +84,8 @@ git config --global alias.tasks "ag 'TODO|FIXME' ./"
 git-difflog() {
     git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --name-status $1..$2
 }
+
+git config --global color.status.changed "magenta normal bold"
+git config --global color.status.added "blue normal bold"
+git config --global color.status.unmerged "yellow normal bold"
 # -----
