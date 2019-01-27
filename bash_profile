@@ -38,6 +38,14 @@ downloads() {
     open ~/Downloads -a "Finder"
 }
 
+icloud() {
+    open ~/Library/Mobile\ Documents/com~apple~CloudDocs/
+}
+
+cd_icloud() {
+    cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/
+}
+
 install-git-completion() {
     curl https://raw.githubusercontent.com/git/git/53f9a3e157dbbc901a02ac2c73346d375e24978c/contrib/completion/git-completion.bash -o ~/.git-completion.bash
 }
