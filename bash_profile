@@ -19,7 +19,7 @@ pub_ip() {
 }
 
 search_history() {
-    history | ag '$1'
+    history | rg '$1'
 }
 
 bashrc() {
@@ -51,7 +51,7 @@ install-git-completion() {
 }
 
 function replace_in_dir() {
-    ag -l -Q "${1}" | xargs sed -i -e "s/${1}/${2}/g"
+    rg -l -F "${1}" | xargs sed -i -e "s/${1}/${2}/g"
 }
 
 
