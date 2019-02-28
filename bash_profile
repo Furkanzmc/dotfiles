@@ -1,18 +1,22 @@
 # General
-# -----
 
 bind "set completion-ignore-case on"
 alias vim=nvim
 export EDITOR='nvim'
 
-alias ls=exa
-alias find=fd
-alias cat=bat
+command -v exa >/dev/null 2>&1 && {
+    alias ls=exa
+}
+command -v fd >/dev/null 2>&1 && {
+    alias find=fd
+}
+command -v bat >/dev/null 2>&1 && {
+    alias cat=bat
+}
 
 # -----
 
 # Functions
-# -----
 
 pub_ip() {
     curl http://ipconfig.io/ip
@@ -26,25 +30,6 @@ bashrc() {
     nvim ~/.bash_profile
 }
 
-typora() {
-    open $1 -a "Typora"
-}
-
-desktop() {
-    open ~/Desktop -a "Finder"
-}
-
-downloads() {
-    open ~/Downloads -a "Finder"
-}
-
-icloud() {
-    open ~/Library/Mobile\ Documents/com~apple~CloudDocs/
-}
-
-cd_icloud() {
-    cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/
-}
 
 install-git-completion() {
     curl https://raw.githubusercontent.com/git/git/53f9a3e157dbbc901a02ac2c73346d375e24978c/contrib/completion/git-completion.bash -o ~/.git-completion.bash
@@ -58,15 +43,39 @@ function replace_in_dir() {
 # -----
 
 # macOS Commands
-# -----
 
 ## Lock screen
-alias lock_screen="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+OS=`uname`
+
+if [ "${OS}" == "Darwin" ]; then
+
+    typora() {
+        open $1 -a "Typora"
+    }
+
+    desktop() {
+        open ~/Desktop -a "Finder"
+    }
+
+    downloads() {
+        open ~/Downloads -a "Finder"
+    }
+
+    icloud() {
+        open ~/Library/Mobile\ Documents/com~apple~CloudDocs/
+    }
+
+    cd_icloud() {
+        cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/
+    }
+
+    alias lock_screen="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+fi
+
 
 # -----
 
 # Git
-# -----
 
 branch_recency() {
     for k in `git branch | sed s/^..//`; do echo -e `git log -1 --pretty=format:"%Cgreen%ci %Cblue%cr%Creset" $k --`\\t"$k";done | sort
@@ -102,4 +111,5 @@ git-difflog() {
 git config --global color.status.changed "magenta normal bold"
 git config --global color.status.added "blue normal bold"
 git config --global color.status.unmerged "yellow normal bold"
+
 # -----
