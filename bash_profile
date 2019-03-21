@@ -97,8 +97,9 @@ elif [ -f ~/.git-completion.bash ]; then
     source ~/.git-completion.bash
 fi
 
+git config --global alias.st 'status'
 # Create an alias for `git stage`
-git config --global alias.unstage 'add'
+git config --global alias.stage 'add'
 # Create an alias for `git unstage`
 git config --global alias.unstage 'reset HEAD --'
 # Create an alias to see the last commit `git last`
