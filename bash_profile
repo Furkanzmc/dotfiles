@@ -123,3 +123,9 @@ git config --global color.status.added "blue normal bold"
 git config --global color.status.unmerged "yellow normal bold"
 
 # -----
+
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+    echo "NeoVim Terminal settings go here."
+    # NeoVim related settings;
+    # TODO: Change the editor so files open in the current NeoVim process.
+fi
