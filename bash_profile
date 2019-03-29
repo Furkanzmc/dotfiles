@@ -129,3 +129,103 @@ if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
     # NeoVim related settings;
     # TODO: Change the editor so files open in the current NeoVim process.
 fi
+
+# TMUX
+# tmux session code is taken from mislav:
+# https://github.com/mislav/dotfiles/blob/master/bin/tmux-session
+
+tmux-dump() {
+  local d=$'\t'
+  tmux list-windows -a -F "#S${d}#W${d}#{pane_current_path}" -t $1
+}
+
+tmux-save() {
+    tmux-dump $1 > $2
+}
+
+tmux_terminal_size() {
+  stty size 2>/dev/null | awk '{ printf "-x%d -y%d", $2, $1 }'
+}
+
+tmux_session_exists() {
+  tmux has-session -t "$1" 2>/dev/null
+}
+
+tmux_add_window() {
+  tmux new-window -d -t "$1:" -n "$2" -c "$3"
+}
+
+tmux_new_session() {
+  cd "$3" &&
+  tmux new-session -d -s "$1" -n "$2" $4
+}
+
+tmux-restore() {
+  tmux start-server
+  local count=0
+  local dimensions="$(tmux_terminal_size)"
+
+  while IFS=$'\t' read session_name window_name dir; do
+    if [[ -d "$dir" && $window_name != "log" && $window_name != "man" ]]; then
+      if tmux_session_exists "$session_name"; then
+        tmux_add_window "$session_name" "$window_name" "$dir"
+      else
+        tmux_new_session "$session_name" "$window_name" "$dir" "$dimensions"
+        count=$(( count + 1 ))
+      fi
+    fi
+
+  done < $1
+  echo "restored $count sessions"
+}
+
+#
+# Tmux launcher
+#
+# See:
+#     http://github.com/brandur/tmux-extra
+#
+# Modified version of a script orginally found at:
+#     http://forums.gentoo.org/viewtopic-t-836006-start-0.html
+# Taken from: https://github.com/brandur/tmux-extra/blob/master/tmx
+# and slightly modified.
+
+# Works because bash automatically trims by assigning to variables and by
+# passing arguments
+trim() { echo $1; }
+
+if [[ -z "$1" ]]; then
+    echo "Specify session name as the first argument"
+    exit
+fi
+
+base_session="main"
+# This actually works without the trim() on all systems except OSX
+tmux_nb=$(trim `tmux ls | grep "^$base_session" | wc -l`)
+if [[ "$tmux_nb" == "0" ]]; then
+    echo "Launching tmux base session $base_session ..."
+    tmux new-session -s $base_session
+else
+    # Make sure we are not already in a tmux session
+    if [[ -z "$TMUX" ]]; then
+        # Kill defunct sessions first
+        old_sessions=$(tmux ls 2>/dev/null | egrep "^[0-9]{14}.*[0-9]+\)$" | cut -f 1 -d:)
+        for old_session_id in $old_sessions; do
+            tmux kill-session -t $old_session_id
+        done
+
+        echo "Launching copy of base session $base_session ..."
+        # Use the number of windows in the group to name the new session.
+        # Explude the first main session from the count.
+        group_count=`tmux ls | rg -F -v 'main:' | rg -F '(group main) (attached)' | wc -l | xargs`
+        group_count=$((group_count + 1))
+        session_id="main-$group_count"
+        # Create a new session (without attaching it) and link to base session
+        # to share windows
+        tmux new-session -d -t $base_session -s $session_id
+        # Attach to the new session
+        tmux attach-session -t $session_id
+        # When we detach from it, kill the session
+        tmux kill-session -t $session_id
+    fi
+fi
