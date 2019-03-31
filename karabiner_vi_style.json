@@ -292,7 +292,7 @@
             ]
         },
         {
-            "description": "Map Caps->Left Control, Right Command->Left Control, Tab->Escape, Tab->Fn + Space",
+            "description": "Map Caps Lock to Left Control, Right Command to Left Control",
             "manipulators": [
                 {
                     "type": "basic",
@@ -315,7 +315,12 @@
                             "key_code": "left_control"
                         }
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "description": "Map Tab to Escape, and Fn + Space to Tab",
+            "manipulators": [
                 {
                     "type": "basic",
                     "from": {
@@ -340,6 +345,26 @@
                     "to": [
                         {
                             "key_code": "tab"
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "spacebar",
+                        "modifiers": {
+                            "mandatory": [
+                                "fn",
+                                "left_shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "tab",
+                            "modifiers": [
+                                "left_shift"
+                            ]
                         }
                     ]
                 }
