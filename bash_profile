@@ -58,23 +58,15 @@ OS=`uname`
 
 if [ "${OS}" == "Darwin" ]; then
 
-    typora() {
-        open $1 -a "Typora"
-    }
-
     desktop() {
-        open ~/Desktop -a "Finder"
+        cd ~/Desktop
     }
 
     downloads() {
-        open ~/Downloads -a "Finder"
+        cd ~/Downloads
     }
 
     icloud() {
-        open ~/Library/Mobile\ Documents/com~apple~CloudDocs/
-    }
-
-    cd_icloud() {
         cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/
     }
 
