@@ -292,7 +292,7 @@
             ]
         },
         {
-            "description": "Map Caps Lock to Left Control on Press and Hold and Escape on press, Right Command to Left Control",
+            "description": "Map Caps Lock and Right Command to Left Control",
             "manipulators": [
                 {
                     "type": "basic",
@@ -302,11 +302,6 @@
                     "to": [
                         {
                             "key_code": "left_control"
-                        }
-                    ],
-                    "to_if_alone": [
-                        {
-                            "key_code": "escape"
                         }
                     ]
                 },
@@ -318,6 +313,58 @@
                     "to": [
                         {
                             "key_code": "left_control"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "description": "Map Tab to Escape, Fn + Space to Tab",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "tab"
+                    },
+                    "to": [
+                        {
+                            "key_code": "escape"
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "spacebar",
+                        "modifiers": {
+                            "mandatory": [
+                                "fn"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "tab"
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "spacebar",
+                        "modifiers": {
+                            "mandatory": [
+                                "fn",
+                                "left_shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "tab",
+                            "modifiers": [
+                                "left_shift"
+                            ]
                         }
                     ]
                 }
