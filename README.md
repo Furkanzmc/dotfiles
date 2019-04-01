@@ -63,7 +63,5 @@ on the right.
     + Fn + 0/4/u/d as Home/End/Page Up/Page Down
     + Fn + y/p as Copy/Paste
     + Fn + H/J/K/L as Shift + Left/Down/Up/Right Arrow Keys. (Enables selection using Fn+Shift+h)
-- Map Caps Lock to Left Control
+- Map Caps Lock to Left Control on press and hold and to escape on single press.
 - Map Right Command to Left Control
-- Map Tab to Escape
-- Map Fn + Space to Tab. (Since I use tab for completion in bash, this makes it similar to Ctrl + Space)
