@@ -59,9 +59,10 @@ on the right.
 ## Karabiner Mappings
 
 - Use Vi-like navigating.
-    + Fn + h/j/k/l as Arrow Keys
-    + Fn + 0/4/u/d as Home/End/Page Up/Page Down
-    + Fn + y/p as Copy/Paste
-    + Fn + H/J/K/L as Shift + Left/Down/Up/Right Arrow Keys. (Enables selection using Fn+Shift+h)
-- Map Caps Lock to Left Control on press and hold and to escape on single press.
+    + LControl + h/j/k/l as Arrow Keys
+    + LControl + 0/4/u/d as Home/End/Page Up/Page Down
+    + LOption + H/J/K/L as Shift + Left/Down/Up/Right Arrow Keys. (Enables
+      selection using LOption+Shift+h)
+- Map Caps Lock to Left Control on press and hold and to escape on single
+  press.
 - Map Right Command to Left Control

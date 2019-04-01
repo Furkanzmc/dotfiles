@@ -1,8 +1,8 @@
 {
-    "title": "Vi Style Arrows",
+    "title": "Vi Style",
     "rules": [
         {
-            "description": "Change Fn + h/j/k/l to Arrows",
+            "description": "Change LOption + h/j/k/l to Arrows",
             "manipulators": [
                 {
                     "type": "basic",
@@ -10,10 +10,7 @@
                         "key_code": "h",
                         "modifiers": {
                             "mandatory": [
-                                "fn"
-                            ],
-                            "optional": [
-                                "caps_lock"
+                                "left_option"
                             ]
                         }
                     },
@@ -29,10 +26,7 @@
                         "key_code": "j",
                         "modifiers": {
                             "mandatory": [
-                                "fn"
-                            ],
-                            "optional": [
-                                "caps_lock"
+                                "left_option"
                             ]
                         }
                     },
@@ -48,10 +42,7 @@
                         "key_code": "k",
                         "modifiers": {
                             "mandatory": [
-                                "fn"
-                            ],
-                            "optional": [
-                                "caps_lock"
+                                "left_option"
                             ]
                         }
                     },
@@ -67,10 +58,7 @@
                         "key_code": "l",
                         "modifiers": {
                             "mandatory": [
-                                "fn"
-                            ],
-                            "optional": [
-                                "caps_lock"
+                                "left_option"
                             ]
                         }
                     },
@@ -83,7 +71,7 @@
             ]
         },
         {
-            "description": "Change Fn + 0/4/u/d to Home/End/Page Up/Page Down",
+            "description": "Change LOption + 0/4/u/d to Home/End/Page Up/Page Down",
             "manipulators": [
                 {
                     "type": "basic",
@@ -91,7 +79,7 @@
                         "key_code": "u",
                         "modifiers": {
                             "mandatory": [
-                                "fn"
+                                "left_option"
                             ]
                         }
                     },
@@ -110,7 +98,7 @@
                         "key_code": "d",
                         "modifiers": {
                             "mandatory": [
-                                "fn"
+                                "left_option"
                             ]
                         }
                     },
@@ -129,7 +117,7 @@
                         "key_code": "0",
                         "modifiers": {
                             "mandatory": [
-                                "fn"
+                                "left_option"
                             ]
                         }
                     },
@@ -148,7 +136,7 @@
                         "key_code": "4",
                         "modifiers": {
                             "mandatory": [
-                                "fn"
+                                "left_option"
                             ]
                         }
                     },
@@ -164,50 +152,7 @@
             ]
         },
         {
-            "description": "Change Fn + y/p to Copy/Paste",
-            "manipulators": [
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "p",
-                        "modifiers": {
-                            "mandatory": [
-                                "fn"
-                            ]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "v",
-                            "modifiers": [
-                                "left_command"
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "y",
-                        "modifiers": {
-                            "mandatory": [
-                                "fn"
-                            ]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "c",
-                            "modifiers": [
-                                "left_command"
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "description": "Change Fn + H/L/J/K to Shift + Left/Right/Down/Up",
+            "description": "Change Left Option + H/L/J/K to Shift + Left/Right/Down/Up",
             "manipulators": [
                 {
                     "type": "basic",
@@ -215,7 +160,7 @@
                         "key_code": "l",
                         "modifiers": {
                             "mandatory": [
-                                "fn",
+                                "left_option",
                                 "left_shift"
                             ]
                         }
@@ -235,7 +180,7 @@
                         "key_code": "k",
                         "modifiers": {
                             "mandatory": [
-                                "fn",
+                                "left_option",
                                 "left_shift"
                             ]
                         }
@@ -255,7 +200,7 @@
                         "key_code": "j",
                         "modifiers": {
                             "mandatory": [
-                                "fn",
+                                "left_option",
                                 "left_shift"
                             ]
                         }
@@ -275,7 +220,7 @@
                         "key_code": "h",
                         "modifiers": {
                             "mandatory": [
-                                "fn",
+                                "left_option",
                                 "left_shift"
                             ]
                         }
@@ -292,7 +237,7 @@
             ]
         },
         {
-            "description": "Map Caps Lock and Right Command to Left Control",
+            "description": "Map Caps Lock/RCommand to LControl on press and hold, escape on press",
             "manipulators": [
                 {
                     "type": "basic",
@@ -302,6 +247,11 @@
                     "to": [
                         {
                             "key_code": "left_control"
+                        }
+                    ],
+                    "to_if_alone": [
+                        {
+                            "key_code": "escape"
                         }
                     ]
                 },
@@ -313,58 +263,6 @@
                     "to": [
                         {
                             "key_code": "left_control"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "description": "Map Tab to Escape, Fn + Space to Tab",
-            "manipulators": [
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "tab"
-                    },
-                    "to": [
-                        {
-                            "key_code": "escape"
-                        }
-                    ]
-                },
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "spacebar",
-                        "modifiers": {
-                            "mandatory": [
-                                "fn"
-                            ]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "tab"
-                        }
-                    ]
-                },
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "spacebar",
-                        "modifiers": {
-                            "mandatory": [
-                                "fn",
-                                "left_shift"
-                            ]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "tab",
-                            "modifiers": [
-                                "left_shift"
-                            ]
                         }
                     ]
                 }
