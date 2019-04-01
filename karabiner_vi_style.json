@@ -369,6 +369,30 @@
                     ]
                 }
             ]
+        },
+        {
+            "description": "Map Shift + Spacebar to Ctrl + b for tmux",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "spacebar",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "b",
+                            "modifiers": [
+                                "left_control"
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
