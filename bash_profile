@@ -58,15 +58,15 @@ OS=`uname`
 
 if [ "${OS}" == "Darwin" ]; then
 
-    desktop() {
+    cd_desktop() {
         cd ~/Desktop
     }
 
-    downloads() {
+    cd_downloads() {
         cd ~/Downloads
     }
 
-    icloud() {
+    cd_icloud() {
         cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/
     }
 
