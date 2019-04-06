@@ -116,12 +116,6 @@ git config --global color.status.unmerged "yellow normal bold"
 
 # -----
 
-if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-    echo "NeoVim Terminal settings go here."
-    # NeoVim related settings;
-    # TODO: Change the editor so files open in the current NeoVim process.
-fi
-
 # TMUX
 # tmux session code is taken from mislav:
 # https://github.com/mislav/dotfiles/blob/master/bin/tmux-session
@@ -186,38 +180,44 @@ tmux-restore() {
 # passing arguments
 trim() { echo $1; }
 
-if [[ -z "$1" ]]; then
-    echo "Specify session name as the first argument"
-    exit
-fi
-
-base_session="main"
+run-tmux() {
+    base_session="main"
 # This actually works without the trim() on all systems except OSX
-tmux_nb=$(trim `tmux ls | grep "^$base_session" | wc -l`)
-if [[ "$tmux_nb" == "0" ]]; then
-    echo "Launching tmux base session $base_session ..."
-    tmux new-session -s $base_session
-else
-    # Make sure we are not already in a tmux session
-    if [[ -z "$TMUX" ]]; then
-        # Kill defunct sessions first
-        old_sessions=$(tmux ls 2>/dev/null | egrep "^[0-9]{14}.*[0-9]+\)$" | cut -f 1 -d:)
-        for old_session_id in $old_sessions; do
-            tmux kill-session -t $old_session_id
-        done
+    tmux_nb=$(trim `tmux ls | grep "^$base_session" | wc -l`)
+    if [[ "$tmux_nb" == "0" ]]; then
+        echo "Launching tmux base session $base_session ..."
+        tmux new-session -s $base_session
+    else
+        # Make sure we are not already in a tmux session
+        if [[ -z "$TMUX" ]]; then
+            # Kill defunct sessions first
+            old_sessions=$(tmux ls 2>/dev/null | egrep "^[0-9]{14}.*[0-9]+\)$" | cut -f 1 -d:)
+            for old_session_id in $old_sessions; do
+                tmux kill-session -t $old_session_id
+            done
 
-        echo "Launching copy of base session $base_session ..."
-        # Use the number of windows in the group to name the new session.
-        # Explude the first main session from the count.
-        group_count=`tmux ls | rg -F -v 'main:' | rg -F '(group main) (attached)' | wc -l | xargs`
-        group_count=$((group_count + 1))
-        session_id="main-$group_count"
-        # Create a new session (without attaching it) and link to base session
-        # to share windows
-        tmux new-session -d -t $base_session -s $session_id
-        # Attach to the new session
-        tmux attach-session -t $session_id
-        # When we detach from it, kill the session
-        tmux kill-session -t $session_id
+            echo "Launching copy of base session $base_session ..."
+            # Use the number of windows in the group to name the new session.
+            # Explude the first main session from the count.
+            group_count=`tmux ls | rg -F -v 'main:' | rg -F '(group main) (attached)' | wc -l | xargs`
+            group_count=$((group_count + 1))
+            session_id="main-$group_count"
+            # Create a new session (without attaching it) and link to base session
+            # to share windows
+            tmux new-session -d -t $base_session -s $session_id
+            # Attach to the new session
+            tmux attach-session -t $session_id
+            # When we detach from it, kill the session
+            tmux kill-session -t $session_id
+        fi
     fi
+}
+
+
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+    echo "NeoVim Terminal settings go here."
+    # NeoVim related settings;
+    # TODO: Change the editor so files open in the current NeoVim process.
+else
+    run-tmux
 fi
