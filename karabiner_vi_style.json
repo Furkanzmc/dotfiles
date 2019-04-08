@@ -2,7 +2,7 @@
     "title": "Vi Style",
     "rules": [
         {
-            "description": "Change LOption + h/j/k/l to Arrows",
+            "description": "Enable Vim like navigation using LOption + h/j/k/l/0/b/e/4",
             "manipulators": [
                 {
                     "type": "basic",
@@ -67,12 +67,7 @@
                             "key_code": "right_arrow"
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "description": "Change LOption + 0/4/u/d to Home/End/Page Up/Page Down",
-            "manipulators": [
+                },
                 {
                     "type": "basic",
                     "from": {
@@ -148,11 +143,49 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "e",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_option"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "right_arrow",
+                            "modifiers": [
+                                "left_option"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "b",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_option"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "left_arrow",
+                            "modifiers": [
+                                "left_option"
+                            ]
+                        }
+                    ]
                 }
             ]
         },
         {
-            "description": "Change Left Option + H/L/J/K to Shift + Left/Right/Down/Up",
+            "description": "Change Left Option + H/L/J/K/E/B to Shift + Left/Right/Down/Up",
             "manipulators": [
                 {
                     "type": "basic",
@@ -230,6 +263,48 @@
                             "key_code": "left_arrow",
                             "modifiers": [
                                 "left_shift"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "b",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_option",
+                                "left_shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "left_arrow",
+                            "modifiers": [
+                                "left_shift",
+                                "left_option"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "e",
+                        "modifiers": {
+                            "mandatory": [
+                                "left_option",
+                                "left_shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "key_code": "right_arrow",
+                            "modifiers": [
+                                "left_shift",
+                                "left_option"
                             ]
                         }
                     ]
