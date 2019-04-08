@@ -25,10 +25,11 @@
 --------------------------------------------------------------------------------
 
 return {
-  modifiers = {'ctrl'},
+  modifiers = {'alt'},
   showHelp  = false,
-  trigger   = 's',
+  trigger   = 'w',
   mappings  = {
+    { {},         'd',      'close' },
     { {},         'return', 'maximize' },
     { {'shift'},  'c',      'centerWithFullHeight' },
     { {},         'c',      'center' },
