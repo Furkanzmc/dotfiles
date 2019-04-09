@@ -73,7 +73,7 @@ function hs.window.rightSameSize(win)
   local screen = win:screen()
   local max = screen:frame()
 
-  f.x = max.x + (max.w / 2)
+  f.x = (max.x + max.w) - f.w
   f.y = max.y
   win:setFrame(f)
 end
