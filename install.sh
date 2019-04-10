@@ -5,5 +5,6 @@ ln -sf ~/.dotfiles/karabiner_vi_style.json ~/.config/karabiner/assets/complex_mo
 
 mkdir -p ~/.hammerspoon
 ln -sf ~/.dotfiles/hammerspoon/* ~/.hammerspoon/
+ln -sf ~/.dotfiles/alacritty.yaml ~/.alacritty.yaml
 
 echo "Installed configurations."
