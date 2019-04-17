@@ -6,5 +6,6 @@ ln -sf ~/.dotfiles/karabiner_vi_style.json ~/.config/karabiner/assets/complex_mo
 mkdir -p ~/.hammerspoon
 ln -sf ~/.dotfiles/hammerspoon/* ~/.hammerspoon/
 ln -sf ~/.dotfiles/alacritty.yaml ~/.alacritty.yaml
+ln -sf ~/.dotfiles/iterm2.json ~/Library/Application\ Support/iTerm2/DynamicProfiles
 
 echo "Installed configurations."
