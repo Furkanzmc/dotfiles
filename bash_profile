@@ -39,6 +39,21 @@ bashrc() {
     nvim ~/.bash_profile
 }
 
+is_older() {
+    if [ $1 -ot $2 ]; then
+        return 0
+    else
+        return -1
+    fi
+}
+
+is_newer() {
+    if [ $1 -nt $2 ]; then
+        return 0
+    else
+        return -1
+    fi
+}
 
 install-git-completion() {
     curl https://raw.githubusercontent.com/git/git/53f9a3e157dbbc901a02ac2c73346d375e24978c/contrib/completion/git-completion.bash -o ~/.git-completion.bash
