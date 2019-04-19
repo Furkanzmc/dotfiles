@@ -92,6 +92,16 @@ OS=`uname`
 
 if [ "${OS}" == "Darwin" ]; then
 
+    post_notification() {
+        if [ $2 -e ""]; then
+            title="Notification"
+        else
+            title=$2
+        fi
+
+        osascript -e "display notification \"$1\" with title \"$title\""
+    }
+
     cd_desktop() {
         cd ~/Desktop
     }
