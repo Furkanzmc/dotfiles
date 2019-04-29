@@ -24,6 +24,43 @@ function hs.window.decreaseHeight(win)
   win:setFrame(f)
 end
 
+function hs.window.setWidthStageOne(win)
+  local f = win:frame()
+  local screen = win:screen()
+  local max = screen:frame()
+
+  f.w = max.w / 4
+  win:setFrame(f)
+end
+
+function hs.window.setWidthStageTwo(win)
+  local f = win:frame()
+  local screen = win:screen()
+  local max = screen:frame()
+
+  f.w = max.w / 3
+  win:setFrame(f)
+end
+
+function hs.window.setWidthStageThree(win)
+  local f = win:frame()
+  local screen = win:screen()
+  local max = screen:frame()
+
+  f.w = max.w / 2
+  win:setFrame(f)
+end
+
+function hs.window.stretchHeight(win)
+  local f = win:frame()
+  local screen = win:screen()
+  local max = screen:frame()
+
+  f.y = 0
+  f.h = max.h
+  win:setFrame(f)
+end
+
 -- +-----------------+
 -- |        |        |
 -- |  HERE  |        |
