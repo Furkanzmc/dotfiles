@@ -1,4 +1,5 @@
-hs.window.animationDuration = 0
+hs.window.animationDuration = 0.2
+
 function getWindows(win)
     local wf = hs.window.filter
     wf = wf.default:setAppFilter(
@@ -100,31 +101,18 @@ function hs.window.decreaseHeight(win)
   win:setFrame(f)
 end
 
-function hs.window.setWidthStageOne(win)
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
+function hs.window.setDefaultTerminalSize(win)
+    if (win:application():name() ~= 'iTerm2') then
+        return
+    end
 
-  f.w = max.w / 4
-  win:setFrame(f)
-end
+    local f = win:frame()
+    local max = win:screen():frame()
 
-function hs.window.setWidthStageTwo(win)
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-
-  f.w = max.w / 3
-  win:setFrame(f)
-end
-
-function hs.window.setWidthStageThree(win)
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-
-  f.w = max.w / 2
-  win:setFrame(f)
+    f.y = 0
+    f.w = 640
+    f.h = max.h
+    win:setFrame(f)
 end
 
 function hs.window.stretchHeight(win)
@@ -134,6 +122,16 @@ function hs.window.stretchHeight(win)
 
   f.y = 0
   f.h = max.h
+  win:setFrame(f)
+end
+
+function hs.window.stretchWidth(win)
+  local f = win:frame()
+  local screen = win:screen()
+  local max = screen:frame()
+
+  f.x = 0
+  f.w = max.w
   win:setFrame(f)
 end
 

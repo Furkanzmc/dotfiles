@@ -48,10 +48,9 @@ return {
     { {},         'left',   'decreaseWidth' },
     { {},         'up',  'increaseHeight' },
     { {},         'down',   'decreaseHeight' },
-    { {},         '1',   'setWidthStageOne' },
-    { {},         '2',   'setWidthStageTwo' },
-    { {},         '3',   'setWidthStageThree' },
-    { {'shift'},         '\\',   'stretchHeight' }
+    { {},         '1',   'setDefaultTerminalSize' },
+    { {'shift'},         '\\',   'stretchHeight' },
+    { {'shift'},         '-',   'stretchWidth' },
     { {},         '[',   'tileLeftHalfScreen' },
     { {},         ']',   'tileRightHalfScreen' },
     { {},         '=',   'tileFullScreen' },
