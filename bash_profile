@@ -140,8 +140,6 @@ git config --global alias.stage 'add'
 git config --global alias.unstage 'reset HEAD --'
 # Create an alias to see the last commit `git last`
 git config --global alias.last 'log -1 HEAD'
-# Open GitX with `git visual`
-git config --global alias.visual '!open ./ -a "GitX"'
 # Use `git logall` to log all the changes
 git config --global alias.logall "log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 # Use `git logcurrent` to log the current branch
@@ -157,6 +155,11 @@ git-difflog() {
 git config --global color.status.changed "magenta normal bold"
 git config --global color.status.added "blue normal bold"
 git config --global color.status.unmerged "yellow normal bold"
+
+git-set-author() {
+    git config user.name $1
+    git config user.email $2
+}
 
 # -----
 
