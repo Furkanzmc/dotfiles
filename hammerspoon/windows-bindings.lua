@@ -52,6 +52,10 @@ return {
     { {},         '2',   'setWidthStageTwo' },
     { {},         '3',   'setWidthStageThree' },
     { {'shift'},         '\\',   'stretchHeight' }
+    { {},         '[',   'tileLeftHalfScreen' },
+    { {},         ']',   'tileRightHalfScreen' },
+    { {},         '=',   'tileFullScreen' },
+    { {'shift'},         '=',   'tileGrid' }
   }
 }
 

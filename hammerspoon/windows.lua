@@ -1,4 +1,80 @@
 hs.window.animationDuration = 0
+function getWindows(win)
+    local wf = hs.window.filter
+    wf = wf.default:setAppFilter(
+        win:application():name(), {
+            visible=true,
+            fullscreen=false,
+            currentSpace=true
+        })
+    -- FIXME: I could not make the filtering take care of the windows selection.
+    -- This solution works, but it'd be cleaner to use the API.
+    local windows = {}
+
+    for _,v in pairs(wf:getWindows()) do
+        if (v:application() == win:application()) then
+            windows[#windows + 1] = v
+        end
+    end
+
+    return windows
+end
+
+function hs.window.tileGrid(win)
+    local windows = getWindows(win)
+    local max = win:screen():frame()
+
+    if (#windows > 1) then
+        hs.window.tiling.tileWindows(
+            windows,
+            hs.geometry(0, 0, max.w, max.h),
+            1,
+            true
+            )
+    end
+end
+
+function hs.window.tileFullScreen(win)
+    local windows = getWindows(win)
+    local max = win:screen():frame()
+
+    if (#windows > 1) then
+        hs.window.tiling.tileWindows(
+            windows,
+            hs.geometry(0, 0, max.w, max.h),
+            0,
+            true
+            )
+    end
+end
+
+function hs.window.tileLeftHalfScreen(win)
+    local windows = getWindows(win)
+    local max = win:screen():frame()
+
+    if (#windows > 1) then
+        hs.window.tiling.tileWindows(
+            windows,
+            hs.geometry(0, 0, max.w / 2, max.h),
+            0,
+            true
+            )
+    end
+end
+
+function hs.window.tileRightHalfScreen(win)
+    local windows = getWindows(win)
+    local max = win:screen():frame()
+
+    if (#windows > 1) then
+        hs.window.tiling.tileWindows(
+            windows,
+            hs.geometry(max.w / 2, 0, max.w / 2, max.h),
+            0,
+            true
+            )
+    end
+end
 
 function hs.window.increaseWidth(win)
   local f = win:frame()
