@@ -2,7 +2,7 @@
     "title": "Vi Style",
     "rules": [
         {
-            "description": "Enable Vim like navigation using LOption + h/j/k/l/0/b/e/4",
+            "description": "Vim like navigation with LOption + h/j/k/l/0/b/e/4/u/d",
             "manipulators": [
                 {
                     "type": "basic",

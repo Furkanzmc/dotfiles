@@ -59,10 +59,26 @@ on the right.
 ## Karabiner Mappings
 
 - Use Vi-like navigating.
-    + LControl + h/j/k/l as Arrow Keys
-    + LControl + 0/4/u/d as Home/End/Page Up/Page Down
-    + LOption + H/J/K/L as Shift + Left/Down/Up/Right Arrow Keys. (Enables
-      selection using LOption+Shift+h)
+    + LControl + h/j/k/l/0/b/e/4/u/d as to navigate.
+    + LOption + H/J/K/L/B/E for selection.
 - Map Caps Lock to Left Control on press and hold and to escape on single
   press.
-- Map Right Command to Left Control
+- Map LControl + Spacebar to Ctrl + b
+
+## Hammerspoon
+
+I use Hammerspoon as a window manager.
+
+Commmands include:
+
++ Tile windows on the left half of the screen.
++ Tile windows on the right half of the screen.
++ Tile windows in a grid.
++ Tile windows horizontally in the entire space.
+
+And a few others...
+
+Commands apply to the focused window or the windows of the application in the
+current space that the window belongs to.
+
+Checkout `hammerspoon/windows-bindings.lua` for details.
