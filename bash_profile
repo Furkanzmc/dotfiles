@@ -157,8 +157,8 @@ git config --global color.status.added "blue normal bold"
 git config --global color.status.unmerged "yellow normal bold"
 
 git-set-author() {
-    git config user.name $1
-    git config user.email $2
+    git config user.name "$1"
+    git config user.email "$2"
 }
 
 # -----
