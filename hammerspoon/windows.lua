@@ -229,6 +229,74 @@ function hs.window.center(win)
     win:setFrame(f)
 end
 
+-- +-----------------+
+-- |  HERE  |        |
+-- +--------+        |
+-- |                 |
+-- +-----------------+
+function hs.window.upLeft(win)
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:fullFrame()
+    f.x = max.x
+    f.y = max.y
+    f.w = max.w/2
+    f.h = max.h/2
+    win:setFrame(f)
+end
+
+-- +-----------------+
+-- |                 |
+-- +--------+        |
+-- |  HERE  |        |
+-- +-----------------+
+function hs.window.downLeft(win)
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:fullFrame()
+
+    f.x = max.x
+    f.y = max.y + (max.h / 2)
+    f.w = max.w/2
+    f.h = max.h/2
+    win:setFrame(f)
+end
+
+-- +-----------------+
+-- |                 |
+-- |        +--------|
+-- |        |  HERE  |
+-- +-----------------+
+function hs.window.downRight(win)
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:fullFrame()
+
+    f.x = max.x + (max.w / 2)
+    f.y = max.y + (max.h / 2)
+    f.w = max.w/2
+    f.h = max.h/2
+
+    win:setFrame(f)
+end
+
+-- +-----------------+
+-- |        |  HERE  |
+-- |        +--------|
+-- |                 |
+-- +-----------------+
+function hs.window.upRight(win)
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:fullFrame()
+
+    f.x = max.x + (max.w / 2)
+    f.y = max.y
+    f.w = max.w/2
+    f.h = max.h/2
+    win:setFrame(f)
+end
+
 windowLayoutMode = hs.hotkey.modal.new({}, 'F16')
 
 windowLayoutMode.entered = function()
