@@ -39,7 +39,9 @@ return {
         { {},         '[',      'tileLeftHalfScreen' },
         { {},         ']',      'tileRightHalfScreen' },
         { {},         '=',      'tileFullScreen' },
-        { {'shift'},  '=',      'tileGrid' }
+        { {'shift'},  '=',      'tileGrid' },
+        { {},         'm',      'saveWindow' },
+        { {},         'r',      'restoreWindow' }
     }
 }
 

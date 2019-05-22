@@ -114,6 +114,51 @@ function hs.window.stretchWidth(win)
     win:setFrame(f)
 end
 
+function getWindowStateIndex(win)
+    local foundIndex = -1
+    for index, windowState in pairs(_ENV.windowPositions) do
+        if (windowState[1] == win:id()) then
+            foundIndex = index
+            break
+        end
+    end
+
+    return foundIndex
+end
+
+function hs.window.saveWindow(win)
+    local frame = win:frame()
+    if (_ENV.windowPositions == nil) then
+        _ENV.windowPositions = { { win:id(), frame.x, frame.y, frame.w, frame.h } }
+    else
+        local index = getWindowStateIndex(win)
+        if (index == -1) then
+            index = #_ENV.windowPositions + 1
+        end
+
+        _ENV.windowPositions[index] = { win:id(), frame.x, frame.y, frame.w, frame.h }
+    end
+end
+
+function hs.window.restoreWindow(win)
+    if (_ENV.windowPositions == nil) then
+        return
+    end
+
+    local foundIndex = getWindowStateIndex(win)
+    if (foundIndex == -1) then
+        return
+    end
+
+    local windowState = _ENV.windowPositions[foundIndex]
+    local frame = win:frame()
+    frame.x = windowState[2]
+    frame.y = windowState[3]
+    frame.w = windowState[4]
+    frame.h = windowState[5]
+    win:setFrame(frame)
+end
+
 -- +-----------------+
 -- |        |        |
 -- |  HERE  |        |
