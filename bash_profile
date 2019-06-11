@@ -102,15 +102,15 @@ if [ "${OS}" == "Darwin" ]; then
         osascript -e "display notification \"$1\" with title \"$title\""
     }
 
-    cd_desktop() {
+    cd-desktop() {
         cd ~/Desktop
     }
 
-    cd_downloads() {
+    cd-downloads() {
         cd ~/Downloads
     }
 
-    cd_icloud() {
+    cd-icloud() {
         cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/
     }
 
