@@ -56,6 +56,17 @@ if ($IsMacOS) {
     alias lock_screen="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 } # End MacOS
 
+if ($IsWindows) {
+    $Shell = $Host.UI.RawUI
+    $size = $Shell.WindowSize
+    $size.width=90
+    $size.height=90
+    $Shell.WindowSize = $size
+    $size = $Shell.BufferSize
+    $size.width=90
+    $size.height=5000
+    $Shell.BufferSize = $size
+}
 
 # Git
 git config --global alias.st 'status'
