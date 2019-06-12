@@ -366,43 +366,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "description": "Map LCtrl + H to Backspace, LCtr + J to Enter",
-            "manipulators": [
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "h",
-                        "modifiers": {
-                            "mandatory": [
-                                "left_control"
-                            ]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "backspace"
-                        }
-                    ]
-                },
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "j",
-                        "modifiers": {
-                            "mandatory": [
-                                "left_control"
-                            ]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "return_or_enter"
-                        }
-                    ]
-                }
-            ]
         }
     ]
 }
