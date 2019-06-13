@@ -3,7 +3,9 @@
 ; Press both shift keys together to toggle Capslock
 ; Script taken from: https://github.com/fenwar/ahk-caps-ctrl-esc/blob/master/AutoHotkey.ahk
 
-global WindowsMap := {}
+global WindowJumpMap := {}
+global WindowGeometries := {}
+
 *Capslock::
     Send {Blind}{LControl down}
     return
@@ -35,37 +37,69 @@ ToggleCaps() {
 LCtrl & h::Backspace
 LCtrl & j::Enter
 
-; Centers the window with the same width and height.
-CenterWindow(WinTitle, changeSize)
+GetWorkArea()
 {
-    WinGetPos,,, Width, Height, %WinTitle%
+    SysGet, WorkArea, MonitorWorkArea
+
+    area := {}
+    area.x := WorkAreaLeft
+    area.y := WorkAreaTop
+    area.width := WorkAreaRight
+    area.height := WorkAreaBottom - WorkAreaTop
+
+    return area
+}
+
+; Centers the window with the same width and height.
+CenterWindow(WinId, changeSize)
+{
+    WinGetPos,,, Width, Height, ahk_id %WinId%
+    WorkArea := GetWorkArea()
+
     If changeSize = 1
     {
-        WinMove, %WinTitle%,, (A_ScreenWidth / 2) - ((A_ScreenWidth * 0.55) / 2), (A_ScreenHeight / 2) - (A_ScreenHeight / 2), A_ScreenWidth * 0.55, A_ScreenHeight
+        WinMove, ahk_id %WinId%,, (WorkArea.width / 2) - ((WorkArea.width * 0.55) / 2), (WorkArea.height / 2) - (WorkArea.height / 2) + WorkArea.y, WorkArea.width * 0.55, WorkArea.height
     }
     else
     {
-        WinMove, %WinTitle%,, (A_ScreenWidth / 2) - (Width / 2), (A_ScreenHeight / 2) - (Height / 2)
+        WinMove, ahk_id %WinId%,, (WorkArea.width / 2) - (Width / 2), (WorkArea.height / 2) - (Height / 2) + WorkArea.y
     }
 }
 
 ; Moves the window to the left with the same width and height.
-MoveWindowToLeft(WinTitle)
+MoveWindowToLeft(WinId)
 {
-    WinGetPos,,, Width, Height, %WinTitle%
-    WinMove, %WinTitle%,, 0, (A_ScreenHeight / 2) - (Height / 2)
+    WinGetPos,,, Width, Height, ahk_id %WinId%
+    WorkArea := GetWorkArea()
+    WinMove, ahk_id %WinId%,, 0, (WorkArea.height / 2) - (Height / 2) + WorkArea.y
 }
 
 ; Moves the window to the right with the same width and height.
-MoveWindowToRight(WinTitle)
+MoveWindowToRight(WinId)
 {
-    WinGetPos,,, Width, Height, %WinTitle%
-    WinMove, %WinTitle%,, A_ScreenWidth - Width, (A_ScreenHeight / 2) - (Height / 2)
+    WinGetPos,,, Width, Height, ahk_id %WinId%
+    WorkArea := GetWorkArea()
+    WinMove, ahk_id %WinId%,, WorkArea.width - Width, (WorkArea.height / 2) - (Height / 2) + WorkArea.y
+}
+
+ExpandWindow(WinId, vertical)
+{
+    WinGetPos,,, Width, Height, ahk_id %WinId%
+    WorkArea := GetWorkArea()
+
+    If vertical = 1
+    {
+        WinMove, ahk_id %WinId%, , , (WorkArea.height / 2) - (WorkArea.height / 2) + WorkArea.y, , WorkArea.height
+    }
+    else
+    {
+        WinMove, ahk_id %WinId%,, (WorkArea.width / 2) - (Width / 2), (WorkArea.height / 2) - (Height / 2) + WorkArea.y, WorkArea.width,
+    }
 }
 
 LAlt & c::
     id := WinExist("A")
-    CenterWindow(A, GetKeyState("LShift"))
+    CenterWindow(id, GetKeyState("LShift"))
     return
 
 LAlt & a::
@@ -79,13 +113,18 @@ LAlt & a::
     }
     else
     {
-        MoveWindowToLeft(A)
+        MoveWindowToLeft(id)
     }
     return
 
 LAlt & d::
     id := WinExist("A")
-    MoveWindowToRight(A)
+    MoveWindowToRight(id)
+    return
+
+LAlt & |::
+    id := WinExist("A")
+    ExpandWindow(id, 1)
     return
 
 LAlt & m::
@@ -99,7 +138,7 @@ LAlt & m::
         if Length > 0
         {
             id := WinExist("A")
-            WindowsMap[OutputVar] := id
+            WindowJumpMap[OutputVar] := id
         }
     }
     return
@@ -112,10 +151,40 @@ LAlt & r::
         ToolTip
 
         StringLen, Length, OutputVar
-        if Length > 0
+        if Length = 0
         {
-            id := WindowsMap[OutputVar]
+            return
+        }
+
+
+        rPressed := OutputVar = "r"
+        if rPressed = 1
+        {
+            id := WinExist("A")
+            geometry := WindowGeometries[%id%]
+            WinMove, ahk_id %id%,, geometry.x, geometry.y, geometry.width, geometry.height
+        }
+        else
+        {
+            id := WindowJumpMap[OutputVar]
             WinActivate, ahk_id %id%
         }
     }
     return
+
+LAlt & s::
+    if GetKeyState("LShift")
+    {
+        id := WinExist("A")
+
+        WinGetPos, X, Y, Width, Height, ahk_id %id%
+        geometry := {}
+        geometry.x := X
+        geometry.y := Y
+        geometry.width := Width
+        geometry.height := Height
+        WindowGeometries[%id%] := geometry
+    }
+
+    return
+
