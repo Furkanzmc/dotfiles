@@ -75,11 +75,19 @@ function cd-downloads() {
 function gdocs2d($url) {
     $subs = "/d/"
     $index = $url.IndexOf($subs)
+    if ($index -lt 0) {
+        return "Cannot process the link."
+    }
+
     $url = $url.Substring(
         $index + $subs.length,
         $url.length - ($index + $subs.length)
     )
     $index = $url.IndexOf("/")
+    if ($index -lt 0) {
+        return "Cannot process the link."
+    }
+
     $fileID = $url.Substring(0, $index)
     $url = "https://drive.google.com/uc?export=download&id=$fileID"
     return $url
