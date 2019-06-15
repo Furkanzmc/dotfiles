@@ -1,6 +1,9 @@
-﻿# Settings for PSReadLine: https://github.com/lzybkr/PSReadLine
+﻿# Import Modules
 Import-Module PSReadLine
-Set-PSReadLineOption -EditMode Vi
+Import-Module posh-git
+if ($IsWindows) {
+    Import-Module Pscx
+}
 
 # Functions
 function export($name, $value) {
@@ -41,19 +44,11 @@ if ($IsMacOS) {
         osascript -e "display notification \`"$message\`" with title \`"$title\`""
     }
 
-    function cd-desktop() {
-        cd ~/Desktop
-    }
-
-    function cd-downloads() {
-        cd ~/Downloads
-    }
-
     function cd-icloud() {
-        cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/
+        cd "~/Library/Mobile Documents/com~apple~CloudDocs/"
     }
 
-    alias lock_screen="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+    alias lock_screen="/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession -suspend"
 } # End MacOS
 
 if ($IsWindows) {
@@ -66,6 +61,28 @@ if ($IsWindows) {
     $size.width=90
     $size.height=5000
     $Shell.BufferSize = $size
+} # End Windows
+
+function cd-desktop() {
+    cd ~/Desktop
+}
+
+function cd-downloads() {
+    cd ~/Downloads
+}
+
+# Returns the direct download link for a Google Drive share link.
+function gdocs2d($url) {
+    $subs = "/d/"
+    $index = $url.IndexOf($subs)
+    $url = $url.Substring(
+        $index + $subs.length,
+        $url.length - ($index + $subs.length)
+    )
+    $index = $url.IndexOf("/")
+    $fileID = $url.Substring(0, $index)
+    $url = "https://drive.google.com/uc?export=download&id=$fileID"
+    return $url
 }
 
 # Git
@@ -93,5 +110,31 @@ function git-set-author($name, $email) {
     git config user.name "$name"
     git config user.email "$email"
 }
-# -----
 
+# Module Configurations
+
+## Posh-Git Configuration
+$GitPromptSettings.DefaultPromptWriteStatusFirst = $true
+$GitPromptSettings.EnableFileStatus = $false
+$GitPromptSettings.DefaultPromptBeforeSuffix.Text = ':`n'
+$GitPromptSettings.DefaultPromptSuffix = '$("=>" * ($nestedPromptLevel + 1)) '
+
+## PSReadLine Options
+
+$PSReadLineOptions = @{
+    EditMode = "Vi"
+    HistoryNoDuplicates = $true
+    HistorySearchCursorMovesToEnd = $true
+    ViModeIndicator = "Cursor"
+    Colors = @{
+        # cosmic-latte colors
+        "Error" = "#202a31"
+        "String" = "#7d9761"
+        "Command" = "#8181f7"
+        "Comment" = "#898f9e"
+        "Operator" = "#459d90"
+        "Number" = "#5496bd"
+    }
+}
+
+Set-PSReadLineOption @PSReadLineOptions
