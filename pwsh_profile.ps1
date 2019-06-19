@@ -48,6 +48,18 @@ if ($IsMacOS) {
         cd "~/Library/Mobile Documents/com~apple~CloudDocs/"
     }
 
+    function enable-dylib-verbose() {
+        export DYLD_PRINT_LIBRARIES 1
+        export DYLD_PRINT_LIBRARIES_POST_LAUNCH 1
+        export DYLD_PRINT_RPATHS 1
+    }
+
+    function disable-dylib-verbose() {
+        export DYLD_PRINT_LIBRARIES 0
+        export DYLD_PRINT_LIBRARIES_POST_LAUNCH 0
+        export DYLD_PRINT_RPATHS 0
+    }
+
     alias lock_screen="/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession -suspend"
 } # End MacOS
 

@@ -27,6 +27,18 @@ copy_pwd() {
 
 # Functions
 
+enable-dylib-verbose() {
+    export DYLD_PRINT_LIBRARIES=1
+    export DYLD_PRINT_LIBRARIES_POST_LAUNCH=1
+    export DYLD_PRINT_RPATHS=1
+}
+
+disable-dylib-verbose() {
+    export DYLD_PRINT_LIBRARIES=0
+    export DYLD_PRINT_LIBRARIES_POST_LAUNCH=0
+    export DYLD_PRINT_RPATHS=0
+}
+
 pub_ip() {
     curl http://ipconfig.io/ip
 }
