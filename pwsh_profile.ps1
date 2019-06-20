@@ -6,8 +6,16 @@ if ($IsWindows) {
 }
 
 # Functions
-function export($name, $value) {
-    [System.Environment]::SetEnvironmentVariable($name, $value)
+function export() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [String[]]
+        $Name,
+        [Parameter(Position=1)]
+        [String[]]
+        $Value
+    )
+    [System.Environment]::SetEnvironmentVariable($Name, $Value)
 }
 
 function replace_in_dir($from, $to) {
@@ -19,25 +27,25 @@ function replace_in_dir($from, $to) {
     }
 }
 
+if (Get-Command "fd" -ErrorAction SilentlyContinue) {
+    Set-Alias find fd
+}
+
+if (Get-Command "exa" -ErrorAction SilentlyContinue) {
+    Set-Alias ls exa
+}
+
+if (Get-Command "bat" -ErrorAction SilentlyContinue) {
+    Set-Alias vim nvim
+}
+
 if ($IsMacOS) {
     $env:PATH += ":/usr/local/bin"
 
     export EDITOR 'nvim'
 
-    if (Test-Path '/usr/local/bin/exa') {
-        Set-Alias ls /usr/local/bin/exa
-    }
-
-    if (Test-Path '/usr/local/bin/fd') {
-        Set-Alias find /usr/local/bin/fd
-    }
-
-    if (Test-Path '/usr/local/bin/bat') {
-        Set-Alias cat /usr/local/bin/bat
-    }
-
-    if (Test-Path '/usr/local/bin/nvim') {
-        Set-Alias vim /usr/local/bin/nvim
+    if (Get-Command "bat" -ErrorAction SilentlyContinue) {
+        Set-Alias cat bat
     }
 
     function post-notification($message, $title) {
@@ -60,7 +68,7 @@ if ($IsMacOS) {
         export DYLD_PRINT_RPATHS 0
     }
 
-    alias lock_screen="/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession -suspend"
+    Set-Alias lock-screen "/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession -suspend"
 } # End MacOS
 
 if ($IsWindows) {
@@ -121,10 +129,6 @@ git config --global alias.discard 'checkout --'
 function git-difflog($from, $to) {
     git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --name-status $from..$to
 }
-
-git config --global color.status.changed "magenta normal bold"
-git config --global color.status.added "blue normal bold"
-git config --global color.status.unmerged "yellow normal bold"
 
 function git-set-author($name, $email) {
     git config user.name "$name"

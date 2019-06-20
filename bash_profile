@@ -161,10 +161,6 @@ git-difflog() {
     git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --name-status $1..$2
 }
 
-git config --global color.status.changed "magenta normal bold"
-git config --global color.status.added "blue normal bold"
-git config --global color.status.unmerged "yellow normal bold"
-
 git-set-author() {
     git config user.name "$1"
     git config user.email "$2"
