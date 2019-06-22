@@ -3,6 +3,61 @@
 
 hs.window.animationDuration = 0.2
 
+windowLayoutMode = hs.hotkey.modal.new({}, 'F16')
+
+local status, windowMappings = pcall(require, 'windows-bindings')
+local modifiers = windowMappings.modifiers
+local showHelp  = windowMappings.showHelp
+local trigger   = windowMappings.trigger
+local mappings  = windowMappings.mappings
+local eventtap = require("hs.eventtap")
+local keycodes = require("hs.keycodes")
+local _inLayoutMode = false
+
+local _markWindowModeEnabled = false
+local _windowToMark = nil
+local _windowRestoreModeEnabled = false
+local _markedWindows = {}
+
+function exitWindowLayoutMode()
+    _markWindowModeEnabled = false
+    _windowToMark = nil
+
+    _windowRestoreModeEnabled = false
+    windowLayoutMode:exit()
+    _inLayoutMode = false
+end
+
+
+eventtap.new({ eventtap.event.types.keyDown }, function(event)
+    if (_inLayoutMode == false) then
+        return false
+    elseif (_inLayoutMode == nil) then
+        return false
+    end
+
+    local keyCode = event:getKeyCode()
+    if (keycodes.map["escape"] == keyCode) then
+        exitWindowLayoutMode()
+        return true
+    end
+
+    if (_markWindowModeEnabled == true) then
+        markWindow(_windowToMark, keyCode)
+        exitWindowLayoutMode()
+        return true
+    elseif (_windowRestoreModeEnabled == true) then
+        restoreWindow(hs.window.focusedWindow(), keyCode)
+        exitWindowLayoutMode()
+        return true
+    end
+
+    return false
+end):start()
+
+
+-----------------------------------------
+
 function getWindows(win)
     local wf = hs.window.filter
     wf = wf.default:setAppFilter(
@@ -152,7 +207,33 @@ function hs.window.saveWindow(win)
     end
 end
 
-function hs.window.restoreWindow(win)
+function hs.window.enableMarkWindowMode(win)
+    _markWindowModeEnabled = true
+    _windowToMark = win
+end
+
+function markWindow(win, keyCode)
+    _markedWindows[keyCode] = win
+end
+
+function jumpToWindow(keyCode)
+    local window = _markedWindows[keyCode]
+    if (window) then
+        window:focus()
+    end
+end
+
+function hs.window.enableRestoreWindowMode(win)
+    _windowRestoreModeEnabled = true
+end
+
+function restoreWindow(win, keyCode)
+    if (keyCode ~= keycodes.map["r"]) then
+        win = _markedWindows[keyCode]
+        win:focus()
+        return
+    end
+
     if (_ENV.windowPositions == nil) then
         return
     end
@@ -354,8 +435,6 @@ function hs.window.upRight(win)
     win:setFrame(f)
 end
 
-windowLayoutMode = hs.hotkey.modal.new({}, 'F16')
-
 windowLayoutMode.entered = function()
     windowLayoutMode.statusMessage:show()
 end
@@ -364,19 +443,15 @@ windowLayoutMode.exited = function()
 end
 
 -- Bind the given key to call the given function and exit WindowLayout mode
-function windowLayoutMode.bindWithAutomaticExit(mode, modifiers, key, fn)
+function windowLayoutMode.bindWithAutomaticExit(mode, modifiers, key, fn, autoClose)
     mode:bind(modifiers, key, function()
-        mode:exit()
         fn()
+
+        if (autoClose) then
+            exitWindowLayoutMode()
+        end
     end)
 end
-
-local status, windowMappings = pcall(require, 'windows-bindings')
-
-local modifiers = windowMappings.modifiers
-local showHelp  = windowMappings.showHelp
-local trigger   = windowMappings.trigger
-local mappings  = windowMappings.mappings
 
 function getModifiersStr(modifiers)
     local modMap = { shift = '⇧', ctrl = '⌃', alt = '⌥', cmd = '⌘' }
@@ -393,14 +468,23 @@ local msgStr = getModifiersStr(modifiers)
 msgStr = 'Window Layout Mode (' .. msgStr .. (string.len(msgStr) > 0 and '+' or '') .. trigger .. ')'
 
 for i, mapping in ipairs(mappings) do
-    local modifiers, trigger, winFunction = table.unpack(mapping)
+    local modifiers, trigger, winFunction, autoClose = table.unpack(mapping)
     local hotKeyStr = getModifiersStr(modifiers)
 
     if showHelp == true then
         if string.len(hotKeyStr) > 0 then
-            msgStr = msgStr .. (string.format('\n%10s+%s => %s', hotKeyStr, trigger, winFunction))
+            msgStr = msgStr .. (
+                string.format('\n%10s+%s => %s',
+                    hotKeyStr,
+                    trigger,
+                    winFunction
+                    )
+                )
         else
-            msgStr = msgStr .. (string.format('\n%11s => %s', trigger, winFunction))
+            msgStr = msgStr .. (string.format(
+                    '\n%11s => %s', trigger, winFunction
+                    )
+                )
         end
     end
 
@@ -408,7 +492,7 @@ for i, mapping in ipairs(mappings) do
         --example: hs.window.focusedWindow():upRight()
         local fw = hs.window.focusedWindow()
         fw[winFunction](fw)
-    end)
+    end, autoClose)
 end
 
 local message = require('status-message')
@@ -416,9 +500,11 @@ windowLayoutMode.statusMessage = message.new(msgStr)
 
 -- Use modifiers+trigger to toggle WindowLayout Mode
 hs.hotkey.bind(modifiers, trigger, function()
+    _inLayoutMode = true
     windowLayoutMode:enter()
 end)
 windowLayoutMode:bind(modifiers, trigger, function()
-    windowLayoutMode:exit()
+    _inLayoutMode = false
+    exitWindowLayoutMode()
 end)
 

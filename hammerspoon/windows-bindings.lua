@@ -19,29 +19,129 @@ return {
     showHelp  = false,
     trigger   = 'w',
     mappings  = {
-        { {},         'd',      'close' },
-        { {},         'return', 'maximize' },
-        { {'shift'},  'c',      'centerWithFullHeight' },
-        { {},         'c',      'center' },
-        { {'shift'},  'a',      'left' },
-        { {},         's',      'down' },
-        { {},         'w',      'up' },
-        { {'shift'},  'd',      'right' },
-        { {},         'a',      'leftSameSize' },
-        { {},         'd',      'rightSameSize' },
-        { {},         'q',      'upLeft' },
-        { {},         'e',      'upRight' },
-        { {},         'z',      'downLeft' },
-        { {},         'x',      'downRight' },
-        { {},         '1',      'setDefaultTerminalSize' },
-        { {'shift'},  '\\',     'stretchHeight' },
-        { {},         '[',      'tileLeftHalfScreen' },
-        { {},         ']',      'tileRightHalfScreen' },
-        { {},         '=',      'tileFullScreen' },
-        { {'shift'},  '=',      'tileGrid' },
-        { {'shift'},  '-',      'tileCenter' },
-        { {},         'm',      'saveWindow' },
-        { {},         'r',      'restoreWindow' }
+        {
+            {}, -- Modifier
+            'd', -- Trigger
+            'close', -- Function name
+            true -- Whether the commands auto disables the mode.
+        },
+        {
+            {},
+            'return',
+            'maximize',
+            true
+        },
+        {
+            {'shift'},
+            'c',
+            'centerWithFullHeight',
+            true
+        },
+        { {},
+            'c',
+            'center',
+            true
+        },
+        { {'shift'},
+            'a',
+            'left',
+            true
+        },
+        { {},
+            's',
+            'down',
+            true
+        },
+        { {},
+            'w',
+            'up',
+            true
+        },
+        { {'shift'},
+            'd',
+            'right',
+            true
+        },
+        { {},
+            'a',
+            'leftSameSize',
+            true
+        },
+        { {},
+            'd',
+            'rightSameSize',
+            true
+        },
+        { {},
+            'q',
+            'upLeft',
+            true
+        },
+        { {},
+            'e',
+            'upRight',
+            true
+        },
+        { {},
+            'z',
+            'downLeft',
+            true
+        },
+        { {},
+            'x',
+            'downRight',
+            true
+        },
+        { {},
+            '1',
+            'setDefaultTerminalSize',
+            true
+        },
+        { {'shift'},
+            '\\',
+            'stretchHeight',
+            true
+        },
+        { {},
+            '[',
+            'tileLeftHalfScreen',
+            true
+        },
+        { {},
+            ']',
+            'tileRightHalfScreen',
+            true
+        },
+        { {},
+            '=',
+            'tileFullScreen',
+            true
+        },
+        { {'shift'},
+            '=',
+            'tileGrid',
+            true
+        },
+        { {'shift'},
+            '-',
+            'tileCenter',
+            true
+        },
+        { {},
+            's',
+            'saveWindow',
+            true
+        },
+        { {},
+            'm',
+            'enableMarkWindowMode',
+            false
+        },
+        { {},
+            'r',
+            'enableRestoreWindowMode',
+            false
+        }
     }
 }
 
