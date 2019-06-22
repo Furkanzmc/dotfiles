@@ -35,11 +35,11 @@ return {
         { {},         'x',      'downRight' },
         { {},         '1',      'setDefaultTerminalSize' },
         { {'shift'},  '\\',     'stretchHeight' },
-        { {'shift'},  '-',      'stretchWidth' },
         { {},         '[',      'tileLeftHalfScreen' },
         { {},         ']',      'tileRightHalfScreen' },
         { {},         '=',      'tileFullScreen' },
         { {'shift'},  '=',      'tileGrid' },
+        { {'shift'},  '-',      'tileCenter' },
         { {},         'm',      'saveWindow' },
         { {},         'r',      'restoreWindow' }
     }

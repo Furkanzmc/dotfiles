@@ -80,6 +80,28 @@ function hs.window.tileRightHalfScreen(win)
     end
 end
 
+function hs.window.tileCenter(win)
+    local windows = getWindows(win)
+    local max = win:screen():frame()
+
+    local maxWindowCount = 5.0
+    if (#windows < 5) then
+        maxWindowCount = 4
+    elseif (#windows > 5) then
+        maxWindowCount = #windows
+    end
+
+    local totalWidth = max.w * (#windows / maxWindowCount)
+    if (#windows > 1) then
+        hs.window.tiling.tileWindows(
+            windows,
+            hs.geometry(max.w / 2 - totalWidth / 2, 0, totalWidth, max.h),
+            0,
+            true
+            )
+    end
+end
+
 function hs.window.setDefaultTerminalSize(win)
     if (win:application():name() ~= 'iTerm2') then
         return
@@ -101,16 +123,6 @@ function hs.window.stretchHeight(win)
 
     f.y = 0
     f.h = max.h
-    win:setFrame(f)
-end
-
-function hs.window.stretchWidth(win)
-    local f = win:frame()
-    local screen = win:screen()
-    local max = screen:frame()
-
-    f.x = 0
-    f.w = max.w
     win:setFrame(f)
 end
 
