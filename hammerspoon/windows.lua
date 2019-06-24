@@ -230,7 +230,9 @@ end
 function restoreWindow(win, keyCode)
     if (keyCode ~= keycodes.map["r"]) then
         win = _markedWindows[keyCode]
-        win:focus()
+        if (win ~= nil) then
+            win:focus()
+        end
         return
     end
 
