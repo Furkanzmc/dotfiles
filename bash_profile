@@ -21,6 +21,12 @@ command -v bat >/dev/null 2>&1 && {
     alias cat=bat
 }
 
+command -v ctags >/dev/null 2>&1 && {
+    gen-cpp-tags() {
+        ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
+    }
+}
+
 copy_pwd() {
     pwd | pbcopy
 }

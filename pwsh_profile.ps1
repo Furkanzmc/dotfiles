@@ -27,6 +27,12 @@ function replace_in_dir($from, $to) {
     }
 }
 
+if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
+    function gen-cpp-tags() {
+        ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
+    }
+}
+
 if (Get-Command "fd" -ErrorAction SilentlyContinue) {
     Set-Alias find fd
 }
