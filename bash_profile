@@ -9,6 +9,8 @@ set vi-cmd-mode-string ":"
 alias vim=nvim
 export EDITOR='nvim'
 
+alias nv=nvim
+
 command -v exa >/dev/null 2>&1 && {
     alias ls=exa
 }

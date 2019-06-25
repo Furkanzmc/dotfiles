@@ -36,17 +36,13 @@ if (Get-Command "exa" -ErrorAction SilentlyContinue) {
 }
 
 if (Get-Command "bat" -ErrorAction SilentlyContinue) {
-    Set-Alias vim nvim
+    Set-Alias cat bat
 }
 
 if ($IsMacOS) {
     $env:PATH += ":/usr/local/bin"
 
     export EDITOR 'nvim'
-
-    if (Get-Command "bat" -ErrorAction SilentlyContinue) {
-        Set-Alias cat bat
-    }
 
     function post-notification($message, $title) {
         osascript -e "display notification \`"$message\`" with title \`"$title\`""
