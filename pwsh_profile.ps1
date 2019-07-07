@@ -45,9 +45,11 @@ if (Get-Command "bat" -ErrorAction SilentlyContinue) {
     Set-Alias cat bat
 }
 
-if ($IsMacOS) {
-    $env:PATH += ":/usr/local/bin"
+if (Get-Command "nvim" -ErrorAction SilentlyContinue) {
+    Set-Alias vim nvim
+}
 
+if ($IsMacOS) {
     export EDITOR 'nvim'
 
     function post-notification($message, $title) {
