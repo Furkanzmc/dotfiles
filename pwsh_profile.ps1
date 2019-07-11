@@ -153,6 +153,7 @@ $PSReadLineOptions = @{
     EditMode = "Vi"
     HistoryNoDuplicates = $true
     HistorySearchCursorMovesToEnd = $true
+    HistorySaveStyle = "SaveIncrementally"
     ViModeIndicator = "Cursor"
     Colors = @{
         # cosmic-latte colors
