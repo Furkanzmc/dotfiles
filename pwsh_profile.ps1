@@ -33,6 +33,15 @@ if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
     }
 }
 
+function copy-pwd() {
+    if ($IsMacOS) {
+        (pwd).Path | pbcopy
+    }
+    else {
+        Set-Clipboard (pwd).Path
+    }
+}
+
 if (Get-Command "fd" -ErrorAction SilentlyContinue) {
     Set-Alias find fd
 }
