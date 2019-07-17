@@ -126,6 +126,48 @@ function gdocs2d($url) {
     return $url
 }
 
+# Code from: https://stackoverflow.com/a/37275209
+Function Generate-Password() {
+    Param(
+        [Int]$Size = 12,
+        [Char[]]$CharSets = "ULNS",
+        [Char[]]$Exclude
+    )
+
+    $Chars = @()
+    $TokenSet = @()
+    If (!$TokenSets) {
+        $Global:TokenSets = @{
+            U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Upper case
+            L = [Char[]]'abcdefghijklmnopqrstuvwxyz' # Lower case
+            N = [Char[]]'0123456789' # Numerals
+            S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_{|}~' # Symbols
+        }
+    }
+
+    $CharSets | ForEach {
+        $Tokens = $TokenSets."$_" | ForEach {
+            If ($Exclude -cNotContains $_) {
+                $_
+            }
+        }
+        If ($Tokens) {
+            $TokensSet += $Tokens
+            # Character sets defined in upper case are mandatory
+            If ($_ -cle [Char]"Z") {
+                $Chars += $Tokens | Get-Random
+            }
+        }
+    }
+
+    While ($Chars.Count -lt $Size) {
+        $Chars += $TokensSet | Get-Random
+    }
+
+    # Mix the (mandatory) characters and output string
+    ($Chars | Sort-Object {Get-Random}) -Join ""
+}
+
 # Git
 git config --global alias.st 'status'
 git config --global alias.stage 'add'
