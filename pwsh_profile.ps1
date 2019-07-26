@@ -19,11 +19,16 @@ function export() {
 }
 
 function replace_in_dir($from, $to) {
-    if ($IsMacOS) {
-        rg -l -F "$from" | xargs sed -i -e "s/$from/$to/g"
+    if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
+        if ($IsMacOS) {
+            rg -l -F "$from" | xargs sed -i -e "s/$from/$to/g"
+        }
+        else {
+            Write-Host 'replace_in_dir is not supported on this platform.'
+        }
     }
     else {
-        Write-Host 'replace_in_dir is not supported on this platform.'
+        Write-Host "rg is not found."
     }
 }
 
@@ -86,14 +91,14 @@ if ($IsMacOS) {
 
 if ($IsWindows) {
     $Shell = $Host.UI.RawUI
-    $size = $Shell.WindowSize
-    $size.width=90
-    $size.height=90
-    $Shell.WindowSize = $size
+
     $size = $Shell.BufferSize
     $size.width=90
-    $size.height=5000
     $Shell.BufferSize = $size
+
+    $size = $Shell.WindowSize
+    $size.width=90
+    $Shell.WindowSize = $size
 } # End Windows
 
 function cd-desktop() {
@@ -168,21 +173,37 @@ Function Generate-Password() {
     ($Chars | Sort-Object {Get-Random}) -Join ""
 }
 
+function Encode-Base64() {
+    Param(
+        [String]$Text
+    )
+
+    $bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
+    return [Convert]::ToBase64String($bytes)
+}
+
+function Decode-Base64() {
+    Param(
+        [String]$Base64Text
+    )
+
+    $bytes = [Convert]::FromBase64String($Base64Text)
+    return [BitConverter]::ToString($bytes)
+}
+
 # Git
-git config --global alias.st 'status'
-git config --global alias.stage 'add'
-git config --global alias.unstage 'reset HEAD --'
+function Load-Git-Config() {
+    git config --global alias.st 'status'
+    git config --global alias.stage 'add'
+    git config --global alias.unstage 'reset HEAD --'
 
-git config --global alias.last 'log -1 HEAD'
-git config --global alias.logall "log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-git config --global alias.logcurrent "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    git config --global alias.last 'log -1 HEAD'
+    git config --global alias.logall "log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    git config --global alias.logcurrent "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
-git config --global alias.logpretty "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-git config --global alias.tasks "!rg 'TODO|FIXME' ./"
-git config --global alias.discard 'checkout --'
-
-function git-difflog($from, $to) {
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --name-status $from..$to
+    git config --global alias.logpretty "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    git config --global alias.tasks "!rg 'TODO|FIXME' ./"
+    git config --global alias.discard 'checkout --'
 }
 
 function git-set-author($name, $email) {
@@ -191,7 +212,6 @@ function git-set-author($name, $email) {
 }
 
 # Module Configurations
-
 ## Posh-Git Configuration
 $GitPromptSettings.DefaultPromptWriteStatusFirst = $true
 $GitPromptSettings.EnableFileStatus = $false
