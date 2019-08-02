@@ -153,25 +153,18 @@ elif [ -f ~/.git-completion.bash ]; then
     source ~/.git-completion.bash
 fi
 
-git config --global alias.st 'status'
-git config --global alias.stage 'add'
-git config --global alias.unstage 'reset HEAD --'
+setup-git-config() {
+    git config --global alias.st 'status'
+    git config --global alias.stage 'add'
+    git config --global alias.unstage 'reset HEAD --'
 
-git config --global alias.last 'log -1 HEAD'
-git config --global alias.logall "log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-git config --global alias.logcurrent "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    git config --global alias.last 'log -1 HEAD'
+    git config --global alias.logall "log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    git config --global alias.logcurrent "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
-git config --global alias.logpretty "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
-git config --global alias.tasks "!rg 'TODO|FIXME' ./"
-git config --global alias.discard 'checkout --'
-
-git-difflog() {
-    git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --name-status $1..$2
-}
-
-git-set-author() {
-    git config user.name "$1"
-    git config user.email "$2"
+    git config --global alias.logpretty "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+    git config --global alias.tasks "!rg 'TODO|FIXME' ./"
+    git config --global alias.discard 'checkout --'
 }
 
 # -----
