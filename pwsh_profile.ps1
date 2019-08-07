@@ -94,11 +94,17 @@ if ($IsWindows) {
 
     $size = $Shell.BufferSize
     $size.width=90
-    $Shell.BufferSize = $size
+    try {
+        $Shell.BufferSize = $size
+    }
+    catch {}
 
     $size = $Shell.WindowSize
     $size.width=90
-    $Shell.WindowSize = $size
+    try {
+        $Shell.WindowSize = $size
+    }
+    catch {}
 } # End Windows
 
 function cd-desktop() {
