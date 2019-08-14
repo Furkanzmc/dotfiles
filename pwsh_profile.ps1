@@ -33,8 +33,17 @@ function replace_in_dir($from, $to) {
 }
 
 if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
-    function gen-cpp-tags() {
-        ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
+    function Generate-Tags() {
+    Param(
+        [String]$Langauge="c++"
+    )
+
+        if ($Langauge -eq "c++") {
+            ctags -R --c++-kinds=+p --exclude=build --fields=+iaS --extra=+q .
+        }
+        else {
+            Write-Host "$Language is not supported."
+        }
     }
 }
 
