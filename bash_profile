@@ -35,6 +35,10 @@ copy_pwd() {
 
 # Functions
 
+sitrep() {
+    git status
+}
+
 enable-dylib-verbose() {
     export DYLD_PRINT_LIBRARIES=1
     export DYLD_PRINT_LIBRARIES_POST_LAUNCH=1

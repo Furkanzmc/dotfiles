@@ -18,8 +18,8 @@ function export() {
     [System.Environment]::SetEnvironmentVariable($Name, $Value)
 }
 
-function replace_in_dir($from, $to) {
-    if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
+function Replace-In-Dir($from, $to) {
+    if (Get-Command "rg" -ErrorAction SilentlyContinue) {
         if ($IsMacOS) {
             rg -l -F "$from" | xargs sed -i -e "s/$from/$to/g"
         }
@@ -30,6 +30,24 @@ function replace_in_dir($from, $to) {
     else {
         Write-Host "rg is not found."
     }
+}
+
+if ($IsMacOS) {
+    function Enable-Dylib-Verbose() {
+        export DYLD_PRINT_LIBRARIES=1
+        export DYLD_PRINT_LIBRARIES_POST_LAUNCH=1
+        export DYLD_PRINT_RPATHS=1
+    }
+
+    function Disable-Dylib-Verbose() {
+        export DYLD_PRINT_LIBRARIES=0
+        export DYLD_PRINT_LIBRARIES_POST_LAUNCH=0
+        export DYLD_PRINT_RPATHS=0
+    }
+}
+
+function Get-Public-IP() {
+    curl http://ipconfig.io/ip
 }
 
 if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
@@ -219,6 +237,10 @@ function Load-Git-Config() {
     git config --global alias.logpretty "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
     git config --global alias.tasks "!rg 'TODO|FIXME' ./"
     git config --global alias.discard 'checkout --'
+}
+
+function sitrep() {
+    git status
 }
 
 function git-set-author($name, $email) {
