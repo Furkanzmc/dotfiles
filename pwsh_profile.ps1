@@ -256,6 +256,8 @@ if ($IsWindows) {
         $Shell.WindowSize = $size
     }
     catch {}
+
+    Set-Alias explorer.exe open
 } # End Windows
 
 function cd-desktop() {
