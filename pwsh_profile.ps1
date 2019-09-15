@@ -124,7 +124,7 @@ if ($IsMacOS) {
     #     http://forums.gentoo.org/viewtopic-t-836006-start-0.html
     # Taken from: https://github.com/brandur/tmux-extra/blob/master/tmx
     # and slightly modified.
-    function Run-Tmux() {
+    function Tmux-Run() {
         $base_session="main"
         $sessions = tmux ls
         $tmux_nb = ([regex]::Matches($sessions, "${base_session}:")).count
