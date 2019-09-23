@@ -1,8 +1,12 @@
 ﻿# Import Modules
-Import-Module PSReadLine
-Import-Module posh-git
-if ($IsWindows) {
-    Import-Module Pscx
+$FULL_FEATURE_ENABLED = -not $env:PWSH_SLIM
+
+if ($FULL_FEATURE_ENABLED) {
+    Import-Module PSReadLine
+    Import-Module posh-git
+    if ($IsWindows) {
+        Import-Module Pscx
+    }
 }
 
 # Functions
@@ -18,31 +22,35 @@ function export() {
     [System.Environment]::SetEnvironmentVariable($Name, $Value)
 }
 
-function Replace-In-Dir($from, $to) {
-    if (Get-Command "rg" -ErrorAction SilentlyContinue) {
-        if ($IsMacOS) {
-            rg -l -F "$from" | xargs sed -i -e "s/$from/$to/g"
+if ($FULL_FEATURE_ENABLED) {
+    function Replace-In-Dir($from, $to) {
+        if (Get-Command "rg" -ErrorAction SilentlyContinue) {
+            if ($IsMacOS) {
+                rg -l -F "$from" | xargs sed -i -e "s/$from/$to/g"
+            }
+            else {
+                Write-Host 'replace_in_dir is not supported on this platform.'
+            }
         }
         else {
-            Write-Host 'replace_in_dir is not supported on this platform.'
+            Write-Host "rg is not found."
         }
-    }
-    else {
-        Write-Host "rg is not found."
     }
 }
 
 if ($IsMacOS) {
-    function Enable-Dylib-Verbose() {
-        export DYLD_PRINT_LIBRARIES=1
-        export DYLD_PRINT_LIBRARIES_POST_LAUNCH=1
-        export DYLD_PRINT_RPATHS=1
-    }
+    if ($FULL_FEATURE_ENABLED) {
+        function Enable-Dylib-Verbose() {
+            export DYLD_PRINT_LIBRARIES=1
+            export DYLD_PRINT_LIBRARIES_POST_LAUNCH=1
+            export DYLD_PRINT_RPATHS=1
+        }
 
-    function Disable-Dylib-Verbose() {
-        export DYLD_PRINT_LIBRARIES=0
-        export DYLD_PRINT_LIBRARIES_POST_LAUNCH=0
-        export DYLD_PRINT_RPATHS=0
+        function Disable-Dylib-Verbose() {
+            export DYLD_PRINT_LIBRARIES=0
+            export DYLD_PRINT_LIBRARIES_POST_LAUNCH=0
+            export DYLD_PRINT_RPATHS=0
+        }
     }
 }
 
@@ -52,9 +60,9 @@ function Get-Public-IP() {
 
 if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
     function Generate-Tags() {
-    Param(
-        [String]$Langauge="c++"
-    )
+        Param(
+            [String]$Langauge="c++"
+        )
 
         if ($Langauge -eq "c++") {
             ctags -R --c++-kinds=+p --exclude=build --fields=+iaS --extra=+q .
@@ -65,7 +73,7 @@ if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
     }
 }
 
-function copy-pwd() {
+function Copy-Pwd() {
     if ($IsMacOS) {
         (pwd).Path | pbcopy
     }
@@ -93,7 +101,7 @@ if (Get-Command "nvim" -ErrorAction SilentlyContinue) {
 if ($IsMacOS) {
     export EDITOR 'nvim'
 
-    function post-notification($message, $title) {
+    function Post-Notification($message, $title) {
         osascript -e "display notification \`"$message\`" with title \`"$title\`""
     }
 
@@ -290,64 +298,68 @@ function gdocs2d($url) {
     return $url
 }
 
+if ($FULL_FEATURE_ENABLED) {
 # Code from: https://stackoverflow.com/a/37275209
-Function Generate-Password() {
-    Param(
-        [Int]$Size = 12,
-        [Char[]]$CharSets = "ULNS",
-        [Char[]]$Exclude
-    )
+    Function Generate-Password() {
+        Param(
+            [Int]$Size = 12,
+            [Char[]]$CharSets = "ULNS",
+            [Char[]]$Exclude
+        )
 
-    $Chars = @()
-    $TokenSet = @()
-    If (!$TokenSets) {
-        $Global:TokenSets = @{
-            U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Upper case
-            L = [Char[]]'abcdefghijklmnopqrstuvwxyz' # Lower case
-            N = [Char[]]'0123456789' # Numerals
-            S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_{|}~' # Symbols
-        }
-    }
-
-    $CharSets | ForEach {
-        $Tokens = $TokenSets."$_" | ForEach {
-            If ($Exclude -cNotContains $_) {
-                $_
+        $Chars = @()
+        $TokenSet = @()
+        If (!$TokenSets) {
+            $Global:TokenSets = @{
+                U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ' # Upper case
+                L = [Char[]]'abcdefghijklmnopqrstuvwxyz' # Lower case
+                N = [Char[]]'0123456789' # Numerals
+                S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_{|}~' # Symbols
             }
         }
-        If ($Tokens) {
-            $TokensSet += $Tokens
-            # Character sets defined in upper case are mandatory
-            If ($_ -cle [Char]"Z") {
-                $Chars += $Tokens | Get-Random
+
+        $CharSets | ForEach {
+            $Tokens = $TokenSets."$_" | ForEach {
+                If ($Exclude -cNotContains $_) {
+                    $_
+                }
+            }
+            If ($Tokens) {
+                $TokensSet += $Tokens
+                # Character sets defined in upper case are mandatory
+                If ($_ -cle [Char]"Z") {
+                    $Chars += $Tokens | Get-Random
+                }
             }
         }
-    }
 
-    While ($Chars.Count -lt $Size) {
-        $Chars += $TokensSet | Get-Random
-    }
+        While ($Chars.Count -lt $Size) {
+            $Chars += $TokensSet | Get-Random
+        }
 
-    # Mix the (mandatory) characters and output string
-    ($Chars | Sort-Object {Get-Random}) -Join ""
+        # Mix the (mandatory) characters and output string
+        ($Chars | Sort-Object {Get-Random}) -Join ""
+    }
 }
 
-function Encode-Base64() {
-    Param(
-        [String]$Text
-    )
+if ($FULL_FEATURE_ENABLED) {
+    function Encode-Base64() {
+        Param(
+            [String]$Text
+        )
 
-    $bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
-    return [Convert]::ToBase64String($bytes)
-}
+        $bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
+        return [Convert]::ToBase64String($bytes)
+    }
 
-function Decode-Base64() {
-    Param(
-        [String]$Base64Text
-    )
+    function Decode-Base64() {
+        Param(
+            [String]$Base64Text
+        )
 
-    $bytes = [Convert]::FromBase64String($Base64Text)
-    return [BitConverter]::ToString($bytes)
+        $bytes = [Convert]::FromBase64String($Base64Text)
+        return [BitConverter]::ToString($bytes)
+    }
 }
 
 # Git
@@ -369,35 +381,39 @@ function sitrep() {
     git status
 }
 
-function git-set-author($name, $email) {
+function Git-Set-Author($name, $email) {
     git config user.name "$name"
     git config user.email "$email"
 }
 
 # Module Configurations
 ## Posh-Git Configuration
-$GitPromptSettings.DefaultPromptWriteStatusFirst = $true
-$GitPromptSettings.EnableFileStatus = $false
-$GitPromptSettings.DefaultPromptBeforeSuffix.Text = ':`n'
-$GitPromptSettings.DefaultPromptSuffix = '$("=>" * ($nestedPromptLevel + 1)) '
+if ($FULL_FEATURE_ENABLED) {
+    $GitPromptSettings.DefaultPromptWriteStatusFirst = $true
+    $GitPromptSettings.EnableFileStatus = $false
+    $GitPromptSettings.DefaultPromptBeforeSuffix.Text = ':`n'
+    $GitPromptSettings.DefaultPromptSuffix = '$("=>" * ($nestedPromptLevel + 1)) '
+}
 
 ## PSReadLine Options
 
-$PSReadLineOptions = @{
-    EditMode = "Vi"
-    HistoryNoDuplicates = $true
-    HistorySearchCursorMovesToEnd = $true
-    HistorySaveStyle = "SaveIncrementally"
-    ViModeIndicator = "Cursor"
-    Colors = @{
-        # cosmic-latte colors
-        "Error" = "#202a31"
-        "String" = "#7d9761"
-        "Command" = "#8181f7"
-        "Comment" = "#898f9e"
-        "Operator" = "#459d90"
-        "Number" = "#5496bd"
+if ($FULL_FEATURE_ENABLED) {
+    $PSReadLineOptions = @{
+        EditMode = "Vi"
+        HistoryNoDuplicates = $true
+        HistorySearchCursorMovesToEnd = $true
+        HistorySaveStyle = "SaveIncrementally"
+        ViModeIndicator = "Cursor"
+        Colors = @{
+            # cosmic-latte colors
+            "Error" = "#202a31"
+            "String" = "#7d9761"
+            "Command" = "#8181f7"
+            "Comment" = "#898f9e"
+            "Operator" = "#459d90"
+            "Number" = "#5496bd"
+        }
     }
-}
 
-Set-PSReadLineOption @PSReadLineOptions
+    Set-PSReadLineOption @PSReadLineOptions
+}
