@@ -265,7 +265,7 @@ if ($IsWindows) {
     }
     catch {}
 
-    Set-Alias explorer.exe open
+    Set-Alias open explorer.exe
 } # End Windows
 
 function cd-desktop() {
