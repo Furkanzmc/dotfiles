@@ -156,7 +156,6 @@ LAlt & r::
             return
         }
 
-
         rPressed := OutputVar = "r"
         if rPressed = 1
         {
