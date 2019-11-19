@@ -176,17 +176,20 @@ if ($IsMacOS) {
         function Tmux-Add-Window() {
             Param(
                 [Parameter(Position=0, Mandatory=$true)]
-                [String[]]
-                $SessionName,
+                [Int]
+                $Index,
                 [Parameter(Position=1, Mandatory=$true)]
-                [String[]]
-                $WindowName,
+                [String]
+                $SessionName,
                 [Parameter(Position=2, Mandatory=$true)]
-                [String[]]
+                [String]
+                $WindowName,
+                [Parameter(Position=3, Mandatory=$true)]
+                [String]
                 $StartDirectory
             )
 
-            tmux new-window -d -t $SessionName -n $WindowName -c $StartDirectory
+            tmux new-window -d -t $SessionName -n $WindowName -c $StartDirectory -t $Index
         }
 
         function Tmux-Add-Session() {
@@ -241,8 +244,9 @@ if ($IsMacOS) {
                 $sessionName = $parts[0]
                 $windowName = $parts[1]
                 $startDirectory = $parts[2]
+                $windowIndex = $index + 1
                 if (Tmux-Has-Session $sessionName) {
-                    Tmux-Add-Window $sessionName $windowName $startDirectory
+                    Tmux-Add-Window $windowIndex $sessionName $windowName $startDirectory
                 }
                 else {
                     Tmux-Add-Session $sessionName $windowName $startDirectory
