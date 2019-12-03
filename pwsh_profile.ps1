@@ -141,7 +141,7 @@ if ($IsMacOS) {
             $tmux_nb = ([regex]::Matches($sessions, "${base_session}:")).count
             if ($tmux_nb -eq 0) {
                 Write-Host "Launching tmux base session ${base_session}..."
-                tmux new-session -s $base_session
+                tmux -u new-session -s $base_session
             }
             else {
                 # Make sure we are not already in a tmux session
@@ -157,7 +157,7 @@ if ($IsMacOS) {
                     # to share windows
                     tmux new-session -d -t $base_session -s $session_id
                     # Attach to the new session
-                    tmux attach-session -t $session_id
+                    tmux -u attach-session -t $session_id
                     # When we detach from it, kill the session
                     tmux kill-session -t $session_id
                 }
