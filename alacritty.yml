@@ -11,7 +11,7 @@ env:
   # check the local terminfo database and use `alacritty` if it is
   # available, otherwise `xterm-256color` is used.
   TERM: xterm-256color
-  TERM_PROG: Alacritty
+  TERM_PROGRAM: Alacritty
 
 window:
   # Window dimensions (changes require restart)
@@ -163,42 +163,59 @@ font:
 draw_bold_text_with_bright_colors: true
 
 # Colors (Cosmic Latte Dark)
-colors:
-  # Default colors
-  primary:
-    background: '0x202A31'
-    foreground: '0xABB0C0'
+schemes:
+  cosmic_latte_light: &light
+    # Default colors
+    primary:
+      background: '0xfff8e7'
+      foreground: '0x485a62'
+    # Normal colors
+    normal:
+      black:   '0xfff8e7'
+      red:     '0xc44756'
+      green:   '0x1f8332'
+      yellow:  '0x916d03'
+      blue:    '0x0075c9'
+      magenta: '0xa154ae'
+      cyan:    '0x007f8a'
+      white:   '0x485a62'
+    # Bright colors
+    bright:
+      black:   '0x63757e'
+      red:     '0xc44756'
+      green:   '0x1f8332'
+      yellow:  '0x916d03'
+      blue:    '0x0075c9'
+      magenta: '0xa154ae'
+      cyan:    '0x007f8a'
+      white:   '0x364850'
+  cosmic_latte_dark: &dark
+    # Default colors
+    primary:
+      background: '0x202A31'
+      foreground: '0xABB0C0'
+    # Normal colors
+    normal:
+      black:   '0x202a31'
+      red:     '0xc17b8d'
+      green:   '0x7d9761'
+      yellow:  '0xb28761'
+      blue:    '0x5496bd'
+      magenta: '0x9b85bb'
+      cyan:    '0x459d90'
+      white:   '0xabb0c0'
+    # Bright colors
+    bright:
+      black:   '0x898f9e'
+      red:     '0xc17b8d'
+      green:   '0x7d9761'
+      yellow:  '0xb28761'
+      blue:    '0x5496bd'
+      magenta: '0x9b85bb'
+      cyan:    '0x459d90'
+      white:   '0xc5cbdb'
 
-  # Normal colors
-  normal:
-    black:   '0x202a31'
-    red:     '0xc17b8d'
-    green:   '0x7d9761'
-    yellow:  '0xb28761'
-    blue:    '0x5496bd'
-    magenta: '0x9b85bb'
-    cyan:    '0x459d90'
-    white:   '0xabb0c0'
-
-  # Bright colors
-  bright:
-    black:   '0x898f9e'
-    red:     '0xc17b8d'
-    green:   '0x7d9761'
-    yellow:  '0xb28761'
-    blue:    '0x5496bd'
-    magenta: '0x9b85bb'
-    cyan:    '0x459d90'
-    white:   '0xc5cbdb'
-  # Indexed Colors
-  #
-  # The indexed colors include all colors from 16 to 256.
-  # When these are not set, they're filled with sensible defaults.
-  #
-  # Example:
-  #   `- { index: 16, color: '0xff00ff' }`
-  #
-  indexed_colors: []
+colors: *dark
 
 # Visual Bell
 #
