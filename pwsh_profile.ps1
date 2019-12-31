@@ -63,14 +63,20 @@ if ((Get-Command "curl" -ErrorAction SilentlyContinue) -and $FULL_FEATURE_ENABLE
 if ((Get-Command "ctags" -ErrorAction SilentlyContinue) -and $FULL_FEATURE_ENABLED) {
     function Generate-Tags() {
         Param(
-            [String]$Langauge="c++"
+            [Parameter(Position=0, Mandatory=$true)]
+            [ValidateSet("c++", "python")]
+            [String]
+            $Langauge="c++"
         )
 
         if ($Langauge -eq "c++") {
             ctags -R --c++-kinds=+p --exclude=build --fields=+iaS --extra=+q .
         }
+        elseif ($Langauge -eq "python") {
+            ctags -R --python-kinds=-i --exclude=build --fields=+iaS --extra=+q .
+        }
         else {
-            Write-Host "$Language is not supported."
+            Write-Error "$Language is not supported."
         }
     }
 }
