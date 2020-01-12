@@ -431,3 +431,8 @@ if ($FULL_FEATURE_ENABLED) {
 
     Set-PSReadLineOption @PSReadLineOptions
 }
+
+if (Test-Path env:NVIM_LISTEN_ADDRESS) {
+    # Neovim specific configuration goes here.
+}
+
