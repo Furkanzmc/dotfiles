@@ -23,6 +23,12 @@ function export() {
 }
 
 if ($FULL_FEATURE_ENABLED) {
+    function Get-Current-Branch() {
+        return &git rev-parse --abbrev-ref HEAD
+    }
+}
+
+if ($FULL_FEATURE_ENABLED) {
     function Replace-In-Dir($from, $to) {
         if (Get-Command "rg" -ErrorAction SilentlyContinue) {
             if ($IsMacOS) {
