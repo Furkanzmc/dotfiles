@@ -1,5 +1,10 @@
 ﻿# Import Modules
-$FULL_FEATURE_ENABLED = -not $env:PWSH_SLIM -or !(Test-Path env:NVIM_LISTEN_ADDRESS)
+$VIM_RUNNING = $false
+if (Test-Path env:NVIM_LISTEN_ADDRESS) {
+    $VIM_RUNNING = $true
+}
+
+$FULL_FEATURE_ENABLED = -not (Test-Path env:PWSH_SLIM) -or $VIM_RUNNING
 
 if ($FULL_FEATURE_ENABLED) {
     Import-Module PSReadLine
@@ -436,9 +441,5 @@ if ($FULL_FEATURE_ENABLED) {
     }
 
     Set-PSReadLineOption @PSReadLineOptions
-}
-
-if (Test-Path env:NVIM_LISTEN_ADDRESS) {
-    # Neovim specific configuration goes here.
 }
 
