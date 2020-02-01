@@ -7,6 +7,5 @@ mkdir -p ~/.hammerspoon
 ln -sf ~/.dotfiles/hammerspoon/* ~/.hammerspoon/
 ln -sf ~/.dotfiles/alacritty.yaml ~/.alacritty.yaml
 ln -sf ~/.dotfiles/iterm2.json ~/Library/Application\ Support/iTerm2/DynamicProfiles
-ln -sf ~/.dotfiles/qutebrowser/config.py ~/.qutebrowser/
 
 echo "Installed configurations."
