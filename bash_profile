@@ -272,7 +272,6 @@ run-tmux() {
 
 
 if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-    echo "NeoVim Terminal settings go here."
     # NeoVim related settings;
     # TODO: Change the editor so files open in the current NeoVim process.
 elif [ -n "$DOTFILES_ENABLE_TMUX" ]; then
