@@ -4,7 +4,7 @@ if (Test-Path env:NVIM_LISTEN_ADDRESS) {
     $VIM_RUNNING = $true
 }
 
-$FULL_FEATURE_ENABLED = -not (Test-Path env:PWSH_SLIM) -or $VIM_RUNNING
+$FULL_FEATURE_ENABLED = -not (Test-Path env:PWSH_SLIM)
 
 if ($FULL_FEATURE_ENABLED) {
     Import-Module PSReadLine
@@ -12,6 +12,82 @@ if ($FULL_FEATURE_ENABLED) {
     if ($IsWindows) {
         Import-Module Pscx
     }
+}
+
+if ($VIM_RUNNING) {
+    if (-not (Get-Command "nvr" -ErrorAction SilentlyContinue)) {
+        Write-Error "Install neovim-remote"
+    }
+
+    function Nvim-Open-Remote() {
+        Param(
+            [Parameter(Position=0, Mandatory=$true)]
+            [String[]]
+            $Paths,
+            [Parameter(Position=0, Mandatory=$true)]
+            [ValidateSet("Vertical", "Horizontal", "Tab", "Current")]
+            [String]
+            $Mode
+        )
+
+        if ($Mode -eq "Vertical") {
+            nvr -O $Paths
+        }
+        elseif ($Mode -eq "Horizontal") {
+            nvr -o $Paths
+        }
+        elseif ($Mode -eq "Tab") {
+            nvr --remote-tab $Paths
+        }
+        elseif ($Mode -eq "Current") {
+            nvr -l $Paths
+        }
+    }
+
+    function Nvim-Open-Vertical() {
+        Param(
+            [Parameter(Position=0, Mandatory=$true)]
+            [String[]]
+            $Paths
+        )
+
+        Nvim-Open-Remote -Paths $Path -Mode Vertical
+    }
+
+    function Nvim-Open-Horizontal() {
+        Param(
+            [Parameter(Position=0, Mandatory=$true)]
+            [String[]]
+            $Paths
+        )
+
+        Nvim-Open-Remote -Paths $Paths -Mode Horizontal
+    }
+
+    function Nvim-Open-Tab() {
+        Param(
+            [Parameter(Position=0, Mandatory=$true)]
+            [String[]]
+            $Paths
+        )
+
+        Nvim-Open-Remote -Paths $Paths -Mode Tab
+    }
+
+    function Nvim-Open-Current() {
+        Param(
+            [Parameter(Position=0, Mandatory=$true)]
+            [String[]]
+            $Paths
+        )
+
+        Nvim-Open-Remote -Paths $Paths -Mode Current
+    }
+
+    Set-Alias -Name nvmh -Value Nvim-Open-Horizontal
+    Set-Alias -Name nvmv -Value Nvim-Open-Vertical
+    Set-Alias -Name nvmt -Value Nvim-Open-Tab
+    Set-Alias -Name nvim -Value Nvim-Open-Current
 }
 
 # Functions

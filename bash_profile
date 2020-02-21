@@ -271,9 +271,10 @@ run-tmux() {
 }
 
 
-if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
-    # NeoVim related settings;
-    # TODO: Change the editor so files open in the current NeoVim process.
-elif [ -n "$DOTFILES_ENABLE_TMUX" ]; then
-    run-tmux
-fi
+command -v nvr >/dev/null 2>&1 && {
+    if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+        alias nvmh='nvr -o'
+        alias nvmv='nvr -O'
+        alias nvmt='nvr --remote-tab'
+    fi
+}
