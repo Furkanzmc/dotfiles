@@ -205,13 +205,13 @@ if ($IsMacOS) {
             cd "~/Library/Mobile Documents/com~apple~CloudDocs/"
         }
 
-        function enable-dylib-verbose() {
+        function Enable-Dylib-Verbose() {
             export DYLD_PRINT_LIBRARIES 1
             export DYLD_PRINT_LIBRARIES_POST_LAUNCH 1
             export DYLD_PRINT_RPATHS 1
         }
 
-        function disable-dylib-verbose() {
+        function Disable-Dylib-Verbose() {
             export DYLD_PRINT_LIBRARIES 0
             export DYLD_PRINT_LIBRARIES_POST_LAUNCH 0
             export DYLD_PRINT_RPATHS 0
@@ -383,7 +383,8 @@ if ($FULL_FEATURE_ENABLED) {
         $subs = "/d/"
         $index = $url.IndexOf($subs)
         if ($index -lt 0) {
-            return "Cannot process the link."
+            Write-Error "Cannot process the link."
+            return
         }
 
         $url = $url.Substring(
@@ -392,7 +393,8 @@ if ($FULL_FEATURE_ENABLED) {
         )
         $index = $url.IndexOf("/")
         if ($index -lt 0) {
-            return "Cannot process the link."
+            Write-Error "Cannot process the link."
+            return
         }
 
         $fileID = $url.Substring(0, $index)
@@ -519,3 +521,6 @@ if ($FULL_FEATURE_ENABLED) {
     Set-PSReadLineOption @PSReadLineOptions
 }
 
+if ((Test-Path env:VIRTUAL_ENV) -and (Test-Path "${env:VIRTUAL_ENV}/bin/activate.ps1")) {
+    . ${env:VIRTUAL_ENV}/bin/activate.ps1
+}
