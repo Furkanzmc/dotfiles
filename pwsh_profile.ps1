@@ -478,6 +478,7 @@ function Load-Git-Config() {
     git config --global alias.logpretty "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
     git config --global alias.tasks "!rg 'TODO|FIXME' ./"
     git config --global alias.discard 'checkout --'
+    git config --global alias.code-changes "!git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10"
 }
 
 function sitrep() {
