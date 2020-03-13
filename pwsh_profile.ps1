@@ -126,6 +126,20 @@ if ($FULL_FEATURE_ENABLED) {
 }
 
 if ($IsMacOS) {
+    function Is-Dark-Mode() {
+        $output = (~/.dotfiles/Is-Dark-Theme.osascript) | Out-String
+        $output = $output.Trim()
+        if ($output -eq "false") {
+            return 0
+        }
+        elseif ($output -eq "true") {
+            return 1
+        }
+        else {
+            Write-Error "Cannot parse output: $output"
+        }
+    }
+
     if ($FULL_FEATURE_ENABLED) {
         function Enable-Dylib-Verbose() {
             export DYLD_PRINT_LIBRARIES=1
