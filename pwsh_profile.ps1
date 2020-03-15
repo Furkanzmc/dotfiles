@@ -1,6 +1,6 @@
 ﻿# Import Modules
 $VIM_RUNNING = $false
-if (Test-Path env:NVIM_LISTEN_ADDRESS) {
+if (Test-Path env:NVIM_LISTEN_ADDRESS -ErrorAction SilentlyContinue) {
     $VIM_RUNNING = $true
 }
 
