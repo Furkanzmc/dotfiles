@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from os.path import expanduser
+from os.path import expanduser, exists
 from subprocess import run
 
 import iterm2
@@ -14,8 +14,15 @@ async def main(connection):
             # Block until theme changes
             theme = await mon.async_get()
 
+            if exists("/usr/bin/python3"):
+                python_path = "/usr/bin/python3"
+            elif exists("/usr/local/bin/python3"):
+                python_path = "/usr/local/bin/python3"
+            else:
+                raise RuntimeError("Cannot find python3 executable.")
+
             pwsh_args = [
-                "/usr/bin/python3",
+                python_path,
                 expanduser("~/.vim_runtime/nvim.py"),
                 "--change-background",
             ]
