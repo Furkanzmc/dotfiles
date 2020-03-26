@@ -104,9 +104,7 @@ function export() {
 }
 
 if ($FULL_FEATURE_ENABLED) {
-    function Get-Current-Branch() {
-        return &git rev-parse --abbrev-ref HEAD
-    }
+    function Get-Current-Branch() { return &git rev-parse --abbrev-ref HEAD }
 }
 
 if ($FULL_FEATURE_ENABLED) {
@@ -538,4 +536,13 @@ if ($FULL_FEATURE_ENABLED) {
 
 if ((Test-Path env:VIRTUAL_ENV) -and (Test-Path "${env:VIRTUAL_ENV}/bin/activate.ps1")) {
     . ${env:VIRTUAL_ENV}/bin/activate.ps1
+}
+
+function Virtualenv-Activate() {
+    if (Test-Path "./.venv/bin/activate.ps1" -ErrorAction SilentlyContinue) {
+        . ./.venv/bin/activate.ps1
+    }
+    else {
+        Write-Warning "No virtualenv is found."
+    }
 }
