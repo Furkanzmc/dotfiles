@@ -20,28 +20,12 @@ Optionally check for `$profile` in Powershell and copy the file to that location
 I don't use Windows that often, so the settings for Windows is very minimal.
 I mostly try to mimic the same git commands.
 
-## Bash Profile
-
-These are the available commands:
-
-- `copy_pwd`: Copy the current directory.
-- `replace_in_dir`: Replace the instances of the first parameter with the second parameter in the current directory. Depends on `rg`.
-- `cd` aliases:
-    + `desktop`: Change current directory to desktop.
-    + `downloads`: Change current directory to downloads.
-    + `icloud`: Change current directory to icloud.
-- Various aliases for Git. Checkout the `bash_profile` file for more details.
-
 ## Tmux
 
 - `tmux-dump`: Dump the given session.
 - `tmux-save`: Save the given session to the given file.
 - `tmux-restore`: Restore a tmux session from a session file that was saved
 using `tmux-save`.
-- When you source `bash_profile`, a new tmux session called `main` is
-automatically created. Whenever you open a new iTerm/Terminal window, a new
-window is added to the main group with a suffix that shows the number of
-windows in main session.
 - A minimal status bar configuration with session name, centered tabs and clock
 on the right.
 
@@ -82,3 +66,12 @@ Commands apply to the focused window or the windows of the application in the
 current space that the window belongs to.
 
 Checkout `hammerspoon/windows-bindings.lua` for details.
+
+## Git Config
+
+Add teh following to your local `.gitconfig` file:
+
+```git
+[include]
+    path = ~/.dotfiles/gitconfig
+```
