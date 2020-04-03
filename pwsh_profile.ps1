@@ -1,15 +1,21 @@
-﻿if ((Test-Path env:VIRTUAL_ENV) -and (Test-Path "${env:VIRTUAL_ENV}/bin/activate.ps1")) {
+﻿$env:VIRTUAL_ENV_DISABLE_PROMPT=1
+
+if ((Test-Path env:VIRTUAL_ENV) -and (Test-Path "${env:VIRTUAL_ENV}/bin/activate.ps1")) {
     . ${env:VIRTUAL_ENV}/bin/activate.ps1
 }
 
 function Prompt() {
-    $lastCommandSucceeded = $?
+    if (Test-Path env:VIRTUAL_ENV -ErrorAction SilentlyContinue) {
+        Write-Host "(.venv) " -ForegroundColor Blue -NoNewLine
+    }
+
     if (Test-Path "./.git" -ErrorAction SilentlyContinue) {
         $branchName = &git rev-parse --abbrev-ref HEAD
         Write-Host "[$branchName] " -ForegroundColor Green -NoNewLine
     }
 
     Write-Host "$(Get-Location):" -NoNewLine
+    $lastCommandSucceeded = $?
     if ($lastCommandSucceeded -eq $false) {
         $bufferSize = (Get-Host).UI.RawUI.BufferSize.Width
         Write-Host "`n!! " -NoNewLine -ForegroundColor Red
