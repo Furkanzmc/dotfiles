@@ -36,36 +36,6 @@ function Nvim-Open-Remote() {
     }
 }
 
-function Nvim-Open-Vertical() {
-    Param(
-        [Parameter(Position=0, Mandatory=$true)]
-        [String[]]
-        $Paths
-    )
-
-    Nvim-Open-Remote -Paths $Path -Mode Vertical
-}
-
-function Nvim-Open-Horizontal() {
-    Param(
-        [Parameter(Position=0, Mandatory=$true)]
-        [String[]]
-        $Paths
-    )
-
-    Nvim-Open-Remote -Paths $Paths -Mode Horizontal
-}
-
-function Nvim-Open-Tab() {
-    Param(
-        [Parameter(Position=0, Mandatory=$true)]
-        [String[]]
-        $Paths
-    )
-
-    Nvim-Open-Remote -Paths $Paths -Mode Tab
-}
-
 function Nvim-Open-Current() {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
@@ -96,9 +66,6 @@ function Nvim-Run-Command() {
     }
 }
 
-Set-Alias -Name nvmh -Value Nvim-Open-Horizontal
-Set-Alias -Name nvmv -Value Nvim-Open-Vertical
-Set-Alias -Name nvmt -Value Nvim-Open-Tab
 Set-Alias -Name nvim -Value Nvim-Open-Current
 Set-Alias -Name nvc -Value Nvim-Run-Command
 
