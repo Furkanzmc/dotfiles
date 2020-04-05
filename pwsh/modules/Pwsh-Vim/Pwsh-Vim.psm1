@@ -76,10 +76,31 @@ function Nvim-Open-Current() {
     Nvim-Open-Remote -Paths $Paths -Mode Current
 }
 
+function Nvim-Run-Command() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [String]
+        $Command,
+        [Parameter(Mandatory=$false)]
+        [ValidateSet("Current", "All")]
+        [String]
+        $Mode="Current"
+    )
+
+    if ($Mode -eq "Current") {
+        nvr -cc $Command --servername $env:NVIM_LISTEN_ADDRESS -s
+    }
+    elseif ($Mode -eq "All") {
+        $arg = $HOME + '/.vim_runtime/nvim.py --command "' + $Command + '"'
+        Start-Process -NoNewWindow -Wait -FilePath python3 -ArgumentList $arg
+    }
+}
+
 Set-Alias -Name nvmh -Value Nvim-Open-Horizontal
 Set-Alias -Name nvmv -Value Nvim-Open-Vertical
 Set-Alias -Name nvmt -Value Nvim-Open-Tab
 Set-Alias -Name nvim -Value Nvim-Open-Current
+Set-Alias -Name nvc -Value Nvim-Run-Command
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Vim in $($Stopwatch.Elapsed.TotalSeconds) seconds."
