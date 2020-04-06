@@ -60,9 +60,36 @@ function Prompt() {
         Write-Host "(.venv) " -ForegroundColor Blue -NoNewLine
     }
 
-    $branchName = &git rev-parse --abbrev-ref HEAD
+    $gitDir = &git rev-parse --git-dir
+    # Continue if the command succeeded.
     if ($?) {
-        Write-Host "[$branchName] " -ForegroundColor Green -NoNewLine
+        $branchName = Get-Content ( `
+                Join-Path $gitDir -ChildPath HEAD `
+                )
+        $branchName = $branchName.Replace("ref: ", "")
+        $branchName = $branchName.Replace("refs/heads/", "")
+
+        # Check for an active rebase.
+        $rebaseMergePath = Join-Path $gitDir -ChildPath rebase-merge
+        $rebasing = Test-Path -Path $rebaseMergePath
+        if ($rebasing) {
+            Write-Host "[$branchName" -ForegroundColor Green -NoNewLine
+            Write-Host ":" -ForegroundColor Green -NoNewLine
+            $isInteractiveRebase = Test-Path -Path (`
+                    Join-Path $rebaseMergePath -ChildPath interactive `
+                    )
+            if ($isInteractiveRebase) {
+                Write-Host "REBASE-I" -ForegroundColor Blue -NoNewLine
+            }
+            else {
+                Write-Host "REBASE-M" -ForegroundColor Blue -NoNewLine
+            }
+
+            Write-Host "] " -ForegroundColor Green -NoNewLine
+        }
+        else {
+            Write-Host "[$branchName] " -ForegroundColor Green -NoNewLine
+        }
     }
 
     Write-Host "$(Get-Location):" -NoNewLine
