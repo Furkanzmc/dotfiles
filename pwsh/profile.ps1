@@ -18,7 +18,13 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 
 Import-Module Pwsh-DotEnv -DisableNameChecking
 Import-Module Pwsh-Vim -DisableNameChecking
-Import-Module Pwsh-MacOS -DisableNameChecking
+if ($IsMacOS) {
+    Import-Module Pwsh-MacOS -DisableNameChecking
+}
+else {
+    Import-Module Pwsh-Windows -DisableNameChecking
+}
+
 Import-Module Pwsh-Utils -DisableNameChecking
 Import-Module Pwsh-Alias -DisableNameChecking
 
@@ -32,10 +38,6 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 }
 
 Import-Module PSReadLine
-if ($IsWindows) {
-    Import-Module Pscx
-}
-
 $PSReadLineOptions = @{
     EditMode = "Vi"
     HistoryNoDuplicates = $true
