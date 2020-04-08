@@ -4,7 +4,12 @@ if ((Test-Path env:VIRTUAL_ENV) -and (Test-Path "${env:VIRTUAL_ENV}/bin/activate
     . ${env:VIRTUAL_ENV}/bin/activate.ps1
 }
 
-$env:PSModulePath += ":~/.dotfiles/pwsh/modules/"
+if ($IsWindows) {
+    $env:PSModulePath += ";~/.dotfiles/pwsh/modules/"
+}
+else {
+    $env:PSModulePath += ":~/.dotfiles/pwsh/modules/"
+}
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
