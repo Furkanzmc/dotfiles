@@ -56,6 +56,8 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 
 function Prompt() {
     $lastCommandSucceeded = $?
+    Write-Host $(Get-Date -Format "[HH:mm:ss] ") `
+        -ForegroundColor DarkGray -NoNewLine
     if (Test-Path env:VIRTUAL_ENV -ErrorAction SilentlyContinue) {
         Write-Host "(.venv) " -ForegroundColor Blue -NoNewLine
     }
