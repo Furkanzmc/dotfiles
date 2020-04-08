@@ -28,6 +28,10 @@ function Dotenv() {
     )
 
     $lines = Get-Content -Path $Path
+    if ($lines.GetType().Name -eq "String") {
+        $lines = $lines.Split("\n")
+    }
+
     for ($index = 0; $index -lt $lines.Length; $index++) {
         $line = $lines[$index]
         $parts = _Get-Env-Var-Parts $line
@@ -36,7 +40,9 @@ function Dotenv() {
         }
 
         if ($Load) {
-            Set-Item -Path "env:$parts[0]" -Value $parts[1]
+            $name = "env:" + $parts[0]
+            $value = $parts[1]
+            Set-Item -Path $name -Value $value
         }
         else {
             Remove-Item -Path "env:$parts[0]"
@@ -63,7 +69,6 @@ function Unload-Dotenv() {
 
     Dotenv $Path -Load $false
 }
-
 
 Export-ModuleMember -Function Load-Dotenv
 Export-ModuleMember -Function Unload-Dotenv
