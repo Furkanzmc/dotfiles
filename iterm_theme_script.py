@@ -23,7 +23,7 @@ async def main(connection):
 
             pwsh_args = [
                 python_path,
-                expanduser("~/.vim_runtime/nvim.py"),
+                expanduser("~/.dotfiles/nvim.py"),
                 "--change-background",
             ]
 

@@ -6,20 +6,6 @@
 global WindowJumpMap := {}
 global WindowGeometries := {}
 
-*Capslock::
-    Send {Blind}{LControl down}
-    return
-
-*Capslock up::
-    Send {Blind}{LControl up}
-    ; Tooltip, %A_PRIORKEY%
-    ; SetTimer, RemoveTooltip, 1000
-    if A_PRIORKEY = CapsLock
-    {
-        Send {Esc}
-    }
-    return
-
 RemoveTooltip() {
     SetTimer, RemoveTooltip, Off
     Tooltip
@@ -32,6 +18,20 @@ ToggleCaps() {
     Send {CapsLock}
     SetStoreCapsLockMode, On
     return
+}
+
+ToggleWindowsDefaultAppMode() {
+    RegRead, appMode, HKCU, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme
+    RegWrite, REG_DWORD, HKCU, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme, % !appMode
+    RegWrite, REG_DWORD, HKCU, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, SystemUsesLightTheme, % !appMode
+    if appMode == 0
+    {
+        Run, pwsh -NoProfile -NonInteractive -WindowStyle Hidden -Command "Import-Module Pwsh-Vim -DisableNameChecking; Vimrc-Background -ChangeAllInstances 1 -Color light"
+    }
+    else
+    {
+        Run, pwsh -NoProfile -NonInteractive -WindowStyle Hidden -Command "Import-Module Pwsh-Vim -DisableNameChecking; Vimrc-Background -ChangeAllInstances 1 -Color dark"
+    }
 }
 
 LCtrl & h::Backspace
@@ -187,3 +187,38 @@ LAlt & s::
 
     return
 
+*Capslock::
+    Send {Blind}{LControl down}
+    return
+
+*Capslock up::
+    Send {Blind}{LControl up}
+    ; Tooltip, %A_PRIORKEY%
+    ; SetTimer, RemoveTooltip, 1000
+    if A_PRIORKEY = CapsLock
+    {
+        Send {Esc}
+    }
+    return
+
+LAlt & l::
+    if GetKeyState("LShift")
+    {
+        ToolTip, Press any key to perform custom functions.
+        Input, OutputVar, L1 M
+        ToolTip
+
+        StringLen, Length, OutputVar
+        if Length = 0
+        {
+            return
+        }
+
+        tPressed := OutputVar = "t"
+        if tPressed = 1
+        {
+            ToggleWindowsDefaultAppMode()
+            return
+        }
+    }
+    return
