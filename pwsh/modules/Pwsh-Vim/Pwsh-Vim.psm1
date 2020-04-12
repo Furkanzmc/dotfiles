@@ -98,7 +98,8 @@ function Vimrc-Background() {
 
     if ($ChangeAllInstances) {
         Write-Host "[vimrc] Changing color in all instances."
-        Start-Process -NoNewWindow -Wait -FilePath python3 -ArgumentList "$HOME/.dotfiles/nvim.py --change-background $Color"
+        Start-Process -NoNewWindow -Wait -FilePath python3 `
+            -ArgumentList "$HOME/.dotfiles/nvim.py --command `"set background=$Color`""
     }
 
     if ($Color -ne "") {

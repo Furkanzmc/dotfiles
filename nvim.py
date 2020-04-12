@@ -2,10 +2,10 @@
 
 # Python
 import argparse
-from os import getenv, ex
+from os import getenv
 from os.path import expanduser
 from typing import List
-from logging import getLogger
+from logging import getLogger, Logger, DEBUG
 
 # Thid Party
 from pynvim import attach
@@ -18,7 +18,7 @@ from psutil import (
 )
 
 logger: Logger = getLogger("zmc.dotfiles.nvim")
-logger.setLevel(getenv("ZMC_DOTFILES_DEBUG_LEVEL", "DEBUG"))
+logger.setLevel(getenv("ZMC_DOTFILES_DEBUG_LEVEL", DEBUG))
 
 
 def get_nvim_processes() -> List[Process]:
@@ -46,11 +46,6 @@ def create_argparser() -> argparse.ArgumentParser:
         description="Helper functions to interact with NeoVim"
     )
     parser.add_argument(
-        "--change-background",
-        type=str,
-        help="Change the background of all the NeoVim instances.",
-    )
-    parser.add_argument(
         "--command", type=str, help="Run a command in all instances.",
     )
 
@@ -60,10 +55,11 @@ def create_argparser() -> argparse.ArgumentParser:
 def run_command(command: str):
     processes = get_nvim_processes()
 
+    logger.debug("Running command: {}".format(command))
     process: Process
     for process in processes:
-        server = ".vim_runtim/temp_dirs/servers/nvim{}.sock".format(
-            expanduser("~"), process.pid
+        server = expanduser(
+            "~/.vim_runtime/temp_dirs/servers/nvim{}.sock".format(process.pid)
         )
         try:
             nvim = attach("socket", path=server)
@@ -74,14 +70,9 @@ def run_command(command: str):
             nvim.command(command)
 
 
-def change_background(mode: str):
-    run_command("set background={}".format(mode))
-
-
 def main():
     args = create_argparser().parse_args()
-    if args.change_background:
-        change_background(args.change_background)
+    logger.debug("Args: {}".format(args))
     if args.command:
         run_command(args.command)
 
