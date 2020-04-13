@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
+# Python
 from os.path import expanduser, exists
 from subprocess import run
 
+# iterm
 import iterm2
 
 
@@ -23,8 +25,8 @@ async def main(connection):
 
             pwsh_args = [
                 python_path,
-                expanduser("~/.dotfiles/nvim.py"),
-                "--change-background",
+                expanduser("~/.dotfiles/scripts/nvim.py"),
+                "--command",
             ]
 
             # Themes have space-delimited attributes, one of which will be
@@ -34,13 +36,14 @@ async def main(connection):
                 preset = await iterm2.ColorPreset.async_get(
                     connection, "cosmic_latte_dark"
                 )
-                pwsh_args.append("dark")
+                pwsh_args.append("set background=dark")
             else:
                 preset = await iterm2.ColorPreset.async_get(
                     connection, "cosmic_latte_light"
                 )
-                pwsh_args.append("light")
+                pwsh_args.append("set background=light")
 
+            print(pwsh_args)
             run(pwsh_args)
 
             # Update the list of all profiles and iterate over them.

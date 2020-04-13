@@ -58,9 +58,10 @@ def run_command(command: str):
     logger.debug("Running command: {}".format(command))
     process: Process
     for process in processes:
-        server = expanduser(
-            "~/.vim_runtime/temp_dirs/servers/nvim{}.sock".format(process.pid)
+        server: str = expanduser(
+            "~/.dotfiles/vim/temp_dirs/servers/nvim{}.sock".format(process.pid)
         )
+
         try:
             nvim = attach("socket", path=server)
         except FileNotFoundError:

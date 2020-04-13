@@ -7,7 +7,7 @@ if ($IsWindows) {
 
 echo '. "~/.dotfiles/pwsh_profile.ps1"' >> $profile
 New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/tmux.conf" -Target "~/.tmux.conf"
-New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/alacritty.yml" -Target "~/.alacritty.yml"
+New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/terminals/alacritty.yml" -Target "~/.alacritty.yml"
 
 New-Item -Force -ItemType SymbolicLink -Path "~/.config/karabiner/assets/complex_modifications/karabiner_vi_style.json" -Target "~/.dotfiles/karabiner_vi_style.json"
 
@@ -19,4 +19,4 @@ foreach ($file in Get-ChildItem -Path "~/.dotfiles/hammerspoon/") {
     New-Item -Force -ItemType SymbolicLink -Target $file -Path ~/.hammerspoon/$fileName
 }
 
-New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/iterm2.json" -Target "~/Library/Application\ Support/iTerm2/DynamicProfiles"
+New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/terminals/iterm2.json" -Target "~/Library/Application\ Support/iTerm2/DynamicProfiles"
