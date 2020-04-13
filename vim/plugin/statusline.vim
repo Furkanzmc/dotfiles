@@ -51,14 +51,16 @@ function! statusline#configure(winnum)
     let stat = ""
 
     " Mode sign {{{
-    let excludedFileTypes = ["help", "qf", "terminal"]
+    let l:excluded_file_types = ["help", "qf", "terminal", "dirvish"]
     let stat .= s:get_color(active, 'Visual', 'Comment')
     if active && &filetype == "fugitive"
         let stat .= " GIT "
     elseif active && &filetype == "terminal"
         let stat .= " Terminal "
-    elseif active && index(excludedFileTypes, &filetype) == -1
+    elseif active && index(l:excluded_file_types, &filetype) == -1
         let stat .= " %{toupper(g:currentmode[mode()])} "
+    elseif active && &filetype == "dirvish"
+        let stat .= " DIRVISH "
     endif
     " }}}
 
