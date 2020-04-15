@@ -275,8 +275,6 @@ au BufReadPost *
 
 " Mappings {{{
 
-command! MarkScratch :call MarkScratchBuffer()
-
 nnoremap <leader>qn :next<CR>
 nnoremap <leader>qp :previous<CR>
 nnoremap <leader>ln :lnext<CR>

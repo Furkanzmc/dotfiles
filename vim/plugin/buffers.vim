@@ -153,6 +153,15 @@ function! buffers#visual_selection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 
+function! buffers#mark_scratch()
+    setlocal buftype=nofile
+    setlocal bufhidden=hide
+    setlocal noswapfile
+    setlocal buflisted
+endfunction
+
+command! MarkScratch :call buffers#mark_scratch()
+
 vmap <leader>s :call buffers#visual_selection('search', '')<CR>
 " When you press <leader>r you can search and replace the selected text
 vnoremap <silent> <leader>r :call buffers#visual_selection('replace', '')<CR>
