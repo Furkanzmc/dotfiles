@@ -34,7 +34,10 @@ ToggleWindowsDefaultAppMode() {
     }
 }
 
-LCtrl & h::Backspace
+LAlt & h::Left
+LAlt & l::Right
+LAlt & j::Down
+LAlt & k::Up
 LCtrl & j::Enter
 
 GetWorkArea()
@@ -201,7 +204,7 @@ LAlt & s::
     }
     return
 
-LAlt & l::
+LAlt & p::
     if GetKeyState("LShift")
     {
         ToolTip, Press any key to perform custom functions.
@@ -221,7 +224,7 @@ LAlt & l::
         }
         else if (OutputVar == "p")
         {
-            Run, pwsh
+            Run, pwsh, %A_Desktop%
             return
         }
     }
