@@ -273,7 +273,7 @@ au BufReadPost *
 
 " }}}
 
-" Mappings {{{
+" Maps Commands {{{
 
 nnoremap <leader>qn :next<CR>
 nnoremap <leader>qp :previous<CR>
@@ -306,6 +306,7 @@ map <leader>cn :cn<cr>
 map <leader>cp :cp<cr>
 
 nmap <silent> <leader>dh :call init#search_docs()<CR>
+command! -nargs=1 Search :call init#search_docs(<f-args>)
 
 " Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 " Allows running macros only on selected files.
