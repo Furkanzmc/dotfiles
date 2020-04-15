@@ -56,7 +56,11 @@ function! statusline#configure(winnum)
     if active && &filetype == "fugitive"
         let stat .= " GIT "
     elseif active && &filetype == "terminal"
-        let stat .= " Terminal "
+        if mode() == "n"
+            let stat .= " N.Terminal "
+        else
+            let stat .= " Terminal "
+        endif
     elseif active && index(l:excluded_file_types, &filetype) == -1
         let stat .= " %{toupper(g:currentmode[mode()])} "
     elseif active && &filetype == "dirvish"
