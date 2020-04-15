@@ -214,11 +214,16 @@ LAlt & l::
             return
         }
 
-        tPressed := OutputVar = "t"
-        if tPressed = 1
+        if (OutputVar == "t")
         {
             ToggleWindowsDefaultAppMode()
             return
         }
+        else if (OutputVar == "p")
+        {
+            Run, pwsh
+            return
+        }
     }
+
     return
