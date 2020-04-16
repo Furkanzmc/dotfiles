@@ -73,9 +73,9 @@ function Vimrc-Background() {
             [ValidateSet("light", "dark")]
             [String]$Color="",
             [Parameter(Mandatory=$false)]
-            [Bool]$ChangeAllInstances=$false,
+            [Switch]$ChangeAllInstances=$false,
             [Parameter(Mandatory=$false)]
-            [Bool]$MatchTheme=$false
+            [Switch]$MatchTheme=$false
          )
 
     if ($MatchTheme) {

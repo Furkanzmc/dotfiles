@@ -91,7 +91,7 @@ function Tmux-Run() {
 function Tmux-Dump() {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
-        [String[]]
+        [String]
         $SessionPath
     )
     tmux list-windows -a -F "#S #W #{pane_current_path}" > $SessionPath
@@ -119,13 +119,13 @@ function Tmux-Add-Window() {
 function Tmux-Add-Session() {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
-        [String[]]
+        [String]
         $SessionName,
         [Parameter(Position=1, Mandatory=$true)]
-        [String[]]
+        [String]
         $WindowName,
         [Parameter(Position=2, Mandatory=$true)]
-        [String[]]
+        [String]
         $StartDirectory
     )
 
@@ -135,7 +135,7 @@ function Tmux-Add-Session() {
 function Tmux-Has-Session() {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
-        [String[]]
+        [String]
         $SessionName
     )
 
@@ -150,7 +150,7 @@ function Tmux-Has-Session() {
 function Tmux-Restore() {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
-        [String[]]
+        [String]
         $SessionPath
     )
 
