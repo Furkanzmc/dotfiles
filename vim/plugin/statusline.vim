@@ -3,19 +3,19 @@
 " Always show the status line
 set laststatus=2
 
-function! statusline#is_fugitive_buffer(bufferName)
+function! statusline#is_fugitive_buffer(buffer_name)
     if has('win32')
-        return match(a:bufferName, 'fugitive:\\') != -1
+        return match(a:buffer_name, 'fugitive:\\') != -1
     endif
 
-    return match(a:bufferName, 'fugitive://') != -1
+    return match(a:buffer_name, 'fugitive://') != -1
 endfunction
 
-function! s:get_color(active, activeColor, inactiveColor)
+function! s:get_color(active, active_color, inactive_color)
     if a:active
-        return '%#' . a:activeColor . '#'
+        return '%#' . a:active_color . '#'
     else
-        return '%#' . a:inactiveColor . '#'
+        return '%#' . a:inactive_color . '#'
     endif
 endfunction
 
@@ -25,8 +25,8 @@ endfunction
 " it only colors the input if the window is the currently
 " focused one
 function! statusline#configure(winnum)
-    let active = a:winnum == winnr()
-    let g:currentmode = {
+    let l:active = a:winnum == winnr()
+    let g:vimrc_mode_map = {
                 \ 'n'      : 'Normal',
                 \ 'no'     : 'N.Operator Pending ',
                 \ 'v'      : 'V',
@@ -48,88 +48,102 @@ function! statusline#configure(winnum)
                 \ 't'      : 'Terminal'
                 \}
 
-    let stat = ""
+    let l:status = ""
 
     " Mode sign {{{
-    let l:excluded_file_types = ["help", "qf", "terminal", "dirvish"]
-    let stat .= s:get_color(active, 'Visual', 'Comment')
-    if active && &filetype == "fugitive"
-        let stat .= " GIT "
-    elseif active && &filetype == "terminal"
-        if mode() == "n"
-            let stat .= " N.Terminal "
-        else
-            let stat .= " Terminal "
+    let l:excluded_file_types = ["help", "qf"]
+    let l:status .= s:get_color(l:active, 'Visual', 'Comment')
+    let l:handled = v:false
+    let l:mode = mode()
+
+    if l:active && &filetype == "fugitive" && l:mode != "c"
+        let l:handled = v:true
+        let l:status .= " GIT "
+    elseif l:active && &filetype == "terminal" && l:mode != "c"
+        if l:mode == "n"
+            let l:handled = v:true
+            let l:status .= " N.Terminal "
+        elseif mode() == "t"
+            let l:handled = v:true
+            let l:status .= " Terminal "
         endif
-    elseif active && index(l:excluded_file_types, &filetype) == -1
-        let stat .= " %{toupper(g:currentmode[mode()])} "
-    elseif active && &filetype == "dirvish"
-        let stat .= " DIRVISH "
+    elseif l:active && &filetype == "dirvish" && l:mode != "c"
+        let l:handled = v:true
+        let l:status .= " DIRVISH "
+    endif
+
+    if l:mode != "c" && index(l:excluded_file_types, &filetype) != -1
+        let l:handled = v:true
+    endif
+
+    if !l:handled && l:active
+        let l:status .= " %{toupper(g:vimrc_mode_map[mode()])} "
     endif
     " }}}
 
-    let stat .= s:get_color(active, 'Error', 'ErrorMsg')
-    let stat .= '%h' " Help sign
-    let stat .= '%q' " Help sign
-    let stat .= '%w' " Preview sign
+    let l:status .= s:get_color(l:active, 'Error', 'ErrorMsg')
+    let l:status .= '%h' " Help sign
+    let l:status .= '%q' " Help sign
+    let l:status .= '%w' " Preview sign
 
     " File path {{{
     if &filetype != "fugitive"
-        let stat .= s:get_color(active, 'Normal', 'Comment')
-        let stat .= " %{statusline#is_fugitive_buffer(expand('%')) ? expand('%:t') : expand('%')}"
+        let l:status .= s:get_color(l:active, 'Normal', 'Comment')
+        let l:status .= " %{statusline#is_fugitive_buffer(expand('%')) ? expand('%:t') : expand('%')}"
     endif
     " }}}
 
     " Diff file signs {{{
 
-    let stat .= s:get_color(1, 'Type', 'Type')
-    let bufferGitTag = " %{"
-    let bufferGitTag .= "&diff && statusline#is_fugitive_buffer(expand('%')) ? '[head]' : "
-    let bufferGitTag .= "(&diff && !statusline#is_fugitive_buffer(expand('%')) ? '[local]' : '')"
-    let bufferGitTag .= "}"
-    let stat .= bufferGitTag
+    let l:status .= s:get_color(1, 'Type', 'Type')
+
+    let l:buffer_git_tag = " %{"
+    let l:buffer_git_tag .= "&diff && statusline#is_fugitive_buffer(expand('%')) ? '[head]' : "
+    let l:buffer_git_tag .= "(&diff && !statusline#is_fugitive_buffer(expand('%')) ? '[local]' : '')"
+    let l:buffer_git_tag .= "}"
+    let l:status .= l:buffer_git_tag
 
     " }}}
 
-    let stat .= s:get_color(active, 'Identifier', 'Comment')
-    let stat .= '%r' " Readonly sign
+    let l:status .= s:get_color(l:active, 'Identifier', 'Comment')
+    let l:status .= '%r' " Readonly sign
     if &spell
-        let stat .= ' ☰'
+        let l:status .= ' ☰'
     endif
 
     " Modified sign {{{
 
-    let stat .= s:get_color(active, 'SpecialChar', 'Comment')
-    let stat .= "%{&modified ? ' +' : ''}" " Modified sign
+    let l:status .= s:get_color(l:active, 'SpecialChar', 'Comment')
+    let l:status .= "%{&modified ? ' +' : ''}" " Modified sign
 
-    if (active)
+    if (l:active)
         " Code from: https://vi.stackexchange.com/a/14313
-        let modifiedBufferCount = len(filter(getbufinfo(), 'v:val.changed == 1'))
-        if (modifiedBufferCount > 0)
-            let stat .= ' [✎ ' . modifiedBufferCount . '] '
+        let l:modified_buf_count = len(filter(getbufinfo(), 'v:val.changed == 1'))
+        if (l:modified_buf_count > 0)
+            let l:status .= ' [✎ ' . l:modified_buf_count . '] '
         endif
     endif
 
     " }}}
 
-    let stat .= '%=' " Switch to right side
+    let l:status .= '%=' " Switch to right side
 
     " Branch name {{{
-    let stat .= s:get_color(active, 'Visual', 'Comment')
-    if exists("*FugitiveHead") && active
-        let head = FugitiveHead()
-        if empty(head) && exists('*FugitiveDetect') && !exists('b:git_dir')
+    let l:status .= s:get_color(l:active, 'Visual', 'Comment')
+    if exists("*FugitiveHead") && l:active
+        let l:head = FugitiveHead()
+        if empty(l:head) && exists('*FugitiveDetect') && !exists('b:git_dir')
             call FugitiveDetect(expand("%"))
-            let head = fugitive#head()
+            let l:head = fugitive#head()
         endif
 
-        if !empty(head)
-            let stat .= ' ʯ ' . head . ' '
+        if !empty(l:head)
+            let l:status .= ' ʯ ' . l:head . ' '
         endif
     endif
     " }}}
 
-    return stat
+    return l:status
 endfunction
 
 function! s:refresh_status()
