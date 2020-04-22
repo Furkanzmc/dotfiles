@@ -382,8 +382,6 @@ function! PackInit()
 
     call minpac#add('skywind3000/asyncrun.vim')
     call minpac#add('tmsvg/pear-tree')
-    " This takes care of the tab line setting, so I no longer need tabline.vim.
-    call minpac#add('gcmt/taboo.vim')
 
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('autozimu/LanguageClient-neovim', {'branch': 'next'})
