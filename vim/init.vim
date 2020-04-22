@@ -373,7 +373,7 @@ function! PackInit()
     call minpac#add('junegunn/fzf.vim')
     call minpac#add('junegunn/fzf')
 
-    call minpac#add('nightsense/cosmic_latte')
+    call minpac#add('furkanzmc/cosmic_latte')
     call minpac#add('Vimjas/vim-python-pep8-indent')
 
     call minpac#add('junegunn/goyo.vim')
