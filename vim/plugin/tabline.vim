@@ -36,7 +36,7 @@ function! tabline#config()
                     \ )
 
         if l:modified_buf_count > 0
-            let l:line .= '[✎' . l:modified_buf_count . '] '
+            let l:line .= '[+' . l:modified_buf_count . '] '
         endif
     endfor
 
