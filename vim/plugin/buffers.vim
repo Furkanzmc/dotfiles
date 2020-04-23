@@ -114,7 +114,7 @@ if !exists("g:vimrc_loaded_spacehi")
         let g:spacehi_spacecolor = g:spacehi_spacecolor . " guibg='#EB5A2D'"
     endif
 
-    function! s:SpaceHi()
+    function! s:highlight_space()
         let bufferFileType = &filetype
         if bufferFileType == "help"
             return
@@ -127,9 +127,23 @@ if !exists("g:vimrc_loaded_spacehi")
         execute("highlight spacehiTrailingSpace " . g:spacehi_spacecolor)
     endfunction
 
-    autocmd BufWinEnter * call s:SpaceHi()
-    autocmd InsertLeave * call s:SpaceHi()
-    autocmd BufWinLeave * call s:SpaceHi()
+    function! s:clear_highlight()
+        let bufferFileType = &filetype
+        if bufferFileType == "help"
+            return
+        endif
+
+        syntax match spacehiTab /\t/ containedin=ALL
+        execute("highlight clear spacehiTab")
+
+        syntax match spacehiTrailingSpace /\s\+$/ containedin=ALL
+        execute("highlight clear spacehiTrailingSpace")
+    endfunction
+
+    autocmd BufWinEnter * call s:highlight_space()
+    autocmd InsertLeave * call s:highlight_space()
+    autocmd InsertEnter * call s:clear_highlight()
+    autocmd BufWinLeave * call s:highlight_space()
 endif
 
 function! s:cmd_line(mode, str)
