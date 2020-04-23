@@ -14,7 +14,6 @@
 " additional regexp to strip foldtext (example for asciidoctor buffers)
 " let b:foldtext_strip_add_regex = '^=\+'
 
-" fasd as {{
 function! fold#fold_text()
     let foldchar = get(b:, 'foldchar', '>')
     let strip_comments = get(b:, 'foldtext_strip_comments', v:false)
@@ -66,7 +65,6 @@ function! fold#fold_text()
                 \ foldlines_padding,
                 \ foldlines)
 endfunction
-" }}
 
 function! fold#set_foldtext()
     if &foldtext == "foldtext()" && &foldtext != "fold#fold_text()"
