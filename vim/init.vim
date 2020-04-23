@@ -588,6 +588,64 @@ let g:nvimgdb_config_override = {
 " }}}
 
 " information-window {{{
+function! init#info_window_timew()
+    if get(g:, "vimrc_timew_enabled", v:true) == v:false
+        return []
+    endif
+
+    if !executable("timew")
+        return []
+    endif
+
+    let l:output = system("timew summary")
+    let l:lines = split(l:output, "\n")
+    let l:today = trim(l:lines[len(l:lines) - 2])
+
+    let l:output = system("timew summary :week")
+    let l:lines = split(l:output, "\n")
+    let l:week = trim(l:lines[len(l:lines) - 2])
+
+    let l:today_header = "Today"
+    let l:week_header = "Week"
+    let l:longest_line = max([len(l:today), len(l:week)])
+
+    let l:header = [
+                \ " ",
+                \ l:today_header,
+                \ join(repeat([" "], l:longest_line), ""),
+                \ " ",
+                \ l:week_header,
+                \ " "
+                \ ]
+
+    let l:divider = [
+                \ " ",
+                \ join(repeat(["-"], len(l:today_header)), ""),
+                \ join(repeat([" "], l:longest_line), ""),
+                \ " ",
+                \ join(repeat(["-"], len(l:week_header)), ""),
+                \ " "
+                \ ]
+    let l:row = [
+                \ " ",
+                \ l:today,
+                \ " ",
+                \ join(repeat([" "], l:longest_line - len(l:week_header)), ""),
+                \ " ",
+                \ l:week
+                \ ]
+    return [
+                \ "                   ",
+                \ " -- TimeWarrior -- ",
+                \ "                   ",
+                \ join(l:header, ""),
+                \ join(l:divider, ""),
+                \ join(l:row, "")
+                \ ]
+endfunction
+
+let g:vimrc_info_window_lines_functions = [function("init#info_window_timew")]
+
 function! init#show_file_info(default_lines)
     let currentTime = strftime('%b %d %A, %H:%M')
     let l:lines = [
@@ -603,15 +661,14 @@ function! init#show_file_info(default_lines)
         call insert(l:lines, fileTypeStr, 2)
     endif
 
-    let l:Custom_lines_func = get(g:, "Vimrc_info_window_lines_func", v:null)
-    if l:Custom_lines_func != v:null
-        let l:custom_lines = l:Custom_lines_func()
-        if len(l:custom_lines) > 0
-            call add(l:lines, " -----")
-        endif
-
-        for line in l:custom_lines
-            call add(l:lines, line)
+    let l:vimrc_info_window_lines_functions = get(g:,
+                \ "vimrc_info_window_lines_functions", [])
+    if len(l:vimrc_info_window_lines_functions) > 0
+        for F in l:vimrc_info_window_lines_functions
+            let l:custom_lines = F()
+            for line in l:custom_lines
+                call add(l:lines, line)
+            endfor
         endfor
     endif
 
