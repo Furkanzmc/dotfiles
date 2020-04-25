@@ -16,6 +16,7 @@ if (Get-Command "bat" -ErrorAction SilentlyContinue) {
 
 if (Get-Command "nvim" -ErrorAction SilentlyContinue) {
     Set-Alias vim nvim
+    $env:MANPAGER="nvim +Man!"
 }
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
