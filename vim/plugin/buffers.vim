@@ -142,7 +142,6 @@ if !exists("g:vimrc_loaded_spacehi")
 
     autocmd BufWinEnter * call s:highlight_space()
     autocmd InsertLeave * call s:highlight_space()
-    autocmd InsertEnter * call s:clear_highlight()
     autocmd BufWinLeave * call s:highlight_space()
 endif
 
