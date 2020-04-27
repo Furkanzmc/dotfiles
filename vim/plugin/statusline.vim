@@ -81,6 +81,13 @@ function! statusline#configure(winnum)
     endif
     " }}}
 
+    " Aysncrun Status {{{
+    if exists("*asyncrun#status()") && asyncrun#status() == "run"
+        let l:status .= s:get_color(l:active, 'SpecialKey', 'Comment')
+        let l:status .= " [Running Job] "
+    endif
+    " }}}
+
     let l:status .= s:get_color(l:active, 'Error', 'ErrorMsg')
     let l:status .= '%h' " Help sign
     let l:status .= '%q' " Help sign
