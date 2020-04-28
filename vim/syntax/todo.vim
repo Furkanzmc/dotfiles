@@ -44,3 +44,5 @@ highlight  default  link  TodoPriorityD  Type
 highlight  default  link  TodoDate       PreProc
 highlight  default  link  TodoProject    Special
 highlight  default  link  TodoContext    Special
+
+let b:current_syntax = "todo"
