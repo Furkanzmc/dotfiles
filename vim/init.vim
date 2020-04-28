@@ -237,10 +237,6 @@ map <silent> <leader><cr> :noh<cr>
 " Close the current buffer
 map <leader>bd :Bclose<cr>
 
-" Useful mappings for managing tabs
-map <leader>tn :tabnew<cr>
-map <leader>tc :tabclose<cr>
-
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
 nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
@@ -275,10 +271,17 @@ au BufReadPost *
 
 " Maps Commands {{{
 
-nnoremap <leader>qn :next<CR>
-nnoremap <leader>qp :previous<CR>
+nnoremap <leader>fn :next<CR>
+nnoremap <leader>fp :previous<CR>
+
 nnoremap <leader>ln :lnext<CR>
 nnoremap <leader>lp :lprevious<CR>
+
+nnoremap <leader>cn :cnext<cr>
+nnoremap <leader>cp :cprevious<cr>
+
+map <leader>tn :tabnew<cr>
+map <leader>tc :tabclose<cr>
 
 " Remap VIM 0 to first non-blank character
 map 0 ^
@@ -301,9 +304,6 @@ endif
 
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
-
-map <leader>cn :cn<cr>
-map <leader>cp :cp<cr>
 
 nmap <silent> <leader>dh :call init#search_docs()<CR>
 command! -nargs=1 Search :call init#search_docs(<f-args>)
