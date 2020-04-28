@@ -82,9 +82,9 @@ function! statusline#configure(winnum)
     " }}}
 
     " Aysncrun Status {{{
-    if exists("*asyncrun#status()") && asyncrun#status() == "run"
-        let l:status .= s:get_color(l:active, 'SpecialKey', 'Comment')
-        let l:status .= " [Running Job] "
+    if l:active && exists("*asyncrun#status()") && asyncrun#status() == "run"
+        let l:status .= s:get_color(l:active, 'WarningMsg', 'Comment')
+        let l:status .= " [A-JOB] "
     endif
     " }}}
 
