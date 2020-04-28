@@ -571,7 +571,7 @@ let g:LanguageClient_useVirtualText = g:vimrc_use_virtual_text
 " asyncrun.vim {{{
 
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
-command! -nargs=1 Grep AsyncRun rg --vimgrep <args> ./
+command! -nargs=1 Grep AsyncRun -program=grep <args>
 
 " }}}
 
