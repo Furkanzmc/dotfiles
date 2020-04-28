@@ -115,34 +115,41 @@ if !exists("g:vimrc_loaded_spacehi")
     endif
 
     function! s:highlight_space()
-        let bufferFileType = &filetype
-        if bufferFileType == "help"
+        if exists("b:space_highlighted") && b:space_highlighted
             return
         endif
+
+        let bufferFileType = &filetype
 
         syntax match spacehiTab /\t/ containedin=ALL
         execute("highlight spacehiTab " . g:spacehi_tabcolor)
 
         syntax match spacehiTrailingSpace /\s\+$/ containedin=ALL
         execute("highlight spacehiTrailingSpace " . g:spacehi_spacecolor)
+        let b:space_highlighted = v:true
     endfunction
 
     function! s:clear_highlight()
-        let bufferFileType = &filetype
-        if bufferFileType == "help"
+        if exists("b:space_highlighted") && b:space_highlighted == v:false
             return
         endif
 
+        let bufferFileType = &filetype
         syntax match spacehiTab /\t/ containedin=ALL
         execute("highlight clear spacehiTab")
 
         syntax match spacehiTrailingSpace /\s\+$/ containedin=ALL
         execute("highlight clear spacehiTrailingSpace")
+
+        let b:space_highlighted = v:false
     endfunction
 
-    autocmd BufWinEnter * call s:highlight_space()
-    autocmd InsertLeave * call s:highlight_space()
-    autocmd BufWinLeave * call s:highlight_space()
+    autocmd BufNewFile,BufReadPost,FilterReadPost,FileReadPost,Syntax *
+                \ call s:highlight_space()
+    autocmd FileType help
+                \ call s:clear_highlight()
+    autocmd FileType qf
+                \ call s:clear_highlight()
 endif
 
 function! s:cmd_line(mode, str)
