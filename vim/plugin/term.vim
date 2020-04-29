@@ -40,8 +40,13 @@ function! term#open(is_floating, ...)
             execute "e term://" . l:term
         endif
     endif
+endfunction
 
-    call feedkeys("i")
+function! term#open_named_list(names)
+    for term_name in a:names
+        call term#open(v:false)
+        execute ":file " . term_name
+    endfor
 endfunction
 
 command! -nargs=? -complete=shellcmd Terminal
@@ -52,3 +57,5 @@ command! LazyGit :call term#open(v:true, "lazygit")
 
 command! -nargs=? -complete=shellcmd TerminalFloatingClose
             \ :call term#close(-1)
+
+autocmd TermOpen * startinsert
