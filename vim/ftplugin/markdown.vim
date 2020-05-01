@@ -1,8 +1,4 @@
 function! markdown#enable_highlight()
-    if get(b:, "markdown_highlight_enabled", v:false)
-        return
-    endif
-
     call SyntaxRange#Include('```qml', '```', 'qml', 'NonText')
     call SyntaxRange#Include('```css', '```', 'css', 'NonText')
     call SyntaxRange#Include('```html', '```', 'html', 'NonText')
@@ -11,8 +7,6 @@ function! markdown#enable_highlight()
     call SyntaxRange#Include('```json', '```', 'json', 'NonText')
     call SyntaxRange#Include('```python', '```', 'python', 'NonText')
     call SyntaxRange#Include('```js', '```', 'javascript', 'NonText')
-
-    let b:markdown_highlight_enabled = v:true
 endfunction
 
 autocmd BufNewFile,BufReadPost,FilterReadPost,FileReadPost *.md
