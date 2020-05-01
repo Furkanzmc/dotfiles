@@ -110,7 +110,7 @@ function Prompt() {
         Write-Host "`n" -NoNewLine
     }
 
-    Write-Host "$("=>" * ($NestedPromptLevel + 1))" -NoNewLine
+    Write-Host "$("=>" * ($NestedPromptLevel + 1))" -NoNewLine -ForegroundColor Magenta
     return " "
 }
 
