@@ -63,11 +63,22 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 
 function Prompt() {
     $lastCommandSucceeded = $?
-    Write-Host $(Get-Date -Format "[HH:mm:ss] ") `
-        -ForegroundColor DarkGray -NoNewLine
+    $exitCode = $LastExitCode
     if (Test-Path env:VIRTUAL_ENV -ErrorAction SilentlyContinue) {
-        Write-Host "(.venv) " -ForegroundColor Blue -NoNewLine
+        Write-Host "(.venv) " -ForegroundColor Yellow -NoNewLine
     }
+
+    $currentLocation = $(Get-Location).Path
+    $currentLocation = $currentLocation.Replace($env:HOME, "~")
+    $maxWidth = (Get-Host).UI.RawUI.MaxWindowSize.Width - 50
+
+    if ($currentLocation.Length -gt $maxWidth) {
+        $p1 = $currentLocation.Substring(0, $currentLocation.IndexOf("/", 2) + 1)
+        $lastSlash = $currentLocation.IndexOf("/", $maxWidth + $p1.Length)
+        $currentLocation = $p1 + "..." + $currentLocation.Substring($lastSlash)
+    }
+
+    Write-Host "$currentLocation " -NoNewLine -ForegroundColor Blue
 
     $gitDir = &git rev-parse --git-dir
     # Continue if the command succeeded.
@@ -101,16 +112,15 @@ function Prompt() {
         }
     }
 
-    Write-Host "$(Get-Location):" -NoNewLine
+    Write-Host $(Get-Date -Format "[HH:mm:ss]") `
+        -ForegroundColor DarkGray -NoNewLine
+
     if ($lastCommandSucceeded -eq $false) {
         $bufferSize = (Get-Host).UI.RawUI.BufferSize.Width
-        Write-Host "`n!! " -NoNewLine -ForegroundColor Red
-    }
-    else {
-        Write-Host "`n" -NoNewLine
+        Write-Host " !! $exitCode" -NoNewLine -ForegroundColor Red
     }
 
-    Write-Host "$("=>" * ($NestedPromptLevel + 1))" -NoNewLine -ForegroundColor Magenta
+    Write-Host "`n$("=>" * ($NestedPromptLevel + 1))" -NoNewLine -ForegroundColor Green
     return " "
 }
 
