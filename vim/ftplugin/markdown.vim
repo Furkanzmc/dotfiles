@@ -7,6 +7,9 @@ function! markdown#enable_highlight()
     call SyntaxRange#Include('```json', '```', 'json', 'NonText')
     call SyntaxRange#Include('```python', '```', 'python', 'NonText')
     call SyntaxRange#Include('```js', '```', 'javascript', 'NonText')
+
+    setlocal foldmethod=expr
+    setlocal conceallevel=2
 endfunction
 
 autocmd BufNewFile,BufReadPost,FilterReadPost,FileReadPost *.md
