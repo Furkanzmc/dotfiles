@@ -70,7 +70,7 @@ function Prompt() {
 
     $currentLocation = $(Get-Location).Path
     $currentLocation = $currentLocation.Replace($env:HOME, "~")
-    $maxWidth = (Get-Host).UI.RawUI.MaxWindowSize.Width - 50
+    $maxWidth = 80
 
     if ($currentLocation.Length -gt $maxWidth) {
         $p1 = $currentLocation.Substring(0, $currentLocation.IndexOf("/", 2) + 1)
