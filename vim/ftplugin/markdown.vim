@@ -18,3 +18,4 @@ autocmd BufEnter *.md :call markdown#enable_highlight()
 
 setlocal spell
 setlocal colorcolumn=80,100
+setlocal signcolumn=no
