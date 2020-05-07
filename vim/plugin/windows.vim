@@ -13,9 +13,9 @@ function! windows#create_floating_window(rw, rh)
                 \ "style": "minimal"
                 \ }
 
-    let top = "‾" . repeat("‾", width - 2) . "‾"
-    let mid = "|" . repeat(" ", width - 2) . "|"
-    let bot = "_" . repeat("_", width - 2) . "_"
+    let top = "╭" . repeat("─", width - 2) . "╮"
+    let mid = "│" . repeat(" ", width - 2) . "│"
+    let bot = "╰" . repeat("─", width - 2) . "╯"
     let frame_lines = [top] + repeat([mid], height - 2) + [bot]
 
     let s:frame_buffer = nvim_create_buf(v:false, v:true)
