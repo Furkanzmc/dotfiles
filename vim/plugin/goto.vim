@@ -3,14 +3,16 @@
 function! s:grep_output()
     "C:/Studio/main/Jamrules.jam:134: dummy text "this/is/a/file:123: parse this!
     let status = v:false
-    let matchList = matchlist(s:file_line, '^\([a-zA-Z]\):\([^:]*\):\([0-9]*\):')
-    if len(matchList)
-        let s:cmd = "edit +" . matchList[3] . " " . matchList[1] . ":" . matchList[2]
+    let l:match_list = matchlist(
+                \ s:file_line, '^\([a-zA-Z]\):\([^:]*\):\([0-9]*\):')
+    if len(l:match_list)
+        let s:cmd = "edit +" . l:match_list[3] . " "
+                    \ . l:match_list[1] . ":" . l:match_list[2]
         let status = v:true
     else
-        let matchList = matchlist( s:file_line, '^\([^:]*\):\([0-9]*\):' )
-        if len( matchList )
-            let s:cmd = "edit +" . matchList[2] . " " . matchList[1]
+        let l:match_list = matchlist( s:file_line, '^\([^:]*\):\([0-9]*\):' )
+        if len(l:match_list)
+            let s:cmd = "edit +" . l:match_list[2] . " " . l:match_list[1]
             let status = v:true
         endif
     endif
@@ -21,11 +23,13 @@ endfunction
 function! s:msvc_error()
     "c:\main\build\Release\units\Foundation\include\MFn.h(90) : error C2061: syntax error : identifier 'kBase'
     let status = v:false
-    let matchList = matchlist(s:file_line, '^ *\([^(]*\)(\([0-9]*\)) : \([^ ]*\)')
-    if len(matchList)
-        let type = matchList[3]
-        if type ==? "error" || type ==? "warning" || type ==? "fatal" || type ==? "see" || type ==? "while"
-            let s:cmd = "edit +" . matchList[2] . " " . matchList[1]
+    let l:match_list = matchlist(
+                \ s:file_line, '^ *\([^(]*\)(\([0-9]*\)) : \([^ ]*\)')
+    if len(l:match_list)
+        let type = l:match_list[3]
+        if type ==? "error" || type ==? "warning"
+                    \ || type ==? "fatal" || type ==? "see" || type ==? "while"
+            let s:cmd = "edit +" . l:match_list[2] . " " . l:match_list[1]
             let status = v:true
         endif
     endif
@@ -35,10 +39,11 @@ endfunction
 
 function! s:include_statement()
     let status = v:false
-    let matchList = matchlist( s:file_line, '^#[     ]*include[     ]*["<]\([^">]*\)' )
+    let l:match_list = matchlist(
+                \ s:file_line, '^#[     ]*include[     ]*["<]\([^">]*\)' )
 
-    if len(matchList)
-        let s:cmd = "tag " . matchList[1]
+    if len(l:match_list)
+        let s:cmd = "tag " . l:match_list[1]
         let status = v:true
     endif
 
@@ -47,10 +52,11 @@ endfunction
 
 function! s:include_from()
     let status = v:false
-    let matchList = matchlist(s:file_line, '^In file included from \([^:>]*\):\([0-9]*\)')
+    let l:match_list = matchlist(
+                \ s:file_line, '^In file included from \([^:>]*\):\([0-9]*\)')
 
-    if len(matchList)
-        let s:cmd = "edit +" . matchList[2] . " " . matchList[1]
+    if len(l:match_list)
+        let s:cmd = "edit +" . l:match_list[2] . " " . l:match_list[1]
         let status = v:true
     endif
 
@@ -59,10 +65,11 @@ endfunction
 
 function! s:msvc_stack()
     let status = v:false
-    let matchList = matchlist( s:file_line, '.*\.dll!\([^(]*\).* Line \([0-9]*\).*' )
+    let l:match_list = matchlist(
+                \ s:file_line, '.*\.dll!\([^(]*\).* Line \([0-9]*\).*' )
 
-    if len(matchList)
-        let s:cmd = "tag " . matchList[1]
+    if len(l:match_list)
+        let s:cmd = "tag " . l:match_list[1]
         let status = v:true
     endif
 
@@ -105,13 +112,16 @@ endfunction
 
 function s:url()
     " Source: https://gist.github.com/tobym/584909
-    let matched = matchstr( s:file_line, '\(https\|http\)\?:\/\/\(\w\+\(:\w\+\)\?@\)\?\([A-Za-z][-_0-9A-Za-z]*\.\)\{1,}\(\w\{2,}\.\?\)\{1,}\(:[0-9]\{1,5}\)\?\S*' )
+    let l:matched = matchstr(
+                \ s:file_line,
+                \ '\(https\|http\)\?:\/\/\(\w\+\(:\w\+\)\?@\)\?\([A-Za-z][-_0-9A-Za-z]*\.\)\{1,}\(\w\{2,}\.\?\)\{1,}\(:[0-9]\{1,5}\)\?\S*'
+                \ )
 
-    if len(matched) > 0
+    if len(l:matched) > 0
         if has("win32")
-            let s:cmd = "!explorer.exe " . matched
+            let s:cmd = "!explorer.exe " . l:matched
         else
-            let s:cmd = "!open " . matched
+            let s:cmd = "!open " . l:matched
         endif
 
         return v:true

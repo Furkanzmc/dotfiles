@@ -1,21 +1,21 @@
 let s:base_branch = ""
 
 function! git#start_review(...)
-    let l:baseBranch = ""
+    let l:base_branch = ""
     if (strlen(s:base_branch) > 0)
-        let l:baseBranch = s:base_branch
+        let l:base_branch = s:base_branch
     else
         if (a:0 == 0)
             echoerr "Base branch is required."
             return
         endif
 
-        let l:baseBranch = a:1
+        let l:base_branch = a:1
         let s:base_branch = a:1
     endif
 
-    echom l:baseBranch
-    execute 'args `git diff --name-only ' . l:baseBranch . '`'
+    echom l:base_branch
+    execute 'args `git diff --name-only ' . l:base_branch . '`'
 endfunction
 
 function! git#review_diff()

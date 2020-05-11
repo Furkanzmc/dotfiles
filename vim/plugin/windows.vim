@@ -30,6 +30,7 @@ function! windows#create_floating_window(rw, rh)
 
     let s:buffer = nvim_create_buf(v:false, v:true)
     let s:window = nvim_open_win(s:buffer, v:true, opts)
+
     au BufWinLeave <buffer> exe "bw ". s:frame_buffer
 
     return s:buffer

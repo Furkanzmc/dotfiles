@@ -2,15 +2,15 @@ function! quickfix#toggle()
     let tpbl = []
     call extend(tpbl, tabpagebuflist(tabpagenr()))
 
-    let l:quickFixOpen = v:false
+    let l:is_open = v:false
     for idx in tpbl
         if getbufvar(idx, "&buftype", "ERROR") == "quickfix"
-            let l:quickFixOpen = v:true
+            let l:is_open = v:true
             break
         endif
     endfor
 
-    if l:quickFixOpen
+    if l:is_open
         cclose
     else
         copen
@@ -19,4 +19,3 @@ endfunction
 
 nmap <silent> <leader>qt :call quickfix#toggle()<CR>
 command! ClearQuickFix :call setqflist([])
-
