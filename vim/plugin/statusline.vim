@@ -63,7 +63,7 @@ function! statusline#configure(winnum)
         if l:mode == "n"
             let l:handled = v:true
             let l:status .= " N.Terminal "
-        elseif mode() == "t"
+        elseif l:mode == "t"
             let l:handled = v:true
             let l:status .= " Terminal "
         endif

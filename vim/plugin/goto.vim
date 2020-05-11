@@ -141,7 +141,13 @@ let s:parsers = [
     \ ]
 
 function! goto#run()
-    let s:file_line = getline(".")
+    let l:selected_lines = buffers#get_visual_selection()
+    if len(l:selected_lines) > 0
+        let s:file_line = l:selected_lines[0]
+    else
+        let s:file_line = getline(".")
+    endif
+
     let processed = 0
     for F in s:parsers
         if F()
@@ -166,3 +172,4 @@ endfunction
 
 " Override vim commands 'gf', '^Wf', '^W^F'
 nnoremap <silent> gf :call goto#run()<CR>
+vnoremap <silent> gf :call goto#run()<CR>
