@@ -2,7 +2,7 @@ if exists("b:markdown_conceal_set")
     finish
 endif
 
-function! markdown#enable_highlight()
+function! s:enable_highlight()
     call SyntaxRange#Include('```qml', '```', 'qml', 'NonText')
     call SyntaxRange#Include('```css', '```', 'css', 'NonText')
     call SyntaxRange#Include('```html', '```', 'html', 'NonText')
@@ -14,13 +14,12 @@ function! markdown#enable_highlight()
 
     setlocal foldmethod=expr
     setlocal conceallevel=2
-    echomsg "ASDASD"
 endfunction
 
 autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd *.md
-            \ :call markdown#enable_highlight()
+            \ :call s:enable_highlight()
 
-call markdown#enable_highlight()
+call s:enable_highlight()
 
 call matchadd('Conceal', '^```[a-z]\+$', 10, -1, {'conceal':' '})
 call matchadd('Conceal', '^```$', 10, -1, {'conceal':' '})

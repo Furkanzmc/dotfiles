@@ -3,6 +3,20 @@ if exists("b:current_syntax")
     finish
 endif
 
+function! s:enable_highlight()
+    call SyntaxRange#Include('```qml', '```', 'qml', 'NonText')
+    call SyntaxRange#Include('```css', '```', 'css', 'NonText')
+    call SyntaxRange#Include('```html', '```', 'html', 'NonText')
+
+    call SyntaxRange#Include('```cpp', '```', 'cpp', 'NonText')
+    call SyntaxRange#Include('```json', '```', 'json', 'NonText')
+    call SyntaxRange#Include('```python', '```', 'python', 'NonText')
+    call SyntaxRange#Include('```js', '```', 'javascript', 'NonText')
+
+    setlocal foldmethod=expr
+    setlocal conceallevel=2
+endfunction
+
 syntax match TodoDate '\d\{2,4\}-\d\{2\}-\d\{2\}' contains=NONE
 syntax match TodoProject '\(^\|\W\)+[^[:blank:]]\+' contains=NONE
 syntax match TodoContext '\(^\|\W\)@[^[:blank:]]\+' contains=NONE
@@ -60,6 +74,11 @@ highlight default link TodoContext Special
 highlight default link TodoComment Comment
 
 highlight default link TodoSubTask Question
+
+autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd todo.txt
+            \ :call s:enable_highlight()
+
+call markdown#enable_highlight()
 
 call matchadd('Conceal', '   ```[a-z]\+$', 10, -1, {'conceal':' '})
 call matchadd('Conceal', '   ```$', 10, -1, {'conceal':' '})
