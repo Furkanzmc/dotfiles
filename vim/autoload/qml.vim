@@ -4,10 +4,11 @@ function! qml#run()
         if len(l:lines) > 0
             let l:qml_file = tempname() . '.qml'
 
-            call insert(l:lines, "import QtQuick 2.10")
-            call insert(l:lines, "import QtQuick.Controls 2.3")
+            call insert(l:lines, "import QtQuick 2.12")
+            call insert(l:lines, "import QtQuick.Controls 2.4")
             call insert(l:lines, "import QtQuick.Layouts 1.3")
-            call insert(l:lines, "import QtQuick.Window 2.3")
+            call insert(l:lines, "import QtQuick.Window 2.12")
+            call insert(l:lines, "import QtQuick.Dialogs 1.3")
 
             call writefile(l:lines, l:qml_file)
         else
