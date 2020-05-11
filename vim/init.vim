@@ -118,6 +118,10 @@ set si "Smart indent
 
 " User Interface {{{
 
+" Always show the status line
+set laststatus=2
+set tabline=%!tabline#config()
+
 if $VIMRC_BACKGROUND == "dark"
     set background=dark
 elseif $VIMRC_BACKGROUND == "light"

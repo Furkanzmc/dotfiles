@@ -44,3 +44,4 @@ function! tabline#config()
     return l:line
 endfunction
 
+set tabline=%!tabline#config()
