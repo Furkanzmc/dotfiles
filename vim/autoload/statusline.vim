@@ -31,7 +31,7 @@ function! s:lsp_daignostic(active) abort
         let l:status .= " E: " . l:errors . " "
     elseif l:warnings > 0
         let l:status .= s:get_color(a:active, 'Type', 'Type')
-        let l:status .= " W: " . l:Warnings . " "
+        let l:status .= " W: " . l:warnings . " "
     endif
     return l:status
 endfunction
