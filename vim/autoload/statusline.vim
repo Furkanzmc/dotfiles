@@ -17,7 +17,7 @@ function! s:get_color(active, active_color, inactive_color)
 endfunction
 
 function! s:lsp_daignostic(active) abort
-    if !exists("*LanguageClient#statusLineDiagnosticsCounts")
+    if !exists("*LanguageClient#statusLineDiagnosticsCounts") || !a:active
         return ""
     endif
 
