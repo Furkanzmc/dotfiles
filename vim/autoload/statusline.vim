@@ -16,6 +16,26 @@ function! s:get_color(active, active_color, inactive_color)
     endif
 endfunction
 
+function! s:lsp_daignostic(active) abort
+    if !exists("*LanguageClient#statusLineDiagnosticsCounts")
+        return ""
+    endif
+
+    let l:dict = LanguageClient#statusLineDiagnosticsCounts()
+    let l:errors = get(l:dict,'E',0)
+    let l:warnings = get(l:dict,'W',0)
+
+    let l:status = ""
+    if l:errors > 0
+        let l:status .= s:get_color(a:active, 'Identifier', 'Identifier')
+        let l:status .= " E: " . l:errors . " "
+    elseif l:warnings > 0
+        let l:status .= s:get_color(a:active, 'Type', 'Type')
+        let l:status .= " W: " . l:Warnings . " "
+    endif
+    return l:status
+endfunction
+
 
 " This function just outputs the content colored by the
 " supplied colorgroup number, e.g. num = 2 -> User2
@@ -131,6 +151,18 @@ function! statusline#configure(winnum)
     " }}}
 
     let l:status .= '%=' " Switch to right side
+
+    " LSP Diagnostic {{{
+
+    let l:diagnostic_enabled_types = get(
+                \ g:, "vimrc_statusline_lsp_diagnostics", ["python"])
+
+    if index(l:diagnostic_enabled_types, &filetype) >= 0
+        let l:status .= s:lsp_daignostic(l:active)
+    endif
+
+    " }}}
+
 
     " Branch name {{{
     let l:status .= s:get_color(l:active, 'Visual', 'Comment')
