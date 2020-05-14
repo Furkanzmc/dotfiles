@@ -395,7 +395,7 @@ function! PackInit()
     call minpac#add('Shougo/deoplete.nvim', {'do': 'UpdateRemotePlugins'})
 
     call minpac#add('mcchrish/info-window.nvim')
-    call minpac#add('furkanzmc/vim-http-client')
+    call minpac#add('furkanzmc/nvim-http', {'do': 'UpdateRemotePlugins'})
 
     if has('win32') == 0
         call minpac#add('sakhnik/nvim-gdb')
