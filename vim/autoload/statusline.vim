@@ -163,6 +163,18 @@ function! statusline#configure(winnum)
 
     " }}}
 
+    " HTTP Request Status {{{
+
+    if exists(":SendHttpRequest") > 0
+        let l:http_in_progress = get(g:, "nvim_http_request_in_progress", v:false)
+        if l:http_in_progress
+            let l:status .= s:get_color(l:active, 'Special', 'Comment')
+            let l:status .= " [Http] "
+        endif
+    endif
+
+    " }}}
+
 
     " Branch name {{{
     let l:status .= s:get_color(l:active, 'Visual', 'Comment')
