@@ -178,3 +178,17 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Vim in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
 }
+
+function codi() {
+    Param(
+        [Parameter(Mandatory=$false)]
+        [ValidateSet("python", "javascript")]
+        [String]$FileType=""
+     )
+
+    vim -c `
+    "PackLoad codi.vim `
+    let g:startify_disable_at_vimenter = 1 |`
+    setlocal cursorline |`
+    Codi $FileType"
+ }
