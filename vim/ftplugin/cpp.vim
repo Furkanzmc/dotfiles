@@ -1,3 +1,11 @@
+if !get(s:, "vimrc_cpp_plugins_loaded", v:false)
+    packadd nvim-gdb
+    packadd tagbar
+    packadd vim-cpp-enhanced-highlight
+    packadd ale
+    let s:vimrc_cpp_plugins_loaded = v:true
+endif
+
 setlocal foldmethod=indent
 
 " Override the default comment string from vim-commentary

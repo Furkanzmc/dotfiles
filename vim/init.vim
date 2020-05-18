@@ -366,6 +366,7 @@ endif
 " minpack {{{
 function! PackInit()
     packadd minpac
+
     call minpac#init()
 
     call minpac#add('sheerun/vim-polyglot')
@@ -373,37 +374,43 @@ function! PackInit()
     call minpac#add('tpope/vim-fugitive')
 
     call minpac#add('machakann/vim-sandwich')
-    call minpac#add('octol/vim-cpp-enhanced-highlight')
-    call minpac#add('w0rp/ale')
-
-    call minpac#add('majutsushi/tagbar')
     call minpac#add('junegunn/fzf.vim')
     call minpac#add('junegunn/fzf')
 
     call minpac#add('furkanzmc/cosmic_latte')
-    call minpac#add('Vimjas/vim-python-pep8-indent')
-
-    call minpac#add('junegunn/goyo.vim')
-    call minpac#add('masukomi/vim-markdown-folding')
-    call minpac#add('vim-scripts/SyntaxRange')
-
+    call minpac#add('furkanzmc/nvim-http', {'do': 'UpdateRemotePlugins'})
     call minpac#add('skywind3000/asyncrun.vim')
-    call minpac#add('tmsvg/pear-tree')
 
+    call minpac#add('tmsvg/pear-tree')
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('autozimu/LanguageClient-neovim', {'branch': 'next'})
-    call minpac#add('Shougo/deoplete.nvim', {'do': 'UpdateRemotePlugins'})
 
+    call minpac#add('Shougo/deoplete.nvim', {'do': 'UpdateRemotePlugins'})
     call minpac#add('mcchrish/info-window.nvim')
-    call minpac#add('furkanzmc/nvim-http', {'do': 'UpdateRemotePlugins'})
+
+    " On Demand Plugins {{{
+
+    call minpac#add('w0rp/ale', {'type': 'opt'})
+    call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
+    call minpac#add('octol/vim-cpp-enhanced-highlight', {'type': 'opt'})
+
+    call minpac#add('majutsushi/tagbar', {'type': 'opt'})
+    call minpac#add('Vimjas/vim-python-pep8-indent', {'type': 'opt'})
+    call minpac#add('masukomi/vim-markdown-folding', {'type': 'opt'})
+
+    call minpac#add('metakirby5/codi.vim', {'type': 'opt'})
+
+    call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
 
     if has('win32') == 0
-        call minpac#add('sakhnik/nvim-gdb')
+        call minpac#add('sakhnik/nvim-gdb', {'type': 'opt'})
     endif
 
     if g:vimrc_rust_enabled
-        call minpac#add('rust-lang/rust.vim')
+        call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
     endif
+
+    " }}}
 endfunction
 
 if exists('*minpac#init')
@@ -413,6 +420,7 @@ endif
 command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
 command! PackClean  call PackInit() | call minpac#clean()
 command! PackStatus call PackInit() | call minpac#status()
+command! -complete=packadd -nargs=1 PackLoad :packadd <args>
 
 " }}}
 
