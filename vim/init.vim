@@ -118,6 +118,8 @@ set si "Smart indent
 
 " User Interface {{{
 
+set guifont=Cascadia\ Code:h10
+
 " Always show the status line
 set laststatus=2
 set tabline=%!tabline#config()
