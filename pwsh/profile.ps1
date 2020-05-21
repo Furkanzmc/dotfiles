@@ -69,7 +69,12 @@ function Prompt() {
     }
 
     $currentLocation = $(Get-Location).Path
-    $currentLocation = $currentLocation.Replace($env:HOME, "~")
+    if ($IsMacOS) {
+        $currentLocation = $currentLocation.Replace($env:HOME, "~")
+    }
+    else {
+        $currentLocation = $currentLocation.Replace($env:USERPROFILE, "~")
+    }
     $maxWidth = 80
 
     if ($currentLocation.Length -gt $maxWidth) {
