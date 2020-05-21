@@ -15,7 +15,7 @@ function! qml#run()
             let l:qml_file = expand("%")
         endif
 
-        execute 'AsyncRun qmlscene ' . shellescape(l:qml_file)
+        execute 'AsyncRun pwsh -C "qmlscene ' . shellescape(l:qml_file) . '"'
     else
         echohl WarningMsg
         echo "Cannot find qmlscene in the path."

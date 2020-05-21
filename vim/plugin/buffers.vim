@@ -8,3 +8,8 @@ vnoremap <silent> <leader>r :call buffers#visual_selection('replace', '')<CR>
 command! Bclose :call buffers#close()
 command! -nargs=1 Bdeletes :call buffers#wipe_matching('<args>')
 command! Bdhidden :call buffers#delete_hidden()
+
+
+autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json
+            \ :call buffers#clean_extra_spaces()
+

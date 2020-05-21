@@ -35,7 +35,3 @@ if get(g:, "swap_source_loaded", 0) == 0
 endif
 
 nnoremap <silent> <buffer> <leader>gg :call cpp#swap_source_header()<CR>
-
-if get(g:, "vimrc_cpp_remove_whitespace", v:true)
-    autocmd BufWritePre *.h,*.cpp :call buffers#clean_extra_spaces()
-endif
