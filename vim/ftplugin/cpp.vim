@@ -2,7 +2,6 @@ if !get(s:, "vimrc_cpp_plugins_loaded", v:false)
     packadd nvim-gdb
     packadd tagbar
     packadd vim-cpp-enhanced-highlight
-    packadd ale
     let s:vimrc_cpp_plugins_loaded = v:true
 endif
 

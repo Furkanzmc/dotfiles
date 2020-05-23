@@ -17,22 +17,25 @@ function! s:get_color(active, active_color, inactive_color)
 endfunction
 
 function! s:lsp_daignostic(active) abort
-    if !exists("*LanguageClient#statusLineDiagnosticsCounts") || !a:active
+    if !exists("*neomake#statusline#LoclistCounts") || !a:active
         return ""
     endif
 
-    let l:dict = LanguageClient#statusLineDiagnosticsCounts()
-    let l:errors = get(l:dict,'E',0)
-    let l:warnings = get(l:dict,'W',0)
+    let l:dict = neomake#statusline#LoclistCounts()
+    let l:errors = get(l:dict,'E', 0)
+    let l:warnings = get(l:dict, 'W', 0)
 
     let l:status = ""
     if l:errors > 0
         let l:status .= s:get_color(a:active, 'Identifier', 'Identifier')
         let l:status .= " E: " . l:errors . " "
-    elseif l:warnings > 0
+    endif
+
+    if l:warnings > 0
         let l:status .= s:get_color(a:active, 'Type', 'Type')
         let l:status .= " W: " . l:warnings . " "
     endif
+
     return l:status
 endfunction
 
@@ -98,13 +101,6 @@ function! statusline#configure(winnum)
     endif
     " }}}
 
-    " Aysncrun Status {{{
-    if l:active && exists("*asyncrun#status()") && asyncrun#status() == "run"
-        let l:status .= s:get_color(l:active, 'WarningMsg', 'Comment')
-        let l:status .= " [A-JOB] "
-    endif
-    " }}}
-
     let l:status .= s:get_color(l:active, 'Error', 'ErrorMsg')
     let l:status .= '%h' " Help sign
     let l:status .= '%q' " Help sign
@@ -155,7 +151,7 @@ function! statusline#configure(winnum)
     " LSP Diagnostic {{{
 
     let l:diagnostic_enabled_types = get(
-                \ g:, "vimrc_statusline_lsp_diagnostics", ["python"])
+                \ g:, "vimrc_statusline_lsp_diagnostics", ["python", "qml", "cpp"])
 
     if index(l:diagnostic_enabled_types, &filetype) >= 0
         let l:status .= s:lsp_daignostic(l:active)

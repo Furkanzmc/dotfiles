@@ -1,7 +1,6 @@
 if !get(s:, "vimrc_python_plugins_loaded", v:false)
     packadd vim-python-pep8-indent
     packadd tagbar
-    packadd ale
     let s:vimrc_python_plugins_loaded = v:true
 endif
 

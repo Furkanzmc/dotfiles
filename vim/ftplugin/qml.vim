@@ -1,5 +1,4 @@
 if !get(s:, "vimrc_qml_plugins_loaded", v:false)
-    packadd ale
     let s:vimrc_qml_plugins_loaded = v:true
 endif
 

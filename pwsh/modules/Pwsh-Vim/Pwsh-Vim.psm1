@@ -187,7 +187,7 @@ function codi() {
      )
 
     vim -c `
-    "PackLoad codi.vim `
+    "packadd codi.vim `
     let g:startify_disable_at_vimenter = 1 |`
     setlocal cursorline |`
     Codi $FileType"

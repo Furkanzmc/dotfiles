@@ -118,7 +118,10 @@ set si "Smart indent
 
 " User Interface {{{
 
-set guifont=Cascadia\ Code:h10
+try
+    set guifont=Cascadia\ Code:h10
+catch
+endtry
 
 " Always show the status line
 set laststatus=2
@@ -320,8 +323,8 @@ command! -nargs=1 Search :call init#search_docs(<f-args>)
 " Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 " Allows running macros only on selected files.
 function! init#execute_macro_on_visual_range()
-  echo "@".getcmdline()
-  execute ":'<,'>normal @".nr2char(getchar())
+    echo "@".getcmdline()
+    execute ":'<,'>normal @".nr2char(getchar())
 endfunction
 xnoremap @ :<C-u>call init#execute_macro_on_visual_range()<CR>
 " }}}
@@ -346,8 +349,6 @@ augroup END
 
 " Plugins {{{
 " Pre-configuration {{{
-" Needs to be called before the plugin is enabled.
-let g:ale_completion_enabled = 0
 
 " Disable netrw in favor of vim-dirvish
 let loaded_netrwPlugin = 1
@@ -357,11 +358,6 @@ let loaded_netrwPlugin = 1
 let g:polyglot_disabled = ['markdown']
 
 let g:vimrc_rust_enabled = !empty($VIMRC_RUST_ENABLED)
-if !empty($VIMRC_USE_VIRTUAL_TEXT)
-    let g:vimrc_use_virtual_text = $VIMRC_USE_VIRTUAL_TEXT
-else
-    let g:vimrc_use_virtual_text = "No"
-endif
 
 " }}}
 
@@ -381,18 +377,17 @@ function! PackInit()
 
     call minpac#add('furkanzmc/cosmic_latte')
     call minpac#add('furkanzmc/nvim-http', {'do': 'UpdateRemotePlugins'})
-    call minpac#add('skywind3000/asyncrun.vim')
-
     call minpac#add('tmsvg/pear-tree')
+
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('autozimu/LanguageClient-neovim', {'branch': 'next'})
-
     call minpac#add('Shougo/deoplete.nvim', {'do': 'UpdateRemotePlugins'})
+
     call minpac#add('mcchrish/info-window.nvim')
 
     " On Demand Plugins {{{
 
-    call minpac#add('w0rp/ale', {'type': 'opt'})
+    call minpac#add('neomake/neomake', {'type': 'opt'})
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
     call minpac#add('octol/vim-cpp-enhanced-highlight', {'type': 'opt'})
 
@@ -422,33 +417,6 @@ endif
 command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
 command! PackClean  call PackInit() | call minpac#clean()
 command! PackStatus call PackInit() | call minpac#status()
-command! -complete=packadd -nargs=1 PackLoad :packadd <args>
-
-" }}}
-
-" Ale {{{
-
-" Only run linters named in ale_linters settings.
-let g:ale_linters_explicit = 1
-
-" Use the virtual text to show errors. Distracting so I only enable it for live
-" coding.
-let g:ale_virtualtext_cursor = 0
-let g:ale_virtualtext_prefix = "-> "
-
-let g:ale_linters = {
-            \   'qml': ['qmllint'],
-            \}
-
-let g:ale_set_loclist = 1
-let g:ale_set_quickfix = 0
-let g:ale_lint_delay = 1000
-let g:ale_sign_error = "!!"
-let g:ale_sign_info = "--"
-let g:ale_sign_warning = "++"
-
-" We don't need live linting.
-let g:ale_lint_on_text_changed = 'never'
 
 " }}}
 
@@ -483,6 +451,8 @@ map <leader>tbs  :TagbarShowTag<CR>
 
 " Completion {{{
 
+" Deoplete {{{
+
 let g:deoplete#enable_at_startup = 1
 augroup Doplete
     autocmd!
@@ -514,6 +484,10 @@ inoremap <silent><expr> <TAB>
 inoremap <silent> <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 inoremap <silent> <expr><c-f> pumvisible() ? deoplete#manual_complete() : "\<C-f>"
 
+" }}}
+
+" Server Discovery {{{
+
 let g:vimrc_cpp_servers = []
 let g:vimrc_python_server = []
 let g:vimrc_rust_server = []
@@ -544,6 +518,49 @@ if g:vimrc_rust_enabled
     endif
 endif
 
+" }}}
+
+" NeoMake {{{
+
+function s:setup_neomake()
+    if exists("g:vimrc_is_neomake_loaded")
+        return
+    endif
+
+    packadd neomake
+
+    call neomake#configure#automake('rw')
+
+    let g:vimrc_is_neomake_loaded = v:true
+endfunction
+
+let g:neomake_virtualtext_current_error = v:false
+
+" Python {{{
+
+let g:neomake_python_enabled_makers = ["pylint"]
+
+" }}}
+
+" QML {{{
+
+let g:neomake_qml_qmllint_maker = {
+    \ 'exe': 'qmllint',
+    \ 'args': ["--check-unqualified"],
+    \ 'errorformat': '%f:%l : %m',
+    \ }
+
+let g:neomake_qml_enabled_makers = ["qmllint"]
+
+" }}}
+
+autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
+
+" }}}
+
+" LanguageClient {{{
+
+let g:LanguageClient_diagnosticsEnable = 0
 let g:LanguageClient_serverCommands = {}
 if len(g:vimrc_cpp_servers) > 0
     let g:LanguageClient_serverCommands["c"] = g:vimrc_cpp_servers
@@ -558,7 +575,7 @@ if len(g:vimrc_rust_server) > 0
     let g:LanguageClient_serverCommands["rust"] = g:vimrc_rust_server
 endif
 
-command! Format :call LanguageClient#textDocument_formatting()<CR>
+command! Format :call Languagelacklient#textDocument_formatting()<CR>
 command! RFormat :call LanguageClient#textDocument_rangeFormatting()<CR>
 nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
 
@@ -579,16 +596,66 @@ nnoremap <leader>lc :call LanguageClient#clearDocumentHighlight()<CR>
 
 let g:LanguageClient_diagnosticsList = "Location"
 let g:LanguageClient_selectionUI = "fzf"
-let g:LanguageClient_useVirtualText = g:vimrc_use_virtual_text
+let g:LanguageClient_useVirtualText = "No"
 
-" let g:LanguageClient_virtualTextPrefix = '>'
 
 " }}}
 
-" asyncrun.vim {{{
+" Preview {{{
 
-command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
-command! -nargs=1 Grep AsyncRun -program=grep <args>
+function! init#show_loc_item_in_preview()
+    let l:loclist = getloclist(winnr())
+    let l:list = []
+
+    if len(l:loclist) == 0
+        let l:qflist = getqflist()
+        let l:list = l:qflist
+    else
+        let l:list = l:loclist
+    endif
+
+    let l:current_line = line('.')
+    let l:type_mapping = {
+                \ "E": "Error",
+                \ "W": "Warning",
+                \ "I": "Info",
+                \ }
+
+    for item in l:list
+        if get(item, "lnum", "") == l:current_line
+            let l:type = get(item, "type", "I")
+            let l:type = get(l:type_mapping, l:type, "")
+            let l:text = get(item, "text", "")
+            call preview#show("Neomake", [l:type . ": " . l:text])
+            break
+        endif
+    endfor
+endfunction
+
+nnoremap <silent> <leader>li :call init#show_loc_item_in_preview()<CR>
+
+" }}}
+
+function! s:neomake_job_finished() abort
+    let l:context = g:neomake_hook_context
+    if l:context.jobinfo.file_mode == 1
+        return
+    endif
+
+    let l:current_time = strftime("%H:%M")
+    let l:message = "Finished with " . l:context.jobinfo.exit_code .
+                \ " at " . l:current_time
+    call setqflist(
+                \ [],
+                \ "a",
+                \ {"lines": [l:message]})
+endfunction
+
+augroup neomake_hooks
+    au!
+    autocmd User NeomakeJobFinished
+                \ nested call <SID>neomake_job_finished()
+augroup END
 
 " }}}
 
