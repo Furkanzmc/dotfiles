@@ -645,6 +645,10 @@ function! s:neomake_job_finished() abort
     let l:current_time = strftime("%H:%M")
     let l:message = "Finished with " . l:context.jobinfo.exit_code .
                 \ " at " . l:current_time
+    echohl IncSearch
+    echo l:message
+    echohl Normal
+
     call setqflist(
                 \ [],
                 \ "a",
