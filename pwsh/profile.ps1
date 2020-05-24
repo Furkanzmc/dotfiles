@@ -18,6 +18,7 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 
 Import-Module Pwsh-DotEnv -DisableNameChecking
 Import-Module Pwsh-Vim -DisableNameChecking
+Import-Module Pwsh-Completion -DisableNameChecking
 if ($IsMacOS) {
     Import-Module Pwsh-MacOS -DisableNameChecking
 }
