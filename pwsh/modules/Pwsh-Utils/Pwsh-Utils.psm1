@@ -139,3 +139,26 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
 }
+
+function Switch-Terminal-Theme() {
+    $content = Get-Content ~/.dotfiles/terminals/alacritty.yml
+    if ($content -match "\*dark") {
+        $content = $content.Replace("*dark", "*light")
+        $command = '"set background=light"'
+    }
+    else {
+        $content = $content.Replace("*light", "*dark")
+        $command = '"set background=dark"'
+    }
+
+    if ($IsMacOS) {
+        $nvimPath = "$HOME/.dotfiles/scripts/nvim.py"
+    }
+    else {
+        $nvimPath = "$USERHOME/.dotfiles/scripts/nvim.py"
+    }
+
+    Set-Content -Path ~/.dotfiles/terminals/alacritty.yml -Value $content
+    Start-Process -FilePath python3 -ArgumentList `
+        $nvimPath,"--command ",$command -NoNewWindow
+}
