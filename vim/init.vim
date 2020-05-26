@@ -47,6 +47,7 @@ set nofoldenable
 set colorcolumn=81
 
 set completeopt=menuone,noinsert,noselect
+set shortmess+=c
 set splitbelow
 set splitright
 
@@ -380,10 +381,11 @@ function! PackInit()
     call minpac#add('tmsvg/pear-tree')
 
     call minpac#add('justinmk/vim-dirvish')
-    call minpac#add('autozimu/LanguageClient-neovim', {'branch': 'next'})
-    call minpac#add('Shougo/deoplete.nvim', {'do': 'UpdateRemotePlugins'})
-
     call minpac#add('mcchrish/info-window.nvim')
+    call minpac#add('neovim/nvim-lsp')
+
+    call minpac#add('haorenW1025/completion-nvim')
+    call minpac#add('Furkanzmc/diagnostic-nvim')
 
     " On Demand Plugins {{{
 
@@ -396,7 +398,6 @@ function! PackInit()
     call minpac#add('masukomi/vim-markdown-folding', {'type': 'opt'})
 
     call minpac#add('metakirby5/codi.vim', {'type': 'opt'})
-
     call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
 
     if has('win32') == 0
@@ -432,7 +433,6 @@ map <leader>o :Files<cr>
 map <leader>b :Buffers<cr>
 nmap <leader>s :Rg<cr>
 map <leader>h :History<CR>
-imap <c-x><c-f> <plug>(fzf-complete-path)
 
 let g:fzf_preview_window = ''
 " [[B]Commits] Customize the options used by 'git log':
@@ -451,76 +451,7 @@ map <leader>tbs  :TagbarShowTag<CR>
 
 " Completion {{{
 
-" Deoplete {{{
-
-let g:deoplete#enable_at_startup = 1
-augroup Doplete
-    autocmd!
-    " Enable auto complete only when the menu is visible. Otherwise it's just
-    " annoying.
-    autocmd TextChangedP * call deoplete#custom#option('auto_complete', v:true)
-    autocmd CompleteDone * call deoplete#custom#option('auto_complete', v:false)
-augroup END
-
-" Pass a dictionary to set multiple options
-autocmd VimEnter * call deoplete#custom#option({
-            \   'smart_case': v:false,
-            \   'auto_complete': v:false,
-            \   'max_list': 100
-            \ })
-
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other
-" plugin.
-function! init#check_backspace() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ init#check_backspace() ? "\<TAB>" :
-            \ deoplete#manual_complete()
-inoremap <silent> <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-inoremap <silent> <expr><c-f> pumvisible() ? deoplete#manual_complete() : "\<C-f>"
-
-" }}}
-
-" Server Discovery {{{
-
-let g:vimrc_cpp_servers = []
-let g:vimrc_python_server = []
-let g:vimrc_rust_server = []
-
-if executable("ccls")
-    call add(g:vimrc_cpp_servers, "ccls")
-elseif executable("cquery")
-    call add(g:vimrc_cpp_servers, "cquery")
-elseif executable("clangd")
-    call add(g:vimrc_cpp_servers, "clangd")
-else
-    echomsg "No C++ linter is found."
-endif
-
-if executable("pyls")
-    call add(g:vimrc_python_server, "pyls")
-else
-    echomsg "No Python language server is found."
-endif
-
-if g:vimrc_rust_enabled
-    if executable("rls")
-        call add(g:vimrc_rust_server, "rls")
-    elseif executable("rustup")
-        let g:vimrc_rust_server = ["rustup", "run", "stable", "rls"]
-    else
-        echomsg "No Rust language server is found."
-    endif
-endif
-
-" }}}
-
-" NeoMake {{{
+" Neomake {{{
 
 function s:setup_neomake()
     if exists("g:vimrc_is_neomake_loaded")
@@ -558,46 +489,119 @@ autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
 
 " }}}
 
-" LanguageClient {{{
+" completion-nvim {{{
 
-let g:LanguageClient_diagnosticsEnable = 0
-let g:LanguageClient_serverCommands = {}
-if len(g:vimrc_cpp_servers) > 0
-    let g:LanguageClient_serverCommands["c"] = g:vimrc_cpp_servers
-    let g:LanguageClient_serverCommands["cpp"] = g:vimrc_cpp_servers
+let g:completion_enable_auto_popup = 0
+let g:completion_auto_change_source = 0
+let g:completion_matching_ignore_case = 1
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ completion#trigger_completion()
+
+augroup CompleteionTriggerCharacter
+    autocmd!
+    autocmd FileType * let g:completion_trigger_character = ['.']
+    autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
+augroup end
+
+let s:lsp_chain_config = [
+            \	{'complete_items': ['lsp']},
+            \	{'mode': '<c-p>'},
+            \	{'mode': '<c-n>'},
+            \	{'mode': 'file'},
+            \ ]
+
+let g:completion_chain_complete_list = {
+            \'python' : s:lsp_chain_config,
+            \'cpp' : s:lsp_chain_config,
+            \'rust' : s:lsp_chain_config,
+            \'default' : [
+            \	{'mode': '<c-p>'},
+            \	{'mode': '<c-n>'},
+            \	{'mode': 'file'},
+            \ ]
+            \ }
+
+" }}}
+
+" nvim-lsp {{{
+
+sign define LspDiagnosticsErrorSign text=!! texthl=LspDiagnosticsError
+            \ linehl= numhl=
+sign define LspDiagnosticsWarningSign text=?? texthl=LspDiagnosticsWarning
+            \ linehl= numhl=
+sign define LspDiagnosticsInformationSign text=++
+            \ texthl=LspDiagnosticsInformation linehl= numhl=
+sign define LspDiagnosticsHintSign text=H texthl=LspDiagnosticsHint
+            \ linehl= numhl=
+
+
+" TODO: Move this to init.lua
+lua << EOF
+vimrc_setup_lsp = function(file_type)
+    local setup = function()
+        require'completion'.on_attach()
+        require'diagnostic'.on_attach()
+    end
+
+    if file_type == "python" then
+        require'nvim_lsp'.pyls.setup{on_attach=setup}
+    elseif file_type == "cpp" then
+        require'nvim_lsp'.clangd.setup{on_attach=setup}
+    elseif file_type == "rust" then
+        require'nvim_lsp'.rls.setup{on_attach=setup}
+    end
+end
+EOF
+
+function! s:setup_lsp(file_type)
+    if !exists('s:syntax_range_loaded')
+        packadd SyntaxRange
+        let s:syntax_range_loaded = v:true
+    endif
+
+    setlocal omnifunc=v:lua.vim.lsp.omnifunc
+    if !exists('s:' . a:file_type . '_lsp_loaded')
+        execute 'lua vimrc_setup_lsp("' . a:file_type . '")'
+        execute 'let s:' . a:file_type . '_lsp_loaded = v:true'
+    endif
+endfunction
+
+command! PrintCurrentLSP :lua print(vim.inspect(vim.lsp.buf_get_clients()))<CR>
+command! StopCurrentLSP :lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
+
+autocmd FileType python call <SID>setup_lsp("python")
+autocmd FileType cpp,c call <SID>setup_lsp("cpp")
+
+if g:vimrc_rust_enabled
+    autocmd FileType rust call <SID>setup_lsp("rust")
 endif
 
-if len(g:vimrc_python_server) > 0
-    let g:LanguageClient_serverCommands["python"] = g:vimrc_python_server
-endif
+nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <silent> <leader>lr <cmd>lua vim.lsp.buf.rename()<CR>
 
-if len(g:vimrc_rust_server) > 0
-    let g:LanguageClient_serverCommands["rust"] = g:vimrc_rust_server
-endif
+nnoremap <silent> gs <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K  <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 
-command! Format :call Languagelacklient#textDocument_formatting()<CR>
-command! RFormat :call LanguageClient#textDocument_rangeFormatting()<CR>
-nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
+" }}}
 
-nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
-vnoremap <leader>f :call LanguageClient#textDocument_rangeFormatting()<CR>
-nnoremap <leader>f :call LanguageClient#textDocument_formatting()<CR>
+" diagnostic-nvim {{{
 
-nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
-nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-
-nnoremap <leader>lh :call LanguageClient_textDocument_documentHighlight()<CR>
-nnoremap <leader>lc :call LanguageClient#clearDocumentHighlight()<CR>
-
-let g:LanguageClient_diagnosticsList = "Location"
-let g:LanguageClient_selectionUI = "fzf"
-let g:LanguageClient_useVirtualText = "No"
-
+let g:diagnostic_enable_virtual_text = 0
+let g:diagnostic_enable_location_list = 0
+let g:diagnostic_show_sign = 0
 
 " }}}
 

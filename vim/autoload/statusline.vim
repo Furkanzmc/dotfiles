@@ -71,6 +71,7 @@ function! statusline#configure(winnum)
     let l:status = ""
 
     " Mode sign {{{
+
     let l:excluded_file_types = ["help", "qf"]
     let l:status .= s:get_color(l:active, 'Visual', 'Comment')
     let l:handled = v:false
@@ -99,6 +100,7 @@ function! statusline#configure(winnum)
     if !l:handled && l:active
         let l:status .= " %{toupper(g:vimrc_mode_map[mode()])} "
     endif
+
     " }}}
 
     let l:status .= s:get_color(l:active, 'Error', 'ErrorMsg')
@@ -107,11 +109,23 @@ function! statusline#configure(winnum)
     let l:status .= '%w' " Preview sign
 
     " File path {{{
+
     if &filetype != "fugitive"
         let l:status .= s:get_color(l:active, 'Normal', 'Comment')
         let l:status .= " %{statusline#is_fugitive_buffer(expand('%')) ? expand('%:t') : expand('%')}"
     endif
+
     " }}}
+
+    if l:active
+        " FIXME: nvim-lsp somtimes stops working. This is a convenient way to
+        " see If LSP is working or not.
+        let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
+        if l:is_lsp_active
+            let l:status .= s:get_color(l:active, 'SpecialKey', 'Comment')
+            let l:status .= " ⚙ "
+        endif
+    endif
 
     " Diff file signs {{{
 
@@ -173,6 +187,7 @@ function! statusline#configure(winnum)
 
 
     " Branch name {{{
+
     let l:status .= s:get_color(l:active, 'Visual', 'Comment')
     if exists("*FugitiveHead") && l:active
         let l:head = FugitiveHead()
@@ -185,6 +200,7 @@ function! statusline#configure(winnum)
             let l:status .= ' ʯ ' . l:head . ' '
         endif
     endif
+
     " }}}
 
     return l:status

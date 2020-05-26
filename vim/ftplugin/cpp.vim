@@ -9,7 +9,6 @@ setlocal foldmethod=indent
 
 " Override the default comment string from vim-commentary
 setlocal commentstring=//%s
-setlocal formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
 
 if get(g:, "swap_source_loaded", 0) == 0
     let g:swap_source_loaded = 1
