@@ -46,7 +46,7 @@ set termguicolors
 set nofoldenable
 set colorcolumn=81
 
-set completeopt-=preview
+set completeopt=menuone,noinsert,noselect
 set splitbelow
 set splitright
 
