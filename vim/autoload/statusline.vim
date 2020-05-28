@@ -120,7 +120,12 @@ function! statusline#configure(winnum)
     if l:active
         " FIXME: nvim-lsp somtimes stops working. This is a convenient way to
         " see If LSP is working or not.
-        let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
+        try
+            let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
+        catch
+            let l:is_lsp_active = v:false
+        endtry
+
         if l:is_lsp_active
             let l:status .= s:get_color(l:active, 'SpecialKey', 'Comment')
             let l:status .= " ⚙ "
