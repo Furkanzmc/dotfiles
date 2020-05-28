@@ -83,10 +83,10 @@ function! statusline#configure(winnum)
     elseif l:active && &filetype == "terminal" && l:mode != "c"
         if l:mode == "n"
             let l:handled = v:true
-            let l:status .= " N.Terminal "
+            let l:status .= " N.TERMINAL "
         elseif l:mode == "t"
             let l:handled = v:true
-            let l:status .= " Terminal "
+            let l:status .= " TERMINAL "
         endif
     elseif l:active && &filetype == "dirvish" && l:mode != "c"
         let l:handled = v:true
