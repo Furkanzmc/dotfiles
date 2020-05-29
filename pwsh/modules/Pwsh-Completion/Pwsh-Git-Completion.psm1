@@ -104,17 +104,17 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
     $allBranches = $(git branch -a) | ForEach-Object {
         $_.Replace("*", "").Trim().Replace("remotes/", "")
     }
-    $localBranches = $(git branch -l) | ForEach-Object {
-        $_.Replace("*", "").Trim()
-    }
 
-    $branchToComplete = $wordToComplete
     $allBranches | ForEach-Object {
         $branchName = $_
-        if ($branchName -like "$branchToComplete*") {
-            $trimmed = $branchName.Replace("origin/", "")
-            if ($trimmed -in $localBranches) {
-                $branchName = $trimmed
+        if ($branchName -like "$wordToComplete*" -or `
+            $branchName.TrimStart("origin/") -like "$wordToComplete*") {
+            if ($wordToComplete.StartsWith("origin") `
+                -and -not $branchName.StartsWith("origin/")) {
+                $branchName = "origin/" + $branchName
+            }
+            elseif (-not $wordToComplete.StartsWith("origin")) {
+                $branchName = $branchName.TrimStart("origin/")
             }
 
             if (-not $branchName.Contains("origin/HEAD")) {
