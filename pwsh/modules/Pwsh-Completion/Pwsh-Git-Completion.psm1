@@ -43,11 +43,19 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
     $textToComplete = $commandAst.ToString()
     $textComponents = $textToComplete.Split(" ")
 
+    if ($GIT_COMMANDS.Length -eq 0) {
+        $gitCommands = Get-Git-Commands
+    }
+    else {
+        $gitCommands = $GIT_COMMANDS
+    }
+
+    $currentCommand = Get-Current-Command $textComponents $gitCommands
     if ($wordToComplete -match "^-") {
         $tmpManPager = $env:MANPAGER
         $env:MANPAGER = ''
 
-        $helpContent = $(git help $textComponents[$textComponents.Length - 2].Trim())
+        $helpContent = $(git help $currentCommand.Trim())
         $helpContent | ForEach-Object {
             $line = $_.Trim()
 
@@ -71,15 +79,6 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
         $env:MANPAGER = $tmpManPager
         return
     }
-
-    if ($GIT_COMMANDS.Length -eq 0) {
-        $gitCommands = Get-Git-Commands
-    }
-    else {
-        $gitCommands = $GIT_COMMANDS
-    }
-
-    $currentCommand = Get-Current-Command $textComponents $gitCommands
 
     $commandCompleted = $false
     if ($currentCommand -eq "") {
