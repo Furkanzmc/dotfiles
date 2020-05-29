@@ -6,7 +6,6 @@ if (-not $IsMacOS) {
 
 # TODO
 # [ ] Handle the cases for sub-commands (e.g git stash push)
-# [ ] Support range in branch names (e.g master..develop)
 # [ ] If there's a file/folder with a name starting with the command, the
 #     command completion doesn't work.
 # [ ] Once the features are complete for macOS, the commands can be cached for
@@ -104,6 +103,14 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
         $_.Replace("*", "").Trim().Replace("remotes/", "")
     }
 
+    $prefix = ""
+    if ($wordToComplete.Contains("..")) {
+        $dotIndex = $wordToComplete.LastIndexOf(".")
+        $prefix = $wordToComplete.Substring(0, $dotIndex + 1)
+        $wordToComplete = $wordToComplete.Substring(`
+            $dotIndex + 1, $wordToComplete.Length - ($dotIndex + 1))
+    }
+
     $allBranches | ForEach-Object {
         $branchName = $_
         if ($branchName -like "$wordToComplete*" -or `
@@ -112,10 +119,12 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
                 -and -not $branchName.StartsWith("origin/")) {
                 $branchName = "origin/" + $branchName
             }
-            elseif (-not $wordToComplete.StartsWith("origin")) {
+            elseif (-not $wordToComplete.StartsWith("origin") `
+                -and $branchName.StartsWith("origin/")) {
                 $branchName = $branchName.TrimStart("origin/")
             }
 
+            $branchName = $prefix + $branchName
             if (-not $branchName.Contains("origin/HEAD")) {
                 New-Object -Type System.Management.Automation.CompletionResult -ArgumentList $branchName,
                     $branchName,
