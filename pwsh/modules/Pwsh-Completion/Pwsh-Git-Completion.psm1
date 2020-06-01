@@ -110,6 +110,10 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
         $wordToComplete = $wordToComplete.Substring(`
             $dotIndex + 1, $wordToComplete.Length - ($dotIndex + 1))
     }
+    elseif ($wordToComplete.Contains(":")) {
+        $wordToComplete = $wordToComplete.Replace(":", "")
+        $prefix = ":"
+    }
 
     $allBranches | ForEach-Object {
         $branchName = $_
