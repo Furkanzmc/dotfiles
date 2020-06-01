@@ -1,6 +1,7 @@
 setlocal scrollback=-1
 setlocal nowrap
 set scrolloff=0
+
 setlocal nonumber
 setlocal norelativenumber
 setlocal signcolumn=no
@@ -20,12 +21,12 @@ nmap <buffer> <silent> [p :call search("^>>>", "b")<CR>
 " Jump to the next Python prompt
 nmap <buffer> <silent> ]p :call search("^>>>")<CR>
 
-function! terminal#cleanup()
-    set scrolloff=3
-endfunction
+augroup Terminal
+    autocmd!
 
-autocmd TermLeave * call terminal#cleanup()
-autocmd TermEnter * set scrolloff=0
+    autocmd TermEnter * set scrolloff=0
+    autocmd TermLeave * set scrolloff=3
+augroup END
 
 tmap <C-d> <PageDown>
 tmap <C-u> <PageUp>
