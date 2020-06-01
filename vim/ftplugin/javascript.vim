@@ -1,2 +1,1 @@
-setlocal foldenable
 setlocal nocindent

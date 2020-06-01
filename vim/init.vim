@@ -492,7 +492,7 @@ autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
 " completion-nvim {{{
 
 let g:completion_enable_auto_popup = 0
-let g:completion_auto_change_source = 0
+let g:completion_auto_change_source = 1
 let g:completion_matching_ignore_case = 1
 
 function! s:check_back_space() abort
@@ -503,7 +503,7 @@ endfunction
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>check_back_space() ? "\<TAB>" :
-            \ completion#trigger_completion()
+            \ <C-R>=ListMonths()<CR>
 
 augroup CompleteionTriggerCharacter
     autocmd!
@@ -528,6 +528,14 @@ let g:completion_chain_complete_list = {
             \	{'mode': 'file'},
             \ ]
             \ }
+
+" }}}
+
+" diagnostic-nvim {{{
+
+let g:diagnostic_enable_virtual_text = 0
+let g:diagnostic_enable_location_list = 0
+let g:diagnostic_show_sign = 0
 
 " }}}
 
@@ -568,17 +576,18 @@ function! s:setup_lsp(file_type)
     endif
 
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
-    if !exists('s:' . a:file_type . '_lsp_loaded')
+
+    let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
+    if !l:is_lsp_active
         execute 'lua vimrc_setup_lsp("' . a:file_type . '")'
-        execute 'let s:' . a:file_type . '_lsp_loaded = v:true'
     endif
 endfunction
 
 command! PrintCurrentLSP :lua print(vim.inspect(vim.lsp.buf_get_clients()))<CR>
 command! StopCurrentLSP :lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
 
-autocmd FileType python call <SID>setup_lsp("python")
-autocmd FileType cpp,c call <SID>setup_lsp("cpp")
+autocmd BufEnter *.py call <SID>setup_lsp("python")
+autocmd BufEnter *.cpp,*.c,*.h call <SID>setup_lsp("cpp")
 
 if g:vimrc_rust_enabled
     autocmd FileType rust call <SID>setup_lsp("rust")
@@ -594,14 +603,6 @@ nnoremap <silent> K  <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-
-" }}}
-
-" diagnostic-nvim {{{
-
-let g:diagnostic_enable_virtual_text = 0
-let g:diagnostic_enable_location_list = 0
-let g:diagnostic_show_sign = 0
 
 " }}}
 
