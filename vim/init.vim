@@ -491,9 +491,10 @@ autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
 
 " completion-nvim {{{
 
-let g:completion_enable_auto_popup = 0
+let g:completion_enable_auto_popup = 1
 let g:completion_auto_change_source = 1
 let g:completion_matching_ignore_case = 1
+let g:completion_timer_cycle = 200
 
 function! s:check_back_space() abort
     let col = col('.') - 1
@@ -503,7 +504,9 @@ endfunction
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>check_back_space() ? "\<TAB>" :
-            \ <C-R>=ListMonths()<CR>
+            \ "\<C-x><C-o>"
+
+inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
 augroup CompleteionTriggerCharacter
     autocmd!
@@ -512,20 +515,20 @@ augroup CompleteionTriggerCharacter
 augroup end
 
 let s:lsp_chain_config = [
-            \	{'complete_items': ['lsp']},
-            \	{'mode': '<c-p>'},
-            \	{'mode': '<c-n>'},
-            \	{'mode': 'file'},
+            \   {'complete_items': ['lsp']},
+            \   {'mode': '<c-p>'},
+            \   {'mode': '<c-n>'},
+            \   {'mode': 'file'},
             \ ]
 
 let g:completion_chain_complete_list = {
-            \'python' : s:lsp_chain_config,
-            \'cpp' : s:lsp_chain_config,
-            \'rust' : s:lsp_chain_config,
-            \'default' : [
-            \	{'mode': '<c-p>'},
-            \	{'mode': '<c-n>'},
-            \	{'mode': 'file'},
+            \ 'python' : s:lsp_chain_config,
+            \ 'cpp' : s:lsp_chain_config,
+            \ 'rust' : s:lsp_chain_config,
+            \ 'default' : [
+            \     {'mode': '<c-p>'},
+            \     {'mode': '<c-n>'},
+            \     {'mode': 'file'},
             \ ]
             \ }
 
@@ -575,6 +578,7 @@ function! s:setup_lsp(file_type)
         let s:syntax_range_loaded = v:true
     endif
 
+    setlocal formatexpr=lua\ vim.lsp.buf.formatting()
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
     let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"

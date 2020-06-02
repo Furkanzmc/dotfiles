@@ -104,9 +104,9 @@ endfunction
 if !exists("g:vimrc_loaded_spacehi")
     let g:vimrc_loaded_spacehi = v:true
 
-    if !exists("g:spacehi_tabcolor")
-        let g:spacehi_tabcolor = "ctermfg=137 cterm=undercurl"
-        let g:spacehi_tabcolor = g:spacehi_tabcolor . " guifg=#b28761 gui=undercurl"
+    if !exists("g:vimrc_spacehi_tab_color")
+        let g:vimrc_spacehi_tab_color = "ctermfg=137 cterm=undercurl"
+        let g:vimrc_spacehi_tab_color = g:vimrc_spacehi_tab_color . " guifg=#b28761 gui=undercurl"
     endif
 
     if !exists("g:spacehi_spacecolor")
@@ -115,6 +115,10 @@ if !exists("g:vimrc_loaded_spacehi")
     endif
 
     function! s:highlight_space()
+        if &filetype == "" && !get(g:, "vimrc_spacehi_enabled_for_all", v:false)
+            return
+        endif
+
         if exists("b:space_highlighted") && b:space_highlighted == v:true
             return
         endif
@@ -125,7 +129,7 @@ if !exists("g:vimrc_loaded_spacehi")
         endif
 
         syntax match spacehiTab /\t/ containedin=ALL
-        execute("highlight spacehiTab " . g:spacehi_tabcolor)
+        execute("highlight spacehiTab " . g:vimrc_spacehi_tab_color)
 
         syntax match spacehiTrailingSpace /\s\+$/ containedin=ALL
         execute("highlight spacehiTrailingSpace " . g:spacehi_spacecolor)
@@ -133,6 +137,10 @@ if !exists("g:vimrc_loaded_spacehi")
     endfunction
 
     function! s:clear_highlight()
+        if &filetype == "" && !get(g:, "vimrc_spacehi_enabled_for_all", v:false)
+            return
+        endif
+
         if exists("b:space_highlighted") && b:space_highlighted == v:false
             return
         endif
