@@ -161,6 +161,7 @@ if has("win16") || has("win32")
 else
    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
+set wildignorecase
 
 "Always show current position
 set ruler
@@ -491,7 +492,7 @@ autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
 
 " completion-nvim {{{
 
-let g:completion_enable_auto_popup = 1
+let g:completion_enable_auto_popup = 0
 let g:completion_auto_change_source = 1
 let g:completion_matching_ignore_case = 1
 let g:completion_timer_cycle = 200
