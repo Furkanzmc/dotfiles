@@ -1,8 +1,7 @@
 setlocal spell
 setlocal colorcolumn=
-setlocal signcolumn=no
-
 setlocal nonumber
+
 setlocal norelativenumber
 
 " Append JIRA ticket number to commit message {{{

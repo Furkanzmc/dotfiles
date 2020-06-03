@@ -1,4 +1,3 @@
-setlocal signcolumn=no
 setlocal cursorline
 setlocal nonumber
 setlocal norelativenumber

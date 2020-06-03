@@ -4,5 +4,4 @@ if !get(s:, "vimrc_todo_plugins_loaded", v:false)
 endif
 
 setlocal colorcolumn=
-setlocal signcolumn=no
 setlocal cursorline

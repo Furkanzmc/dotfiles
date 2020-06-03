@@ -51,7 +51,7 @@ set shortmess+=c
 set splitbelow
 set splitright
 
-set signcolumn=yes
+set signcolumn=no
 
 " Reduces the number of lines that are above the curser when I do zt.
 set scrolloff=3

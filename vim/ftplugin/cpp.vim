@@ -6,6 +6,7 @@ if !get(s:, "vimrc_cpp_plugins_loaded", v:false)
 endif
 
 setlocal foldmethod=indent
+setlocal signcolumn=yes
 
 " Override the default comment string from vim-commentary
 setlocal commentstring=//%s

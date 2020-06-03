@@ -15,6 +15,7 @@ setlocal expandtab
 setlocal autoindent
 setlocal foldmethod=indent
 
+setlocal signcolumn=yes
 setlocal wildignore+=*.pyc,__pycache__
 
 if executable("black")

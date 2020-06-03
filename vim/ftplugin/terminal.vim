@@ -4,7 +4,6 @@ set scrolloff=0
 
 setlocal nonumber
 setlocal norelativenumber
-setlocal signcolumn=no
 
 " Jump to the previous shell prompt
 nmap <buffer> <silent> [t ?^\(!!\ =>\\|=>\)<CR><leader><CR>

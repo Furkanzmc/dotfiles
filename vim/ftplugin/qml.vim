@@ -3,6 +3,7 @@ if !get(s:, "vimrc_qml_plugins_loaded", v:false)
 endif
 
 setlocal foldmethod=indent
+setlocal signcolumn=yes
 
 command! -buffer -range RunQML :call qml#run()
 

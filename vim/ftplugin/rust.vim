@@ -5,3 +5,4 @@ if !get(s:, "vimrc_rust_plugins_loaded", v:false)
     let s:vimrc_rust_plugins_loaded = v:true
 endif
 
+setlocal signcolumn=yes
