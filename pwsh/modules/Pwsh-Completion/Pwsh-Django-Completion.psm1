@@ -47,7 +47,7 @@ function Complete() {
         return
     }
 
-    if ($app -eq "python" -and -not $textComponents[1] -contains "manage.py") {
+    if ($app -eq "python" -and -not ($textToComplete.Contains("manage.py"))) {
         return
     }
 
