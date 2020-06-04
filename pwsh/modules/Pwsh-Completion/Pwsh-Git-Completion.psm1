@@ -102,6 +102,7 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
     $allBranches = $(git branch -a) | ForEach-Object {
         $_.Replace("*", "").Trim().Replace("remotes/", "")
     }
+    $tags = $(git tag --list)
 
     $prefix = ""
     if ($wordToComplete.Contains("..")) {
@@ -115,7 +116,8 @@ Register-ArgumentCompleter -Native -CommandName git -ScriptBlock {
         $prefix = ":"
     }
 
-    $allBranches | ForEach-Object {
+    $completionList = $allBranches + $tags
+    $completionList | ForEach-Object {
         $branchName = $_
         if ($branchName -like "$wordToComplete*" -or `
             $branchName.TrimStart("origin/") -like "$wordToComplete*") {
