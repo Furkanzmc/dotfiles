@@ -386,19 +386,20 @@ function! PackInit()
     call minpac#add('neovim/nvim-lsp')
 
     call minpac#add('haorenW1025/completion-nvim')
-    call minpac#add('Furkanzmc/diagnostic-nvim')
 
     " On Demand Plugins {{{
 
+    call minpac#add('Furkanzmc/diagnostic-nvim', {'type': 'opt'})
     call minpac#add('neomake/neomake', {'type': 'opt'})
+
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
     call minpac#add('octol/vim-cpp-enhanced-highlight', {'type': 'opt'})
-
     call minpac#add('majutsushi/tagbar', {'type': 'opt'})
+
     call minpac#add('Vimjas/vim-python-pep8-indent', {'type': 'opt'})
     call minpac#add('masukomi/vim-markdown-folding', {'type': 'opt'})
-
     call minpac#add('metakirby5/codi.vim', {'type': 'opt'})
+
     call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
 
     if has('win32') == 0
@@ -490,6 +491,75 @@ autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
 
 " }}}
 
+" nvim-lsp {{{
+
+sign define LspDiagnosticsErrorSign text=!! texthl=LspDiagnosticsError
+            \ linehl= numhl=
+sign define LspDiagnosticsWarningSign text=?? texthl=LspDiagnosticsWarning
+            \ linehl= numhl=
+sign define LspDiagnosticsInformationSign text=++
+            \ texthl=LspDiagnosticsInformation linehl= numhl=
+sign define LspDiagnosticsHintSign text=H texthl=LspDiagnosticsHint
+            \ linehl= numhl=
+
+
+" TODO: Move this to init.lua
+lua << EOF
+vimrc_setup_lsp = function(file_type)
+    local setup = function()
+        require'completion'.on_attach()
+        require'diagnostic'.on_attach()
+    end
+
+    if file_type == "python" then
+        require'nvim_lsp'.pyls.setup{on_attach=setup}
+    elseif file_type == "cpp" then
+        require'nvim_lsp'.clangd.setup{on_attach=setup}
+    elseif file_type == "rust" then
+        require'nvim_lsp'.rls.setup{on_attach=setup}
+    end
+end
+EOF
+
+function! s:setup_lsp(file_type)
+    if !exists('s:completion_plugins_loaded')
+        packadd SyntaxRange
+        packadd diagnostic-nvim
+        let s:completion_plugins_loaded = v:true
+    endif
+
+    setlocal formatexpr=lua\ vim.lsp.buf.formatting()
+    setlocal omnifunc=v:lua.vim.lsp.omnifunc
+
+    let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
+    if !l:is_lsp_active
+        execute 'lua vimrc_setup_lsp("' . a:file_type . '")'
+    endif
+endfunction
+
+command! PrintCurrentLSP :lua print(vim.inspect(vim.lsp.buf_get_clients()))<CR>
+command! StopCurrentLSP :lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
+
+autocmd BufEnter *.py call <SID>setup_lsp("python")
+autocmd BufEnter *.cpp,*.c,*.h call <SID>setup_lsp("cpp")
+
+if g:vimrc_rust_enabled
+    autocmd FileType rust call <SID>setup_lsp("rust")
+endif
+
+nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <silent> <leader>lr <cmd>lua vim.lsp.buf.rename()<CR>
+
+nnoremap <silent> gs <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K  <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+
+" }}}
+
 " completion-nvim {{{
 
 let g:completion_enable_auto_popup = 0
@@ -505,7 +575,7 @@ endfunction
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>check_back_space() ? "\<TAB>" :
-            \ "\<C-x><C-o>"
+            \ completion#trigger_completion()
 
 inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
@@ -540,74 +610,6 @@ let g:completion_chain_complete_list = {
 let g:diagnostic_enable_virtual_text = 0
 let g:diagnostic_enable_location_list = 0
 let g:diagnostic_show_sign = 0
-
-" }}}
-
-" nvim-lsp {{{
-
-sign define LspDiagnosticsErrorSign text=!! texthl=LspDiagnosticsError
-            \ linehl= numhl=
-sign define LspDiagnosticsWarningSign text=?? texthl=LspDiagnosticsWarning
-            \ linehl= numhl=
-sign define LspDiagnosticsInformationSign text=++
-            \ texthl=LspDiagnosticsInformation linehl= numhl=
-sign define LspDiagnosticsHintSign text=H texthl=LspDiagnosticsHint
-            \ linehl= numhl=
-
-
-" TODO: Move this to init.lua
-lua << EOF
-vimrc_setup_lsp = function(file_type)
-    local setup = function()
-        require'completion'.on_attach()
-        require'diagnostic'.on_attach()
-    end
-
-    if file_type == "python" then
-        require'nvim_lsp'.pyls.setup{on_attach=setup}
-    elseif file_type == "cpp" then
-        require'nvim_lsp'.clangd.setup{on_attach=setup}
-    elseif file_type == "rust" then
-        require'nvim_lsp'.rls.setup{on_attach=setup}
-    end
-end
-EOF
-
-function! s:setup_lsp(file_type)
-    if !exists('s:syntax_range_loaded')
-        packadd SyntaxRange
-        let s:syntax_range_loaded = v:true
-    endif
-
-    setlocal formatexpr=lua\ vim.lsp.buf.formatting()
-    setlocal omnifunc=v:lua.vim.lsp.omnifunc
-
-    let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
-    if !l:is_lsp_active
-        execute 'lua vimrc_setup_lsp("' . a:file_type . '")'
-    endif
-endfunction
-
-command! PrintCurrentLSP :lua print(vim.inspect(vim.lsp.buf_get_clients()))<CR>
-command! StopCurrentLSP :lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
-
-autocmd BufEnter *.py call <SID>setup_lsp("python")
-autocmd BufEnter *.cpp,*.c,*.h call <SID>setup_lsp("cpp")
-
-if g:vimrc_rust_enabled
-    autocmd FileType rust call <SID>setup_lsp("rust")
-endif
-
-nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
-nnoremap <silent> <leader>lr <cmd>lua vim.lsp.buf.rename()<CR>
-
-nnoremap <silent> gs <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K  <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 
 " }}}
 
