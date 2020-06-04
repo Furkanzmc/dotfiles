@@ -437,8 +437,6 @@ nmap <leader>s :Rg<cr>
 map <leader>h :History<CR>
 
 let g:fzf_preview_window = ''
-" [[B]Commits] Customize the options used by 'git log':
-let g:fzf_commits_log_options = "--graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --color=always"
 
 " }}}
 
