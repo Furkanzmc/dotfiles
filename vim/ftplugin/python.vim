@@ -21,3 +21,5 @@ setlocal wildignore+=*.pyc,__pycache__
 if executable("black")
     setlocal formatprg=black\ --line-length=80\ --quiet\ -
 endif
+
+nmap <buffer><silent> <leader>pi :call python#get_pylint_error_message(expand("<cword>"))<CR>

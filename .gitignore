@@ -1,4 +1,4 @@
-vim/temp_dirs/undodir/*
+vim/temp_dirs/*
 pwsh/tmp_dirs/*
 vim/temp_dirs/yankring_history_v2.txt
 tags
