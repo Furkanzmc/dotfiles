@@ -67,16 +67,16 @@ if (Test-Path env:NVIM_LISTEN_ADDRESS -ErrorAction SilentlyContinue) {
     Set-Alias -Name nvc -Value Nvim-Run-Command
 }
 
-function Vimrc-Background() {
+function Vim-Color() {
     Param(
-            [Parameter(Mandatory=$false)]
-            [ValidateSet("light", "dark")]
-            [String]$Color="",
-            [Parameter(Mandatory=$false)]
-            [Switch]$ChangeAllInstances=$false,
-            [Parameter(Mandatory=$false)]
-            [Switch]$MatchTheme=$false
-         )
+        [Parameter(Position=0, Mandatory=$false)]
+        [ValidateSet("light", "dark")]
+        [String]$Color="",
+        [Parameter(Mandatory=$false)]
+        [Switch]$ChangeAllInstances=$false,
+        [Parameter(Mandatory=$false)]
+        [Switch]$MatchTheme=$false
+     )
 
     if ($MatchTheme) {
         if (Get-Command -Name Is-Dark-Mode -ErrorAction SilentlyContinue) {
@@ -114,81 +114,21 @@ function Vimrc-Background() {
     }
 }
 
-function Vimrc-Status() {
-    Vimrc-Rust-Enabled
-    Vimrc-Virtual-Text-Enabled
-    Vimrc-Background
-}
-
-function Vimrc-Rust-Enabled() {
-    Param(
-        [Parameter(Mandatory=$false)]
-        [ValidateSet("true", "false")]
-        [String]$Enabled=""
-     )
-
-    if ($Enabled -eq "true") {
-        $env:VIMRC_RUST_ENABLED=1
-    }
-    elseif ($Enabled -eq "false") {
-        $env:VIMRC_RUST_ENABLED=0
-    }
-
-    if (Test-Path env:VIMRC_RUST_ENABLED) {
-        if ($env:VIMRC_RUST_ENABLED -eq 1) {
-            Write-Host "[vimrc] Rust support is enabled."
-        }
-        else {
-            Write-Host "[vimrc] Rust support is disabled."
-        }
-    }
-    else {
-        Write-Host "[vimrc] VIMRC_RUST_ENABLED environment variable is not used."
-    }
-}
-
-function Vimrc-Virtual-Text-Enabled() {
-    Param(
-        [Parameter(Mandatory=$false)]
-        [ValidateSet("true", "false")]
-        [String]$Enabled=""
-     )
-
-    if ($Enabled -eq "true") {
-        $env:VIMRC_USE_VIRTUAL_TEXT=1
-    }
-    elseif ($Enabled -eq "false") {
-        $env:VIMRC_USE_VIRTUAL_TEXT=0
-    }
-
-    if (Test-Path env:VIMRC_USE_VIRTUAL_TEXT) {
-        if ($env:VIMRC_USE_VIRTUAL_TEXT -eq 1) {
-            Write-Host "[vimrc] Virtual text support is enabled."
-        }
-        else {
-            Write-Host "[vimrc] Virtual text support is disabled."
-        }
-    }
-    else {
-        Write-Host "[vimrc] VIMRC_USE_VIRTUAL_TEXT environment variable is not used."
-    }
-}
-
-if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
-    Write-Host "Loaded Pwsh-Vim in $($Stopwatch.Elapsed.TotalSeconds) seconds."
-    $Stopwatch.Stop()
-}
-
-function codi() {
+function Codi() {
     Param(
         [Parameter(Mandatory=$false)]
         [ValidateSet("python", "javascript")]
         [String]$FileType=""
      )
 
-    vim -c `
+    nvim -c `
     "packadd codi.vim `
     let g:startify_disable_at_vimenter = 1 |`
     setlocal cursorline |`
     Codi $FileType"
  }
+
+if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
+    Write-Host "Loaded Pwsh-Vim in $($Stopwatch.Elapsed.TotalSeconds) seconds."
+    $Stopwatch.Stop()
+}
