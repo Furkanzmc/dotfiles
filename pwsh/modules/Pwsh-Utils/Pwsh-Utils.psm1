@@ -14,22 +14,23 @@ function Virtualenv-Activate() {
 if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
     function Fzf-List-Process() {
         $color = $env:VIMRC_BACKGROUND -eq "light" ? "light" : "dark"
+        $command = 'Get-Process | Where-Object { `
+            $_.ProcessName.Length -gt 0 `
+        } | Format-Table Id,ProcessName,StartTime'
+        $killCommand = '$processId = Select-String -Pattern "^[0-9]+" -InputObject {} `
+                    | Select-Object -ExpandProperty Matches `
+                    | Select-Object -Index 0 | Select-Object -ExpandProperty Value;`
+                    Stop-Process $processId'
+
         Get-Process | Where-Object {`
             $_.ProcessName.Length -gt 0 `
         } | Format-Table Id,ProcessName,StartTime `
           | fzf --reverse --no-mouse --color=$color `
-            --header 'Press <C-d> to kill the process, <C-r> to refresh the list.' `
-            --bind 'ctrl-d:execute-silent(`
-                    $processId = Select-String -Pattern "^[0-9]+" -InputObject {} `
-                    | Select-Object -ExpandProperty Matches `
-                    | Select-Object -Index 0 | Select-Object -ExpandProperty Value;`
-                    Stop-Process $processId)+kill-line+clear-query+reload(`
-                          Get-Process | Where-Object {`
-                              $_.ProcessName.Length -gt 0 `
-                          } | Format-Table Id,ProcessName,StartTime)' `
-            --bind 'ctrl-r:reload(Get-Process | Where-Object {`
-                              $_.ProcessName.Length -gt 0 `
-                          } | Format-Table Id,ProcessName,StartTime)'
+            --header 'Press <C-k> to kill the process, <C-r> to refresh the list.' `
+            --bind 'ctrl-d:page-down' `
+            --bind 'ctrl-u:page-up' `
+            --bind "ctrl-k:execute-silent($killCommand)+kill-line+clear-query+reload($command)" `
+            --bind "ctrl-r:reload($command)"
     }
 
     function Fzf-History() {
