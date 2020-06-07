@@ -12,6 +12,26 @@ function Virtualenv-Activate() {
 }
 
 if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
+    function Fzf-List-Process() {
+        $color = $env:VIMRC_BACKGROUND -eq "light" ? "light" : "dark"
+        Get-Process | Where-Object {`
+            $_.ProcessName.Length -gt 0 `
+        } | Format-Table Id,ProcessName,StartTime `
+          | fzf --reverse --no-mouse --color=$color `
+            --header 'Press <C-d> to kill the process, <C-r> to refresh the list.' `
+            --bind 'ctrl-d:execute-silent(`
+                    $processId = Select-String -Pattern "^[0-9]+" -InputObject {} `
+                    | Select-Object -ExpandProperty Matches `
+                    | Select-Object -Index 0 | Select-Object -ExpandProperty Value;`
+                    Stop-Process $processId)+kill-line+clear-query+reload(`
+                          Get-Process | Where-Object {`
+                              $_.ProcessName.Length -gt 0 `
+                          } | Format-Table Id,ProcessName,StartTime)' `
+            --bind 'ctrl-r:reload(Get-Process | Where-Object {`
+                              $_.ProcessName.Length -gt 0 `
+                          } | Format-Table Id,ProcessName,StartTime)'
+    }
+
     function Fzf-History() {
         Param(
             [Parameter(Position=0, Mandatory=$false)]
@@ -65,8 +85,10 @@ if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
     Set-Alias -Name hh -Value Fzf-History
     Set-Alias -Name mm -Value Add-Dir-Bookmark
     Set-Alias -Name ms -Value Get-Dir-Bookmarks
+
     Set-Alias -Name mc -Value Clear-Dir-Bookmarks
     Set-Alias -Name commands -Value Get-Commands
+    Set-Alias -Name ps -Value Fzf-List-Process
 }
 
 function Copy-Pwd() {
