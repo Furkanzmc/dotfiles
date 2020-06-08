@@ -26,10 +26,10 @@ if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
             $_.ProcessName.Length -gt 0 `
         } | Format-Table Id,ProcessName,StartTime `
           | fzf --reverse --no-mouse --color=$color `
-            --header 'Press <C-k> to kill the process, <C-r> to refresh the list.' `
+            --header 'Press <C-q> to kill the process, <C-r> to refresh the list.' `
             --bind 'ctrl-d:page-down' `
             --bind 'ctrl-u:page-up' `
-            --bind "ctrl-k:execute-silent($killCommand)+kill-line+clear-query+reload($command)" `
+            --bind "ctrl-q:execute-silent($killCommand)+kill-line+clear-query+reload($command)" `
             --bind "ctrl-r:reload($command)"
     }
 
