@@ -158,9 +158,8 @@ function Replace-In-Dir($from, $to) {
     }
 }
 
-if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
-    Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
-    $Stopwatch.Stop()
+function Get-Weather() {
+    (Invoke-WebRequest http://v2.wttr.in/).Content
 }
 
 function Switch-Terminal-Theme() {
@@ -184,4 +183,9 @@ function Switch-Terminal-Theme() {
     Set-Content -Path ~/.dotfiles/terminals/alacritty.yml -Value $content
     Start-Process -FilePath python3 -ArgumentList `
         $nvimPath,"--command ",$command -NoNewWindow
+}
+
+if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
+    Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
+    $Stopwatch.Stop()
 }
