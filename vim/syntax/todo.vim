@@ -78,7 +78,7 @@ highlight default link TodoSubTask Question
 autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd todo.txt
             \ :call s:enable_highlight()
 
-call markdown#enable_highlight()
+call s:enable_highlight()
 
 call matchadd('Conceal', '   ```[a-z]\+$', 10, -1, {'conceal':' '})
 call matchadd('Conceal', '   ```$', 10, -1, {'conceal':' '})
