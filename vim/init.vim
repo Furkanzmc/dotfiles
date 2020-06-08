@@ -449,8 +449,6 @@ map <leader>tbs  :TagbarShowTag<CR>
 
 " }}}
 
-" Completion {{{
-
 " Neomake {{{
 
 function s:setup_neomake()
@@ -488,6 +486,10 @@ let g:neomake_qml_enabled_makers = ["qmllint"]
 autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
 
 " }}}
+
+" Completion {{{
+
+set pumheight=12
 
 " nvim-lsp {{{
 
@@ -561,27 +563,18 @@ nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 " completion-nvim {{{
 
 let g:completion_enable_auto_popup = 0
-let g:completion_auto_change_source = 1
-let g:completion_matching_ignore_case = 1
+let g:completion_enable_snippet = 0
+let g:completion_confirm_key = ""
+
+let g:completion_enable_auto_hover = 0
+let g:completion_enable_auto_signature = 0
+let g:completion_trigger_keyword_length = 3
+
 let g:completion_timer_cycle = 200
+let g:completion_auto_change_source = 1
+let g:completion_matching_strategy_list = ['exact', 'substring']
 
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ completion#trigger_completion()
-
-inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-
-augroup CompleteionTriggerCharacter
-    autocmd!
-    autocmd FileType * let g:completion_trigger_character = ['.']
-    autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
-augroup end
+let g:completion_matching_ignore_case = 1
 
 let s:lsp_chain_config = [
             \   {'complete_items': ['lsp']},
@@ -600,6 +593,25 @@ let g:completion_chain_complete_list = {
             \     {'mode': 'file'},
             \ ]
             \ }
+
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ completion#trigger_completion()
+
+inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+
+augroup CompletionNvim
+    autocmd!
+    autocmd FileType * let g:completion_trigger_character = ['.']
+    autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
+augroup end
 
 " }}}
 
