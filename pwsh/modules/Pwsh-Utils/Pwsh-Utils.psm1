@@ -45,7 +45,13 @@ if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
             $count = -1
         }
 
-        $selectedItem = Get-Content (Get-PSReadlineOption).HistorySavePath -Tail $count | fzf --reverse --tac
+        $selectedItem = Get-Content (Get-PSReadlineOption).HistorySavePath `
+            -Tail $count | `
+            fzf --header `
+                "Press Enter to copy the line, <C-r> to list all history, <C-l> to only list the last 1000." `
+                --reverse --tac `
+                --bind "ctrl-r:reload(Get-Content (Get-PSReadlineOption).HistorySavePath)" `
+                --bind "ctrl-l:reload(Get-Content (Get-PSReadlineOption).HistorySavePath -Tail 1000)"
         Write-Host $selectedItem -ForegroundColor blue
         Set-Clipboard $selectedItem
     }
@@ -56,17 +62,34 @@ if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
             -Value $location.Path
     }
 
-    function Clear-Dir-Bookmarks() {
-        $location = Get-Location
-        Set-Content -Path "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt" `
-            -Value ""
+    function Remove-Dir-Bookmark() {
+        Param(
+            [Parameter(Position=0, Mandatory=$true)]
+            [String]
+            $Entry
+        )
+
+        $bookmarkPath = "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt"
+        $content = Get-Content -Path $bookmarkPath
+        $newContent = [System.Collections.ArrayList]@()
+
+        Set-Content -Path $bookmarkPath -Value ""
+        $content | ForEach-Object {
+            if ($_ -ne $Entry) {
+                Add-Content -Path $bookmarkPath -Value $_
+            }
+        }
     }
 
     function Get-Dir-Bookmarks() {
         $bookmarkPath = "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt"
+        $refreshCommand = 'Get-Content ' + $bookmarkPath + ' | Sort-Object -Unique | Where-Object { $_.Length -gt 0 }'
         if (Test-Path $bookmarkPath -ErrorAction SilentlyContinue) {
             Get-Content $bookmarkPath | Sort-Object -Unique `
-                | fzf --reverse +x | Set-Location
+                | Where-Object { $_.Length -gt 0 } `
+                | fzf --reverse +x --header "Press enter to navigate, <C-r> to remove the selected bookmark." `
+                --bind "ctrl-r:execute-silent(Remove-Dir-Bookmark {})+reload($refreshCommand)" `
+                | Where-Object { Test-Path $_ -ErrorAction SilentlyContinue} | Set-Location
         }
         else {
             Write-Host "No bookmarks file."
@@ -75,7 +98,7 @@ if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
 
     function Get-Commands() {
         $selected = Get-Command -All | Select-Object -Property CommandType,Name `
-            | fzf --reverse +x
+            | fzf --reverse +x --header "Press enter to copy the command."
         if ($selected) {
             $selected = $selected.Trim().Split(" ")[1]
             Write-Host $selected -ForegroundColor blue
@@ -87,7 +110,6 @@ if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
     Set-Alias -Name mm -Value Add-Dir-Bookmark
     Set-Alias -Name ms -Value Get-Dir-Bookmarks
 
-    Set-Alias -Name mc -Value Clear-Dir-Bookmarks
     Set-Alias -Name commands -Value Get-Commands
     Set-Alias -Name ps -Value Fzf-List-Process
 }
