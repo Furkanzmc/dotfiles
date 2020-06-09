@@ -1,7 +1,7 @@
 function! qml#run()
     if executable('qmlscene')
-        let l:lines = buffers#get_visual_selection()
-        if len(l:lines) > 0
+        if mode() == "v"
+            let l:lines = buffers#get_visual_selection()
             let l:qml_file = tempname() . '.qml'
 
             call insert(l:lines, "import QtQuick 2.12")
