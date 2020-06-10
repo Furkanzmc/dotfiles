@@ -106,7 +106,7 @@ if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
         }
     }
 
-    Set-Alias -Name hh -Value Fzf-History
+    Set-Alias -Name hs -Value Fzf-History
     Set-Alias -Name mm -Value Add-Dir-Bookmark
     Set-Alias -Name ms -Value Get-Dir-Bookmarks
 
