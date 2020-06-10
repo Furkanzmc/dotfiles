@@ -385,11 +385,8 @@ function! PackInit()
     call minpac#add('mcchrish/info-window.nvim')
     call minpac#add('neovim/nvim-lsp')
 
-    call minpac#add('haorenW1025/completion-nvim')
-
     " On Demand Plugins {{{
 
-    call minpac#add('Furkanzmc/diagnostic-nvim', {'type': 'opt'})
     call minpac#add('neomake/neomake', {'type': 'opt'})
 
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
@@ -506,17 +503,12 @@ sign define LspDiagnosticsHintSign text=H texthl=LspDiagnosticsHint
 " TODO: Move this to init.lua
 lua << EOF
 vimrc_setup_lsp = function(file_type)
-    local setup = function()
-        require'completion'.on_attach()
-        require'diagnostic'.on_attach()
-    end
-
     if file_type == "python" then
-        require'nvim_lsp'.pyls.setup{on_attach=setup}
+        require'nvim_lsp'.pyls.setup{on_attach=require'lsp'.on_attach}
     elseif file_type == "cpp" then
-        require'nvim_lsp'.clangd.setup{on_attach=setup}
+        require'nvim_lsp'.clangd.setup{}
     elseif file_type == "rust" then
-        require'nvim_lsp'.rls.setup{on_attach=setup}
+        require'nvim_lsp'.rls.setup{}
     end
 end
 EOF
@@ -524,7 +516,6 @@ EOF
 function! s:setup_lsp(file_type)
     if !exists('s:completion_plugins_loaded')
         packadd SyntaxRange
-        packadd diagnostic-nvim
         let s:completion_plugins_loaded = v:true
     endif
 
@@ -558,43 +549,6 @@ nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 
-" }}}
-
-" completion-nvim {{{
-
-let g:completion_enable_auto_popup = 0
-let g:completion_enable_snippet = 0
-let g:completion_confirm_key = ""
-
-let g:completion_enable_auto_hover = 0
-let g:completion_enable_auto_signature = 0
-let g:completion_trigger_keyword_length = 3
-
-let g:completion_timer_cycle = 200
-let g:completion_auto_change_source = 1
-let g:completion_matching_strategy_list = ['exact', 'substring']
-
-let g:completion_matching_ignore_case = 1
-
-let s:lsp_chain_config = [
-            \   {'complete_items': ['lsp']},
-            \   {'mode': '<c-p>'},
-            \   {'mode': '<c-n>'},
-            \   {'mode': 'file'},
-            \ ]
-
-let g:completion_chain_complete_list = {
-            \ 'python' : s:lsp_chain_config,
-            \ 'cpp' : s:lsp_chain_config,
-            \ 'rust' : s:lsp_chain_config,
-            \ 'default' : [
-            \     {'mode': '<c-p>'},
-            \     {'mode': '<c-n>'},
-            \     {'mode': 'file'},
-            \ ]
-            \ }
-
-
 function! s:check_back_space() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
@@ -603,23 +557,9 @@ endfunction
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>check_back_space() ? "\<TAB>" :
-            \ completion#trigger_completion()
+            \ "\<C-x><C-o>"
 
 inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-
-augroup CompletionNvim
-    autocmd!
-    autocmd FileType * let g:completion_trigger_character = ['.']
-    autocmd FileType cpp let g:completion_trigger_character = ['.', '::', '->']
-augroup end
-
-" }}}
-
-" diagnostic-nvim {{{
-
-let g:diagnostic_enable_virtual_text = 0
-let g:diagnostic_enable_location_list = 0
-let g:diagnostic_show_sign = 0
 
 " }}}
 
