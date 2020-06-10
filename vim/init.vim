@@ -499,20 +499,6 @@ sign define LspDiagnosticsInformationSign text=++
 sign define LspDiagnosticsHintSign text=H texthl=LspDiagnosticsHint
             \ linehl= numhl=
 
-
-" TODO: Move this to init.lua
-lua << EOF
-vimrc_setup_lsp = function(file_type)
-    if file_type == "python" then
-        require'nvim_lsp'.pyls.setup{on_attach=require'lsp'.on_attach}
-    elseif file_type == "cpp" then
-        require'nvim_lsp'.clangd.setup{}
-    elseif file_type == "rust" then
-        require'nvim_lsp'.rls.setup{}
-    end
-end
-EOF
-
 function! s:setup_lsp(file_type)
     if !exists('s:completion_plugins_loaded')
         packadd SyntaxRange
@@ -522,32 +508,35 @@ function! s:setup_lsp(file_type)
     setlocal formatexpr=lua\ vim.lsp.buf.formatting()
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
+
     let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
-    if !l:is_lsp_active
-        execute 'lua vimrc_setup_lsp("' . a:file_type . '")'
+    if l:is_lsp_active
+        return
     endif
+
+    nnoremap <silent> <buffer> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+    nnoremap <silent> <buffer> <leader>lr <cmd>lua vim.lsp.buf.rename()<CR>
+    nnoremap <silent> <buffer> gs <cmd>lua vim.lsp.buf.signature_help()<CR>
+
+    nnoremap <silent> <buffer> <leader>lt <cmd>lua vim.lsp.buf.type_definition()<CR>
+    nnoremap <silent> <buffer> gd <cmd>lua vim.lsp.buf.definition()<CR>
+    nnoremap <silent> <buffer> K  <cmd>lua vim.lsp.buf.hover()<CR>
+
+    nnoremap <silent> <buffer> gr <cmd>lua vim.lsp.buf.references()<CR>
+    nnoremap <silent> <buffer> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
+    nnoremap <silent> <buffer> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+
+    execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'
 endfunction
 
-command! PrintCurrentLSP :lua print(vim.inspect(vim.lsp.buf_get_clients()))<CR>
-command! StopCurrentLSP :lua vim.lsp.stop_client(vim.lsp.get_active_clients())<CR>
+command! PrintCurrentLSP :lua require'lsp'.print_buffer_clients()<CR>
+command! StopCurrentLSP :lua require'lsp'.stop_buffer_clients()<CR>
 
 autocmd BufEnter *.py call <SID>setup_lsp("python")
 autocmd BufEnter *.cpp,*.c,*.h call <SID>setup_lsp("cpp")
-
 if g:vimrc_rust_enabled
     autocmd FileType rust call <SID>setup_lsp("rust")
 endif
-
-nnoremap <silent> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
-nnoremap <silent> <leader>lr <cmd>lua vim.lsp.buf.rename()<CR>
-
-nnoremap <silent> gs <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K  <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 
 function! s:check_back_space() abort
     let col = col('.') - 1
