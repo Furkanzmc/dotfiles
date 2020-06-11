@@ -383,10 +383,10 @@ function! PackInit()
 
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('mcchrish/info-window.nvim')
-    call minpac#add('neovim/nvim-lsp')
 
     " On Demand Plugins {{{
 
+    call minpac#add('neovim/nvim-lsp', {'type': 'opt'})
     call minpac#add('neomake/neomake', {'type': 'opt'})
 
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
@@ -502,6 +502,7 @@ sign define LspDiagnosticsHintSign text=H texthl=LspDiagnosticsHint
 function! s:setup_lsp(file_type)
     if !exists('s:completion_plugins_loaded')
         packadd SyntaxRange
+        packadd nvim-lsp
         let s:completion_plugins_loaded = v:true
     endif
 
