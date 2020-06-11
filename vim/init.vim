@@ -497,14 +497,15 @@ let g:lsp_virtual_text_prefix_warning = '‼'
 let g:lsp_virtual_text_prefix_information = 'ℹ'
 let g:lsp_virtual_text_prefix_hint = '⦿'
 let g:lsp_virtual_text_include_error_message = 0
+let g:lsp_signs_enabled = 1
 
-sign define LspDiagnosticsErrorSign text=!! texthl=LspDiagnosticsError
+sign define LspDiagnosticsErrorSign text=✖ texthl=LspDiagnosticsError
             \ linehl= numhl=
-sign define LspDiagnosticsWarningSign text=?? texthl=LspDiagnosticsWarning
+sign define LspDiagnosticsWarningSign text=‼ texthl=LspDiagnosticsWarning
             \ linehl= numhl=
-sign define LspDiagnosticsInformationSign text=++
+sign define LspDiagnosticsInformationSign text=ℹ
             \ texthl=LspDiagnosticsInformation linehl= numhl=
-sign define LspDiagnosticsHintSign text=H texthl=LspDiagnosticsHint
+sign define LspDiagnosticsHintSign text=⦿ texthl=LspDiagnosticsHint
             \ linehl= numhl=
 
 function! s:setup_lsp(file_type)

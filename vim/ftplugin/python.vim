@@ -22,3 +22,4 @@ nmap <buffer><silent> <leader>pi :call python#get_pylint_error_message(expand("<
 
 let g:lsp_location_list_enabled = 0
 let g:lsp_virtual_text_enabled = 0
+let g:lsp_signs_enabled = 0
