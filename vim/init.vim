@@ -490,6 +490,9 @@ set pumheight=12
 
 " nvim-lsp {{{
 
+let g:lsp_location_list_enabled = 1
+let g:lsp_virtual_text_enabled = 1
+
 sign define LspDiagnosticsErrorSign text=!! texthl=LspDiagnosticsError
             \ linehl= numhl=
 sign define LspDiagnosticsWarningSign text=?? texthl=LspDiagnosticsWarning
@@ -514,18 +517,6 @@ function! s:setup_lsp(file_type)
     if l:is_lsp_active
         return
     endif
-
-    nnoremap <silent> <buffer> <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
-    nnoremap <silent> <buffer> <leader>lr <cmd>lua vim.lsp.buf.rename()<CR>
-    nnoremap <silent> <buffer> gs <cmd>lua vim.lsp.buf.signature_help()<CR>
-
-    nnoremap <silent> <buffer> <leader>lt <cmd>lua vim.lsp.buf.type_definition()<CR>
-    nnoremap <silent> <buffer> gd <cmd>lua vim.lsp.buf.definition()<CR>
-    nnoremap <silent> <buffer> K  <cmd>lua vim.lsp.buf.hover()<CR>
-
-    nnoremap <silent> <buffer> gr <cmd>lua vim.lsp.buf.references()<CR>
-    nnoremap <silent> <buffer> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
-    nnoremap <silent> <buffer> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 
     execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'
 endfunction
