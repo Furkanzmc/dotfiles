@@ -13,7 +13,7 @@ function! buffers#close()
     endif
 
     if buflisted(l:currentBufNum)
-        execute("bdelete! ".l:currentBufNum)
+        execute("bdelete! " . l:currentBufNum)
     endif
 endfunction
 
@@ -32,7 +32,7 @@ function! s:matching_buffers(pattern)
     return filter(s:get_buflist(), 'bufname(v:val) =~ a:pattern')
 endfunction
 
-function! buffers#wipe_matching(pattern)
+function! buffers#wipe_matching(pattern, bang)
     if a:pattern == "*"
         let l:matchList = s:get_buflist()
     else
@@ -51,7 +51,11 @@ function! buffers#wipe_matching(pattern)
         let l:suffix = 's'
     endif
 
-    exec 'bw ' . join(l:matchList, ' ')
+    if a:bang == "!"
+        exec 'bw! ' . join(l:matchList, ' ')
+    else
+        exec 'bw ' . join(l:matchList, ' ')
+    endif
 
     echo 'Wiped ' . l:count . ' buffer' . l:suffix . '.'
 endfunction
