@@ -492,6 +492,11 @@ set pumheight=12
 
 let g:lsp_location_list_enabled = 1
 let g:lsp_virtual_text_enabled = 1
+let g:lsp_virtual_text_prefix_error = '✖'
+let g:lsp_virtual_text_prefix_warning = '‼'
+let g:lsp_virtual_text_prefix_information = 'ℹ'
+let g:lsp_virtual_text_prefix_hint = '⦿'
+let g:lsp_virtual_text_include_error_message = 0
 
 sign define LspDiagnosticsErrorSign text=!! texthl=LspDiagnosticsError
             \ linehl= numhl=
