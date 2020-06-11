@@ -564,15 +564,19 @@ function! init#show_loc_item_in_preview()
                 \ "I": "Info",
                 \ }
 
+    let l:lines = []
     for item in l:list
         if get(item, "lnum", "") == l:current_line
             let l:type = get(item, "type", "I")
             let l:type = get(l:type_mapping, l:type, "")
             let l:text = get(item, "text", "")
-            call preview#show("Neomake", [l:type . ": " . l:text])
-            break
+            call add(l:lines, l:type . ": " . l:text)
         endif
     endfor
+
+    if len(l:lines) > 0
+        call preview#show("Neomake", l:lines)
+    endif
 endfunction
 
 nnoremap <silent> <leader>li :call init#show_loc_item_in_preview()<CR>
