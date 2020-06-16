@@ -80,6 +80,27 @@ function! buffers#delete_hidden()
     endif
 endfunction
 
+function! buffers#wipe_nonexisting_files()
+    let l:matchList = filter(s:get_buflist(),
+                \ '!file_readable(bufname(v:val))')
+
+    let l:count = len(l:matchList)
+    if l:count < 1
+        echo 'No buffers found matching pattern ' . a:pattern
+        return
+    endif
+
+    if l:count == 1
+        let l:suffix = ''
+    else
+        let l:suffix = 's'
+    endif
+
+    exec 'bw! ' . join(l:matchList, ' ')
+
+    echo 'Wiped ' . l:count . ' buffer' . l:suffix . '.'
+endfunction
+
 " Code taken from here: https://stackoverflow.com/a/6271254
 function! buffers#get_visual_selection()
     let [line_start, column_start] = getpos("'<")[1:2]
