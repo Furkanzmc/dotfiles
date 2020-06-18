@@ -282,17 +282,17 @@ au BufReadPost *
 
 " Maps Commands {{{
 
-nnoremap <leader>an :next<CR>
-nnoremap <leader>ap :previous<CR>
+nnoremap <silent> <leader>an :next<CR>
+nnoremap <silent> <leader>ap :previous<CR>
 
-nnoremap <leader>ln :lnext<CR>
-nnoremap <leader>lp :lprevious<CR>
+nnoremap <silent> <leader>ln :lnext<CR>
+nnoremap <silent> <leader>lp :lprevious<CR>
 
-nnoremap <leader>cn :cnext<cr>
-nnoremap <leader>cp :cprevious<cr>
+nnoremap <silent> <leader>cn :cnext<cr>
+nnoremap <silent> <leader>cp :cprevious<cr>
 
-nnoremap <leader>bn :bnext<CR>
-nnoremap <leader>bp :bprevious<CR>
+nnoremap <silent> <leader>bn :bnext<CR>
+nnoremap <silent> <leader>bp :bprevious<CR>
 
 map <leader>tn :tabnew<cr>
 map <leader>tc :tabclose<cr>
