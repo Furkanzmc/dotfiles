@@ -11,7 +11,7 @@ command! Bdhidden :call buffers#delete_hidden()
 command! Bdnonexisting :call buffers#wipe_nonexisting_files()
 
 
-autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json
+autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html
             \ :call buffers#clean_extra_spaces()
 
 " Code from https://www.vim.org/scripts/script.php?script_id=443

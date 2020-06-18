@@ -158,6 +158,10 @@ M.setup_lsp = function(file_type)
         require'nvim_lsp'.clangd.setup{on_attach=setup}
     elseif file_type == "rust" then
         require'nvim_lsp'.rls.setup{on_attach=setup}
+    elseif file_type == "json" then
+        require'nvim_lsp'.jsonls.setup{on_attach=setup}
+    elseif file_type == "vim" then
+        require'nvim_lsp'.vimls.setup{on_attach=setup}
     end
 end
 

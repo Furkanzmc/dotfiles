@@ -359,8 +359,6 @@ let loaded_netrwPlugin = 1
 " highlighting.
 let g:polyglot_disabled = ['markdown']
 
-let g:vimrc_rust_enabled = !empty($VIMRC_RUST_ENABLED)
-
 " }}}
 
 " minpack {{{
@@ -398,14 +396,8 @@ function! PackInit()
     call minpac#add('metakirby5/codi.vim', {'type': 'opt'})
 
     call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-
-    if has('win32') == 0
-        call minpac#add('sakhnik/nvim-gdb', {'type': 'opt'})
-    endif
-
-    if g:vimrc_rust_enabled
-        call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
-    endif
+    call minpac#add('sakhnik/nvim-gdb', {'type': 'opt'})
+    call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
 
     " }}}
 endfunction
@@ -482,6 +474,32 @@ let g:neomake_qml_enabled_makers = ["qmllint"]
 
 autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
 
+function! s:neomake_job_finished() abort
+    let l:context = g:neomake_hook_context
+    if l:context.jobinfo.file_mode == 1
+        return
+    endif
+
+    let l:current_time = strftime("%H:%M")
+    let l:message = "Finished with " . l:context.jobinfo.exit_code .
+                \ " at " . l:current_time
+    echohl IncSearch
+    echo l:message
+    echohl Normal
+
+    call setqflist(
+                \ [],
+                \ "a",
+                \ {"lines": [l:message]})
+endfunction
+
+augroup neomake_hooks
+    au!
+    autocmd User NeomakeJobFinished
+                \ nested call <SID>neomake_job_finished()
+augroup END
+
+
 " }}}
 
 " Completion {{{
@@ -518,7 +536,6 @@ function! s:setup_lsp(file_type)
     setlocal formatexpr=lua\ vim.lsp.buf.formatting()
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
-
     let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
     if l:is_lsp_active
         return
@@ -531,10 +548,19 @@ command! PrintCurrentLSP :lua require'lsp'.print_buffer_clients()<CR>
 command! StopCurrentLSP :lua require'lsp'.stop_buffer_clients()<CR>
 
 autocmd BufEnter *.py call <SID>setup_lsp("python")
+autocmd FileType python call <SID>setup_lsp("python")
+
 autocmd BufEnter *.cpp,*.c,*.h call <SID>setup_lsp("cpp")
-if g:vimrc_rust_enabled
-    autocmd FileType rust call <SID>setup_lsp("rust")
-endif
+autocmd FileType cpp call <SID>setup_lsp("cpp")
+
+autocmd BufEnter *.json call <SID>setup_lsp("json")
+autocmd FileType json call <SID>setup_lsp("json")
+
+autocmd BufEnter *.vim call <SID>setup_lsp("vim")
+autocmd FileType vim call <SID>setup_lsp("vim")
+
+autocmd BufEnter *.rs call <SID>setup_lsp("rust")
+autocmd FileType rust call <SID>setup_lsp("rust")
 
 function! s:check_back_space() abort
     let col = col('.') - 1
@@ -588,31 +614,6 @@ endfunction
 nnoremap <silent> <leader>li :call init#show_loc_item_in_preview()<CR>
 
 " }}}
-
-function! s:neomake_job_finished() abort
-    let l:context = g:neomake_hook_context
-    if l:context.jobinfo.file_mode == 1
-        return
-    endif
-
-    let l:current_time = strftime("%H:%M")
-    let l:message = "Finished with " . l:context.jobinfo.exit_code .
-                \ " at " . l:current_time
-    echohl IncSearch
-    echo l:message
-    echohl Normal
-
-    call setqflist(
-                \ [],
-                \ "a",
-                \ {"lines": [l:message]})
-endfunction
-
-augroup neomake_hooks
-    au!
-    autocmd User NeomakeJobFinished
-                \ nested call <SID>neomake_job_finished()
-augroup END
 
 " }}}
 

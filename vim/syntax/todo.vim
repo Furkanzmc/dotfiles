@@ -13,7 +13,7 @@ function! s:enable_highlight()
     call SyntaxRange#Include('```python', '```', 'python', 'NonText')
     call SyntaxRange#Include('```js', '```', 'javascript', 'NonText')
 
-    setlocal foldmethod=expr
+    setlocal foldmethod=indent
     setlocal conceallevel=2
 endfunction
 
@@ -22,6 +22,7 @@ syntax match TodoProject '\(^\|\W\)+[^[:blank:]]\+' contains=NONE
 syntax match TodoContext '\(^\|\W\)@[^[:blank:]]\+' contains=NONE
 
 syntax match TodoDone '^[xX]\s.\+$'
+syntax match TodoInProgress '^[iI]\s.\+$'
 syntax match TodoPriorityA '^([aA])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
 syntax match TodoPriorityB '^([bB])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
 syntax match TodoPriorityC '^([cC])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
@@ -62,17 +63,18 @@ syntax match TodoSubTask '    +\s.\+$'
 
 " Other priority colours might be defined by the user
 highlight default link TodoDone Comment
+highlight default link TodoInProgress Type
 highlight default link TodoPriorityA Constant
-highlight default link TodoPriorityB Statement
 
+highlight default link TodoPriorityB Statement
 highlight default link TodoPriorityC Identifier
 highlight default link TodoPriorityD Type
+
 highlight default link TodoDate PreProc
+highlight default link TodoProject Keyword
+highlight default link TodoContext Tag
 
-highlight default link TodoProject Special
-highlight default link TodoContext Special
 highlight default link TodoComment Comment
-
 highlight default link TodoSubTask Question
 
 autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd todo.txt
