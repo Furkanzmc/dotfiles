@@ -536,8 +536,7 @@ function! s:setup_lsp(file_type)
     setlocal formatexpr=lua\ vim.lsp.buf.formatting()
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
-    let l:is_lsp_active = luaeval("vim.inspect(vim.lsp.buf_get_clients())") != "{}"
-    if l:is_lsp_active
+    if luaeval("require'lsp'.is_lsp_running()")
         return
     endif
 
@@ -570,7 +569,7 @@ endfunction
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>check_back_space() ? "\<TAB>" :
-            \ "\<C-x><C-o>"
+            \ luaeval("require'lsp'.is_lsp_running()") == 0 ? "\<C-x><C-n>" : "\<C-x><C-o>"
 
 inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 

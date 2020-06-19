@@ -106,8 +106,37 @@ M.print_buffer_clients = function()
     print(vim.inspect(vim.lsp.buf_get_clients()))
 end
 
+M.is_lsp_running = function()
+    return next(vim.lsp.buf_get_clients()) ~= nil
+end
+
 M.stop_buffer_clients = function()
     vim.lsp.stop_client(vim.lsp.get_active_clients())
+end
+
+local completion_timer = nil
+M.on_complete_done_pre = function()
+    if vim.fn.pumvisible() == 1 then
+        return
+    end
+
+    local info = vim.fn.complete_info()
+    if #info.items == 0 then
+        if completion_timer == nil then
+            completion_timer = vim.loop.new_timer()
+            completion_timer:start(100, 0, vim.schedule_wrap(function()
+                if vim.fn.pumvisible() == 0 then
+                    local mode_keys = "<c-x><c-n>"
+                    mode_keys = vim.api.nvim_replace_termcodes(mode_keys, true, false, true)
+                    vim.api.nvim_feedkeys(mode_keys, 'n', true)
+                end
+
+                completion_timer:stop()
+                completion_timer:close()
+                completion_timer = nil
+            end))
+        end
+    end
 end
 
 
@@ -143,6 +172,9 @@ function set_up_keymap(bufnr)
     vim.api.nvim_buf_set_keymap(
         bufnr, 'i', '<c-g><c-s>',
         '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+
+    vim.api.nvim_command(
+        "autocmd CompleteDonePre <buffer> lua require'lsp'.on_complete_done_pre()")
 end
 
 
