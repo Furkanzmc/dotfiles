@@ -22,57 +22,57 @@ syntax match TodoProject '\(^\|\W\)+[^[:blank:]]\+' contains=NONE
 syntax match TodoContext '\(^\|\W\)@[^[:blank:]]\+' contains=NONE
 
 syntax match TodoDone '^[xX]\s.\+$'
-syntax match TodoInProgress '^[iI]\s.\+$'
-syntax match TodoPriorityA '^([aA])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityB '^([bB])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityC '^([cC])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoInProgress '^[iI] ' contains=NONE
+syntax match TodoPriorityA '\(^[iI] ([aA])\|^([aA])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityB '\(^[iI] ([bB])\|^([bB])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityC '\(^[iI] ([cC])\|^([cC])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityD '^([dD])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityE '^([eE])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityF '^([fF])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityD '\(^[iI] ([dD])\|^([dD])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityE '\(^[iI] ([eE])\|^([eE])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityF '\(^[iI] ([fF])\|^([fF])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityG '^([gG])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityH '^([hH])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityI '^([iI])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityG '\(^[iI] ([gG])\|^([gG])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityH '\(^[iI] ([hH])\|^([hH])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityI '\(^[iI] ([iI])\|^([iI])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityJ '^([jJ])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityK '^([kK])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityL '^([lL])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityJ '\(^[iI] ([jJ])\|^([jJ])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityK '\(^[iI] ([kK])\|^([kK])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityL '\(^[iI] ([lL])\|^([lL])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityM '^([mM])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityN '^([nN])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityO '^([oO])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityM '\(^[iI] ([mM])\|^([mM])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityN '\(^[iI] ([nN])\|^([nN])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityO '\(^[iI] ([oO])\|^([oO])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityP '^([pP])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityQ '^([qQ])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityR '^([rR])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityP '\(^[iI] ([pP])\|^([pP])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityQ '\(^[iI] ([qQ])\|^([qQ])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityR '\(^[iI] ([rR])\|^([rR])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityS '^([sS])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityT '^([tT])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityU '^([uU])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityS '\(^[iI] ([sS])\|^([sS])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityT '\(^[iI] ([tT])\|^([tT])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityU '\(^[iI] ([uU])\|^([uU])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityV '^([vV])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityW '^([wW])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityX '^([xX])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityV '\(^[iI] ([vV])\|^([vV])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityW '\(^[iI] ([wW])\|^([wW])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityX '\(^[iI] ([xX])\|^([xX])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityY '^([yY])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityZ '^([zZ])\s.\+$' contains=TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityY '\(^[iI] ([yY])\|^([yY])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityZ '\(^[iI] ([zZ])\|^([zZ])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 syntax match TodoComment '^\(|->\|  \)\s.\+$'
 syntax match TodoSubTask '    +\s.\+$'
 
 
 " Other priority colours might be defined by the user
 highlight default link TodoDone Comment
-highlight default link TodoInProgress Type
-highlight default link TodoPriorityA Constant
+highlight default link TodoInProgress IncSearch
+highlight default link TodoPriorityA Identifier
 
-highlight default link TodoPriorityB Statement
-highlight default link TodoPriorityC Identifier
-highlight default link TodoPriorityD Type
+highlight default link TodoPriorityB Constant
+highlight default link TodoPriorityC Type
+highlight default link TodoPriorityD SpecialKey
 
 highlight default link TodoDate PreProc
-highlight default link TodoProject Keyword
-highlight default link TodoContext Tag
+highlight default link TodoProject Label
+highlight default link TodoContext Label
 
 highlight default link TodoComment Comment
 highlight default link TodoSubTask Question
