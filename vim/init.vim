@@ -433,9 +433,6 @@ let g:fzf_preview_window = ''
 
 let g:tagbar_show_linenumbers = 1
 
-map <leader>tb  :Tagbar<CR>
-map <leader>tbs  :TagbarShowTag<CR>
-
 " }}}
 
 " Neomake {{{
