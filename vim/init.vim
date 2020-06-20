@@ -571,7 +571,10 @@ inoremap <silent><expr> <TAB>
             \ <SID>check_back_space() ? "\<TAB>" :
             \ luaeval("require'lsp'.is_lsp_running()") == 0 ? "\<C-x><C-n>" : "\<C-x><C-o>"
 
-inoremap <expr> <S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+inoremap <silent><expr> <S-TAB>
+            \ pumvisible() ? "\<C-p>" :
+            \ <SID>check_back_space() ? "\<S-TAB>" :
+            \ luaeval("require'lsp'.is_lsp_running()") == 0 ? "\<C-x><C-p>" : "\<C-x><C-o>"
 
 " }}}
 
