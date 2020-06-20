@@ -79,18 +79,17 @@ endfunction
 " Emulate 'gf' but recognize :line format
 " Code from: https://github.com/amix/open_file_under_cursor.vim
 function! s:local_file()
-    let curword = expand("<cfile>")
-    if (strlen(curword) == 0)
+    if (strlen(s:file_line) == 0)
         return v:false
     endif
 
-    let matchstart = match(curword, ':\d\+$')
+    let matchstart = match(s:file_line, ':\d\+$')
     if matchstart > 0
-        let pos = '+' . strpart(curword, matchstart+1)
-        let fname = strpart(curword, 0, matchstart)
+        let pos = '+' . strpart(s:file_line, matchstart+1)
+        let fname = strpart(s:file_line, 0, matchstart)
     else
         let pos = ""
-        let fname = curword
+        let fname = s:file_line
     endif
 
     " check exists file.
@@ -148,24 +147,32 @@ function! goto#run()
         let s:file_line = getline(".")
     endif
 
-    let processed = 0
+    if len(s:file_line) == 0
+        return
+    endif
+
+    echo "FILE_LINE:" . s:file_line
+    let l:processed = v:false
     for F in s:parsers
         if F()
+            let l:processed = v:true
+
             try
                 exec s:cmd
+                break
             catch
                 echohl ErrorMsg
                 echo "Cannot find file in line."
                 echohl Normal
             endtry
-            let processed = 1
-            break
         endif
     endfor
 
-    if !processed
+    if !l:processed
         echohl ErrorMsg
         echo "Parsing of the current line failed."
         echohl Normal
     endif
+
+    let s:file_line = ""
 endfunction
