@@ -6,19 +6,19 @@ setlocal nonumber
 setlocal norelativenumber
 
 " Jump to the previous shell prompt
-nmap <buffer> <silent> [t :call search('^\(!!\ =>\\|=>\)')<CR>
+nmap <buffer> <silent> [t :call search('^\(!!\ =>\\|=>\)', 'Wb')<CR>
 " Jump to the next shell prompt
-nmap <buffer> <silent> ]t :call search('^\(!!\ =>\\|=>\)')<CR>
+nmap <buffer> <silent> ]t :call search('^\(!!\ =>\\|=>\)', 'W')<CR>
 
 " Jump to the previous pytest error
-nmap <buffer> <silent> [e :call search('^_\{10,\}\ \w\+.*\ _\{10,\}')<CR>
+nmap <buffer> <silent> [e :call search('^_\{10,\}\ \w\+.*\ _\{10,\}', 'Wb')<CR>
 " Jump to the next pytest error
-nmap <buffer> <silent> ]e :call search('^_\{10,}\ \w\+.*\ _\{10,}')<CR>
+nmap <buffer> <silent> ]e :call search('^_\{10,}\ \w\+.*\ _\{10,}', 'W')<CR>
 
 " Jump to the previous Python prompt
-nmap <buffer> <silent> [p :call search("^>>>", "b")<CR>
+nmap <buffer> <silent> [p :call search("^>>>", "Wb")<CR>
 " Jump to the next Python prompt
-nmap <buffer> <silent> ]p :call search("^>>>")<CR>
+nmap <buffer> <silent> ]p :call search("^>>>", "W")<CR>
 
 augroup Terminal
     autocmd!
