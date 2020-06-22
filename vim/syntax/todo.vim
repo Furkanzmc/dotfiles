@@ -1,4 +1,18 @@
 " Syntax from: https://github.com/freitass/todo.txt-vim/blob/master/syntax/todo.vim
+" Example: {{{
+" [ ] (A) A todo item. +Project @Context
+" [x] (A) Prepend `x` to mark it as done.
+" [ ] (B) A todo item with a subtask.
+"     [ ] Here's a subtask.
+"     > It can contain comments.
+"       [ ] Or nested tasks.
+"       > With nested comments.
+"       > You can also include code here:
+"       ```python
+"       import this
+"       ```
+" [i] (A) Prepend `i` to mark a todo in progress.
+" }}}
 if exists("b:current_syntax")
     finish
 endif
@@ -21,49 +35,23 @@ syntax match TodoDate '\d\{2,4\}-\d\{2\}-\d\{2\}' contains=NONE
 syntax match TodoProject '\(^\|\W\)+[^[:blank:]]\+' contains=NONE
 syntax match TodoContext '\(^\|\W\)@[^[:blank:]]\+' contains=NONE
 
-syntax match TodoDone '^[xX]\s.\+$'
-syntax match TodoInProgress '^[iI] ' contains=NONE
-syntax match TodoPriorityA '\(^[iI] ([aA])\|^([aA])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityB '\(^[iI] ([bB])\|^([bB])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityC '\(^[iI] ([cC])\|^([cC])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoLeadingWhiteSpace '^\ \{1,\}' contains=NONE
+syntax match TodoDone '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$' contains=TodoLeadingWhiteSpace
+syntax match TodoInProgress '\(^\[[iI]\]\|^\ \{4,\}\[[iI]\]\)' contains=TodoLeadingWhiteSpace
 
-syntax match TodoPriorityD '\(^[iI] ([dD])\|^([dD])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityE '\(^[iI] ([eE])\|^([eE])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityF '\(^[iI] ([fF])\|^([fF])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityA '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([aA])\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityB '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([bB])\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityC '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([cC])\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityG '\(^[iI] ([gG])\|^([gG])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityH '\(^[iI] ([hH])\|^([hH])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityI '\(^[iI] ([iI])\|^([iI])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityD '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([dD])\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityJ '\(^[iI] ([jJ])\|^([jJ])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityK '\(^[iI] ([kK])\|^([kK])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityL '\(^[iI] ([lL])\|^([lL])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-
-syntax match TodoPriorityM '\(^[iI] ([mM])\|^([mM])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityN '\(^[iI] ([nN])\|^([nN])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityO '\(^[iI] ([oO])\|^([oO])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-
-syntax match TodoPriorityP '\(^[iI] ([pP])\|^([pP])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityQ '\(^[iI] ([qQ])\|^([qQ])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityR '\(^[iI] ([rR])\|^([rR])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-
-syntax match TodoPriorityS '\(^[iI] ([sS])\|^([sS])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityT '\(^[iI] ([tT])\|^([tT])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityU '\(^[iI] ([uU])\|^([uU])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-
-syntax match TodoPriorityV '\(^[iI] ([vV])\|^([vV])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityW '\(^[iI] ([wW])\|^([wW])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityX '\(^[iI] ([xX])\|^([xX])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-
-syntax match TodoPriorityY '\(^[iI] ([yY])\|^([yY])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityZ '\(^[iI] ([zZ])\|^([zZ])\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoComment '^\(|->\|  \)\s.\+$'
-syntax match TodoSubTask '    +\s.\+$'
+syntax match TodoComment '^\ \{4,\}>\s.\+$'
+syntax match TodoSubTask '\(^\ \{4,\}\[[iI]\]\|^\ \{4,\}\[ \]\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate,TodoPriorityA,TodoPriorityB,TodoPriorityB,TodoPriorityC,TodoPriorityD
 
 
 " Other priority colours might be defined by the user
 highlight default link TodoDone Comment
-highlight default link TodoInProgress IncSearch
+highlight default link TodoInProgress WarningMsg
 highlight default link TodoPriorityA Identifier
 
 highlight default link TodoPriorityB Constant
@@ -71,18 +59,18 @@ highlight default link TodoPriorityC Type
 highlight default link TodoPriorityD SpecialKey
 
 highlight default link TodoDate PreProc
-highlight default link TodoProject Label
+highlight default link TodoProject SpecialKey
 highlight default link TodoContext Label
 
-highlight default link TodoComment Comment
-highlight default link TodoSubTask Question
+highlight default link TodoComment String
+highlight default link TodoSubTask NONE
 
 autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd todo.txt
             \ :call s:enable_highlight()
 
 call s:enable_highlight()
 
-call matchadd('Conceal', '   ```[a-z]\+$', 10, -1, {'conceal':' '})
-call matchadd('Conceal', '   ```$', 10, -1, {'conceal':' '})
+call matchadd('Conceal', '^\ \{4,\}```[a-z]\+$', 10, -1, {'conceal':' '})
+call matchadd('Conceal', '^\ \{4,\}```$', 10, -1, {'conceal':' '})
 
 let b:current_syntax = "todo"
