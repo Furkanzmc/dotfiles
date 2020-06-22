@@ -12,10 +12,15 @@ let s:done_conceal_pattern =  '\(^\ \{4,\}\[[xX]\]\|^\[[xX]\]\)\s.\+'
 augroup todo_events
     autocmd!
     autocmd TextChanged <buffer> call <SID>update_conceal()
+    autocmd BufUnload <buffer> call <SID>show_done()
 augroup END
 
 command! -buffer HideDone call <SID>hide_done()
 command! -buffer ShowDone call <SID>show_done()
+
+nmap <buffer> <silent> <leader>x :normal! mt0f]hrx`t<CR>
+nmap <buffer> <silent> <leader>i :normal! mt0f]hri`t<CR>
+nmap <buffer> <silent> <leader>t :normal! mt0f]hr `t<CR>
 
 if exists("s:todo_functions_loaded")
     finish
@@ -65,6 +70,10 @@ function! s:hide_done()
 endfunction
 
 function! s:show_done()
+    if !exists("b:match_ids")
+        return
+    endif
+
     for [line_number, match_id] in b:match_ids
         call matchdelete(match_id)
     endfor
