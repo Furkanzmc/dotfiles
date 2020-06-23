@@ -140,18 +140,12 @@ let s:parsers = [
     \ ]
 
 function! goto#run()
-    let l:selected_lines = buffers#get_visual_selection()
-    if len(l:selected_lines) > 0
-        let s:file_line = l:selected_lines[0]
-    else
-        let s:file_line = getline(".")
-    endif
+    let s:file_line = getline(".")
 
     if len(s:file_line) == 0
         return
     endif
 
-    echo "FILE_LINE:" . s:file_line
     let l:processed = v:false
     for F in s:parsers
         if F()
