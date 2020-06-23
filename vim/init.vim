@@ -396,7 +396,10 @@ function! PackInit()
     call minpac#add('metakirby5/codi.vim', {'type': 'opt'})
 
     call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-    call minpac#add('sakhnik/nvim-gdb', {'type': 'opt'})
+    call minpac#add('sakhnik/nvim-gdb', {
+                \ 'type': 'opt',
+                \ 'do': 'UpdateRemotePlugins'
+                \ })
     call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
 
     " }}}

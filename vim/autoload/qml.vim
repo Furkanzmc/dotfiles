@@ -1,4 +1,5 @@
 function! qml#run()
+    setlocal errorformat+=file://%f:%l:\ %s%trror:\ %m,file://%f:%l:%c\ %m,file://%f:%l\ %m
     if executable('qmlscene')
         if mode() == "v"
             let l:lines = buffers#get_visual_selection()
