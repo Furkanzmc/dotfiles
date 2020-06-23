@@ -124,7 +124,7 @@ M.on_complete_done_pre = function()
     if #info.items == 0 then
         if completion_timer == nil then
             completion_timer = vim.loop.new_timer()
-            completion_timer:start(100, 0, vim.schedule_wrap(function()
+            completion_timer:start(5, 0, vim.schedule_wrap(function()
                 if vim.fn.pumvisible() == 0 then
                     local mode_keys = "<c-x><c-n>"
                     mode_keys = vim.api.nvim_replace_termcodes(mode_keys, true, false, true)
