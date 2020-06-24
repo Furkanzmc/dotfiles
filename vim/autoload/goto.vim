@@ -79,20 +79,21 @@ endfunction
 " Emulate 'gf' but recognize :line format
 " Code from: https://github.com/amix/open_file_under_cursor.vim
 function! s:local_file()
-    if (strlen(s:file_line) == 0)
+    let l:word_under_cursor = expand("<cfile>")
+    if (strlen(l:word_under_cursor) == 0)
         return v:false
     endif
 
-    let matchstart = match(s:file_line, ':\d\+$')
+    let matchstart = match(l:word_under_cursor, ':\d\+$')
     if matchstart > 0
-        let pos = '+' . strpart(s:file_line, matchstart+1)
-        let fname = strpart(s:file_line, 0, matchstart)
+        let pos = '+' . strpart(l:word_under_cursor, matchstart+1)
+        let fname = strpart(l:word_under_cursor, 0, matchstart)
     else
         let pos = ""
-        let fname = s:file_line
+        let fname = l:word_under_cursor
     endif
 
-    " check exists file.
+    " Check exists file.
     if filereadable(fname)
         let fullname = fname
     else

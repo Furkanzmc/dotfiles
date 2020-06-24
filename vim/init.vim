@@ -245,14 +245,6 @@ set ffs=unix,dos,mac
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
 
-" Close the current buffer
-map <leader>bd :Bclose<cr>
-
-" Let 'tl' toggle between this and the last accessed tab
-let g:lasttab = 1
-nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
-
 " Specify the behavior when switching between buffers
 try
   " Use the current tab for openning files from quickfix.
@@ -332,6 +324,9 @@ xnoremap @ :<C-u>call init#execute_macro_on_visual_range()<CR>
 " }}}
 
 " Misc {{{
+
+" Custom Server {{{
+
 function! s:CreateCustomNvimListenServer()
     if has('win32')
         return
@@ -346,6 +341,15 @@ augroup StartUp
     autocmd!
     autocmd VimEnter * call s:CreateCustomNvimListenServer()
 augroup END
+
+" }}}
+
+" Abbreviations {{{
+
+abbreviate langauge language
+abbreviate Langauge Language
+
+" }}}
 
 " }}}
 
