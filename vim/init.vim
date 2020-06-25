@@ -544,6 +544,10 @@ function! s:setup_lsp(file_type)
         return
     endif
 
+    if !exists("b:is_lsp_shortcuts_set")
+        let b:is_lsp_shortcuts_set = v:false
+    endif
+
     execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'
 endfunction
 

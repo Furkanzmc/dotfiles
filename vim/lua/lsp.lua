@@ -142,6 +142,10 @@ end
 
 function set_up_keymap(bufnr)
     local opts = { noremap=true, silent=true }
+    local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_lsp_shortcuts_set")
+    if is_configured then
+        return
+    end
 
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', '<leader>f', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
@@ -171,11 +175,14 @@ function set_up_keymap(bufnr)
         '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 
     vim.api.nvim_command(
-        "autocmd CompleteDonePre <buffer> lua require'lsp'.on_complete_done_pre()")
-    vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
     vim.api.nvim_command(
         "setlocal keywordprg=:LspHover")
+
+    vim.api.nvim_command(
+        "autocmd CompleteDonePre <buffer> lua require'lsp'.on_complete_done_pre()")
+
+    vim.api.nvim_buf_set_var(bufnr, "is_lsp_shortcuts_set", true)
 end
 
 
