@@ -86,7 +86,6 @@ function! buffers#wipe_nonexisting_files()
 
     let l:count = len(l:matchList)
     if l:count < 1
-        echo 'No buffers found matching pattern ' . a:pattern
         return
     endif
 
