@@ -153,10 +153,7 @@ function set_up_keymap(bufnr)
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
 
@@ -175,6 +172,10 @@ function set_up_keymap(bufnr)
 
     vim.api.nvim_command(
         "autocmd CompleteDonePre <buffer> lua require'lsp'.on_complete_done_pre()")
+    vim.api.nvim_command(
+        "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
+    vim.api.nvim_command(
+        "setlocal keywordprg=:LspHover")
 end
 
 
