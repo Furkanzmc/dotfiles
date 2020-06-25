@@ -27,9 +27,12 @@ function! s:enable_highlight()
     call SyntaxRange#Include('```python', '```', 'python', 'NonText')
     call SyntaxRange#Include('```js', '```', 'javascript', 'NonText')
 
-    setlocal foldmethod=indent
+    setlocal foldmethod=expr
+    setlocal foldexpr=todo#foldexpr(v:lnum)
     setlocal conceallevel=2
 endfunction
+
+let b:done_task_pattern = '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$'
 
 syntax match TodoDate '\d\{2,4\}-\d\{2\}-\d\{2\}' contains=NONE
 syntax match TodoProject '\(^\|\W\)+[^[:blank:]]\+' contains=NONE
