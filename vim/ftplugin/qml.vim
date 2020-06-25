@@ -4,7 +4,7 @@ endif
 
 setlocal foldmethod=indent
 setlocal signcolumn=yes
-setlocal errorformat+=file://%f:%l\ %m
+setlocal errorformat+=file://%f:%l:\ %s%trror:\ %m,file://%f:%l:%c:\ %m,%f:%l:%c:\ %t%*[^:]:%m,%f:%l:\ %t%*[^:]:%m,%m\ (file://%f:%l),%m\ file\ %f\,\ line\ %l,file://%f:%l\ %m
 
 command! -buffer -range RunQML :call qml#run()
 
