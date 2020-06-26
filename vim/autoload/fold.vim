@@ -58,7 +58,7 @@ function! fold#fold_text()
         let foldlines_padding = ' '
     endif
 
-    return printf("%s%s%s%s(%d)",
+    return printf("%s%s%s%s[%d]",
                 \ foldlevel,
                 \ foldindent,
                 \ foldtext,

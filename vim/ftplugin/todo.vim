@@ -7,6 +7,7 @@ setlocal colorcolumn=
 setlocal cursorline
 setlocal foldmethod=expr
 setlocal foldexpr=todo#foldexpr(v:lnum)
+setlocal foldtext=todo#foldtext()
 
 nmap <buffer> <silent> <leader>x :normal! mt0f]hrx`t<CR>
 nmap <buffer> <silent> <leader>i :normal! mt0f]hri`t<CR>
@@ -28,4 +29,17 @@ function todo#foldexpr(line_number)
     endif
 
     return 0
+endfunction
+
+function todo#foldtext()
+    let l:completed_tasks = 0
+    for line_number in range(v:foldstart, v:foldend)
+        let l:line = getline(line_number)
+        if l:line =~ b:done_task_pattern
+            let l:completed_tasks += 1
+        endif
+    endfor
+
+    let l:foldchar = get(b:, 'foldchar', '>')
+    return l:foldchar . " Completed Tasks [" . l:completed_tasks . "]"
 endfunction
