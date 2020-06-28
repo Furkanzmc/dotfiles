@@ -21,6 +21,14 @@ nmap <buffer> <silent> [p :call search("^>>>", "Wb")<CR>
 " Jump to the next Python prompt
 nmap <buffer> <silent> ]p :call search("^>>>", "W")<CR>
 
+tmap <C-d> <PageDown>
+tmap <C-u> <PageUp>
+tnoremap <C-w>q <C-\><C-n>
+
+if get(s:, "terminal_plugin_loaded", v:false)
+    finish
+endif
+
 augroup Terminal
     autocmd!
 
@@ -28,6 +36,4 @@ augroup Terminal
     autocmd TermLeave * set scrolloff=3
 augroup END
 
-tmap <C-d> <PageDown>
-tmap <C-u> <PageUp>
-tnoremap <C-w>q <C-\><C-n>
+let s:terminal_plugin_loaded = v:true

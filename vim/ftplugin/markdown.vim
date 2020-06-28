@@ -7,4 +7,10 @@ endif
 setlocal spell
 setlocal colorcolumn=80,100
 
-command! -buffer -range RunQML :call qml#run()
+if get(s:, "markdown_plugin_loaded", v:false)
+    finish
+endif
+
+command -buffer -range RunQML :call qml#run()
+
+let s:markdown_plugin_loaded = v:true

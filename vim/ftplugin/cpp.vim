@@ -10,27 +10,29 @@ setlocal signcolumn=yes
 
 " Override the default comment string from vim-commentary
 setlocal commentstring=//%s
+nnoremap <silent> <buffer> <leader>gg :call <SID>swap_source_header()<CR>
 
-if get(g:, "swap_source_loaded", 0) == 0
-    let g:swap_source_loaded = 1
-    function! cpp#swap_source_header()
-        let l:extension = expand('%:p:e')
-
-        setlocal path+=expand('%:h')
-        if l:extension == 'cpp'
-            let l:filename = expand('%:t:r') . '.h'
-        elseif l:extension =='h'
-            let l:filename = expand('%:t:r') . '.cpp'
-        endif
-
-        try
-            execute 'find ' . l:filename
-        catch
-            echo "Cannot file " . l:filename
-        endtry
-
-        setlocal path-=expand('%:h')
-    endfunction
+if get(s:, "functions_loaded", v:false)
+    finish
 endif
 
-nnoremap <silent> <buffer> <leader>gg :call cpp#swap_source_header()<CR>
+function! s:swap_source_header()
+    let l:extension = expand('%:p:e')
+
+    setlocal path+=expand('%:h')
+    if l:extension == 'cpp'
+        let l:filename = expand('%:t:r') . '.h'
+    elseif l:extension =='h'
+        let l:filename = expand('%:t:r') . '.cpp'
+    endif
+
+    try
+        execute 'find ' . l:filename
+    catch
+        echo "Cannot file " . l:filename
+    endtry
+
+    setlocal path-=expand('%:h')
+endfunction
+
+let s:functions_loaded = v:true
