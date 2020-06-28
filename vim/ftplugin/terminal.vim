@@ -4,6 +4,7 @@ set scrolloff=0
 
 setlocal nonumber
 setlocal norelativenumber
+setlocal cursorline
 
 " Jump to the previous shell prompt
 nmap <buffer> <silent> [t :call search('^\(!!\ =>\\|=>\)', 'Wb')<CR>
