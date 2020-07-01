@@ -117,6 +117,12 @@ set tw=500
 
 set ai "Auto indent
 set si "Smart indent
+
+augroup LuaHighlight
+    autocmd!
+    au TextYankPost * silent! lua return (not vim.v.event.visual) and
+                \ require'vim.highlight'.on_yank("IncSearch", 100)
+augroup END
 " }}}
 
 " User Interface {{{
