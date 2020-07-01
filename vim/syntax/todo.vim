@@ -36,6 +36,7 @@ let b:done_task_pattern = '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$'
 let b:comment_patten = '^\ \{4,\}>\s.\+$'
 
 syntax match TodoDate '\d\{2,4\}-\d\{2\}-\d\{4\}' contains=NONE
+syntax match TodoTime '\d\{2\}:\d\{2\}' contains=TodoDate
 syntax match TodoProject '\(^\|\W\)+[^[:blank:]]\+' contains=NONE
 syntax match TodoContext '\(^\|\W\)@[^[:blank:]]\+' contains=NONE
 
@@ -43,14 +44,14 @@ syntax match TodoLeadingWhiteSpace '^\ \{1,\}' contains=NONE
 syntax match TodoDone '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$' contains=TodoLeadingWhiteSpace
 syntax match TodoInProgress '\(^\[[iI]\]\|^\ \{4,\}\[[iI]\]\)' contains=TodoLeadingWhiteSpace
 
-syntax match TodoPriorityA '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([aA])\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityB '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([bB])\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
-syntax match TodoPriorityC '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([cC])\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityA '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([aA])\s.\+$' contains=TodoInProgress,TodoDate,TodoTime,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityB '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([bB])\s.\+$' contains=TodoInProgress,TodoDate,TodoTime,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityC '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([cC])\s.\+$' contains=TodoInProgress,TodoDate,TodoTime,TodoProject,TodoContext,OverDueDate
 
-syntax match TodoPriorityD '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([dD])\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate
+syntax match TodoPriorityD '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([dD])\s.\+$' contains=TodoInProgress,TodoDate,TodoTime,TodoProject,TodoContext,OverDueDate
 
 syntax match TodoComment '^\ \{4,\}>\s.\+$'
-syntax match TodoSubTask '\(^\ \{4,\}\[[iI]\]\|^\ \{4,\}\[ \]\)\s.\+$' contains=TodoInProgress,TodoDate,TodoProject,TodoContext,OverDueDate,TodoPriorityA,TodoPriorityB,TodoPriorityB,TodoPriorityC,TodoPriorityD
+syntax match TodoSubTask '\(^\ \{4,\}\[[iI]\]\|^\ \{4,\}\[ \]\)\s.\+$' contains=TodoInProgress,TodoDate,TodoTime,TodoProject,TodoContext,OverDueDate,TodoPriorityA,TodoPriorityB,TodoPriorityB,TodoPriorityC,TodoPriorityD
 
 
 " Other priority colours might be defined by the user
@@ -63,6 +64,7 @@ highlight default link TodoPriorityC Type
 highlight default link TodoPriorityD SpecialKey
 
 highlight default link TodoDate PreProc
+highlight default link TodoTime PreProc
 highlight default link TodoProject SpecialKey
 highlight default link TodoContext Label
 
