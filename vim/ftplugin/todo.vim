@@ -38,6 +38,7 @@ endfunction
 
 function todo#foldtext()
     let l:completed_task_count = 0
+    let l:task_count = 0
     let l:line_count = 0
     let l:is_code_block = v:false
 
@@ -45,6 +46,9 @@ function todo#foldtext()
         let l:line = getline(line_number)
         if l:line =~ b:done_task_pattern
             let l:completed_task_count += 1
+            let l:task_count += 1
+        elseif l:line =~ b:task_pattern
+            let l:task_count += 1
         elseif l:line =~ '^\ \{4,\}```\w\+$' && !l:is_code_block
             let l:is_code_block = v:true
         endif
@@ -56,7 +60,8 @@ function todo#foldtext()
     let l:foldlevel = repeat(l:foldchar, v:foldlevel)
 
     if l:completed_task_count > 0
-        return l:foldlevel . " Completed Tasks [" . l:completed_task_count . "]"
+        return l:foldlevel . " Completed Tasks [" . l:completed_task_count . "/"
+                    \ . l:task_count . "]"
     endif
 
     if l:is_code_block

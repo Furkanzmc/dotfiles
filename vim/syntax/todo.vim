@@ -33,6 +33,7 @@ function! s:enable_highlight()
 endfunction
 
 let b:done_task_pattern = '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$'
+let b:task_pattern  ='^\ \{4,\}\[\ \]'
 let b:comment_patten = '^\ \{4,\}>\s.\+$'
 
 syntax match TodoDate '\d\{2,4\}-\d\{2\}-\d\{4\}' contains=NONE
