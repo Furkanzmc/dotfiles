@@ -184,28 +184,75 @@ function Get-Weather() {
     (Invoke-WebRequest http://v2.wttr.in/).Content
 }
 
-function Switch-Terminal-Theme() {
+function _Set-Alacritty-Color($Color) {
     $content = Get-Content ~/.dotfiles/terminals/alacritty.yml
-    if ($content -match "\*dark") {
+    if ($content -match "\*dark" -and $Color -eq "light") {
         $content = $content.Replace("*dark", "*light")
-        $command = '"set background=light"'
     }
-    else {
+    elseif ($content -match "\*light" -and $Color -eq "dark") {
         $content = $content.Replace("*light", "*dark")
-        $command = '"set background=dark"'
-    }
-
-    if ($IsMacOS) {
-        $nvimPath = "$HOME/.dotfiles/scripts/nvim.py"
     }
     else {
-        $nvimPath = "$USERHOME/.dotfiles/scripts/nvim.py"
+        return
     }
 
     Set-Content -Path ~/.dotfiles/terminals/alacritty.yml -Value $content
-    Start-Process -FilePath python3 -ArgumentList `
-        $nvimPath,"--command ",$command -NoNewWindow
 }
+
+function Set-Terminal-Background() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [ValidateSet("light", "dark")]
+        [String]$Color="",
+        [Parameter(Mandatory=$false)]
+        [Switch]$ChangeInAllNeovimInstances=$true,
+        [Parameter(Mandatory=$false)]
+        [Switch]$MatchTheme=$false
+     )
+
+    if ($MatchTheme) {
+        if (Get-Command -Name Is-Dark-Mode -ErrorAction SilentlyContinue) {
+            $IsDarkMode = Is-Dark-Mode
+            if ($IsDarkMode) {
+                $Color = "dark"
+            }
+            else {
+                $Color = "light"
+            }
+        }
+        else {
+            Write-Error "Is-Dark-Mode script does not exist. Please see "
+                        "github/furkanzmc/dotfiles for the function."
+        }
+    }
+
+    if ($ChangeInAllNeovimInstances) {
+        if ($IsMacOS) {
+            $nvimPath = "$HOME/.dotfiles/scripts/nvim.py"
+        }
+        else {
+            $nvimPath = "$USERHOME/.dotfiles/scripts/nvim.py"
+        }
+
+        $command = "`"set background=$Color`""
+        Start-Process -FilePath python3 -ArgumentList `
+            $nvimPath,"--command ",$command -NoNewWindow
+    }
+
+    if ($Color -ne "") {
+        $env:VIMRC_BACKGROUND=$Color
+        $env:FZF_DEFAULT_OPTS="--bind='ctrl-l:toggle-preview' --color=$Color"
+        _Set-Alacritty-Color $Color
+    }
+
+    if (Test-Path env:VIMRC_BACKGROUND) {
+        Write-Host "[vimrc] Background color is set to ${env:VIMRC_BACKGROUND}."
+    }
+    else {
+        Write-Host "[vimrc] VIMRC_BACKGROUND environment variable is not used."
+    }
+}
+
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."

@@ -67,53 +67,6 @@ if (Test-Path env:NVIM_LISTEN_ADDRESS -ErrorAction SilentlyContinue) {
     Set-Alias -Name nvc -Value Nvim-Run-Command
 }
 
-function Vim-Color() {
-    Param(
-        [Parameter(Position=0, Mandatory=$false)]
-        [ValidateSet("light", "dark")]
-        [String]$Color="",
-        [Parameter(Mandatory=$false)]
-        [Switch]$ChangeAllInstances=$false,
-        [Parameter(Mandatory=$false)]
-        [Switch]$MatchTheme=$false
-     )
-
-    if ($MatchTheme) {
-        if (Get-Command -Name Is-Dark-Mode -ErrorAction SilentlyContinue) {
-            $IsDarkMode = Is-Dark-Mode
-            if ($IsDarkMode) {
-                $Color = "dark"
-                Write-Host "[vimrc] Setting dark theme."
-            }
-            else {
-                $Color = "light"
-                Write-Host "[vimrc] Setting light theme."
-            }
-        }
-        else {
-            Write-Error "Is-Dark-Mode script does not exist. Please see "
-                        "github/furkanzmc/dotfiles for the function."
-        }
-    }
-
-    if ($ChangeAllInstances) {
-        Write-Host "[vimrc] Changing color in all instances."
-        Start-Process -NoNewWindow -Wait -FilePath python3 `
-            -ArgumentList "$HOME/.dotfiles/nvim.py --command `"set background=$Color`""
-    }
-
-    if ($Color -ne "") {
-        $env:VIMRC_BACKGROUND=$Color
-    }
-
-    if (Test-Path env:VIMRC_BACKGROUND) {
-        Write-Host "[vimrc] Background color is set to ${env:VIMRC_BACKGROUND}."
-    }
-    else {
-        Write-Host "[vimrc] VIMRC_BACKGROUND environment variable is not used."
-    }
-}
-
 function Codi() {
     Param(
         [Parameter(Mandatory=$false)]
