@@ -352,10 +352,36 @@ augroup END
 
 " }}}
 
-" Abbreviations {{{
+" Dictionary {{{
 
-abbreviate langauge language
-abbreviate Langauge Language
+function s:load_dictionary()
+    if get(b:, "vimrc_dictionary_loaded", v:false)
+        return
+    endif
+
+    let l:search_directories = get(
+                \ g:, "vimrc_dictionary_paths", [])
+    call add(l:search_directories, "~/.dotfiles/vim/dictionary/")
+
+    let l:files = globpath(
+                \ expand(join(l:search_directories, ",")),
+                \ '\(' . &l:filetype . '_*\|' . &l:filetype . '\).dictionary')
+    let l:files = split(l:files, '\n')
+    if empty(l:files)
+        return
+    endif
+
+    for file_path in l:files
+        execute "setlocal dictionary+=" . file_path
+    endfor
+
+    let b:vimrc_dictionary_loaded = v:true
+endfunction
+
+augroup vimrc_dictionary
+    autocmd!
+    autocmd BufRead,BufEnter,FileType * call <SID>load_dictionary()
+augroup END
 
 " }}}
 
