@@ -199,7 +199,7 @@ function _Set-Alacritty-Color($Color) {
     Set-Content -Path ~/.dotfiles/terminals/alacritty.yml -Value $content
 }
 
-function Set-Terminal-Background() {
+function Set-Terminal-Theme() {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
         [ValidateSet("light", "dark")]
