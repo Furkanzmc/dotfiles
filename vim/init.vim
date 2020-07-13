@@ -296,6 +296,22 @@ nnoremap <silent> [cm :call search('^=\{4,\}$', 'Wb')<CR>
 " Jump to next divider
 nnoremap <silent> ]cm :call search('^=\{4,\}$', 'W')<CR>
 
+function s:count_conflicts()
+    try
+        redir => conflict_count
+        silent execute '%s/^<\{4,\} \w\+.*$//gn'
+        redir END
+        let l:result = matchstr(conflict_count, '\d\+')
+    catch
+        let l:result = 0
+    endtry
+
+    echohl IncSearch
+    echo " " . l:result . " merge conflicts"
+    echohl Normal
+endfunction
+nnoremap <silent> =cc :call <SID>count_conflicts()<CR>
+
 " }}}
 
 " Maps Commands {{{
