@@ -274,9 +274,27 @@ command! Lcdc lcd %:p:h
 command! Cdc cd %:p:h
 
 " Return to last edit position when opening files (You want this!)
-au BufReadPost *
-            \ if line("'\"") > 1 && line("'\"") <= line("$")
-            \ | exe "normal! g'\"" | endif
+augroup vimrc_init
+    au!
+    au BufReadPost *
+                \ if line("'\"") > 1 && line("'\"") <= line("$")
+                \ | exe "normal! g'\"" | endif
+augroup END
+
+" Jump to the previous git conflict start
+nnoremap <buffer> <silent> [cs :call search('^<\{4,\} \w\+.*$', 'Wb')<CR>
+" Jump to the previous git conflict end
+nnoremap <buffer> <silent> [ce :call search('^>\{4,\} \w\+.*$', 'Wb')<CR>
+
+" Jump to the next git conflict start
+nnoremap <buffer> <silent> ]cs :call search('^<\{4,\} \w\+.*$', 'W')<CR>
+" Jump to the next git conflict end
+nnoremap <buffer> <silent> ]ce :call search('^>\{4,\} \w\+.*$', 'W')<CR>
+
+" Jump to previous divider
+nnoremap <buffer> <silent> [cm :call search('^=\{4,\}$', 'Wb')<CR>
+" Jump to next divider
+nnoremap <buffer> <silent> ]cm :call search('^=\{4,\}$', 'W')<CR>
 
 " }}}
 
