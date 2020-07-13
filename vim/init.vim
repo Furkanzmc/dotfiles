@@ -282,19 +282,19 @@ augroup vimrc_init
 augroup END
 
 " Jump to the previous git conflict start
-nnoremap <buffer> <silent> [cs :call search('^<\{4,\} \w\+.*$', 'Wb')<CR>
+nnoremap <silent> [cs :call search('^<\{4,\} \w\+.*$', 'Wb')<CR>
 " Jump to the previous git conflict end
-nnoremap <buffer> <silent> [ce :call search('^>\{4,\} \w\+.*$', 'Wb')<CR>
+nnoremap <silent> [ce :call search('^>\{4,\} \w\+.*$', 'Wb')<CR>
 
 " Jump to the next git conflict start
-nnoremap <buffer> <silent> ]cs :call search('^<\{4,\} \w\+.*$', 'W')<CR>
+nnoremap <silent> ]cs :call search('^<\{4,\} \w\+.*$', 'W')<CR>
 " Jump to the next git conflict end
-nnoremap <buffer> <silent> ]ce :call search('^>\{4,\} \w\+.*$', 'W')<CR>
+nnoremap <silent> ]ce :call search('^>\{4,\} \w\+.*$', 'W')<CR>
 
 " Jump to previous divider
-nnoremap <buffer> <silent> [cm :call search('^=\{4,\}$', 'Wb')<CR>
+nnoremap <silent> [cm :call search('^=\{4,\}$', 'Wb')<CR>
 " Jump to next divider
-nnoremap <buffer> <silent> ]cm :call search('^=\{4,\}$', 'W')<CR>
+nnoremap <silent> ]cm :call search('^=\{4,\}$', 'W')<CR>
 
 " }}}
 
