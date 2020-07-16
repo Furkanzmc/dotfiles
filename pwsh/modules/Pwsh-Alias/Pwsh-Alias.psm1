@@ -19,6 +19,10 @@ if (Get-Command "nvim" -ErrorAction SilentlyContinue) {
     $env:MANPAGER="nvim +Man!"
 }
 
+if (Get-Command "rmtrash" -ErrorAction SilentlyContinue) {
+    Set-Alias trash rmtrash
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Alias in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
