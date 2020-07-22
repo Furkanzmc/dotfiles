@@ -19,21 +19,23 @@ function! term#open(is_floating, ...)
         endif
 
         let s:term_floating_buffer = windows#create_floating_window(0.8, 0.8)
+    elseif &modified || !&modifiable
+        enew
     endif
 
+    let l:program = ""
     if a:0 == 1
-        if a:is_floating
-            call termopen(a:1, {"on_exit": {_, c -> term#close(c)}})
-        else
-            execute "e term://" . a:1
-        endif
+        let l:program = a:1
     else
-        let l:term = get(g:, "vimrc_shell", &shell)
-        if a:is_floating
-            call termopen(l:term, {"on_exit": {_, c -> term#close(c)}})
-        else
-            execute "e term://" . l:term
-        endif
+        let l:program = get(g:, "vimrc_shell", &shell)
+    endif
+
+    if a:is_floating
+        call termopen(l:program, {
+                    \ "on_exit": {_, c -> term#close(c)},
+                    \ })
+    else
+        call termopen(l:program)
     endif
 endfunction
 
