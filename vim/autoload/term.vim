@@ -19,8 +19,6 @@ function! term#open(is_floating, ...)
         endif
 
         let s:term_floating_buffer = windows#create_floating_window(0.8, 0.8)
-    elseif &modified || !&modifiable
-        enew
     endif
 
     let l:program = ""
@@ -31,10 +29,12 @@ function! term#open(is_floating, ...)
     endif
 
     if a:is_floating
+        enew
         call termopen(l:program, {
                     \ "on_exit": {_, c -> term#close(c)},
                     \ })
     else
+        enew
         call termopen(l:program)
     endif
 endfunction
