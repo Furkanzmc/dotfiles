@@ -1,25 +1,6 @@
 local vim = vim
+local lsp = vim.lsp.util
 local M = {}
-local sign_ns = 'vim_lsp_signs'
-local severity_highlights = {
-    [vim.lsp.protocol.DiagnosticSeverity.Error] = "LspDiagnosticsError";
-    [vim.lsp.protocol.DiagnosticSeverity.Warning] = "LspDiagnosticsWarning";
-    [vim.lsp.protocol.DiagnosticSeverity.Information] = "LspDiagnosticsInformation";
-    [vim.lsp.protocol.DiagnosticSeverity.Hint] = "LspDiagnosticsHint";
-}
-local virtual_text_prefixes = {
-    [vim.lsp.protocol.DiagnosticSeverity.Error] = vim.api.nvim_get_var('lsp_virtual_text_prefix_error');
-    [vim.lsp.protocol.DiagnosticSeverity.Warning] = vim.api.nvim_get_var('lsp_virtual_text_prefix_warning');
-    [vim.lsp.protocol.DiagnosticSeverity.Information] = vim.api.nvim_get_var('lsp_virtual_text_prefix_information');
-    [vim.lsp.protocol.DiagnosticSeverity.Hint] = vim.api.nvim_get_var('lsp_virtual_text_prefix_hint');
-}
-local sign_severity_map = {
-    [vim.lsp.protocol.DiagnosticSeverity.Error] = "LspDiagnosticsErrorSign";
-    [vim.lsp.protocol.DiagnosticSeverity.Warning] = "LspDiagnosticsWarningSign";
-    [vim.lsp.protocol.DiagnosticSeverity.Information] = "LspDiagnosticsInformationSign";
-    [vim.lsp.protocol.DiagnosticSeverity.Hint] = "LspDiagnosticsHintSign";
-}
-local diagnostic_ns = vim.api.nvim_create_namespace("vim_lsp_diagnostics")
 
 function publish_to_location_list(bufnr, local_result)
   if local_result and local_result.diagnostics then
@@ -35,46 +16,6 @@ function publish_to_location_list(bufnr, local_result)
       "r")
 end
 
-function buf_diagnostics_signs(bufnr, diagnostics)
-    for _, diagnostic in ipairs(diagnostics) do
-        vim.fn.sign_place(
-            0,
-            sign_ns,
-            sign_severity_map[diagnostic.severity],
-            bufnr,
-            {lnum=(diagnostic.range.start.line+1)})
-    end
-end
-
-function buf_diagnostics_virtual_text(bufnr, diagnostics)
-    if not diagnostics then
-        return
-    end
-
-    local include_error = vim.api.nvim_get_var('lsp_virtual_text_include_error_message') == 1
-    local buffer_line_diagnostics = vim.lsp.util.diagnostics_group_by_line(diagnostics)
-
-    for line, line_diags in pairs(buffer_line_diagnostics) do
-        local virt_texts = {}
-        for i = 1, #line_diags - 1 do
-            table.insert(virt_texts, {prefix, severity_highlights[line_diags[i].severity]})
-        end
-
-        local last = line_diags[#line_diags]
-        local prefix = virtual_text_prefixes[last.severity]
-        local text = prefix
-        if include_error then
-            text = text .. " " .. last.message:gsub("\r", ""):gsub("\n", "  ")
-        end
-
-        -- TODO(ashkan) use first line instead of subbing 2 spaces?
-        table.insert(
-            virt_texts, {text, severity_highlights[last.severity]}
-            )
-        vim.api.nvim_buf_set_virtual_text(bufnr, diagnostic_ns, line, virt_texts, {})
-    end
-end
-
 function publish_diagnostics()
     local callback = 'textDocument/publishDiagnostics'
     vim.lsp.callbacks[callback] = function(_, _, result, _)
@@ -88,7 +29,7 @@ function publish_diagnostics()
         vim.lsp.util.buf_clear_diagnostics(bufnr)
         vim.lsp.util.buf_diagnostics_save_positions(bufnr, result.diagnostics)
         if vim.api.nvim_get_var('lsp_virtual_text_enabled') == 1 then
-            buf_diagnostics_virtual_text(bufnr, result.diagnostics)
+            lsp.buf_diagnostics_virtual_text(bufnr, result.diagnostics)
         end
 
         if vim.api.nvim_get_var('lsp_location_list_enabled') == 1 then
@@ -96,7 +37,7 @@ function publish_diagnostics()
         end
 
         if vim.api.nvim_get_var('lsp_signs_enabled') == 1 then
-            buf_diagnostics_signs(bufnr, result.diagnostics)
+            lsp.buf_diagnostics_signs(bufnr, result.diagnostics)
         end
     end
 end
