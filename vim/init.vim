@@ -120,8 +120,7 @@ set si "Smart indent
 
 augroup LuaHighlight
     autocmd!
-    au TextYankPost * silent! lua return (not vim.v.event.visual) and
-                \ require'vim.highlight'.on_yank("IncSearch", 100)
+    au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, higroup="IncSearch", timeout=100}
 augroup END
 " }}}
 
@@ -477,6 +476,7 @@ function! PackInit()
     " }}}
 endfunction
 
+packadd matchit
 if exists('*minpac#init')
     call PackInit()
 endif
