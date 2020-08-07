@@ -240,16 +240,10 @@ function Set-Terminal-Theme() {
     }
 
     if ($Color -ne "") {
-        $env:VIMRC_BACKGROUND=$Color
-        $env:FZF_DEFAULT_OPTS="--bind='ctrl-l:toggle-preview' --color=$Color"
+        $env:VIMRC_BACKGROUND = $Color
+        $env:VIMRC_TERMINAL_THEME = $Color
+        $env:FZF_DEFAULT_OPTS = "--bind='ctrl-l:toggle-preview' --color=$Color"
         _Set-Alacritty-Color $Color
-    }
-
-    if (Test-Path env:VIMRC_BACKGROUND) {
-        Write-Host "[vimrc] Background color is set to ${env:VIMRC_BACKGROUND}."
-    }
-    else {
-        Write-Host "[vimrc] VIMRC_BACKGROUND environment variable is not used."
     }
 }
 
