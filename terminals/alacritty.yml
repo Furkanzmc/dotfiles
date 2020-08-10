@@ -14,6 +14,8 @@ env:
   TERM_PROGRAM: Alacritty
 
 window:
+  # Allow terminal applications to change Alacritty's window title.
+  dynamic_title: true
   # Window dimensions (changes require restart)
   #
   # Specified in number of columns/lines, not pixels.
@@ -50,7 +52,7 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background, but no title bar buttons
-  decorations: full
+  decorations: buttonless
 
   # Startup Mode (changes require restart)
   #
@@ -88,21 +90,21 @@ font:
     #   - (macOS) Menlo
     #   - (Linux) monospace
     #   - (Windows) Consolas
-    family: Cascadia Code
+    family: Source Code
 
     # The `style` can be specified to pick a specific face.
     style: Regular
 
   # Bold font face
-  #bold:
+  bold:
     # Font family
     #
     # If the bold family is not specified, it will fall back to the
     # value specified for the normal font.
-    #family: monospace
+    family: Source Code
 
     # The `style` can be specified to pick a specific face.
-    # style: Bold
+    style: Bold
 
   # Italic font face
   #italic:
@@ -203,7 +205,7 @@ schemes:
       cyan:    '0x459d90'
       white:   '0xc5cbdb'
 
-colors: *dark
+colors: *light
 
 # Visual Bell
 #
@@ -226,7 +228,7 @@ colors: *dark
 #   - Linear
 #
 # Specifying a `duration` of `0` will disable the visual bell.
-visual_bell:
+bell:
   animation: EaseOutExpo
   duration: 0
   color: '0xffffff'
@@ -294,9 +296,6 @@ selection:
 
   # When set to `true`, selected text will be copied to the primary clipboard.
   save_to_clipboard: false
-
-# Allow terminal applications to change Alacritty's window title.
-dynamic_title: false
 
 cursor:
   # Cursor style
@@ -490,7 +489,7 @@ key_bindings:
   #- { key: W,      mods: Command,         action: Quit             }
   #- { key: F,      mods: Command|Control, action: ToggleFullscreen }
 
-  - { key: N,         mods: Command,      action: SpawnNewInstance           }
+  # - { key: N,         mods: Command,      action: SpawnNewInstance           }
   - { key: Paste,                   action: Paste                            }
   - { key: Copy,                    action: Copy                             }
   - { key: L,        mods: Control, action: ClearLogNotice                   }

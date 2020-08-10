@@ -17,7 +17,7 @@ endif
 
 if (exists("g:vimrc_active_jira_ticket") || exists("b:vimrc_active_jira_ticket")) && !exists("b:ticket_number_appended")
     let s:ticket_number = ""
-    if exists("g:vimrc_active_jira_ticket")
+    if exists("g:vimrc_active_jira_ticket") && !empty("g:vimrc_active_jira_ticket")
         let s:ticket_number = g:vimrc_active_jira_ticket
     else
         let s:ticket_number = b:vimrc_active_jira_ticket

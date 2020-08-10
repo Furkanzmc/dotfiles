@@ -128,14 +128,14 @@ function Prompt() {
 
     Write-Host "`n$("=>" * ($NestedPromptLevel + 1))" -NoNewLine -ForegroundColor Green
 
-    $time = $(Get-Date -Format "HHMM")
-    $envSet = Test-Path env:VIMRC_TERMINAL_THEME
-    if ((-not $envSet -or $env:VIMRC_TERMINAL_THEME -eq "light") `
-        -and $time -gt 2000) {
+    $date = Get-Date
+    if (($date -gt $(Get-Date -Hour 20 -Minute 00)) `
+        -or (($date -gt $(Get-Date -Hour 00 -Minute 00)) `
+        -and ($date -lt $(Get-Date -Hour 7 -Minute 00)))) {
         Set-Terminal-Theme dark | Out-Null
     }
-    elseif ((-not $envSet -or $env:VIMRC_TERMINAL_THEME -eq "dark") `
-        -and $time -lt 2000) {
+    elseif (($date -gt $(Get-Date -Hour 7 -Minute 00)) `
+        -or ($date -lt $(Get-Date -Hour 20 -Minute 00))) {
         Set-Terminal-Theme light | Out-Null
     }
 

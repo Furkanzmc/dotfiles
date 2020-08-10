@@ -313,7 +313,7 @@ nnoremap <silent> =cc :call <SID>count_conflicts()<CR>
 
 " }}}
 
-" Maps Commands {{{
+" Maps, Commands {{{
 
 nnoremap <silent> <leader>an :next<CR>
 nnoremap <silent> <leader>ap :previous<CR>
@@ -354,6 +354,16 @@ map <leader>ss :setlocal spell!<cr>
 
 nmap <silent> <leader>dh :call init#search_docs()<CR>
 command! -nargs=1 Search :call init#search_docs(<f-args>)
+
+command! -nargs=1 StartTicket :let g:vimrc_active_jira_ticket=<f-args>
+
+function s:close_ticket()
+    if exists("g:vimrc_active_jira_ticket")
+        unlet g:vimrc_active_jira_ticket
+    endif
+endfunction
+
+command! CloseTicket :call <SID>close_ticket()
 
 " Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 " Allows running macros only on selected files.
