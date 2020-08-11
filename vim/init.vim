@@ -265,7 +265,6 @@ endtry
 " Use these to delete a line without cutting it.
 nnoremap <leader>d "_d
 xnoremap <leader>d "_d
-xnoremap p "_dP
 xnoremap <leader>c "_c
 
 " Mappings to [l]cd into the current file's directory.

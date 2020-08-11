@@ -13,8 +13,9 @@ endif
 
 command -buffer -range RunQML :call qml#run()
 
-inoremap <buffer> <c-s> <esc>Ion<esc>l~A: {<CR>}<ESC>O
-inoremap <buffer> <c-d> <esc>Ion<esc>l~AChanged: {<CR>}<ESC>O
+inoremap <buffer> <c-s> <ESC>bion<ESC>l~A: {<CR>}<ESC>O
+inoremap <buffer> <c-d> <ESC>bion<ESC>l~AChanged: {<CR>}<ESC>O
+inoremap <buffer> <c-l> console.log("[=expand("%:t")::]")F:a
+inoremap <buffer> <c-u> console.log("    ")F"i
 
 let b:qml_mappings_set = v:true
-
