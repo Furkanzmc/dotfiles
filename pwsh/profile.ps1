@@ -62,83 +62,9 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     $Stopwatch.Stop()
 }
 
+Import-Module Pwsh-Prompt -DisableNameChecking
 function Prompt() {
-    $lastCommandSucceeded = $?
-    $exitCode = $LastExitCode
-    if (Test-Path env:VIRTUAL_ENV -ErrorAction SilentlyContinue) {
-        Write-Host "(.venv) " -ForegroundColor Yellow -NoNewLine
-    }
-
-    $currentLocation = $(Get-Location).Path
-    if ($IsMacOS) {
-        $currentLocation = $currentLocation.Replace($env:HOME, "~")
-    }
-    else {
-        $currentLocation = $currentLocation.Replace($env:USERPROFILE, "~")
-    }
-    $maxWidth = 80
-
-    if ($currentLocation.Length -gt $maxWidth) {
-        $p1 = $currentLocation.Substring(0, $currentLocation.IndexOf("/", 2) + 1)
-        $lastSlash = $currentLocation.IndexOf("/", $maxWidth + $p1.Length)
-        $currentLocation = $p1 + "..." + $currentLocation.Substring($lastSlash)
-    }
-
-    Write-Host "$currentLocation " -NoNewLine -ForegroundColor Blue
-
-    $gitDir = &git rev-parse --git-dir
-    # Continue if the command succeeded.
-    if ($?) {
-        $branchName = Get-Content ( `
-                Join-Path $gitDir -ChildPath HEAD `
-                )
-        $branchName = $branchName.Replace("ref: ", "")
-        $branchName = $branchName.Replace("refs/heads/", "")
-
-        # Check for an active rebase.
-        $rebaseMergePath = Join-Path $gitDir -ChildPath rebase-merge
-        $rebasing = Test-Path -Path $rebaseMergePath
-        if ($rebasing) {
-            Write-Host "[$branchName" -ForegroundColor Green -NoNewLine
-            Write-Host ":" -ForegroundColor Green -NoNewLine
-            $isInteractiveRebase = Test-Path -Path (`
-                    Join-Path $rebaseMergePath -ChildPath interactive `
-                    )
-            if ($isInteractiveRebase) {
-                Write-Host "REBASE-I" -ForegroundColor Blue -NoNewLine
-            }
-            else {
-                Write-Host "REBASE-M" -ForegroundColor Blue -NoNewLine
-            }
-
-            Write-Host "] " -ForegroundColor Green -NoNewLine
-        }
-        else {
-            Write-Host "[$branchName] " -ForegroundColor Green -NoNewLine
-        }
-    }
-
-    Write-Host $(Get-Date -Format "[HH:mm:ss]") `
-        -ForegroundColor DarkGray -NoNewLine
-
-    if ($lastCommandSucceeded -eq $false) {
-        $bufferSize = (Get-Host).UI.RawUI.BufferSize.Width
-        Write-Host " !! $exitCode" -NoNewLine -ForegroundColor Red
-    }
-
-    Write-Host "`n$("=>" * ($NestedPromptLevel + 1))" -NoNewLine -ForegroundColor Green
-
-    $date = Get-Date
-    if (($date -gt $(Get-Date -Hour 20 -Minute 00)) `
-        -or (($date -gt $(Get-Date -Hour 00 -Minute 00)) `
-        -and ($date -lt $(Get-Date -Hour 7 -Minute 00)))) {
-        Set-Terminal-Theme dark | Out-Null
-    }
-    elseif (($date -gt $(Get-Date -Hour 7 -Minute 00)) `
-        -or ($date -lt $(Get-Date -Hour 20 -Minute 00))) {
-        Set-Terminal-Theme light | Out-Null
-    }
-
+    Write-Prompt
     return " "
 }
 
