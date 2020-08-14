@@ -227,13 +227,7 @@ function Set-Terminal-Theme() {
     }
 
     if ($ChangeInAllNeovimInstances) {
-        if ($IsMacOS) {
-            $nvimPath = "$HOME/.dotfiles/scripts/nvim.py"
-        }
-        else {
-            $nvimPath = "$USERHOME/.dotfiles/scripts/nvim.py"
-        }
-
+        $nvimPath = "$HOME/.dotfiles/scripts/nvim.py"
         $command = "`"set background=$Color`""
         Start-Process -FilePath python3 -ArgumentList `
             $nvimPath,"--command ",$command -NoNewWindow

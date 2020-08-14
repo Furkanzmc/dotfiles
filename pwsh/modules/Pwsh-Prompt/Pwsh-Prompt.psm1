@@ -130,7 +130,7 @@ function Write-Git-Prompt($date) {
         if ($ahead -gt 0) {
             Write-Host -ForegroundColor Green "↑$ahead" -NoNewLine
         }
-        
+
         Write-Host -ForegroundColor Magenta ") " -NoNewLine
     }
 }

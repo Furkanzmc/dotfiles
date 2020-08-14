@@ -204,7 +204,7 @@ LAlt & s::
     }
     return
 
-LAlt & p::
+LAlt & o::
     if GetKeyState("LShift")
     {
         ToolTip, Press any key to perform custom functions.
