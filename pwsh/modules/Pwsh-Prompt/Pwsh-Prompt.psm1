@@ -9,20 +9,21 @@ function Get-Git-Status-Dict() {
     $renamedCount = $status | Select-String -Pattern "(^ R|^RR)" | Measure-Object | Select-Object -ExpandProperty Count
     $newCount = $status | Select-String -Pattern "(^\?\?|^ \?\?)" | Measure-Object | Select-Object -ExpandProperty Count
     $deletedCount = $status | Select-String -Pattern "(^DD|^ D)" | Measure-Object | Select-Object -ExpandProperty Count
-    $result = $status | Select-String -Pattern "\[behind"
+
+    $result = $status[0] | Select-String -Pattern "\[behind"
     $behindCount = 0
     if ($result) {
         $currentMatch = $result.Matches[0]
-        $behindCount = $status.SubString(`
+        $behindCount = $status[0].SubString(`
             $currentMatch.Index + $currentMatch.Length + 1, 1 `
         )
     }
 
-    $result = $status | Select-String -Pattern "\[ahead"
+    $result = $status[0] | Select-String -Pattern "\[ahead"
     $aheadCount = 0
     if ($result) {
         $currentMatch = $result.Matches[0]
-        $aheadCount = $status.SubString(`
+        $aheadCount = $status[0].SubString(`
             $currentMatch.Index + $currentMatch.Length + 1, 1 `
         )
     }
