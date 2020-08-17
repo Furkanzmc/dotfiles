@@ -79,6 +79,11 @@ function Write-Git-Prompt($date) {
         Write-Host " $branchName" -ForegroundColor Magenta -NoNewLine
     }
 
+    if (Test-Path env:PWSH_GIT_PROMPT_DISABLED -ErrorAction SilentlyContinue) {
+        Write-Host " " -NoNewLine
+        return
+    }
+
     $gitStatusFile = Join-Path -Path $gitDir -ChildPath status_prompt.json
 
     $previousJob = Get-Job -Name pwsh_git_status -Newest 1 -ErrorAction SilentlyContinue
@@ -112,7 +117,7 @@ function Write-Git-Prompt($date) {
         }
 
         if ($modified -gt 0) {
-            Write-Host -ForegroundColor Blue "✚$modified" -NoNewLine
+            Write-Host -ForegroundColor Blue "+$modified" -NoNewLine
         }
 
         if ($deleted -gt 0) {
