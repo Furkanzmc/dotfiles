@@ -10,20 +10,27 @@ function Get-Git-Status-Dict() {
     $newCount = $status | Select-String -Pattern "(^\?\?|^ \?\?)" | Measure-Object | Select-Object -ExpandProperty Count
     $deletedCount = $status | Select-String -Pattern "(^DD|^ D)" | Measure-Object | Select-Object -ExpandProperty Count
 
-    $result = $status[0] | Select-String -Pattern "\[behind"
+    if ($status.GetType().Name -eq "Object[]") {
+        $branchLine = $status[0]
+    }
+    else {
+        $branchLine = $status
+    }
+
+    $result = $branchLine | Select-String -Pattern "\[behind"
     $behindCount = 0
     if ($result) {
         $currentMatch = $result.Matches[0]
-        $behindCount = $status[0].SubString(`
+        $behindCount = $branchLine.SubString(`
             $currentMatch.Index + $currentMatch.Length + 1, 1 `
         )
     }
 
-    $result = $status[0] | Select-String -Pattern "\[ahead"
+    $result = $branchLine | Select-String -Pattern "\[ahead"
     $aheadCount = 0
     if ($result) {
         $currentMatch = $result.Matches[0]
-        $aheadCount = $status[0].SubString(`
+        $aheadCount = $branchLine.SubString(`
             $currentMatch.Index + $currentMatch.Length + 1, 1 `
         )
     }
