@@ -85,10 +85,12 @@ function Write-Git-Prompt($date) {
     }
 
     $gitStatusFile = Join-Path -Path $gitDir -ChildPath status_prompt.json
-
-    $previousJob = Get-Job -Name pwsh_git_status -Newest 1 -ErrorAction SilentlyContinue
-    if (!$previousJob -or $previousJob.State -eq "Completed") {
-        $job = Start-Job -Name "pwsh_git_status" { Cache-Git-Status }
+    $envExists = Test-Path env:PWSH_PROMPT_CACHE_PROCESS_ID -ErrorAction SilentlyContinue
+    if (-not $envExists -or ($envExists -and -not (Get-Process -Id $env:PWSH_PROMPT_CACHE_PROCESS_ID -ErrorAction SilentlyContinue))) {
+        $process = Start-Process -FilePath pwsh -ArgumentList "-C Cache-Git-Status" `
+            -NoNewWindow -PassThru -RedirectStandardOutput "~/.dotfiles/pwsh/tmp_dirs/out_null" `
+            -RedirectStandardError  "~/.dotfiles/pwsh/tmp_dirs/out_null_err"
+        $env:PWSH_PROMPT_CACHE_PROCESS_ID=$process.Id
     }
 
     if (! (Test-Path $gitStatusFile -ErrorAction SilentlyContinue)) {
