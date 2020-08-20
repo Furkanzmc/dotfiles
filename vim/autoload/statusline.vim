@@ -202,7 +202,7 @@ function! statusline#configure(winnum)
         endif
 
         if !empty(l:head)
-            let l:status .= ' ʯ ' . l:head . ' '
+            let l:status .= '  ' . l:head . ' '
         endif
     endif
 
