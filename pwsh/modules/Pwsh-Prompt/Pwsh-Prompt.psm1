@@ -17,22 +17,18 @@ function Get-Git-Status-Dict() {
         $branchLine = $status
     }
 
-    $result = $branchLine | Select-String -Pattern "\[behind"
+    $result = $branchLine | Select-String -Pattern "behind [0-9]+"
     $behindCount = 0
     if ($result) {
         $currentMatch = $result.Matches[0]
-        $behindCount = $branchLine.SubString(`
-            $currentMatch.Index + $currentMatch.Length + 1, 1 `
-        )
+        $behindCount = $currentMatch -replace "behind "
     }
 
-    $result = $branchLine | Select-String -Pattern "\[ahead"
+    $result = $branchLine | Select-String -Pattern "ahead [0-9]+"
     $aheadCount = 0
     if ($result) {
         $currentMatch = $result.Matches[0]
-        $aheadCount = $branchLine.SubString(`
-            $currentMatch.Index + $currentMatch.Length + 1, 1 `
-        )
+        $aheadCount = $currentMatch -replace "ahead "
     }
 
     $output = "M$modifiedCount D$deletedCount ??$newCount ↑$aheadCount ↓$behindCount"
@@ -49,6 +45,11 @@ function Get-Git-Status-Dict() {
 function Cache-Git-Status() {
     $gitDir = &git rev-parse --git-dir
     $gitStatusFile = Join-Path -Path $gitDir -ChildPath status_prompt.json
+    $lockFile = Join-Path -Path $gitDir -ChildPath index.lock
+    if (Test-Path $lockFile -ErrorAction SilentlyContinue) {
+        return
+    }
+
     $status = Get-Git-Status-Dict
     $jsonContent = ConvertTo-Json $status
     Set-Content -Path $gitStatusFile -Value $jsonContent
@@ -71,7 +72,7 @@ function Write-Git-Prompt($date) {
     $rebaseMergePath = Join-Path $gitDir -ChildPath rebase-merge
     $rebasing = Test-Path -Path $rebaseMergePath
     if ($rebasing) {
-        Write-Host " $branchName" -ForegroundColor Magenta -NoNewLine
+        Write-Host " $branchName" -ForegroundColor Cyan -NoNewLine
         Write-Host ":" -ForegroundColor Green -NoNewLine
         $isInteractiveRebase = Test-Path -Path (`
                 Join-Path $rebaseMergePath -ChildPath interactive `
@@ -84,7 +85,7 @@ function Write-Git-Prompt($date) {
         }
     }
     else {
-        Write-Host " $branchName" -ForegroundColor Magenta -NoNewLine
+        Write-Host " $branchName" -ForegroundColor Cyan -NoNewLine
     }
 
     if (Test-Path env:PWSH_GIT_PROMPT_DISABLED -ErrorAction SilentlyContinue) {
@@ -102,9 +103,9 @@ function Write-Git-Prompt($date) {
     }
 
     if (! (Test-Path $gitStatusFile -ErrorAction SilentlyContinue)) {
-        Write-Host -ForegroundColor Magenta " (" -NoNewLine
+        Write-Host -ForegroundColor Cyan " (" -NoNewLine
         Write-Host -ForegroundColor DarkYellow "…" -NoNewLine
-        Write-Host -ForegroundColor Magenta ") " -NoNewLine
+        Write-Host -ForegroundColor Cyan ") " -NoNewLine
     }
     else {
         $statusVars = Get-Content $gitStatusFile | ConvertFrom-Json
@@ -121,7 +122,7 @@ function Write-Git-Prompt($date) {
             return
         }
 
-        Write-Host -ForegroundColor Magenta " (" -NoNewLine
+        Write-Host -ForegroundColor Cyan " (" -NoNewLine
         if ($staged -gt 0) {
             Write-Host -ForegroundColor Blue "●$staged" -NoNewLine
         }
@@ -146,7 +147,7 @@ function Write-Git-Prompt($date) {
             Write-Host -ForegroundColor Green "↑$ahead" -NoNewLine
         }
 
-        Write-Host -ForegroundColor Magenta ") " -NoNewLine
+        Write-Host -ForegroundColor Cyan ") " -NoNewLine
     }
 }
 
