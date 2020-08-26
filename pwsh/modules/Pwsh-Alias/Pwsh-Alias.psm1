@@ -23,6 +23,8 @@ if (Get-Command "rmtrash" -ErrorAction SilentlyContinue) {
     Set-Alias trash rmtrash
 }
 
+Set-Alias -Name :e -Value nvim
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Alias in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()

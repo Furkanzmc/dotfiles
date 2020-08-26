@@ -1,6 +1,7 @@
 " Initial config from: https://jip.dev/posts/a-simpler-vim-statusline/
 
-function! statusline#is_fugitive_buffer(buffer_name)
+" Utility Functions {{{
+function! statusline#is_fugitive_buffer(buffer_name) 
     if has('win32')
         return match(a:buffer_name, 'fugitive:\\') != -1
     endif
@@ -27,18 +28,41 @@ function! s:lsp_daignostic(active) abort
 
     let l:status = ""
     if l:errors > 0
-        let l:status .= s:get_color(a:active, 'Identifier', 'Identifier')
+        let l:status .= s:get_color(a:active, 'Identifier', 'StatusLineNC')
         let l:status .= " E: " . l:errors . " "
     endif
 
     if l:warnings > 0
-        let l:status .= s:get_color(a:active, 'Type', 'Type')
+        let l:status .= s:get_color(a:active, 'Type', 'StatusLineNC')
         let l:status .= " W: " . l:warnings . " "
     endif
 
     return l:status
 endfunction
 
+" }}}
+
+let g:vimrc_mode_map = {
+            \ 'n'      : 'Normal',
+            \ 'no'     : 'N.Operator Pending ',
+            \ 'v'      : 'V',
+            \ 'V'      : 'V.Line',
+            \ '' : 'V.Block',
+            \ 's'      : 'Select',
+            \ 'S'      : 'S.Line',
+            \ '\<C-S>' : 'S.Block',
+            \ 'i'      : 'Insert',
+            \ 'R'      : 'Replace',
+            \ 'Rv'     : 'V.Replace',
+            \ 'c'      : 'Command',
+            \ 'cv'     : 'Vim Ex',
+            \ 'ce'     : 'Ex',
+            \ 'r'      : 'Prompt',
+            \ 'rm'     : 'More',
+            \ 'r?'     : 'Confirm',
+            \ '!'      : 'Shell',
+            \ 't'      : 'Terminal'
+            \}
 
 " This function just outputs the content colored by the
 " supplied colorgroup number, e.g. num = 2 -> User2
@@ -46,34 +70,12 @@ endfunction
 " focused one
 function! statusline#configure(winnum)
     let l:active = a:winnum == winnr()
-    let g:vimrc_mode_map = {
-                \ 'n'      : 'Normal',
-                \ 'no'     : 'N.Operator Pending ',
-                \ 'v'      : 'V',
-                \ 'V'      : 'V.Line',
-                \ '' : 'V.Block',
-                \ 's'      : 'Select',
-                \ 'S'      : 'S.Line',
-                \ '\<C-S>' : 'S.Block',
-                \ 'i'      : 'Insert',
-                \ 'R'      : 'Replace',
-                \ 'Rv'     : 'V.Replace',
-                \ 'c'      : 'Command',
-                \ 'cv'     : 'Vim Ex',
-                \ 'ce'     : 'Ex',
-                \ 'r'      : 'Prompt',
-                \ 'rm'     : 'More',
-                \ 'r?'     : 'Confirm',
-                \ '!'      : 'Shell',
-                \ 't'      : 'Terminal'
-                \}
-
     let l:status = ""
 
     " Mode sign {{{
 
     let l:excluded_file_types = ["help", "qf"]
-    let l:status .= s:get_color(l:active, 'Visual', 'Comment')
+    let l:status .= s:get_color(l:active, 'Visual', 'StatusLineNC')
     let l:handled = v:false
     let l:mode = mode()
 
@@ -103,19 +105,25 @@ function! statusline#configure(winnum)
 
     " }}}
 
-    let l:status .= s:get_color(l:active, 'Error', 'ErrorMsg')
+    " Help, Quickfix, and Preview signs {{{
+
+    let l:status .= s:get_color(l:active, 'TooLong', 'StatusLineTermNC')
     let l:status .= '%h' " Help sign
-    let l:status .= '%q' " Help sign
+    let l:status .= '%q' " Quickfix sign
     let l:status .= '%w' " Preview sign
+
+    " }}}
 
     " File path {{{
 
     if &filetype != "fugitive"
-        let l:status .= s:get_color(l:active, 'Normal', 'Comment')
+        let l:status .= s:get_color(l:active, 'Normal', 'StatusLineNC')
         let l:status .= " %{statusline#is_fugitive_buffer(expand('%')) ? expand('%:t') : expand('%')}"
     endif
 
     " }}}
+
+    " LSP Status {{{
 
     if l:active
         " FIXME: nvim-lsp somtimes stops working. This is a convenient way to
@@ -127,24 +135,26 @@ function! statusline#configure(winnum)
         endtry
 
         if l:is_lsp_active
-            let l:status .= s:get_color(l:active, 'SpecialKey', 'Comment')
+            let l:status .= s:get_color(l:active, 'SpecialKey', 'StatusLineNC')
             let l:status .= " ⚙ "
         endif
     endif
 
+    " }}}
+
     " Diff file signs {{{
 
-    let l:status .= s:get_color(1, 'Type', 'Type')
-
     let l:buffer_git_tag = " %{"
-    let l:buffer_git_tag .= "&diff && statusline#is_fugitive_buffer(expand('%')) ? '[head]' : "
-    let l:buffer_git_tag .= "(&diff && !statusline#is_fugitive_buffer(expand('%')) ? '[local]' : '')"
+    let l:buffer_git_tag .= "!&diff ? '' : "
+    let l:buffer_git_tag .= "(statusline#is_fugitive_buffer(expand('%')) ? '[head]' : '[local]')"
     let l:buffer_git_tag .= "}"
+
+    let l:status .= s:get_color(l:active, 'StatusDiffFileSign', 'StatusDiffFileSignNC')
     let l:status .= l:buffer_git_tag
 
     " }}}
 
-    let l:status .= s:get_color(l:active, 'Identifier', 'Comment')
+    let l:status .= s:get_color(l:active, 'Identifier', 'StatusLineNC')
     let l:status .= '%r' " Readonly sign
     if &spell
         let l:status .= ' ☰'
@@ -152,7 +162,7 @@ function! statusline#configure(winnum)
 
     " Modified sign {{{
 
-    let l:status .= s:get_color(l:active, 'SpecialChar', 'Comment')
+    let l:status .= s:get_color(l:active, 'SpecialChar', 'StatusLineNC')
     let l:status .= "%{&modified ? ' +' : ''}" " Modified sign
 
     if (l:active)
@@ -164,8 +174,9 @@ function! statusline#configure(winnum)
     endif
 
     " }}}
-
-    let l:status .= '%=' " Switch to right side
+    
+    " Switch to right side
+    let l:status .= '%=' 
 
     " LSP Diagnostic {{{
 
@@ -183,7 +194,7 @@ function! statusline#configure(winnum)
     if exists(":SendHttpRequest") > 0
         let l:http_in_progress = get(g:, "nvim_http_request_in_progress", v:false)
         if l:http_in_progress
-            let l:status .= s:get_color(l:active, 'Special', 'Comment')
+            let l:status .= s:get_color(l:active, 'Special', 'StatusLineNC')
             let l:status .= " [Http] "
         endif
     endif
@@ -193,7 +204,7 @@ function! statusline#configure(winnum)
 
     " Branch name {{{
 
-    let l:status .= s:get_color(l:active, 'Visual', 'Comment')
+    let l:status .= s:get_color(l:active, 'Visual', 'StatusLineNC')
     if exists("*FugitiveHead") && l:active
         let l:head = FugitiveHead()
         if empty(l:head) && exists('*FugitiveDetect') && !exists('b:git_dir')
