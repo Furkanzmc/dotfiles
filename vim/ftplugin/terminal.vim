@@ -26,6 +26,10 @@ tmap <C-d> <PageDown>
 tmap <C-u> <PageUp>
 tnoremap <C-w>q <C-\><C-n>
 
+" Pastes the text in the register into the terminal.
+nmap <buffer> <leader>p :call chansend(b:terminal_job_id,
+            \ shellescape(trim(@*)) . "\n")<CR>
+
 if get(s:, "terminal_plugin_loaded", v:false)
     finish
 endif
