@@ -1,5 +1,5 @@
 " Functions {{{
-function! init#search_docs(...)
+function! s:search_docs(...)
     let wordUnderCursor = a:0 > 0 ? a:1 : expand('<cword>')
     let filetype = &filetype
     if (filetype == 'qml')
@@ -97,8 +97,6 @@ catch
 endtry
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
-set nowb
 set noswapfile
 
 " Use spaces instead of tabs
@@ -111,17 +109,20 @@ set smarttab
 set shiftwidth=4
 set tabstop=4
 
-" Linebreak on 500 characters
-set lbr
-set tw=500
+set linebreak
+set textwidth=500
 
-set ai "Auto indent
-set si "Smart indent
+set autoindent
+set smartindent
 
-augroup LuaHighlight
-    autocmd!
-    au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, higroup="IncSearch", timeout=100}
-augroup END
+if has("win32") && executable("pwsh")
+    set shell=pwsh
+    set shellquote=
+    set shellpipe=\|\ Out-File\ -Encoding\ UTF8
+    set shellxquote=
+    set shellcmdflag=-NoLogo\ -NonInteractive\ -NoProfile\ -ExecutionPolicy\ RemoteSigned\ -Command
+    set shellredir=Out-File\ -Encoding\ UTF8\ %s\ \|\ Out-Null
+endif
 " }}}
 
 " User Interface {{{
@@ -351,33 +352,33 @@ endif
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
-nmap <silent> <leader>dh :call init#search_docs()<CR>
-command! -nargs=1 Search :call init#search_docs(<f-args>)
+nmap <silent> <leader>dh :call <SID>search_docs()<CR>
+command! -nargs=1 Search :call <SID>search_docs(<f-args>)
 
 command! -nargs=1 StartTicket :let g:vimrc_active_jira_ticket=<f-args>
-
-function s:close_ticket()
-    if exists("g:vimrc_active_jira_ticket")
-        unlet g:vimrc_active_jira_ticket
-    endif
-endfunction
-
-command! CloseTicket :call <SID>close_ticket()
+command! CloseTicket :call if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
 
 " Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 " Allows running macros only on selected files.
-function! init#execute_macro_on_visual_range()
+function! s:execute_macro_on_visual_range()
     echo "@".getcmdline()
     execute ":'<,'>normal @".nr2char(getchar())
 endfunction
-xnoremap @ :<C-u>call init#execute_macro_on_visual_range()<CR>
+
+xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
+
+
+augroup LuaHighlight
+    autocmd!
+    au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, higroup="IncSearch", timeout=100}
+augroup END
 " }}}
 
 " Misc {{{
 
 " Custom Server {{{
 
-function! s:CreateCustomNvimListenServer()
+function! s:create_custom_nvim_server()
     if has('win32')
         return
     endif
@@ -389,7 +390,7 @@ endfunction
 
 augroup StartUp
     autocmd!
-    autocmd VimEnter * call s:CreateCustomNvimListenServer()
+    autocmd VimEnter * call s:create_custom_nvim_server()
 augroup END
 
 " }}}
@@ -667,7 +668,7 @@ inoremap <silent><expr> <S-TAB>
 
 " Preview {{{
 
-function! init#show_loc_item_in_preview()
+function! s:show_loc_item_in_preview()
     let l:loclist = getloclist(winnr())
     let l:list = []
 
@@ -700,7 +701,7 @@ function! init#show_loc_item_in_preview()
     endif
 endfunction
 
-nnoremap <silent> <leader>li :call init#show_loc_item_in_preview()<CR>
+nnoremap <silent> <leader>li :call <SID>show_loc_item_in_preview()<CR>
 
 " }}}
 
