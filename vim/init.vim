@@ -115,13 +115,13 @@ set textwidth=500
 set autoindent
 set smartindent
 
-if has("win32") && executable("pwsh")
+if executable("pwsh") && exists("$VIMRC_PWSH_ENABLED")
     set shell=pwsh
     set shellquote=
     set shellpipe=\|\ Out-File\ -Encoding\ UTF8
     set shellxquote=
     set shellcmdflag=-NoLogo\ -NonInteractive\ -NoProfile\ -ExecutionPolicy\ RemoteSigned\ -Command
-    set shellredir=Out-File\ -Encoding\ UTF8\ %s\ \|\ Out-Null
+    set shellredir=\|\ Out-File\ -Encoding\ UTF8\ %s\ \|\ Out-Null
 endif
 " }}}
 

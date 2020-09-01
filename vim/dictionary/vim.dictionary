@@ -17,3 +17,4 @@ vimrc_shell
 vimrc_spacehi_enabled_for_all
 vimrc_spacehi_tab_color
 vimrc_statusline_lsp_diagnostics
+VIMRC_PWSH_ENABLED
