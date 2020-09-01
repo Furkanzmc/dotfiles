@@ -3,17 +3,17 @@ local lsp = vim.lsp.util
 local M = {}
 
 function publish_to_location_list(bufnr, local_result)
-  if local_result and local_result.diagnostics then
-    for _, v in ipairs(local_result.diagnostics) do
-      v.uri = v.uri or local_result.uri
+    if local_result and local_result.diagnostics then
+        for _, v in ipairs(local_result.diagnostics) do
+            v.uri = v.uri or local_result.uri
+        end
     end
-  end
 
-  local locations = vim.lsp.util.locations_to_items(local_result.diagnostics)
-  vim.fn.setloclist(
-      bufnr,
-      locations,
-      "r")
+    local locations = vim.lsp.util.locations_to_items(local_result.diagnostics)
+    vim.fn.setloclist(
+        bufnr,
+        locations,
+        "r")
 end
 
 function publish_diagnostics()
@@ -81,25 +81,6 @@ M.on_complete_done_pre = function()
 end
 
 
-local function preview_location_callback(_, method, result)
-  if result == nil or vim.tbl_isempty(result) then
-    vim.lsp.log.info(method, 'No location found')
-    return nil
-  end
-  if vim.tbl_islist(result) then
-    vim.lsp.util.preview_location(result[1])
-  else
-    vim.lsp.util.preview_location(result)
-  end
-end
-
-
-M.peek_definition = function()
-  local params = vim.lsp.util.make_position_params()
-  return vim.lsp.buf_request(0, 'textDocument/definition', params, preview_location_callback)
-end
-
-
 function set_up_keymap(bufnr)
     local opts = { noremap=true, silent=true }
     local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_lsp_shortcuts_set")
@@ -114,7 +95,7 @@ function set_up_keymap(bufnr)
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', '<leader>lr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gs', "<Cmd>lua require'lsp'.peek_definition()<CR>", opts)
+        bufnr, 'n', 'gs', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
