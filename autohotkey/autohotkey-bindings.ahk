@@ -61,7 +61,7 @@ CenterWindow(WinId, changeSize)
 
     If changeSize = 1
     {
-        WinMove, ahk_id %WinId%,, (WorkArea.width / 2) - ((WorkArea.width * 0.55) / 2), (WorkArea.height / 2) - (WorkArea.height / 2) + WorkArea.y, WorkArea.width * 0.55, WorkArea.height
+        WinMove, ahk_id %WinId%,, (WorkArea.width / 2) - ((WorkArea.width * 0.7) / 2), (WorkArea.height / 2) - (WorkArea.height / 2) + WorkArea.y, WorkArea.width * 0.7, WorkArea.height
     }
     else
     {
