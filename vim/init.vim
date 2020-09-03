@@ -315,17 +315,17 @@ nnoremap <silent> =cc :call <SID>count_conflicts()<CR>
 
 " Maps, Commands {{{
 
-nnoremap <silent> <leader>an :next<CR>
-nnoremap <silent> <leader>ap :previous<CR>
+nnoremap <silent> ]a :next<CR>
+nnoremap <silent> [a :previous<CR>
 
-nnoremap <silent> <leader>ln :lnext<CR>
-nnoremap <silent> <leader>lp :lprevious<CR>
+nnoremap <silent> ]l :lnext<CR>
+nnoremap <silent> [l :lprevious<CR>
 
-nnoremap <silent> <leader>cn :cnext<cr>
-nnoremap <silent> <leader>cp :cprevious<cr>
+nnoremap <silent> ]q :cnext<cr>
+nnoremap <silent> [q :cprevious<cr>
 
-nnoremap <silent> <leader>bn :bnext<CR>
-nnoremap <silent> <leader>bp :bprevious<CR>
+nnoremap <silent> ]b :bnext<CR>
+nnoremap <silent> [b :bprevious<CR>
 
 map <leader>tn :tabnew<cr>
 map <leader>tc :tabclose<cr>
