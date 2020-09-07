@@ -34,11 +34,11 @@ if get(s:, "terminal_plugin_loaded", v:false)
     finish
 endif
 
-augroup Terminal
+augroup vimrc_terminal
     autocmd!
 
-    autocmd TermEnter * set scrolloff=0
-    autocmd TermLeave * set scrolloff=3
+    autocmd TermEnter * set scrolloff=0 | setlocal nonumber | setlocal norelativenumber
+    autocmd TermLeave * set scrolloff=3 | setlocal number | setlocal relativenumber
 augroup END
 
 let s:terminal_plugin_loaded = v:true
