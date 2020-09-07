@@ -24,13 +24,13 @@ ToggleWindowsDefaultAppMode() {
     RegRead, appMode, HKCU, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme
     RegWrite, REG_DWORD, HKCU, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, AppsUseLightTheme, % !appMode
     RegWrite, REG_DWORD, HKCU, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, SystemUsesLightTheme, % !appMode
-    if appMode == 0
+    if appMode
     {
-        Run, pwsh -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "Import-Module Pwsh-Vim -DisableNameChecking; Set-Terminal-Theme light; Set-Content -Path ~/.dotfiles/pwsh/tmp_dirs/system_theme -Value dark"
+        Run, pwsh -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "Import-Module Pwsh-Utils -DisableNameChecking; Set-Terminal-Theme dark; Set-Content -Path ~/.dotfiles/pwsh/tmp_dirs/system_theme -Value dark"
     }
     else
     {
-        Run, pwsh -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "Import-Module Pwsh-Vim -DisableNameChecking; Set-Terminal-Theme dark; Set-Content -Path ~/.dotfiles/pwsh/tmp_dirs/system_theme -Value dark"
+        Run, pwsh -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "Import-Module Pwsh-Utils -DisableNameChecking; Set-Terminal-Theme light; Set-Content -Path ~/.dotfiles/pwsh/tmp_dirs/system_theme -Value light"
     }
 }
 
