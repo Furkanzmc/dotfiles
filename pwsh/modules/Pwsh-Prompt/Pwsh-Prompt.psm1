@@ -193,16 +193,16 @@ function Write-Prompt() {
         Write-Host "`n$("=>" * ($NestedPromptLevel + 1))" -NoNewLine -ForegroundColor Red
     }
 
-    if (($date -gt $(Get-Date -Hour 20 -Minute 00)) `
-        -or (($date -gt $(Get-Date -Hour 00 -Minute 00)) `
-        -and ($date -lt $(Get-Date -Hour 7 -Minute 00)))) {
-        Set-Terminal-Theme dark | Out-Null
+    $themeFile = "~/.dotfiles/pwsh/tmp_dirs/system_theme"
+    if (Test-Path $themeFile -ErrorAction SilentlyContinue) {
+        $content = Get-Content $themeFile
+        if ($content -match "dark") {
+            Set-Terminal-Theme dark | Out-Null
+        }
+        else {
+            Set-Terminal-Theme light | Out-Null
+        }
     }
-    elseif (($date -gt $(Get-Date -Hour 7 -Minute 00)) `
-        -or ($date -lt $(Get-Date -Hour 20 -Minute 00))) {
-        Set-Terminal-Theme light | Out-Null
-    }
-
 }
 
 Export-ModuleMember -Function Write-Prompt

@@ -37,11 +37,19 @@ async def main(connection):
                     connection, "cosmic_latte_dark"
                 )
                 pwsh_args.append("set background=dark")
+                with open(
+                    expanduser("~/.dotfiles/pwsh/tmp_dirs/system_theme"), "w"
+                ) as file_handle:
+                    file_handle.write("dark")
             else:
                 preset = await iterm2.ColorPreset.async_get(
                     connection, "cosmic_latte_light"
                 )
                 pwsh_args.append("set background=light")
+                with open(
+                    expanduser("~/.dotfiles/pwsh/tmp_dirs/system_theme"), "w"
+                ) as file_handle:
+                    file_handle.write("light")
 
             print(pwsh_args)
             run(pwsh_args)
