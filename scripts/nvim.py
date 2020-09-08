@@ -2,7 +2,7 @@
 
 # Python
 import argparse
-from os import getenv
+from os import getenv, name as os_name
 from os.path import expanduser
 from typing import List
 from logging import getLogger, Logger, DEBUG
@@ -35,7 +35,7 @@ def get_nvim_processes() -> List[Process]:
         ):
             pass
         else:
-            if process_name == "nvim":
+            if process_name == "nvim.exe" or process_name == "nvim":
                 processes.append(process)
 
     return processes
@@ -58,17 +58,18 @@ def run_command(command: str):
     logger.debug("Running command: {}".format(command))
     process: Process
     for process in processes:
-        server: str = expanduser(
-            "~/.dotfiles/vim/temp_dirs/servers/nvim{}.sock".format(process.pid)
-        )
+        if os_name == "nt":
+            server: str = "//./pipe/nvim-{}".format(process.pid)
+        else:
+            server: str = expanduser(
+                "~/.dotfiles/vim/temp_dirs/servers/nvim{}.sock".format(process.pid)
+            )
 
         try:
-            nvim = attach("socket", path=server)
-        except FileNotFoundError:
+            with attach("socket", path=server) as nvim:
+                nvim.command(command)
+        except:
             logger.debug("{} server not found.".format(server))
-            pass
-        else:
-            nvim.command(command)
 
 
 def main():

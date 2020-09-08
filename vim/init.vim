@@ -379,16 +379,17 @@ augroup END
 " Custom Server {{{
 
 function! s:create_custom_nvim_server()
-    if has('win32')
-        return
+    let pid = string(getpid())
+    if has("win32")
+        let socket_name = '\\.\pipe\nvim-' . pid
+    else
+        let socket_name = expand('~/.dotfiles/vim/temp_dirs/servers/nvim') . pid . '.sock'
     endif
 
-    let pid = string(getpid())
-    let socket_name = expand('~/.dotfiles/vim/temp_dirs/servers/nvim') . pid . '.sock'
     call serverstart(socket_name)
 endfunction
 
-augroup StartUp
+augroup vimrc_startup
     autocmd!
     autocmd VimEnter * call s:create_custom_nvim_server()
 augroup END
