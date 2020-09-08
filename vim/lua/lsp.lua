@@ -114,7 +114,7 @@ function set_up_keymap(bufnr)
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gW', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts)
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'i', '<c-g><c-s>',
+        bufnr, 'i', '<c-l>gs',
         '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 
     vim.api.nvim_command(
