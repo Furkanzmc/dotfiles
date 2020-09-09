@@ -38,8 +38,13 @@ endfunction
 
 " General {{{
 " which commands trigger auto-unfold
+
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+
 set foldopen=block,hor,jump,mark,percent,quickfix,search,tag
-set complete-=i
+set complete=.,w,b,u,t,k
 set noshowmode
 
 set termguicolors
@@ -49,8 +54,8 @@ set colorcolumn=81
 set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 set splitbelow
-set splitright
 
+set splitright
 set signcolumn=no
 
 " Reduces the number of lines that are above the curser when I do zt.
@@ -63,10 +68,6 @@ set history=500
 set showbreak=↳\ 
 
 set inccommand=split
-
-" Enable filetype plugins
-filetype plugin on
-filetype indent on
 
 " Access system clipboard on macOS.
 set clipboard=unnamed
@@ -126,11 +127,6 @@ endif
 " }}}
 
 " User Interface {{{
-
-try
-    set guifont=Cascadia\ Code:h10
-catch
-endtry
 
 " Always show the status line
 set laststatus=2
@@ -268,18 +264,6 @@ nnoremap <leader>d "_d
 xnoremap <leader>d "_d
 xnoremap <leader>c "_c
 
-" Mappings to [l]cd into the current file's directory.
-command! Lcdc lcd %:p:h
-command! Cdc cd %:p:h
-
-" Return to last edit position when opening files (You want this!)
-augroup vimrc_init
-    au!
-    au BufReadPost *
-                \ if line("'\"") > 1 && line("'\"") <= line("$")
-                \ | exe "normal! g'\"" | endif
-augroup END
-
 " Jump to the previous git conflict start
 nnoremap <silent> [cs :call search('^<\{4,\} \w\+.*$', 'Wb')<CR>
 " Jump to the previous git conflict end
@@ -315,20 +299,17 @@ nnoremap <silent> =cc :call <SID>count_conflicts()<CR>
 
 " Maps, Commands {{{
 
-nnoremap <silent> ]a :next<CR>
-nnoremap <silent> [a :previous<CR>
+nnoremap <silent> ]a <cmd>execute ":" . v:count . "next"<CR>
+nnoremap <silent> [a <cmd>execute ":" . v:count . "previous"<CR>
 
-nnoremap <silent> ]l :lnext<CR>
-nnoremap <silent> [l :lprevious<CR>
+nnoremap <silent> ]l <cmd>execute ":" . v:count . "lnext"<CR>
+nnoremap <silent> [l <cmd>execute ":" . v:count . "lprevious"<CR>
 
-nnoremap <silent> ]q :cnext<cr>
-nnoremap <silent> [q :cprevious<cr>
+nnoremap <silent> ]q <cmd>execute ":" . v:count . "cnext"<CR>
+nnoremap <silent> [q <cmd>execute ":" . v:count . "cprevious"<CR>
 
-nnoremap <silent> ]b :bnext<CR>
-nnoremap <silent> [b :bprevious<CR>
-
-map <leader>tn :tabnew<cr>
-map <leader>tc :tabclose<cr>
+nnoremap <silent> ]b <cmd>execute ":" . v:count . "bnext"<CR>
+nnoremap <silent> [b <cmd>execute ":" . v:count . "bprevious"<CR>
 
 " Remap VIM 0 to first non-blank character
 map 0 ^
@@ -757,5 +738,12 @@ nmap <silent> <leader>i :call infowindow#create(
 
 " }}}
 
-autocmd VimEnter * colorscheme cosmic_latte
+" Return to last edit position when opening files (You want this!)
+augroup vimrc_init
+    au!
+    autocmd VimEnter * colorscheme cosmic_latte
+    au BufReadPost *
+                \ if line("'\"") > 1 && line("'\"") <= line("$")
+                \ | exe "normal! g'\"" | endif
+augroup END
 " }}}
