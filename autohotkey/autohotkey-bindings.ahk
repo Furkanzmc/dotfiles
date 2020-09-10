@@ -26,11 +26,11 @@ ToggleWindowsDefaultAppMode() {
     RegWrite, REG_DWORD, HKCU, Software\Microsoft\Windows\CurrentVersion\Themes\Personalize, SystemUsesLightTheme, % !appMode
     if appMode
     {
-        Run, pwsh -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "$env:PSModulePath += ';~/.dotfiles/pwsh/modules/'; Import-Module Pwsh-Utils -DisableNameChecking; Set-Content -Path ~/.dotfiles/pwsh/tmp_dirs/system_theme -Value dark; Set-Terminal-Theme dark"
+        Run, pwsh -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "Set-Item -Path env:PSModulePath -Value '$env:PSModulePath;~/.dotfiles/pwsh/modules/' && Import-Module Pwsh-Utils -DisableNameChecking && Set-Content -Path ~/.dotfiles/pwsh/tmp_dirs/system_theme -Value dark && Set-Terminal-Theme dark"
     }
     else
     {
-        Run, pwsh -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "$env:PSModulePath += ';~/.dotfiles/pwsh/modules/'; Import-Module Pwsh-Utils -DisableNameChecking; Set-Content -Path ~/.dotfiles/pwsh/tmp_dirs/system_theme -Value light; Set-Terminal-Theme light"
+        Run, pwsh -NoLogo -NoProfile -NonInteractive -WindowStyle Hidden -Command "Set-Item -Path env:PSModulePath -Value '$env:PSModulePath;~/.dotfiles/pwsh/modules/' && Import-Module Pwsh-Utils -DisableNameChecking && Set-Content -Path ~/.dotfiles/pwsh/tmp_dirs/system_theme -Value light && Set-Terminal-Theme light"
     }
 }
 

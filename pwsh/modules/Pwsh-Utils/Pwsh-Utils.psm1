@@ -243,12 +243,11 @@ function Set-Terminal-Theme() {
     if ($IsWindows -and (Test-Path env:PWSH_WINDOWS_TERMINAL_SETTINGS -ErrorAction SilentlyContinue)) {
         $content = Get-Content $env:PWSH_WINDOWS_TERMINAL_SETTINGS
         # Lazy way of doing this...
-        $content.Replace('"dark"', $Color)
-        $content.Replace('"light"', $Color)
+        $content = $content.Replace('"colorScheme": "dark"', '"colorScheme": "' + $Color + '"')
+        $content = $content.Replace('"colorScheme": "light"', '"colorScheme": "' + $Color + '"')
         Set-Content -Path $env:PWSH_WINDOWS_TERMINAL_SETTINGS -Value $content
     }
 }
-
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
