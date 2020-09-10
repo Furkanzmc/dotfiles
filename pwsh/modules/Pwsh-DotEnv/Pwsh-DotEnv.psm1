@@ -50,7 +50,7 @@ function Dotenv() {
     }
 }
 
-function Load-Dotenv() {
+function Source-Env() {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
         [String]
@@ -60,7 +60,7 @@ function Load-Dotenv() {
     Dotenv $Path -Load $true
 }
 
-function Unload-Dotenv() {
+function Deactivate-Env() {
     Param(
         [Parameter(Position=0, Mandatory=$true)]
         [String]
@@ -70,8 +70,8 @@ function Unload-Dotenv() {
     Dotenv $Path -Load $false
 }
 
-Export-ModuleMember -Function Load-Dotenv
-Export-ModuleMember -Function Unload-Dotenv
+Export-ModuleMember -Function Source-Env
+Export-ModuleMember -Function Deactivate-Env
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-DotEnv in $($Stopwatch.Elapsed.TotalSeconds) seconds."
