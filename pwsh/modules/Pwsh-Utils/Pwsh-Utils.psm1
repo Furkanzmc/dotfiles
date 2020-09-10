@@ -239,6 +239,14 @@ function Set-Terminal-Theme() {
         $env:FZF_DEFAULT_OPTS = "--bind='ctrl-l:toggle-preview' --color=$Color"
         _Set-Alacritty-Color $Color
     }
+
+    if ($IsWindows -and (Test-Path env:PWSH_WINDOWS_TERMINAL_SETTINGS -ErrorAction SilentlyContinue)) {
+        $content = Get-Content $env:PWSH_WINDOWS_TERMINAL_SETTINGS
+        # Lazy way of doing this...
+        $content.Replace('"dark"', $Color)
+        $content.Replace('"light"', $Color)
+        Set-Content -Path $env:PWSH_WINDOWS_TERMINAL_SETTINGS -Value $content
+    }
 }
 
 
