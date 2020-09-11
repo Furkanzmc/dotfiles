@@ -464,6 +464,7 @@ function! PackInit()
                 \ 'do': 'UpdateRemotePlugins'
                 \ })
     call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
+    call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
 
     " }}}
 endfunction
@@ -735,6 +736,39 @@ endfunction
 
 nmap <silent> <leader>i :call infowindow#create(
             \ {}, function("init#show_file_info"))<CR>
+
+" }}}
+
+" nvim-treesitter {{{
+
+function s:setup_treesitter()
+lua << EOF
+    require'nvim-treesitter.configs'.setup {
+      ensure_installed = {'python', 'html', 'cpp', 'vue', 'json'}, -- one of "all", "language", or a list of languages
+      highlight = {
+        enable = true,
+        custom_captures = {
+          -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
+          ["foo.bar"] = "Identifier",
+        },
+      },
+      refactor = {
+          highlight_definitions = { enable = true },
+      },
+    }
+EOF
+endfunction
+
+augroup plugin_nvim_treesitter
+    au!
+    au FileType python,cpp,json
+                \ if !exists(":TSInstall")
+                \ | packadd nvim-treesitter
+                \ | call <SID>setup_treesitter()
+                \ | setlocal foldmethod=expr
+                \ | setlocal foldexpr=nvim_treesitter#foldexpr()
+                \ | endif
+augroup END
 
 " }}}
 
