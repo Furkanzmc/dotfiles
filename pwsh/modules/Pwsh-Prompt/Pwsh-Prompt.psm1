@@ -151,13 +151,7 @@ function Write-Git-Prompt($date) {
     }
 }
 
-function Write-Prompt() {
-    $lastCommandSucceeded = $?
-    $exitCode = $LastExitCode
-    if (Test-Path env:VIRTUAL_ENV -ErrorAction SilentlyContinue) {
-        Write-Host "(.venv) " -ForegroundColor Yellow -NoNewLine
-    }
-
+function Write-Current-Location() {
     $currentLocation = $(Get-Location).Path
     if ($IsMacOS) {
         $currentLocation = $currentLocation.Replace($env:HOME, "~")
@@ -165,15 +159,18 @@ function Write-Prompt() {
     else {
         $currentLocation = $currentLocation.Replace($env:USERPROFILE, "~")
     }
-    $maxWidth = 80
-
-    if ($currentLocation.Length -gt $maxWidth) {
-        $p1 = $currentLocation.Substring(0, $currentLocation.IndexOf("/", 2) + 1)
-        $lastSlash = $currentLocation.IndexOf("/", $maxWidth + $p1.Length)
-        $currentLocation = $p1 + "..." + $currentLocation.Substring($lastSlash)
-    }
 
     Write-Host "$currentLocation " -NoNewLine -ForegroundColor Blue
+}
+
+function Write-Prompt() {
+    $lastCommandSucceeded = $?
+    $exitCode = $LastExitCode
+    if (Test-Path env:VIRTUAL_ENV -ErrorAction SilentlyContinue) {
+        Write-Host "(.venv) " -ForegroundColor Yellow -NoNewLine
+    }
+
+    Write-Current-Location
 
     $date = Get-Date
     Write-Git-Prompt $date
