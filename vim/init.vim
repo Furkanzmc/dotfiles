@@ -44,7 +44,7 @@ filetype plugin on
 filetype indent on
 
 set foldopen=block,hor,jump,mark,percent,quickfix,search,tag
-set complete=.,w,b,u,t,k
+set complete=.,w,k
 set noshowmode
 
 set termguicolors
@@ -614,38 +614,48 @@ function! s:setup_lsp(file_type)
     execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'
 endfunction
 
+function s:setup_completion()
+    if !exists("b:is_completion_configured")
+        let b:is_completion_configured = v:false
+    endif
+
+    execute "lua require'completion'.setup_completion()"
+endfunction
+
 command! PrintCurrentLSP :lua require'lsp'.print_buffer_clients()<CR>
 command! StopCurrentLSP :lua require'lsp'.stop_buffer_clients()<CR>
 
-autocmd BufEnter *.py call <SID>setup_lsp("python")
-autocmd FileType python call <SID>setup_lsp("python")
+augroup lsp_completion
+    au!
 
-autocmd BufEnter *.cpp,*.c,*.h call <SID>setup_lsp("cpp")
-autocmd FileType cpp call <SID>setup_lsp("cpp")
+    autocmd BufEnter * call <SID>setup_completion()
+    autocmd FileType * call <SID>setup_completion()
 
-autocmd BufEnter *.json call <SID>setup_lsp("json")
-autocmd FileType json call <SID>setup_lsp("json")
-
-autocmd BufEnter *.vim call <SID>setup_lsp("vim")
-autocmd FileType vim call <SID>setup_lsp("vim")
-
-autocmd BufEnter *.rs call <SID>setup_lsp("rust")
-autocmd FileType rust call <SID>setup_lsp("rust")
+    autocmd BufEnter *.py,*.cpp,*.c,*.h,*.vim,*.json,*.rs call <SID>setup_lsp(&l:filetype)
+    autocmd FileType python,cpp,json,vim,rust call <SID>setup_lsp(&l:filetype)
+augroup END
 
 function! s:check_back_space() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
+function init#completion_wrapper()
+    lua require'completion'.trigger_completion()
+    return ''
+endfunction
+
+function s:trigger_completion()
+    return "\<c-r>=init#completion_wrapper()\<CR>"
+endfunction
+
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ luaeval("require'lsp'.is_lsp_running()") == 0 ? "\<C-x><C-n>" : "\<C-x><C-o>"
+            \ <SID>check_back_space() ? "\<TAB>" : <SID>trigger_completion()
 
 inoremap <silent><expr> <S-TAB>
             \ pumvisible() ? "\<C-p>" :
-            \ <SID>check_back_space() ? "\<S-TAB>" :
-            \ luaeval("require'lsp'.is_lsp_running()") == 0 ? "\<C-x><C-p>" : "\<C-x><C-o>"
+            \ <SID>check_back_space() ? "\<S-TAB>" : <SID>trigger_completion()
 
 " }}}
 

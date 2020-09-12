@@ -2,6 +2,7 @@ local vim = vim
 local lsp = vim.lsp.util
 local M = {}
 
+
 function publish_to_location_list(bufnr, local_result)
     if local_result and local_result.diagnostics then
         for _, v in ipairs(local_result.diagnostics) do
@@ -38,44 +39,6 @@ function publish_diagnostics()
 
         if vim.api.nvim_get_var('lsp_signs_enabled') == 1 then
             lsp.buf_diagnostics_signs(bufnr, result.diagnostics)
-        end
-    end
-end
-
-
-M.print_buffer_clients = function()
-    print(vim.inspect(vim.lsp.buf_get_clients()))
-end
-
-M.is_lsp_running = function()
-    return next(vim.lsp.buf_get_clients()) ~= nil
-end
-
-M.stop_buffer_clients = function()
-    vim.lsp.stop_client(vim.lsp.get_active_clients())
-end
-
-local completion_timer = nil
-M.on_complete_done_pre = function()
-    if vim.fn.pumvisible() == 1 then
-        return
-    end
-
-    local info = vim.fn.complete_info()
-    if #info.items == 0 then
-        if completion_timer == nil then
-            completion_timer = vim.loop.new_timer()
-            completion_timer:start(5, 0, vim.schedule_wrap(function()
-                if vim.fn.pumvisible() == 0 then
-                    local mode_keys = "<c-x><c-n>"
-                    mode_keys = vim.api.nvim_replace_termcodes(mode_keys, true, false, true)
-                    vim.api.nvim_feedkeys(mode_keys, 'n', true)
-                end
-
-                completion_timer:stop()
-                completion_timer:close()
-                completion_timer = nil
-            end))
         end
     end
 end
@@ -119,12 +82,22 @@ function set_up_keymap(bufnr)
 
     vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
-    vim.api.nvim_command(
-        "autocmd CompleteDonePre <buffer> lua require'lsp'.on_complete_done_pre()")
 
     vim.api.nvim_buf_set_var(bufnr, "is_lsp_shortcuts_set", true)
 end
 
+
+M.print_buffer_clients = function()
+    print(vim.inspect(vim.lsp.buf_get_clients()))
+end
+
+M.is_lsp_running = function()
+    return next(vim.lsp.buf_get_clients()) ~= nil
+end
+
+M.stop_buffer_clients = function()
+    vim.lsp.stop_client(vim.lsp.get_active_clients())
+end
 
 M.setup_lsp = function(file_type)
     local setup = function(_, bufnr)
