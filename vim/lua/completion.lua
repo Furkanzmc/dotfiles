@@ -6,8 +6,8 @@ local completion_timer = nil
 local completion_sources = {
     "<c-x><c-o>",
     "<c-x><c-n>",
-    "<c-x><c-k>",
     "<c-x><c-f>",
+    "<c-x><c-k>",
     "<c-g><c-g><c-n>"
 }
 local completion_index = nil
@@ -82,7 +82,6 @@ M.on_complete_done = function()
         completion_index = -1
     end
 end
-
 
 M.trigger_completion = function()
     if require'lsp'.is_lsp_running() then

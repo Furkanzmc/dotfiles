@@ -615,6 +615,10 @@ function! s:setup_lsp(file_type)
 endfunction
 
 function s:setup_completion()
+    if &l:filetype == "dirvish" || &l:modifiable == 0
+        return
+    endif
+
     if !exists("b:is_completion_configured")
         let b:is_completion_configured = v:false
     endif
