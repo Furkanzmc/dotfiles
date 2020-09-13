@@ -14,8 +14,11 @@ function! git#start_review(...)
         let s:base_branch = a:1
     endif
 
-    echom l:base_branch
     execute 'args `git diff --name-only ' . l:base_branch . '`'
+
+    if mapcheck("<leader>gr", "n") == ""
+        nmap <silent> <leader>gr :ReviewDiff<CR>
+    endif
 endfunction
 
 function! git#review_diff()
@@ -25,4 +28,10 @@ function! git#review_diff()
     endif
 
     execute 'Gdiff ' . s:base_branch
+endfunction
+
+function! git#finish_review()
+    if mapcheck("<leader>gr", "n") != ""
+        nunmap <leader>gr
+    endif
 endfunction
