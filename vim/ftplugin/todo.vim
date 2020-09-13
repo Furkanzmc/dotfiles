@@ -10,13 +10,13 @@ setlocal foldmethod=expr
 setlocal foldexpr=todo#foldexpr(v:lnum)
 setlocal foldtext=todo#foldtext()
 
-if exists("s:todo_functions_loaded")
-    finish
-endif
-
 nmap <buffer> <silent> <leader>x :normal! mt0f]hrxA finished:=strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
 nmap <buffer> <silent> <leader>i :normal! mt0f]hriA started:=strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
 nmap <buffer> <silent> <leader>t :normal! mt0f]hr `t<CR>
+
+if exists("s:todo_functions_loaded")
+    finish
+endif
 
 let s:todo_functions_loaded = v:true
 let s:foldexpr_indent_blocks = v:false
