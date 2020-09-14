@@ -18,6 +18,11 @@ function timer_handler()
         return
     end
 
+    if vim.api.nvim_get_mode().mode == "n" then
+        completion_index = -1
+        return
+    end
+
     if vim.fn.pumvisible() == 0 then
         if completion_index == #completion_sources + 1 then
             completion_dispatched = false
@@ -39,6 +44,7 @@ end
 
 M.on_complete_done_pre = function()
     if vim.api.nvim_get_mode().mode == "n" then
+        completion_index = -1
         return
     end
 
