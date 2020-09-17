@@ -352,7 +352,7 @@ function hs.window.centerWithFullHeight(win)
     local screen = win:screen()
     local max = screen:fullFrame()
 
-    f.w = max.w * 0.7
+    f.w = max.w * 0.6
     f.h = max.h
     f.x = max.x + (max.w / 2) - f.w / 2
     f.y = max.y
