@@ -28,6 +28,12 @@ function timer_handler()
             completion_dispatched = false
         else
             local mode_keys = completion_sources[completion_index]
+
+            if mode_keys == "<c-x><c-k>" and not pcall(vim.api.nvim_buf_get_option, '.', "dictionary") then
+                completion_index = completion_index + 1
+                mode_keys = completion_sources[completion_index]
+            end
+
             mode_keys = vim.api.nvim_replace_termcodes(mode_keys, true, false, true)
             vim.api.nvim_feedkeys(mode_keys, 'n', true)
             completion_dispatched = true
