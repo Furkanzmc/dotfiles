@@ -438,13 +438,10 @@ function! PackInit()
     call minpac#add('tpope/vim-fugitive')
 
     call minpac#add('machakann/vim-sandwich')
-    call minpac#add('junegunn/fzf.vim')
-    call minpac#add('junegunn/fzf')
-
     call minpac#add('furkanzmc/cosmic_latte')
     call minpac#add('furkanzmc/nvim-http', {'do': 'UpdateRemotePlugins'})
-    call minpac#add('tmsvg/pear-tree')
 
+    call minpac#add('tmsvg/pear-tree')
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('mcchrish/info-window.nvim')
 
@@ -486,17 +483,6 @@ command! PackStatus call PackInit() | call minpac#status()
 " vim-cpp-enhanced-highlight {{{
 
 let g:cpp_member_variable_highlight = 1
-
-" }}}
-
-" fzf {{{
-
-map <leader>o :Files<cr>
-map <leader>b :Buffers<cr>
-nmap <leader>s :Rg<cr>
-map <leader>h :History<CR>
-
-let g:fzf_preview_window = ''
 
 " }}}
 
