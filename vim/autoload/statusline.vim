@@ -174,9 +174,9 @@ function! statusline#configure(winnum)
     endif
 
     " }}}
-    
+
     " Switch to right side
-    let l:status .= '%=' 
+    let l:status .= '%='
 
     " LSP Diagnostic {{{
 
@@ -201,6 +201,11 @@ function! statusline#configure(winnum)
 
     " }}}
 
+
+    if l:active
+        let l:status .= s:get_color(l:active, 'Comment', 'StatusLineNC')
+            let l:status .= " [%l:%c] "
+    endif
 
     " Branch name {{{
 

@@ -351,6 +351,7 @@ endfunction
 
 xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 
+command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE
 
 augroup LuaHighlight
     autocmd!
