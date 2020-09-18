@@ -443,7 +443,8 @@ function! PackInit()
 
     call minpac#add('tmsvg/pear-tree')
     call minpac#add('justinmk/vim-dirvish')
-    call minpac#add('mcchrish/info-window.nvim')
+
+    call minpac#add('Furkanzmc/neovim-firvish')
 
     " On Demand Plugins {{{
 
@@ -702,43 +703,6 @@ let g:nvimgdb_config_override = {
             \ "key_continue":   "<leader>c",
             \ "key_next":       "<leader>n",
             \ }
-
-" }}}
-
-" information-window {{{
-
-function! init#show_file_info(default_lines)
-    let currentTime = strftime('%b %d %A, %H:%M')
-    let l:lines = [
-        \ "",
-        \ " [" . currentTime . "] ",
-        \ " Line: " . line('.') . ":" . col('.'),
-        \ ]
-
-    if len(&filetype) > 0
-        let fileTypeStr = " File: " . &filetype . ' - ' . &fileencoding .
-                    \ ' [' . &fileformat . '] '
-
-        call insert(l:lines, fileTypeStr, 2)
-    endif
-
-    let l:vimrc_info_window_lines_functions = get(g:,
-                \ "vimrc_info_window_lines_functions", [])
-    if len(l:vimrc_info_window_lines_functions) > 0
-        for F in l:vimrc_info_window_lines_functions
-            let l:custom_lines = F()
-            for line in l:custom_lines
-                call add(l:lines, line)
-            endfor
-        endfor
-    endif
-
-    call add(l:lines, "")
-    return l:lines
-endfunction
-
-nmap <silent> <leader>i :call infowindow#create(
-            \ {}, function("init#show_file_info"))<CR>
 
 " }}}
 
