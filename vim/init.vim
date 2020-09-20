@@ -449,7 +449,7 @@ function! PackInit()
 
     " On Demand Plugins {{{
 
-    call minpac#add('neovim/nvim-lsp', {'type': 'opt'})
+    call minpac#add('neovim/nvim-lspconfig', {'type': 'opt'})
     call minpac#add('neomake/neomake', {'type': 'opt'})
 
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
@@ -587,7 +587,7 @@ sign define LspDiagnosticsHintSign text=⦿ texthl=LspDiagnosticsHint
 function! s:setup_lsp(file_type)
     if !exists('s:completion_plugins_loaded')
         packadd SyntaxRange
-        packadd nvim-lsp
+        packadd nvim-lspconfig
         let s:completion_plugins_loaded = v:true
     endif
 
