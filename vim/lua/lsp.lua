@@ -86,23 +86,38 @@ function set_up_keymap(bufnr)
     vim.api.nvim_buf_set_var(bufnr, "is_lsp_shortcuts_set", true)
 end
 
+function setup_buffer_events(bufnr)
+    local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_lsp_events_set")
+    if is_configured then
+        return
+    end
 
-M.print_buffer_clients = function()
-    print(vim.inspect(vim.lsp.buf_get_clients()))
+    vim.api.nvim_command("augroup vimrc_lsp_buffer_events")
+    vim.api.nvim_command("au!")
+    vim.api.nvim_command("autocmd BufLeave,WinLeave,BufDelete,BufWipeout <buffer> lua require'lsp'.stop_buffer_clients(" .. bufnr .. ")")
+    vim.api.nvim_command("augroup END")
+
+    vim.api.nvim_buf_set_var(bufnr, "is_lsp_events_set", true)
 end
 
-M.is_lsp_running = function()
-    return next(vim.lsp.buf_get_clients()) ~= nil
+M.print_buffer_clients = function(bufnr)
+    print(vim.inspect(vim.lsp.buf_get_clients(bufnr)))
 end
 
-M.stop_buffer_clients = function()
-    vim.lsp.stop_client(vim.lsp.get_active_clients())
+M.is_lsp_running = function(bufnr)
+    return next(vim.lsp.buf_get_clients(bufnr)) ~= nil
+end
+
+M.stop_buffer_clients = function(bufnr)
+    vim.lsp.stop_client(vim.lsp.buf_get_clients(bufnr))
 end
 
 M.setup_lsp = function(file_type)
-    local setup = function(_, bufnr)
+    local setup = function(client)
         publish_diagnostics()
+        local bufnr = vim.api.nvim_get_current_buf()
         set_up_keymap(bufnr)
+        setup_buffer_events(bufnr)
     end
 
     if file_type == "python" then

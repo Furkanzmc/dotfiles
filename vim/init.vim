@@ -594,12 +594,17 @@ function! s:setup_lsp(file_type)
     setlocal formatexpr=lua\ vim.lsp.buf.formatting()
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
-    if luaeval("require'lsp'.is_lsp_running()")
+    let l:bufnr = bufnr("%")
+    if luaeval("require'lsp'.is_lsp_running(" . l:bufnr . ")")
         return
     endif
 
     if !exists("b:is_lsp_shortcuts_set")
         let b:is_lsp_shortcuts_set = v:false
+    endif
+
+    if !exists("b:is_lsp_events_set")
+        let b:is_lsp_events_set = v:false
     endif
 
     execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'
@@ -617,7 +622,7 @@ function s:setup_completion()
     execute "lua require'completion'.setup_completion()"
 endfunction
 
-command! PrintCurrentLSP :lua require'lsp'.print_buffer_clients()<CR>
+command! PrintCurrentLSP :lua require'lsp'.print_buffer_clients(vim.api.nvim_get_current_buf())<CR>
 command! StopCurrentLSP :lua require'lsp'.stop_buffer_clients()<CR>
 
 augroup lsp_completion
@@ -626,7 +631,7 @@ augroup lsp_completion
     autocmd BufEnter * call <SID>setup_completion()
     autocmd FileType * call <SID>setup_completion()
 
-    autocmd BufEnter *.py,*.cpp,*.c,*.h,*.vim,*.json,*.rs call <SID>setup_lsp(&l:filetype)
+    autocmd BufEnter,WinEnter *.py,*.cpp,*.c,*.h,*.vim,*.json,*.rs call <SID>setup_lsp(&l:filetype)
     autocmd FileType python,cpp,json,vim,rust call <SID>setup_lsp(&l:filetype)
 augroup END
 
