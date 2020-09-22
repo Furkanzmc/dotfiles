@@ -1,2 +1,3 @@
-nmap <silent> <leader>qt :call quickfix#toggle()<CR>
+nmap <silent> <F10> :call quickfix#toggle()<CR>
+
 command! ClearQuickFix :call setqflist([])

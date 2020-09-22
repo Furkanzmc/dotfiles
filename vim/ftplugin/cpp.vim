@@ -10,7 +10,7 @@ setlocal signcolumn=yes
 
 " Override the default comment string from vim-commentary
 setlocal commentstring=//%s
-nnoremap <silent> <buffer> <leader>gg :call <SID>swap_source_header()<CR>
+nnoremap <silent> <buffer> <nowait> <F4> :call <SID>swap_source_header()<CR>
 
 if get(s:, "functions_loaded", v:false)
     finish

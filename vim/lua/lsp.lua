@@ -80,6 +80,9 @@ function set_up_keymap(bufnr)
         bufnr, 'i', '<c-l>gs',
         '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 
+    vim.api.nvim_buf_set_keymap(
+        bufnr, 'n', 'Gf', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+
     vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
 
