@@ -340,7 +340,7 @@ nmap <silent> <leader>dh :call <SID>search_docs()<CR>
 command! -nargs=1 Search :call <SID>search_docs(<f-args>)
 
 command! -nargs=1 StartTicket :let g:vimrc_active_jira_ticket=<f-args>
-command! CloseTicket :call if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
+command! CloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
 
 " Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 " Allows running macros only on selected files.
