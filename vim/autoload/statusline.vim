@@ -17,7 +17,7 @@ function! s:get_color(active, active_color, inactive_color)
     endif
 endfunction
 
-function! s:lsp_daignostic(active) abort
+function! s:lsp_dianostics(active) abort
     if !exists("*neomake#statusline#LoclistCounts") || !a:active
         return ""
     endif
@@ -25,6 +25,19 @@ function! s:lsp_daignostic(active) abort
     let l:dict = neomake#statusline#LoclistCounts()
     let l:errors = get(l:dict,'E', 0)
     let l:warnings = get(l:dict, 'W', 0)
+
+    if luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))')
+        let l:lsp_errors = luaeval("vim.lsp.util.buf_diagnostics_count([[Error]])")
+        let l:lsp_warnings = luaeval("vim.lsp.util.buf_diagnostics_count([[Warning]])")
+
+        if l:lsp_errors != v:null
+            let l:errors += l:lsp_errors
+        endif
+
+        if l:lsp_warnings != v:null
+            let l:warnings += l:lsp_warnings
+        endif
+    endif
 
     let l:status = ""
     if l:errors > 0
@@ -184,7 +197,7 @@ function! statusline#configure(winnum)
                 \ g:, "vimrc_statusline_lsp_diagnostics", ["python", "qml", "cpp"])
 
     if index(l:diagnostic_enabled_types, &filetype) >= 0
-        let l:status .= s:lsp_daignostic(l:active)
+        let l:status .= s:lsp_dianostics(l:active)
     endif
 
     " }}}
