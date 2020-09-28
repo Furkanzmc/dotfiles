@@ -55,7 +55,7 @@ function Cache-Git-Status() {
     Set-Content -Path $gitStatusFile -Value $jsonContent
 }
 
-function Write-Git-Prompt($date) {
+function Write-Git-Prompt() {
     $gitDir = &git rev-parse --git-dir
     # Continue if the command succeeded.
     if (! $?) {
@@ -85,7 +85,7 @@ function Write-Git-Prompt($date) {
         }
     }
     else {
-        Write-Host " $branchName" -ForegroundColor Cyan -NoNewLine
+        Write-Host " $branchName" -ForegroundColor Cyan -NoNewLine
     }
 
     if (Test-Path env:PWSH_GIT_PROMPT_DISABLED -ErrorAction SilentlyContinue) {
@@ -160,7 +160,7 @@ function Write-Current-Location() {
         $currentLocation = $currentLocation.Replace($env:USERPROFILE, "~")
     }
 
-    Write-Host "$currentLocation " -NoNewLine -ForegroundColor Blue
+    Write-Host "$currentLocation" -NoNewLine -ForegroundColor Blue
 }
 
 function Write-Prompt() {
@@ -171,9 +171,7 @@ function Write-Prompt() {
     }
 
     Write-Current-Location
-
-    $date = Get-Date
-    Write-Git-Prompt $date
+    Write-Git-Prompt
 
     Write-Host $(Get-Date -Format "[HH:mm:ss]") `
         -ForegroundColor DarkYellow -NoNewLine
