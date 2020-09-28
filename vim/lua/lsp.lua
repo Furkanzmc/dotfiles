@@ -95,7 +95,7 @@ function setup_buffer_events(bufnr)
         return
     end
 
-    vim.api.nvim_command("augroup vimrc_lsp_buffer_events")
+    vim.api.nvim_command("augroup vimrc_lsp_" .. bufnr .. "_events")
     vim.api.nvim_command("au!")
     vim.api.nvim_command("autocmd BufLeave,WinLeave,BufDelete,BufWipeout <buffer> lua require'lsp'.stop_buffer_clients(" .. bufnr .. ")")
     vim.api.nvim_command("augroup END")

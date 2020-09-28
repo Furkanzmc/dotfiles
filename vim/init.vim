@@ -594,8 +594,7 @@ function! s:setup_lsp(file_type)
     setlocal formatexpr=lua\ vim.lsp.buf.formatting()
     setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
-    let l:bufnr = bufnr("%")
-    if luaeval("require'lsp'.is_lsp_running(" . l:bufnr . ")")
+    if luaeval("require'lsp'.is_lsp_running(" . bufnr() . ")")
         return
     endif
 

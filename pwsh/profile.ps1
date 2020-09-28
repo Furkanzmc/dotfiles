@@ -56,6 +56,12 @@ $PSReadLineOptions = @{
     }
 }
 
+function Update-Dotfiles() {
+    Push-Location ~/.dotfiles/
+    git pull
+    Pop-Location
+}
+
 Set-PSReadLineOption @PSReadLineOptions
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded all external modules in $($Stopwatch.Elapsed.TotalSeconds) seconds."
