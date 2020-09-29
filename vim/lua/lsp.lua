@@ -54,9 +54,9 @@ function set_up_keymap(bufnr)
     end
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', '<leader>f', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+        bufnr, 'n', '<leader>gq', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', '<leader>lr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        bufnr, 'n', '<leader>gr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gs', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 
@@ -81,7 +81,7 @@ function set_up_keymap(bufnr)
         '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'Gf', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+        bufnr, 'n', '<leader>gf', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 
     vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
