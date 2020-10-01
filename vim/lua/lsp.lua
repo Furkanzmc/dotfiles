@@ -29,15 +29,15 @@ function publish_diagnostics()
 
         vim.lsp.util.buf_clear_diagnostics(bufnr)
         vim.lsp.util.buf_diagnostics_save_positions(bufnr, result.diagnostics)
-        if vim.api.nvim_get_var('lsp_virtual_text_enabled') == 1 then
+        if vim.api.nvim_buf_get_var(bufnr, 'lsp_virtual_text_enabled') == 1 then
             lsp.buf_diagnostics_virtual_text(bufnr, result.diagnostics)
         end
 
-        if vim.api.nvim_get_var('lsp_location_list_enabled') == 1 then
+        if vim.api.nvim_buf_get_var(bufnr, 'lsp_location_list_enabled') == 1 then
             publish_to_location_list(bufnr, result)
         end
 
-        if vim.api.nvim_get_var('lsp_signs_enabled') == 1 then
+        if vim.api.nvim_buf_get_var(bufnr, 'lsp_signs_enabled') == 1 then
             lsp.buf_diagnostics_signs(bufnr, result.diagnostics)
         end
     end
