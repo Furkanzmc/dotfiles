@@ -259,11 +259,6 @@ try
 catch
 endtry
 
-" Use these to delete a line without cutting it.
-nnoremap <leader>d "_d
-xnoremap <leader>d "_d
-xnoremap <leader>c "_c
-
 " Jump to the previous git conflict start
 nnoremap <silent> [cs :call search('^<\{4,\} \w\+.*$', 'Wb')<CR>
 " Jump to the previous git conflict end
@@ -595,26 +590,6 @@ function! s:setup_lsp(file_type)
 
     if luaeval("require'lsp'.is_lsp_running(" . bufnr() . ")")
         return
-    endif
-
-    if !exists("b:is_lsp_shortcuts_set")
-        let b:is_lsp_shortcuts_set = v:false
-    endif
-
-    if !exists("b:is_lsp_events_set")
-        let b:is_lsp_events_set = v:false
-    endif
-
-    if !exists("b:lsp_location_list_enabled")
-        let b:lsp_location_list_enabled = 1
-    endif
-
-    if !exists("b:lsp_virtual_text_enabled")
-        let b:lsp_virtual_text_enabled = 1
-    endif
-
-    if !exists("b:lsp_signs_enabled")
-        let b:lsp_signs_enabled = 1
     endif
 
     execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'

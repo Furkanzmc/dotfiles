@@ -54,34 +54,37 @@ function set_up_keymap(bufnr)
     end
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', '<leader>gq', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+        bufnr, 'n', 'gq', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', '<leader>gr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
+
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gs', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+        bufnr, 'n', 'g*', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'ge', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
+
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gW', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(
-        bufnr, 'i', '<c-l>gs',
-        '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', '<leader>gf', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+        bufnr, 'n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 
     vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
@@ -103,6 +106,29 @@ function setup_buffer_events(bufnr)
     vim.api.nvim_buf_set_var(bufnr, "is_lsp_events_set", true)
 end
 
+function setup_buffer_vars(bufnr)
+    if vim.fn.exists("b:is_lsp_shortcuts_set") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "is_lsp_shortcuts_set", false)
+    end
+
+    if vim.fn.exists("b:is_lsp_events_set") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "is_lsp_events_set", false)
+    end
+
+    if vim.fn.exists("b:lsp_location_list_enabled") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "lsp_location_list_enabled", true)
+    end
+
+    if vim.fn.exists("b:lsp_virtual_text_enabled") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "lsp_virtual_text_enabled", true)
+    end
+
+    if vim.fn.exists("b:lsp_signs_enabled") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "lsp_signs_enabled", true)
+    end
+
+end
+
 M.print_buffer_clients = function(bufnr)
     print(vim.inspect(vim.lsp.buf_get_clients(bufnr)))
 end
@@ -117,10 +143,12 @@ end
 
 M.setup_lsp = function(file_type)
     local setup = function(client)
-        publish_diagnostics()
         local bufnr = vim.api.nvim_get_current_buf()
+        setup_buffer_vars(bufnr)
         set_up_keymap(bufnr)
         setup_buffer_events(bufnr)
+
+        publish_diagnostics()
     end
 
     if file_type == "python" then
