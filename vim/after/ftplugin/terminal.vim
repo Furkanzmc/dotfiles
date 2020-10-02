@@ -27,18 +27,19 @@ tmap <C-d> <PageDown>
 tmap <C-u> <PageUp>
 tnoremap <C-w>q <C-\><C-n>
 
-function s:send_to_terminal()
-    let l:lines = split(trim(@*), "\n")
-    call add(l:lines, '')
-    call chansend(b:terminal_job_id, l:lines)
-endfunction
-
 " Pastes the text in the register into the terminal.
 nmap <buffer> <leader>p :call <SID>send_to_terminal()<CR>
 
 if get(s:, "terminal_plugin_loaded", v:false)
     finish
 endif
+
+function s:send_to_terminal()
+    let l:lines = split(trim(@*), "\n")
+    call add(l:lines, '')
+    call chansend(b:terminal_job_id, l:lines)
+endfunction
+
 
 augroup vimrc_terminal
     autocmd!

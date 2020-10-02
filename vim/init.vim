@@ -419,7 +419,7 @@ let loaded_netrwPlugin = 1
 
 " Disable markdown support for polyglot because it messes up with syntax
 " highlighting.
-let g:polyglot_disabled = ['markdown']
+let g:polyglot_disabled = ['markdown', 'python-indent']
 
 " }}}
 
@@ -451,11 +451,10 @@ function! PackInit()
     call minpac#add('octol/vim-cpp-enhanced-highlight', {'type': 'opt'})
     call minpac#add('majutsushi/tagbar', {'type': 'opt'})
 
-    call minpac#add('Vimjas/vim-python-pep8-indent', {'type': 'opt'})
     call minpac#add('masukomi/vim-markdown-folding', {'type': 'opt'})
     call minpac#add('metakirby5/codi.vim', {'type': 'opt'})
-
     call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
+
     call minpac#add('sakhnik/nvim-gdb', {
                 \ 'type': 'opt',
                 \ 'do': 'UpdateRemotePlugins'
@@ -592,6 +591,26 @@ function! s:setup_lsp(file_type)
         return
     endif
 
+    if !exists("b:is_lsp_shortcuts_set")
+        let b:is_lsp_shortcuts_set = v:false
+    endif
+
+    if !exists("b:is_lsp_events_set")
+        let b:is_lsp_events_set = v:false
+    endif
+
+    if !exists("b:lsp_location_list_enabled")
+        let b:lsp_location_list_enabled = 1
+    endif
+
+    if !exists("b:lsp_virtual_text_enabled")
+        let b:lsp_virtual_text_enabled = 1
+    endif
+
+    if !exists("b:lsp_signs_enabled")
+        let b:lsp_signs_enabled = 1
+    endif
+
     execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'
 endfunction
 
@@ -711,7 +730,10 @@ lua << EOF
         },
       },
       refactor = {
-          highlight_definitions = { enable = true },
+          highlight_definitions = {
+              enable = true,
+              disable={ "python" }
+          },
       },
     }
 EOF

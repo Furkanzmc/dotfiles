@@ -57,7 +57,7 @@ function set_up_keymap(bufnr)
         bufnr, 'n', 'gq', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', '<leader>gr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        bufnr, 'n', 'gr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gs', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
