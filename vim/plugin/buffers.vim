@@ -9,8 +9,11 @@ command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-bang>)
 command! Bdhidden :call buffers#delete_hidden()
 command! Bdnonexisting :call buffers#wipe_nonexisting_files()
 
-autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html
-            \ :call buffers#clean_extra_spaces()
+augroup plugin_buffers
+    au!
+    autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html
+                \ :call buffers#clean_extra_spaces()
+augroup END
 
 if !exists("g:vimrc_spacehi_enabled_filetypes")
     let g:vimrc_spacehi_enabled_filetypes = [

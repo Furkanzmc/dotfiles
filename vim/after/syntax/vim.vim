@@ -6,4 +6,7 @@ function! s:enable_highlight()
     call SyntaxRange#Include('lua << EOF', 'EOF', 'lua', 'NonText')
 endfunction
 
-autocmd BufEnter *.vim :call s:enable_highlight()
+augroup syn_vim
+    au!
+    autocmd BufEnter *.vim :call s:enable_highlight()
+augroup END

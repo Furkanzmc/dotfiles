@@ -125,10 +125,13 @@ M.setup_completion = function()
         return
     end
 
+    vim.api.nvim_command("augroup vimrc_completion_buf_" .. bufnr)
+    vim.api.nvim_command("au!")
     vim.api.nvim_command(
         "autocmd CompleteDonePre <buffer> lua require'completion'.on_complete_done_pre()")
     vim.api.nvim_command(
         "autocmd CompleteDone <buffer> lua require'completion'.on_complete_done()")
+    vim.api.nvim_command("augroup END")
 
     vim.api.nvim_buf_set_var(bufnr, "is_completion_configured", true)
 end

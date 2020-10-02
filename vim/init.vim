@@ -348,7 +348,7 @@ xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 
 command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE
 
-augroup LuaHighlight
+augroup vimrc_lua_highlight
     autocmd!
     au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, higroup="IncSearch", timeout=100}
 augroup END
@@ -522,7 +522,10 @@ let g:neomake_qml_enabled_makers = ["qmllint"]
 
 " }}}
 
-autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
+augroup neomake_ft
+    au!
+    autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
+augroup END
 
 function! s:neomake_job_finished() abort
     let l:context = g:neomake_hook_context

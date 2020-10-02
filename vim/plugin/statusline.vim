@@ -7,7 +7,7 @@ function! s:refresh_status()
     endfor
 endfunction
 
-augroup Status
+augroup plugin_status
     autocmd!
     autocmd VimEnter,WinEnter,BufWinEnter * call <SID>refresh_status()
     autocmd User NvimHttpRequestStarted call <SID>refresh_status()

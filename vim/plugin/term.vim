@@ -7,4 +7,7 @@ command! LazyGit :call term#open(v:true, "lazygit")
 command! -nargs=? -complete=shellcmd TerminalFloatingClose
             \ :call term#close(-1)
 
-autocmd TermOpen * startinsert
+augroup term_plugin
+    au!
+    autocmd TermOpen * startinsert
+augroup END

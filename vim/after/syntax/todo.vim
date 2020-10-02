@@ -72,8 +72,11 @@ highlight default link TodoContext Label
 highlight default link TodoComment String
 highlight default link TodoSubTask NONE
 
-autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd todo.txt
-            \ :call s:enable_highlight()
+augroup syn_todo
+    au!
+    autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd todo.txt
+                \ :call s:enable_highlight()
+augroup END
 
 call s:enable_highlight()
 

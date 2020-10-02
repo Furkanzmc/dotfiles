@@ -25,7 +25,11 @@ nmap <buffer> <silent> ]p :call search("^>>>", "W")<CR>
 
 tmap <C-d> <PageDown>
 tmap <C-u> <PageUp>
-tnoremap <C-w>q <C-\><C-n>
+tnoremap <C-w><C-q> <C-\><C-n>
+tnoremap <C-w><C-h> <C-\><C-n><C-w>h
+tnoremap <C-w><C-j> <C-\><C-n><C-w>j
+tnoremap <C-w><C-k> <C-\><C-n><C-w>k
+tnoremap <C-w><C-l> <C-\><C-n><C-w>l
 
 " Pastes the text in the register into the terminal.
 nmap <buffer> <leader>p :call <SID>send_to_terminal()<CR>
@@ -39,7 +43,6 @@ function s:send_to_terminal()
     call add(l:lines, '')
     call chansend(b:terminal_job_id, l:lines)
 endfunction
-
 
 augroup vimrc_terminal
     autocmd!

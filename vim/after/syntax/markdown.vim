@@ -16,8 +16,12 @@ function! s:enable_highlight()
     setlocal conceallevel=2
 endfunction
 
-autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd *.md
-            \ :call s:enable_highlight()
+augroup syn_markdown
+    au!
+
+    autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd *.md
+                \ :call s:enable_highlight()
+augroup END
 
 call s:enable_highlight()
 
