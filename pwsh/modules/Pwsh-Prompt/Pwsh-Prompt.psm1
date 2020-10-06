@@ -59,6 +59,7 @@ function Write-Git-Prompt() {
     $gitDir = &git rev-parse --git-dir
     # Continue if the command succeeded.
     if (! $?) {
+        Write-Host " " -NoNewLine
         return
     }
 
