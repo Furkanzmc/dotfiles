@@ -54,14 +54,14 @@ GetWorkArea()
 }
 
 ; Centers the window with the same width and height.
-CenterWindow(WinId, changeSize)
+CenterWindow(WinId, sizeMultiplier)
 {
     WinGetPos,,, Width, Height, ahk_id %WinId%
     WorkArea := GetWorkArea()
 
-    If changeSize = 1
+    If sizeMultiplier > 0
     {
-        WinMove, ahk_id %WinId%,, (WorkArea.width / 2) - ((WorkArea.width * 0.6) / 2), (WorkArea.height / 2) - (WorkArea.height / 2) + WorkArea.y, WorkArea.width * 0.6, WorkArea.height
+        WinMove, ahk_id %WinId%,, (WorkArea.width / 2) - ((WorkArea.width * sizeMultiplier) / 2), (WorkArea.height / 2) - (WorkArea.height / 2) + WorkArea.y, WorkArea.width * sizeMultiplier, WorkArea.height
     }
     else
     {
@@ -102,7 +102,22 @@ ExpandWindow(WinId, vertical)
 
 LAlt & c::
     id := WinExist("A")
-    CenterWindow(id, GetKeyState("LShift"))
+    if GetKeyState("LShift")
+    {
+        CenterWindow(id, 0.6)
+    }
+    else
+    {
+        CenterWindow(id, 0)
+    }
+    return
+
+LAlt & w::
+    id := WinExist("A")
+    if GetKeyState("LShift")
+    {
+        CenterWindow(id, 0.8)
+    }
     return
 
 LAlt & a::
