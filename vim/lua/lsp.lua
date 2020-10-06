@@ -17,10 +17,9 @@ function publish_to_location_list(bufnr, local_result)
         "r")
 end
 
-function publish_diagnostics()
+function publish_diagnostics(bufnr)
     local callback = 'textDocument/publishDiagnostics'
     vim.lsp.callbacks[callback] = function(_, _, result, _)
-        local bufnr = vim.uri_to_bufnr(result.uri)
         if not bufnr then
             vim.lsp.err_message(
                 "LSP.publishDiagnostics: Couldn't find buffer for ", uri)
@@ -29,15 +28,15 @@ function publish_diagnostics()
 
         vim.lsp.util.buf_clear_diagnostics(bufnr)
         vim.lsp.util.buf_diagnostics_save_positions(bufnr, result.diagnostics)
-        if vim.api.nvim_buf_get_var(bufnr, 'lsp_virtual_text_enabled') == 1 then
+        if vim.api.nvim_buf_get_var(bufnr, 'vimrc_lsp_virtual_text_enabled') == 1 then
             lsp.buf_diagnostics_virtual_text(bufnr, result.diagnostics)
         end
 
-        if vim.api.nvim_buf_get_var(bufnr, 'lsp_location_list_enabled') == 1 then
+        if vim.api.nvim_buf_get_var(bufnr, 'vimrc_lsp_location_list_enabled') == 1 then
             publish_to_location_list(bufnr, result)
         end
 
-        if vim.api.nvim_buf_get_var(bufnr, 'lsp_signs_enabled') == 1 then
+        if vim.api.nvim_buf_get_var(bufnr, 'vimrc_lsp_signs_enabled') == 1 then
             lsp.buf_diagnostics_signs(bufnr, result.diagnostics)
         end
     end
@@ -46,7 +45,7 @@ end
 
 function set_up_keymap(bufnr)
     local opts = { noremap=true, silent=true }
-    local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_lsp_shortcuts_set")
+    local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_vimrc_lsp_shortcuts_set")
 
     vim.api.nvim_command("setlocal keywordprg=:LspHover")
     if is_configured then
@@ -89,11 +88,11 @@ function set_up_keymap(bufnr)
     vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
 
-    vim.api.nvim_buf_set_var(bufnr, "is_lsp_shortcuts_set", true)
+    vim.api.nvim_buf_set_var(bufnr, "is_vimrc_lsp_shortcuts_set", true)
 end
 
 function setup_buffer_events(bufnr)
-    local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_lsp_events_set")
+    local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_vimrc_lsp_events_set")
     if is_configured then
         return
     end
@@ -103,30 +102,29 @@ function setup_buffer_events(bufnr)
     vim.api.nvim_command("autocmd BufLeave,WinLeave,BufDelete,BufWipeout <buffer> lua require'lsp'.stop_buffer_clients(" .. bufnr .. ")")
     vim.api.nvim_command("augroup END")
 
-    vim.api.nvim_buf_set_var(bufnr, "is_lsp_events_set", true)
+    vim.api.nvim_buf_set_var(bufnr, "is_vimrc_lsp_events_set", true)
 end
 
 function setup_buffer_vars(bufnr)
-    if vim.fn.exists("b:is_lsp_shortcuts_set") == 0 then
-        vim.api.nvim_buf_set_var(bufnr, "is_lsp_shortcuts_set", false)
+    if vim.fn.exists("b:is_vimrc_lsp_shortcuts_set") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "is_vimrc_lsp_shortcuts_set", false)
     end
 
-    if vim.fn.exists("b:is_lsp_events_set") == 0 then
-        vim.api.nvim_buf_set_var(bufnr, "is_lsp_events_set", false)
+    if vim.fn.exists("b:is_vimrc_lsp_events_set") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "is_vimrc_lsp_events_set", false)
     end
 
-    if vim.fn.exists("b:lsp_location_list_enabled") == 0 then
-        vim.api.nvim_buf_set_var(bufnr, "lsp_location_list_enabled", true)
+    if vim.fn.exists("b:vimrc_lsp_location_list_enabled") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "vimrc_lsp_location_list_enabled", true)
     end
 
-    if vim.fn.exists("b:lsp_virtual_text_enabled") == 0 then
-        vim.api.nvim_buf_set_var(bufnr, "lsp_virtual_text_enabled", true)
+    if vim.fn.exists("b:vimrc_lsp_signs_enabled") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "vimrc_lsp_signs_enabled", true)
     end
 
-    if vim.fn.exists("b:lsp_signs_enabled") == 0 then
-        vim.api.nvim_buf_set_var(bufnr, "lsp_signs_enabled", true)
+    if vim.fn.exists("b:vimrc_lsp_virtual_text_enabled") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "vimrc_lsp_virtual_text_enabled", true)
     end
-
 end
 
 M.print_buffer_clients = function(bufnr)
@@ -148,11 +146,11 @@ M.setup_lsp = function(file_type)
         set_up_keymap(bufnr)
         setup_buffer_events(bufnr)
 
-        publish_diagnostics()
+        publish_diagnostics(bufnr)
     end
 
     if file_type == "python" then
-        require'nvim_lsp'.pyls.setup{on_attach=setup}
+        require'nvim_lsp'.pyls_ms.setup{on_attach=setup}
     elseif file_type == "cpp" then
         require'nvim_lsp'.clangd.setup{on_attach=setup}
     elseif file_type == "rust" then

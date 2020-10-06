@@ -24,14 +24,14 @@ setlocal indentexpr=
 
 nmap <buffer><silent> <leader>pi :call python#get_pylint_error_message(expand("<cword>"))<CR>
 
-if !exists("b:lsp_location_list_enabled")
-    let b:lsp_location_list_enabled = 0
+if !exists("b:vimrc_lsp_location_list_enabled")
+    let b:vimrc_lsp_location_list_enabled = 0
 endif
 
-if !exists("b:lsp_virtual_text_enabled")
-    let b:lsp_virtual_text_enabled = 0
+if !exists("b:vimrc_lsp_virtual_text_enabled")
+    let b:vimrc_lsp_virtual_text_enabled = 0
 endif
 
-if !exists("b:lsp_signs_enabled")
-    let b:lsp_signs_enabled = 0
+if !exists("b:vimrc_lsp_signs_enabled")
+    let b:vimrc_lsp_signs_enabled = 0
 endif

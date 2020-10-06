@@ -563,11 +563,11 @@ set pumheight=12
 
 " These are here so I remember to configure it when Neovim LSP supports it. {{{
 
-let g:lsp_virtual_text_prefix_error = '✖'
-let g:lsp_virtual_text_prefix_warning = '‼'
-let g:lsp_virtual_text_prefix_information = 'ℹ'
-let g:lsp_virtual_text_prefix_hint = '⦿'
-let g:lsp_virtual_text_include_error_message = 0
+let g:vimrc_lsp_virtual_text_prefix_error = '✖'
+let g:vimrc_lsp_virtual_text_prefix_warning = '‼'
+let g:vimrc_lsp_virtual_text_prefix_information = 'ℹ'
+let g:vimrc_lsp_virtual_text_prefix_hint = '⦿'
+let g:vimrc_lsp_virtual_text_include_error_message = 0
 
 " }}}
 
@@ -592,26 +592,6 @@ function! s:setup_lsp(file_type)
 
     if luaeval("require'lsp'.is_lsp_running(" . bufnr() . ")")
         return
-    endif
-
-    if !exists("b:is_lsp_shortcuts_set")
-        let b:is_lsp_shortcuts_set = v:false
-    endif
-
-    if !exists("b:is_lsp_events_set")
-        let b:is_lsp_events_set = v:false
-    endif
-
-    if !exists("b:lsp_location_list_enabled")
-        let b:lsp_location_list_enabled = 1
-    endif
-
-    if !exists("b:lsp_virtual_text_enabled")
-        let b:lsp_virtual_text_enabled = 1
-    endif
-
-    if !exists("b:lsp_signs_enabled")
-        let b:lsp_signs_enabled = 1
     endif
 
     execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'
