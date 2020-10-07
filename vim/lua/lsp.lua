@@ -46,17 +46,22 @@ end
 function set_up_keymap(bufnr)
     local opts = { noremap=true, silent=true }
     local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_vimrc_lsp_shortcuts_set")
+    local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
 
     vim.api.nvim_command("setlocal keywordprg=:LspHover")
     if is_configured then
         return
     end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gq', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+    if filetype ~= "python" then
+        vim.api.nvim_buf_set_option(bufnr, "formatexpr", "lua vim.lsp.buf.formatting()")
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, 'v', 'gq', '<Cmd>lua vim.lsp.buf.range_formatting()<CR><esc>', opts)
+        vim.api.nvim_buf_set_keymap(
+            bufnr, 'n', 'gq', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+        vim.api.nvim_buf_set_keymap(
+            bufnr, 'v', 'gq', '<Cmd>lua vim.lsp.buf.range_formatting()<CR><esc>', opts)
+    end
 
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
@@ -90,6 +95,8 @@ function set_up_keymap(bufnr)
 
     vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
+
+    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
     vim.api.nvim_buf_set_var(bufnr, "is_vimrc_lsp_shortcuts_set", true)
 end

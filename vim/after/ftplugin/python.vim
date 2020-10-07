@@ -21,6 +21,10 @@ setlocal linebreak
 setlocal textwidth=90
 
 setlocal indentexpr=
+if executable("black")
+    setlocal formatprg=black\ --quiet\ -
+    nmap <buffer><silent> gqgq mlgggqG`l
+endif
 
 nmap <buffer><silent> <leader>pi :call python#get_pylint_error_message(expand("<cword>"))<CR>
 

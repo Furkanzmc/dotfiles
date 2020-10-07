@@ -587,9 +587,6 @@ function! s:setup_lsp(file_type)
         let s:completion_plugins_loaded = v:true
     endif
 
-    setlocal formatexpr=lua\ vim.lsp.buf.formatting()
-    setlocal omnifunc=v:lua.vim.lsp.omnifunc
-
     if luaeval("require'lsp'.is_lsp_running(" . bufnr() . ")")
         return
     endif
