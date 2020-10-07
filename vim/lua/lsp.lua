@@ -53,15 +53,11 @@ function set_up_keymap(bufnr)
         return
     end
 
-    if filetype ~= "python" then
-        vim.api.nvim_buf_set_option(bufnr, "formatexpr", "lua vim.lsp.buf.formatting()")
+    vim.api.nvim_buf_set_keymap(
+        bufnr, 'n', 'gq', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
-        vim.api.nvim_buf_set_keymap(
-            bufnr, 'n', 'gq', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-
-        vim.api.nvim_buf_set_keymap(
-            bufnr, 'v', 'gq', '<Cmd>lua vim.lsp.buf.range_formatting()<CR><esc>', opts)
-    end
+    vim.api.nvim_buf_set_keymap(
+        bufnr, 'v', 'gq', '<Cmd>lua vim.lsp.buf.range_formatting()<CR><esc>', opts)
 
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'gr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
@@ -96,9 +92,9 @@ function set_up_keymap(bufnr)
     vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
 
-    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-
     vim.api.nvim_buf_set_var(bufnr, "is_vimrc_lsp_shortcuts_set", true)
+
+    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 end
 
 function setup_buffer_events(bufnr)
@@ -160,7 +156,7 @@ M.setup_lsp = function(file_type)
     end
 
     if file_type == "python" then
-        require'nvim_lsp'.pyls_ms.setup{on_attach=setup}
+        require'nvim_lsp'.pyls.setup{on_attach=setup}
     elseif file_type == "cpp" then
         require'nvim_lsp'.clangd.setup{on_attach=setup}
     elseif file_type == "rust" then
