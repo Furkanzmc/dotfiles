@@ -42,6 +42,12 @@ return {
             'center',
             true
         },
+        {
+            {'shift'},
+            'w',
+            'expandCenter',
+            true
+        },
         { {'shift'},
             'a',
             'left',
