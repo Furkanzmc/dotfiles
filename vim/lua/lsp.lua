@@ -48,7 +48,9 @@ function set_up_keymap(bufnr)
     local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_vimrc_lsp_shortcuts_set")
     local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
 
-    vim.api.nvim_command("setlocal keywordprg=:LspHover")
+    vim.api.nvim_buf_set_option(bufnr, "keywordprg", ":LspHover")
+    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+
     if is_configured then
         return
     end
@@ -93,8 +95,6 @@ function set_up_keymap(bufnr)
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
 
     vim.api.nvim_buf_set_var(bufnr, "is_vimrc_lsp_shortcuts_set", true)
-
-    vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 end
 
 function setup_buffer_events(bufnr)
