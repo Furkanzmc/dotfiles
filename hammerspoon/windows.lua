@@ -386,6 +386,19 @@ function hs.window.center(win)
     win:setFrame(f)
 end
 
+
+function hs.window.maximize(win)
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:fullFrame()
+
+    f.w = max.w
+    f.h = max.h
+    f.x = max.x
+    f.y = max.y
+    win:setFrame(f)
+end
+
 -- +-----------------+
 -- |  HERE  |        |
 -- +--------+        |
@@ -510,7 +523,7 @@ for i, mapping in ipairs(mappings) do
     windowLayoutMode:bindWithAutomaticExit(modifiers, trigger, function()
         --example: hs.window.focusedWindow():upRight()
         local fw = hs.window.focusedWindow()
-        fw[winFunction](fw)
+        hs.window[winFunction](fw)
     end, autoClose)
 end
 
