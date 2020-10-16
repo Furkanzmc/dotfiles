@@ -337,6 +337,17 @@ command! -nargs=1 Search :call <SID>search_docs(<f-args>)
 command! -nargs=1 StartTicket :let g:vimrc_active_jira_ticket=<f-args>
 command! CloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
 
+function s:glob_filter(start_line, end_line, matching, args)
+  let l:bang = a:matching ? "!" : ""
+  if a:start_line == a:end_line
+    execute "%g" . l:bang . "/" . a:args . "/d"
+  else
+    execute a:start_line . "," . a:end_line . "g" . l:bang . "/" . a:args . "/d"
+  end
+endfunction
+
+command! -buffer -bang -nargs=* -range FilterLines :call <SID>glob_filter(<line1>, <line2>, "<bang>" != "!", <q-args>)
+
 " Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 " Allows running macros only on selected files.
 function! s:execute_macro_on_visual_range()
