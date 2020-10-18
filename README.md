@@ -69,7 +69,7 @@ Checkout `hammerspoon/windows-bindings.lua` for details.
 
 ## Git Config
 
-Add teh following to your local `.gitconfig` file:
+Add the following to your local `.gitconfig` file:
 
 ```git
 [include]

@@ -1,4 +1,40 @@
 " Functions {{{
+
+function! s:create_custom_nvim_server()
+    let pid = string(getpid())
+    if has("win32")
+        let socket_name = '\\.\pipe\nvim-' . pid
+    else
+        let socket_name = expand('~/.dotfiles/vim/temp_dirs/servers/nvim') . pid . '.sock'
+    endif
+
+    call serverstart(socket_name)
+endfunction
+
+function! s:load_dictionary()
+    if get(b:, "vimrc_dictionary_loaded", v:false)
+        return
+    endif
+
+    let l:search_directories = get(
+                \ g:, "vimrc_dictionary_paths", [])
+    call add(l:search_directories, "~/.dotfiles/vim/dictionary/")
+
+    let l:files = globpath(
+                \ expand(join(l:search_directories, ",")),
+                \ '\(' . &l:filetype . '_*\|' . &l:filetype . '\).dictionary')
+    let l:files = split(l:files, '\n')
+    if empty(l:files)
+        return
+    endif
+
+    for file_path in l:files
+        execute "setlocal dictionary+=" . file_path
+    endfor
+
+    let b:vimrc_dictionary_loaded = v:true
+endfunction
+
 function! s:search_docs(...)
     let wordUnderCursor = a:0 > 0 ? a:1 : expand('<cword>')
     let filetype = &filetype
@@ -34,10 +70,10 @@ function! s:search_docs(...)
         call execute('!open "' . searchLink . '"')
     endif
 endfunction
+
 " }}}
 
 " General {{{
-" which commands trigger auto-unfold
 
 " Enable filetype plugins
 filetype plugin on
@@ -57,6 +93,7 @@ set splitbelow
 
 set splitright
 set signcolumn=no
+set pumheight=12
 
 " Reduces the number of lines that are above the curser when I do zt.
 set scrolloff=3
@@ -90,12 +127,9 @@ if executable("rg")
    set grepformat=%f:%l:%c:%m
 endif
 
-try
-    " Means that you can undo even when you close a buffer/VIM
-    set undodir=~/.dotfiles/vim/temp_dirs/undodir
-    set undofile
-catch
-endtry
+" Means that you can undo even when you close a buffer/VIM
+set undodir=~/.dotfiles/vim/temp_dirs/undodir
+set undofile
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
 set noswapfile
@@ -124,6 +158,7 @@ if executable("pwsh") && exists("$VIMRC_PWSH_ENABLED")
     set shellcmdflag=-NoLogo\ -NonInteractive\ -NoProfile\ -ExecutionPolicy\ RemoteSigned\ -Command
     set shellredir=\|\ Out-File\ -Encoding\ UTF8\ %s\ \|\ Out-Null
 endif
+
 " }}}
 
 " User Interface {{{
@@ -134,25 +169,17 @@ set tabline=%!tabline#config()
 
 if $VIMRC_BACKGROUND == "dark"
     set background=dark
-elseif $VIMRC_BACKGROUND == "light"
-    set background=light
 else
-    set background=dark
+    set background=light
 endif
-
-" Set 7 lines to the cursor - when moving vertically using j/k
-set so=7
 
 set diffopt=vertical,filler
 if has("nvim")
     set diffopt+=internal
 endif
 
-" Avoid garbled characters in Chinese language windows OS
-let $LANG='en'
 set langmenu=en
-
-set nu
+set number
 set relativenumber
 
 " Turn on the Wild menu
@@ -165,6 +192,7 @@ if has("win16") || has("win32")
 else
    set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
+
 set wildignorecase
 
 "Always show current position
@@ -174,7 +202,7 @@ set ruler
 set cmdheight=1
 
 " A buffer becomes hidden when it is abandoned
-set hid
+set hidden
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
@@ -202,7 +230,7 @@ set magic
 set showmatch
 
 " How many tenths of a second to blink when matching brackets
-set mat=3
+set matchtime=3
 
 " No annoying sound on errors
 set noerrorbells
@@ -215,7 +243,6 @@ set guioptions-=r
 set guioptions-=R
 set guioptions-=l
 set guioptions-=L
-
 
 " Colors and Fonts {{{
 
@@ -237,7 +264,7 @@ endif
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
 
-" Use Unix as the standard file type
+" Use Unix a the standard file type
 set ffs=unix,dos,mac
 
 " }}}
@@ -250,14 +277,11 @@ set ffs=unix,dos,mac
 map <silent> <leader><cr> :noh<cr>
 
 " Specify the behavior when switching between buffers
-try
-  " Use the current tab for openning files from quickfix.
-  " Otherwise it gets really annoying and each file is opened
-  " in a different tab.
-  set switchbuf=useopen,usetab
-  set stal=2
-catch
-endtry
+" Use the current tab for openning files from quickfix.
+" Otherwise it gets really annoying and each file is opened
+" in a different tab.
+set switchbuf=useopen,usetab
+set stal=2
 
 " Jump to the previous git conflict start
 nnoremap <silent> [cs :call search('^<\{4,\} \w\+.*$', 'Wb')<CR>
@@ -306,29 +330,10 @@ nnoremap <silent> [q <cmd>execute ":" . v:count . "cprevious"<CR>
 nnoremap <silent> ]b <cmd>execute ":" . v:count . "bnext"<CR>
 nnoremap <silent> [b <cmd>execute ":" . v:count . "bprevious"<CR>
 
-" Remap VIM 0 to first non-blank character
-map 0 ^
-
-" Reselect text that was just pasted with ,v
-nnoremap <leader>v V`]
-
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
 imap <c-t> <tab>
 imap <c-d> <s-tab>
 
-if has("mac") || has("macunix")
-  nmap <D-j> <M-j>
-  nmap <D-k> <M-k>
-  vmap <D-j> <M-j>
-  vmap <D-k> <M-k>
-endif
-
-" Pressing ,ss will toggle and untoggle spell checking
+" Pressing <leader>ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
 nmap <silent> <leader>dh :call <SID>search_docs()<CR>
@@ -358,68 +363,6 @@ endfunction
 xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 
 command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE
-
-augroup vimrc_lua_highlight
-    autocmd!
-    au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, higroup="IncSearch", timeout=100}
-augroup END
-" }}}
-
-" Misc {{{
-
-" Custom Server {{{
-
-function! s:create_custom_nvim_server()
-    let pid = string(getpid())
-    if has("win32")
-        let socket_name = '\\.\pipe\nvim-' . pid
-    else
-        let socket_name = expand('~/.dotfiles/vim/temp_dirs/servers/nvim') . pid . '.sock'
-    endif
-
-    call serverstart(socket_name)
-endfunction
-
-augroup vimrc_startup
-    autocmd!
-    autocmd VimEnter * call s:create_custom_nvim_server()
-augroup END
-
-" }}}
-
-" Dictionary {{{
-
-function s:load_dictionary()
-    if get(b:, "vimrc_dictionary_loaded", v:false)
-        return
-    endif
-
-    let l:search_directories = get(
-                \ g:, "vimrc_dictionary_paths", [])
-    call add(l:search_directories, "~/.dotfiles/vim/dictionary/")
-
-    let l:files = globpath(
-                \ expand(join(l:search_directories, ",")),
-                \ '\(' . &l:filetype . '_*\|' . &l:filetype . '\).dictionary')
-    let l:files = split(l:files, '\n')
-    if empty(l:files)
-        return
-    endif
-
-    for file_path in l:files
-        execute "setlocal dictionary+=" . file_path
-    endfor
-
-    let b:vimrc_dictionary_loaded = v:true
-endfunction
-
-augroup vimrc_dictionary
-    autocmd!
-    autocmd BufRead,BufEnter,FileType * call <SID>load_dictionary()
-augroup END
-
-" }}}
-
 " }}}
 
 " Plugins {{{
@@ -435,6 +378,7 @@ let g:polyglot_disabled = ['markdown', 'python-indent']
 " }}}
 
 " minpack {{{
+
 function! PackInit()
     packadd minpac
 
@@ -474,6 +418,7 @@ function! PackInit()
     call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
 
     " }}}
+
 endfunction
 
 packadd matchit
@@ -513,6 +458,11 @@ function s:setup_neomake()
     let g:vimrc_is_neomake_loaded = v:true
 endfunction
 
+augroup neomake_ft
+    au!
+    autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
+augroup END
+
 let g:neomake_virtualtext_current_error = v:false
 
 " Python {{{
@@ -532,11 +482,6 @@ let g:neomake_qml_qmllint_maker = {
 let g:neomake_qml_enabled_makers = ["qmllint"]
 
 " }}}
-
-augroup neomake_ft
-    au!
-    autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
-augroup END
 
 function! s:neomake_job_finished() abort
     let l:context = g:neomake_hook_context
@@ -558,17 +503,14 @@ function! s:neomake_job_finished() abort
 endfunction
 
 augroup neomake_hooks
-    au!
+    autocmd!
     autocmd User NeomakeJobFinished
                 \ nested call <SID>neomake_job_finished()
 augroup END
 
-
 " }}}
 
 " Completion {{{
-
-set pumheight=12
 
 " nvim-lsp {{{
 
@@ -712,13 +654,9 @@ let g:nvimgdb_config_override = {
 function s:setup_treesitter()
 lua << EOF
     require'nvim-treesitter.configs'.setup {
-      ensure_installed = {'python', 'html', 'cpp', 'vue', 'json'}, -- one of "all", "language", or a list of languages
+      ensure_installed = {'python', 'html', 'cpp', 'vue', 'json'},
       highlight = {
-        enable = true,
-        custom_captures = {
-          -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
-          ["foo.bar"] = "Identifier",
-        },
+        enable = true
       },
       refactor = {
           highlight_definitions = {
@@ -743,12 +681,22 @@ augroup END
 
 " }}}
 
-" Return to last edit position when opening files (You want this!)
+" codi {{{
+
+let g:codi#virtual_text=0
+
+" }}}
+
+" }}}
+
 augroup vimrc_init
-    au!
+    autocmd!
+    autocmd BufRead,BufEnter,FileType * call <SID>load_dictionary()
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, higroup="IncSearch", timeout=100}
+    autocmd VimEnter * call s:create_custom_nvim_server()
     autocmd VimEnter * colorscheme cosmic_latte
+    " Return to last edit position when opening files (You want this!)
     au BufReadPost *
                 \ if line("'\"") > 1 && line("'\"") <= line("$")
                 \ | exe "normal! g'\"" | endif
 augroup END
-" }}}
