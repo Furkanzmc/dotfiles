@@ -86,7 +86,7 @@ function set_up_keymap(bufnr)
         bufnr, 'n', 'g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gW', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts)
+        bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts)
 
     vim.api.nvim_buf_set_keymap(
         bufnr, 'n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
