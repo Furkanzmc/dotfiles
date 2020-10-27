@@ -334,7 +334,7 @@ let loaded_netrwPlugin = 1
 
 " Disable markdown support for polyglot because it messes up with syntax
 " highlighting.
-let g:polyglot_disabled = ['markdown', 'python-indent']
+let g:polyglot_is_disabled = {'markdown': v:true, 'python-indent': v:true}
 
 " }}}
 
