@@ -378,6 +378,8 @@ function! PackInit()
     call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
     call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
 
+    call minpac#add('lukas-reineke/format.nvim', {'type': 'opt'})
+
     " }}}
 
 endfunction
@@ -645,6 +647,72 @@ augroup END
 " codi {{{
 
 let g:codi#virtual_text=0
+
+" }}}
+
+" format.nvim {{{
+
+function s:setup_format_nvim()
+lua << EOF
+require "format".setup {
+    vim = {
+        {
+            cmd = {"luafmt -w replace"},
+            start_pattern = "^lua << EOF$",
+            end_pattern = "^EOF$"
+        }
+    },
+    javascript = {
+        {cmd = {"prettier -w", "./node_modules/.bin/eslint --fix"}}
+    },
+    python = {
+        {
+            cmd = {"black"},
+        }
+    },
+    markdown = {
+        {
+            cmd = {"black"},
+            start_pattern = "^```python$",
+            end_pattern = "^```$",
+            target = "current"
+        },
+        {
+            cmd = {"qmlformat -i"},
+            start_pattern = "^```qml$",
+            end_pattern = "^```$",
+            target = "current"
+        },
+        {
+            cmd = {"clang-format -i"},
+            start_pattern = "^```cpp$",
+            end_pattern = "^```$",
+            target = "current"
+        }
+    },
+    cpp = {
+        {
+            cmd = {"clang-format -i"},
+        }
+    },
+    qml = {
+        {
+            cmd = {"qmlformat -i"},
+        }
+    }
+}
+EOF
+endfunction
+
+augroup plugin_format_nvim
+    au!
+    au FileType vim,javascript,python,markdown,cpp,qml
+                \   if !exists(":Format")
+                \ |     packadd format.nvim
+                \ |     call <SID>setup_format_nvim()
+                \ | endif
+                \ | nmap <buffer> <silent> gq :Format<CR>
+augroup END
 
 " }}}
 
