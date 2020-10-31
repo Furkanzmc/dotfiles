@@ -356,7 +356,7 @@ function! PackInit()
     call minpac#add('tmsvg/pear-tree')
     call minpac#add('justinmk/vim-dirvish')
 
-    call minpac#add('Furkanzmc/neovim-firvish')
+    call minpac#add('Furkanzmc/firvish.nvim')
 
     " On Demand Plugins {{{
 
@@ -624,7 +624,6 @@ lua << EOF
       refactor = {
           highlight_definitions = {
               enable = true,
-              disable={ "python" }
           },
       },
     }
@@ -713,6 +712,12 @@ augroup plugin_format_nvim
                 \ | endif
                 \ | nmap <buffer> <silent> gq :Format<CR>
 augroup END
+
+" }}}
+
+" firvish.nvim {{{
+
+let g:firvish_shell = "pwsh"
 
 " }}}
 
