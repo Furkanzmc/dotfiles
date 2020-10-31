@@ -249,6 +249,11 @@ function Set-Terminal-Theme() {
     }
 }
 
+# Sample usage: `git --help | nman`
+function nman($Input) {
+    $Input | nvim "+setlocal filetype=man"
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
