@@ -1,5 +1,4 @@
 if !get(s:, "vimrc_python_plugins_loaded", v:false)
-    packadd vim-python-pep8-indent
     packadd tagbar
     let s:vimrc_python_plugins_loaded = v:true
 endif
@@ -18,11 +17,17 @@ setlocal softtabstop=4
 
 setlocal nosmarttab
 setlocal linebreak
-setlocal textwidth=90
+setlocal textwidth=120
 
 setlocal indentexpr=
 
 nmap <buffer><silent> <leader>pi :call python#get_pylint_error_message(expand("<cword>"))<CR>
+
+" Abbreviations {{{
+
+inoremap <buffer> <c-l>ff <ESC>bidef <ESC>$a():<Left><Left>
+
+" }}}
 
 if !exists("b:vimrc_lsp_location_list_enabled")
     let b:vimrc_lsp_location_list_enabled = 0

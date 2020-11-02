@@ -348,36 +348,28 @@ function! PackInit()
     call minpac#add('sheerun/vim-polyglot')
     call minpac#add('tpope/vim-commentary')
     call minpac#add('tpope/vim-fugitive')
-
     call minpac#add('machakann/vim-sandwich')
     call minpac#add('furkanzmc/cosmic_latte')
     call minpac#add('furkanzmc/nvim-http', {'do': 'UpdateRemotePlugins'})
-
     call minpac#add('tmsvg/pear-tree')
     call minpac#add('justinmk/vim-dirvish')
-
     call minpac#add('Furkanzmc/firvish.nvim')
 
     " On Demand Plugins {{{
 
     call minpac#add('neovim/nvim-lspconfig', {'type': 'opt'})
     call minpac#add('neomake/neomake', {'type': 'opt'})
-
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
-    call minpac#add('octol/vim-cpp-enhanced-highlight', {'type': 'opt'})
     call minpac#add('majutsushi/tagbar', {'type': 'opt'})
-
     call minpac#add('masukomi/vim-markdown-folding', {'type': 'opt'})
     call minpac#add('metakirby5/codi.vim', {'type': 'opt'})
     call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-
     call minpac#add('sakhnik/nvim-gdb', {
                 \ 'type': 'opt',
                 \ 'do': 'UpdateRemotePlugins'
                 \ })
     call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
     call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
-
     call minpac#add('lukas-reineke/format.nvim', {'type': 'opt'})
 
     " }}}
@@ -392,12 +384,6 @@ endif
 command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
 command! PackClean  call PackInit() | call minpac#clean()
 command! PackStatus call PackInit() | call minpac#status()
-
-" }}}
-
-" vim-cpp-enhanced-highlight {{{
-
-let g:cpp_member_variable_highlight = 1
 
 " }}}
 
