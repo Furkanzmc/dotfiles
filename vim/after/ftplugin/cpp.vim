@@ -12,6 +12,16 @@ setlocal signcolumn=yes
 setlocal commentstring=//%s
 nnoremap <silent> <buffer> <nowait> <F4> :call <SID>swap_source_header()<CR>
 
+" Abbreviations {{{
+
+abbreviate <buffer> #i #include <><Left><C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <buffer> #i" #include ""<Left><C-R>=abbreviations#eat_char('\s')<CR>
+
+inoremap <buffer> <c-l>fs <ESC>biset<ESC>l~A()<CR>{<CR>}<Up><CR><ESC>i    <Esc>mb2<Up>$i
+inoremap <buffer> <c-l>fg <ESC>biget<ESC>l~A() const<CR>{<CR>}<Up><CR><ESC>i    
+
+" }}}
+
 if get(s:, "functions_loaded", v:false)
     finish
 endif
