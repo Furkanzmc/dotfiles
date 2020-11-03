@@ -11,7 +11,7 @@ if get(b:, "qml_mappings_set", v:false)
     finish
 endif
 
-command -buffer -range RunQML :call qml#run()
+command -buffer -range RunQML :call qml#run(<line1>, <line2>)
 
 inoremap <buffer> <c-l>s <ESC>bion<ESC>l~A: {<CR>}<ESC>O
 inoremap <buffer> <c-l>d <ESC>bion<ESC>l~AChanged: {<CR>}<ESC>O

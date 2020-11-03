@@ -1,7 +1,6 @@
-function! qml#run()
-    setlocal errorformat+=file://%f:%l:\ %s%trror:\ %m,file://%f:%l:%c\ %m,file://%f:%l\ %m
+function! qml#run(line1, line2)
     if executable('qmlscene')
-        if mode() == "v"
+        if a:line1 != a:line2
             let l:lines = buffers#get_visual_selection()
             let l:qml_file = tempname() . '.qml'
 
@@ -16,7 +15,7 @@ function! qml#run()
             let l:qml_file = expand("%")
         endif
 
-        execute 'NeomakeSh! pwsh -C "qmlscene ' . shellescape(l:qml_file) . '"'
+        execute 'NeomakeSh! pwsh -NoProfile -NoLogo -NonInteractive -C "qmlscene ' . l:qml_file . '"'
     else
         echohl WarningMsg
         echo "Cannot find qmlscene in the path."
