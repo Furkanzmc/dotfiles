@@ -370,7 +370,7 @@ function! PackInit()
                 \ })
     call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
     call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
-    call minpac#add('lukas-reineke/format.nvim', {'type': 'opt'})
+    call minpac#add('mhartington/formatter.nvim', {'type': 'opt'})
 
     " }}}
 
@@ -517,8 +517,8 @@ augroup lsp_completion
     autocmd BufEnter * call <SID>setup_completion()
     autocmd FileType * call <SID>setup_completion()
 
-    autocmd BufEnter,WinEnter *.py,*.cpp,*.c,*.h,*.vim,*.json,*.rs call <SID>setup_lsp(&l:filetype)
-    autocmd FileType python,cpp,json,vim,rust call <SID>setup_lsp(&l:filetype)
+    autocmd BufEnter,WinEnter *.py,*.cpp,*.c,*.h,*.vim,*.json,*.rs,*.java call <SID>setup_lsp(&l:filetype)
+    autocmd FileType python,cpp,json,vim,rust,java call <SID>setup_lsp(&l:filetype)
 augroup END
 
 function! s:check_back_space() abort
@@ -639,61 +639,52 @@ let g:codi#virtual_text=0
 
 function s:setup_format_nvim()
 lua << EOF
-require "format".setup {
-    vim = {
-        {
-            cmd = {"luafmt -w replace"},
-            start_pattern = "^lua << EOF$",
-            end_pattern = "^EOF$"
-        }
-    },
-    javascript = {
-        {cmd = {"prettier -w", "./node_modules/.bin/eslint --fix"}}
-    },
-    python = {
-        {
-            cmd = {"black"},
-        }
-    },
-    markdown = {
-        {
-            cmd = {"black"},
-            start_pattern = "^```python$",
-            end_pattern = "^```$",
-            target = "current"
-        },
-        {
-            cmd = {"qmlformat -i"},
-            start_pattern = "^```qml$",
-            end_pattern = "^```$",
-            target = "current"
-        },
-        {
-            cmd = {"clang-format -i"},
-            start_pattern = "^```cpp$",
-            end_pattern = "^```$",
-            target = "current"
-        }
-    },
-    cpp = {
-        {
-            cmd = {"clang-format -i"},
-        }
-    },
-    qml = {
-        {
-            cmd = {"qmlformat -i"},
-        }
-    }
-}
+    require('format').setup({
+      javascript = {
+          prettier = function()
+            return {
+              exe = "prettier",
+              args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
+              stdin = true
+            }
+          end
+      },
+      python = {
+          black = function()
+            return {
+              exe = "black",
+              args = {"--quiet","-"},
+              stdin = true
+            }
+          end
+      },
+      cpp = {
+          clang_format = function()
+            return {
+              exe = "clang-format",
+              args = {"-i"},
+              stdin = true
+            }
+          end
+      },
+      qml = {
+          qmlformat = function()
+            return {
+              exe = "qmlformat",
+              args = {"-i"},
+              stdin = true
+            }
+          end
+      },
+    })
 EOF
 endfunction
 
 augroup plugin_format_nvim
     au!
-    au FileType vim,javascript,python,markdown,cpp,qml
+    au FileType vim,javascript,python,cpp,qml
                 \   if !exists(":Format")
-                \ |     packadd format.nvim
+                \ |     packadd formatter.nvim
                 \ |     call <SID>setup_format_nvim()
                 \ | endif
                 \ | nmap <buffer> <silent> gq :Format<CR>
