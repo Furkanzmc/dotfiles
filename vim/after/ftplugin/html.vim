@@ -1,4 +1,6 @@
 setlocal colorcolumn=120
+setlocal suffixesadd=.html
+
 call buffers#set_indent(2)
 
 if get(s:, "html_plugin_loaded", v:false)

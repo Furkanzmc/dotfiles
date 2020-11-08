@@ -3,6 +3,11 @@ if !get(s:, "vimrc_python_plugins_loaded", v:false)
     let s:vimrc_python_plugins_loaded = v:true
 endif
 
+function python#includeexpr(fname)
+    let l:search_paths = [".venv/lib/*/site-packages"]
+    return includeexpr#find(substitute(a:fname, "\\.", "\/", "g"), l:search_paths)
+endfunction
+
 setlocal cindent
 setlocal expandtab
 setlocal autoindent
@@ -20,6 +25,8 @@ setlocal linebreak
 setlocal textwidth=120
 
 setlocal indentexpr=
+setlocal includeexpr=python#includeexpr(v:fname)
+setlocal suffixesadd=.py
 
 nmap <buffer><silent> <leader>pi :call python#get_pylint_error_message(expand("<cword>"))<CR>
 

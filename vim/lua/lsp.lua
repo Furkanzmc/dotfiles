@@ -159,6 +159,8 @@ M.setup_lsp = function(file_type)
         require'nvim_lsp'.jsonls.setup{on_attach=setup}
     elseif file_type == "vim" then
         require'nvim_lsp'.vimls.setup{on_attach=setup}
+    elseif file_type == "java" then
+        require'nvim_lsp'.jdtls.setup{on_attach=setup}
     end
 end
 

@@ -7,6 +7,7 @@ endif
 
 setlocal foldmethod=indent
 setlocal signcolumn=yes
+setlocal suffixesadd=.cpp,.h,.hxx,.cxx
 
 " Override the default comment string from vim-commentary
 setlocal commentstring=//%s

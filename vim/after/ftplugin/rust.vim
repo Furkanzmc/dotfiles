@@ -6,3 +6,4 @@ if !get(s:, "vimrc_rust_plugins_loaded", v:false)
 endif
 
 setlocal signcolumn=yes
+setlocal suffixesadd=.rs

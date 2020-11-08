@@ -35,6 +35,38 @@ function! s:load_dictionary()
     let b:vimrc_dictionary_loaded = v:true
 endfunction
 
+function s:count_conflicts()
+    try
+        redir => conflict_count
+        silent execute '%s/^<\{4,\} \w\+.*$//gn'
+        redir END
+        let l:result = matchstr(conflict_count, '\d\+')
+    catch
+        let l:result = 0
+    endtry
+
+    echohl IncSearch
+    echo " " . l:result . " merge conflicts"
+    echohl Normal
+endfunction
+
+function s:glob_filter(start_line, end_line, matching, args)
+  let l:bang = a:matching ? "!" : ""
+  if a:start_line == a:end_line
+    execute "%g" . l:bang . "/" . a:args . "/d"
+  else
+    execute a:start_line . "," . a:end_line . "g" . l:bang . "/" . a:args . "/d"
+  end
+endfunction
+
+" Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
+" Allows running macros only on selected files.
+function! s:execute_macro_on_visual_range()
+    echo "@".getcmdline()
+    execute ":'<,'>normal @" . nr2char(getchar())
+endfunction
+
+
 " }}}
 
 " General {{{
@@ -69,15 +101,11 @@ set history=500
 set showbreak=↳\ 
 
 set inccommand=split
-
-" Access system clipboard on macOS.
 set clipboard=unnamed
 
 " Set to auto read when a file is changed from the outside
 set autoread
 
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
 let mapleader = ' '
 let maplocalleader = ' '
 
@@ -137,10 +165,7 @@ else
     set background=light
 endif
 
-set diffopt=vertical,filler
-if has("nvim")
-    set diffopt+=internal
-endif
+set diffopt=vertical,filler,context:5,closeoff,algorithm:histogram,internal
 
 set langmenu=en
 set number
@@ -262,20 +287,6 @@ nnoremap <silent> [cm :call search('^=\{4,\}$', 'Wb')<CR>
 " Jump to next divider
 nnoremap <silent> ]cm :call search('^=\{4,\}$', 'W')<CR>
 
-function s:count_conflicts()
-    try
-        redir => conflict_count
-        silent execute '%s/^<\{4,\} \w\+.*$//gn'
-        redir END
-        let l:result = matchstr(conflict_count, '\d\+')
-    catch
-        let l:result = 0
-    endtry
-
-    echohl IncSearch
-    echo " " . l:result . " merge conflicts"
-    echohl Normal
-endfunction
 nnoremap <silent> =cc :call <SID>count_conflicts()<CR>
 
 " }}}
@@ -303,27 +314,12 @@ map <leader>ss :setlocal spell!<cr>
 command! -nargs=1 StartTicket :let g:vimrc_active_jira_ticket=<f-args>
 command! CloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
 
-function s:glob_filter(start_line, end_line, matching, args)
-  let l:bang = a:matching ? "!" : ""
-  if a:start_line == a:end_line
-    execute "%g" . l:bang . "/" . a:args . "/d"
-  else
-    execute a:start_line . "," . a:end_line . "g" . l:bang . "/" . a:args . "/d"
-  end
-endfunction
-
 command! -buffer -bang -nargs=* -range FilterLines :call <SID>glob_filter(<line1>, <line2>, "<bang>" != "!", <q-args>)
-
-" Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
-" Allows running macros only on selected files.
-function! s:execute_macro_on_visual_range()
-    echo "@".getcmdline()
-    execute ":'<,'>normal @".nr2char(getchar())
-endfunction
 
 xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 
 command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE
+
 " }}}
 
 " Plugins {{{
@@ -483,10 +479,10 @@ sign define LspDiagnosticsHintSign text=⦿ texthl=LspDiagnosticsHint
             \ linehl= numhl=
 
 function! s:setup_lsp(file_type)
-    if !exists('s:completion_plugins_loaded')
+    if !exists('s:are_lsp_plugins_loaded')
         packadd SyntaxRange
         packadd nvim-lspconfig
-        let s:completion_plugins_loaded = v:true
+        let s:are_lsp_plugins_loaded = v:true
     endif
 
     if luaeval("require'lsp'.is_lsp_running(" . bufnr() . ")")
@@ -703,11 +699,13 @@ let g:firvish_shell = "pwsh"
 augroup vimrc_init
     autocmd!
     autocmd BufRead,BufEnter,FileType * call <SID>load_dictionary()
-    autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, higroup="IncSearch", timeout=100}
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank{
+                \ on_visual=false, higroup="IncSearch", timeout=100}
     autocmd VimEnter * call s:create_custom_nvim_server()
     autocmd VimEnter * colorscheme cosmic_latte
     " Return to last edit position when opening files (You want this!)
     au BufReadPost *
                 \ if line("'\"") > 1 && line("'\"") <= line("$")
-                \ | exe "normal! g'\"" | endif
+                \ | execute "normal! g'\""
+                \ | endif
 augroup END
