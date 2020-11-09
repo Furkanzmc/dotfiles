@@ -658,7 +658,7 @@ lua << EOF
           clang_format = function()
             return {
               exe = "clang-format",
-              args = {"-i"},
+              args = {},
               stdin = true
             }
           end
@@ -667,7 +667,7 @@ lua << EOF
           qmlformat = function()
             return {
               exe = "qmlformat",
-              args = {"-i"},
+              args = {},
               stdin = true
             }
           end
