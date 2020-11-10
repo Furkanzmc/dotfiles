@@ -346,7 +346,6 @@ function! PackInit()
     call minpac#add('tpope/vim-fugitive')
     call minpac#add('machakann/vim-sandwich')
     call minpac#add('furkanzmc/cosmic_latte')
-    call minpac#add('furkanzmc/nvim-http', {'do': 'UpdateRemotePlugins'})
     call minpac#add('tmsvg/pear-tree')
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('Furkanzmc/firvish.nvim')
@@ -367,6 +366,7 @@ function! PackInit()
     call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
     call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
     call minpac#add('mhartington/formatter.nvim', {'type': 'opt'})
+    call minpac#add('furkanzmc/nvim-http', {'type': 'opt', 'do': 'UpdateRemotePlugins'})
 
     " }}}
 
@@ -699,6 +699,9 @@ let g:firvish_shell = "pwsh"
 augroup vimrc_init
     autocmd!
     autocmd BufRead,BufEnter,FileType * call <SID>load_dictionary()
+    autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses")
+                \ | packadd nvim-http
+                \ | endif
     autocmd TextYankPost * silent! lua vim.highlight.on_yank{
                 \ on_visual=false, higroup="IncSearch", timeout=100}
     autocmd VimEnter * call s:create_custom_nvim_server()
