@@ -357,7 +357,6 @@ function! PackInit()
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
     call minpac#add('majutsushi/tagbar', {'type': 'opt'})
     call minpac#add('masukomi/vim-markdown-folding', {'type': 'opt'})
-    call minpac#add('metakirby5/codi.vim', {'type': 'opt'})
     call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
     call minpac#add('sakhnik/nvim-gdb', {
                 \ 'type': 'opt',
@@ -635,7 +634,7 @@ let g:codi#virtual_text=0
 
 function s:setup_format_nvim()
 lua << EOF
-    require('format').setup({
+    require('formatter').setup({
       javascript = {
           prettier = function()
             return {
