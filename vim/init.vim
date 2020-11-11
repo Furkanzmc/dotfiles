@@ -634,7 +634,7 @@ let g:codi#virtual_text=0
 
 function s:setup_format_nvim()
 lua << EOF
-    require('formatter').setup({
+    require('format').setup({
       javascript = {
           prettier = function()
             return {
