@@ -20,7 +20,7 @@ inoremap <buffer> <c-l>l console.log("[=expand("%:t")<BS>::]")F:a
 inoremap <buffer> <c-l>u console.log("    ")F"i
 
 abbreviate <buffer> iqqc import QtQuick.Controls 2.<C-R>=abbreviations#eat_char('\s')<CR>
-abbreviate <buffer> iqq import QtQuick 2.<Left><C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <buffer> iqq import QtQuick 2.<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <buffer> iqql import QtQuick.Layouts 1.<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <buffer> iqqw import QtQuick.Window 2.<C-R>=abbreviations#eat_char('\s')<CR>
 

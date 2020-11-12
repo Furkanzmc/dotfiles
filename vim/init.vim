@@ -542,40 +542,8 @@ inoremap <silent><expr> <S-TAB>
 
 " Preview {{{
 
-function! s:show_loc_item_in_preview()
-    let l:loclist = getloclist(winnr())
-    let l:list = []
-
-    if len(l:loclist) == 0
-        let l:qflist = getqflist()
-        let l:list = l:qflist
-    else
-        let l:list = l:loclist
-    endif
-
-    let l:current_line = line('.')
-    let l:type_mapping = {
-                \ "E": "Error",
-                \ "W": "Warning",
-                \ "I": "Info",
-                \ }
-
-    let l:lines = []
-    for item in l:list
-        if get(item, "lnum", "") == l:current_line
-            let l:type = get(item, "type", "I")
-            let l:type = get(l:type_mapping, l:type, "")
-            let l:text = get(item, "text", "")
-            call add(l:lines, l:type . ": " . l:text)
-        endif
-    endfor
-
-    if len(l:lines) > 0
-        call preview#show("Neomake", l:lines)
-    endif
-endfunction
-
-nnoremap <silent> <leader>li :call <SID>show_loc_item_in_preview()<CR>
+nnoremap <silent> sli :call quickfix#show_item_in_preview(v:true, line('.'))<CR>
+nnoremap <silent> sci :call quickfix#show_item_in_preview(v:false, line('.'))<CR>
 
 " }}}
 
