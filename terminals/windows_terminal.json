@@ -130,6 +130,7 @@
         // - "splitMode": "duplicate" makes the new pane use the focused pane's profile.
         // To learn more about panes, visit https://aka.ms/terminal-panes
         { "command": { "action": "splitPane", "split": "auto", "splitMode": "duplicate" }, "keys": "alt+shift+d" },
-        { "command": { "action": "commandPalette" }, "keys": "alt+shift+p" }
+        { "command": { "action": "commandPalette" }, "keys": "alt+shift+p" },
+        { "command": { "action": "togglePaneZoom" }, "keys": "alt+shift+z" }
     ]
 }
