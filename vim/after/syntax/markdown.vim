@@ -11,6 +11,7 @@ function! s:enable_highlight()
     call SyntaxRange#Include('```json', '```', 'json', 'NonText')
     call SyntaxRange#Include('```python', '```', 'python', 'NonText')
     call SyntaxRange#Include('```js', '```', 'javascript', 'NonText')
+    call SyntaxRange#Include('```diff', '```', 'diff', 'NonText')
 
     setlocal foldmethod=expr
     setlocal conceallevel=2
