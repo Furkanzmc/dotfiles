@@ -52,3 +52,4 @@ function! term#set_t_register()
     let l:lines = join(l:lines, "\r")
     call setreg("t", l:lines)
 endfunction
+
