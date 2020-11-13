@@ -38,16 +38,11 @@ if get(s:, "terminal_plugin_loaded", v:false)
     finish
 endif
 
-function s:send_to_terminal()
-    let l:lines = split(trim(@*), "\n")
-    call add(l:lines, '')
-    call chansend(b:terminal_job_id, l:lines)
-endfunction
-
 augroup vimrc_terminal
     autocmd!
 
     autocmd TermEnter * set scrolloff=0
+    autocmd TermEnter,BufEnter,WinEnter <buffer> call term#set_t_register()
     autocmd TermLeave * set scrolloff=3
 augroup END
 

@@ -45,3 +45,10 @@ function! term#open_named_list(names)
         execute ":file " . term_name
     endfor
 endfunction
+
+function! term#set_t_register()
+    let l:lines = split(trim(@*), "\n")
+    call add(l:lines, '')
+    let l:lines = join(l:lines, "\r")
+    call setreg("t", l:lines)
+endfunction
