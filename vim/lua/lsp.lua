@@ -1,5 +1,5 @@
 local vim = vim
-local lsp = vim.lsp.util
+local lsp = vim.lsp
 local M = {}
 
 
@@ -10,7 +10,9 @@ function publish_to_location_list(bufnr, local_result)
         end
     end
 
-    local locations = vim.lsp.util.locations_to_items(local_result.diagnostics)
+    -- TODO: Clear only the items that we add here so we can share the location
+    -- list with others.
+    local locations = lsp.util.locations_to_items(local_result.diagnostics)
     vim.fn.setloclist(
         bufnr,
         locations,
@@ -18,26 +20,27 @@ function publish_to_location_list(bufnr, local_result)
 end
 
 function publish_diagnostics(bufnr)
-    local callback = 'textDocument/publishDiagnostics'
-    vim.lsp.callbacks[callback] = function(_, _, result, _)
+    local api = vim.api
+    local callback = "textDocument/publishDiagnostics"
+    lsp.callbacks[callback] = function(_, _, result, _)
         if not bufnr then
-            vim.lsp.err_message(
+            lsp.err_message(
                 "LSP.publishDiagnostics: Couldn't find buffer for ", uri)
             return
         end
 
-        vim.lsp.util.buf_clear_diagnostics(bufnr)
-        vim.lsp.util.buf_diagnostics_save_positions(bufnr, result.diagnostics)
-        if vim.api.nvim_buf_get_var(bufnr, 'vimrc_lsp_virtual_text_enabled') == 1 then
-            lsp.buf_diagnostics_virtual_text(bufnr, result.diagnostics)
+        lsp.util.buf_clear_diagnostics(bufnr)
+        lsp.util.buf_diagnostics_save_positions(bufnr, result.diagnostics)
+        if vim.api.nvim_buf_get_var(bufnr, "vimrc_lsp_virtual_text_enabled") == 1 then
+            lsp.util.buf_diagnostics_virtual_text(bufnr, result.diagnostics)
         end
 
-        if vim.api.nvim_buf_get_var(bufnr, 'vimrc_lsp_location_list_enabled') == 1 then
+        if vim.api.nvim_buf_get_var(bufnr, "vimrc_lsp_location_list_enabled") == 1 then
             publish_to_location_list(bufnr, result)
         end
 
-        if vim.api.nvim_buf_get_var(bufnr, 'vimrc_lsp_signs_enabled') == 1 then
-            lsp.buf_diagnostics_signs(bufnr, result.diagnostics)
+        if vim.api.nvim_buf_get_var(bufnr, "vimrc_lsp_signs_enabled") == 1 then
+            lsp.util.buf_diagnostics_signs(bufnr, result.diagnostics)
         end
     end
 end
@@ -56,34 +59,34 @@ function set_up_keymap(bufnr)
     end
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gr', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        bufnr, "n", "gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gs', '<Cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+        bufnr, "n", "gs", "<Cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+        bufnr, "n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+        bufnr, "n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+        bufnr, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'g*', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+        bufnr, "n", "g*", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'ge', '<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>', opts)
+        bufnr, "n", "ge", "<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', opts)
+        bufnr, "n", "g0", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'gw', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts)
+        bufnr, "n", "gw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, 'n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+        bufnr, "n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
 
     vim.api.nvim_command(
         "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
@@ -128,15 +131,15 @@ function setup_buffer_vars(bufnr)
 end
 
 M.print_buffer_clients = function(bufnr)
-    print(vim.inspect(vim.lsp.buf_get_clients(bufnr)))
+    print(vim.inspect(lsp.buf_get_clients(bufnr)))
 end
 
 M.is_lsp_running = function(bufnr)
-    return next(vim.lsp.buf_get_clients(bufnr)) ~= nil
+    return next(lsp.buf_get_clients(bufnr)) ~= nil
 end
 
 M.stop_buffer_clients = function(bufnr)
-    vim.lsp.stop_client(vim.lsp.buf_get_clients(bufnr))
+    lsp.stop_client(lsp.buf_get_clients(bufnr))
 end
 
 M.setup_lsp = function(file_type)

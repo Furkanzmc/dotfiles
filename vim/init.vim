@@ -427,15 +427,20 @@ let g:neomake_qml_enabled_makers = ["qmllint"]
 
 " }}}
 
-function! s:neomake_job_finished() abort
+function! s:neomake_job_finished(cancelled) abort
     let l:context = g:neomake_hook_context
     if l:context.jobinfo.file_mode == 1
         return
     endif
 
     let l:current_time = strftime("%H:%M")
-    let l:message = "Finished with " . l:context.jobinfo.exit_code .
-                \ " at " . l:current_time
+    if a:cancelled
+        let l:message = "Finished with " . l:context.jobinfo.exit_code .
+                    \ " at " . l:current_time
+    else
+        let l:message = "Cancelled at " . l:current_time
+    endif
+
     echohl IncSearch
     echo l:message
     echohl Normal
@@ -449,12 +454,12 @@ endfunction
 augroup neomake_hooks
     autocmd!
     autocmd User NeomakeJobFinished
-                \ nested call <SID>neomake_job_finished()
+                \ nested call <SID>neomake_job_finished(v:false)
+    autocmd User NeomakeJobCancelled
+                \ nested call <SID>neomake_job_finished(v:true)
 augroup END
 
 " }}}
-
-" Completion {{{
 
 " nvim-lsp {{{
 
@@ -503,9 +508,6 @@ function s:setup_completion()
     execute "lua require'completion'.setup_completion()"
 endfunction
 
-command! PrintCurrentLSP :lua require'lsp'.print_buffer_clients(vim.api.nvim_get_current_buf())<CR>
-command! StopCurrentLSP :lua require'lsp'.stop_buffer_clients()<CR>
-
 augroup lsp_completion
     au!
 
@@ -513,7 +515,7 @@ augroup lsp_completion
     autocmd FileType * call <SID>setup_completion()
 
     autocmd BufEnter,WinEnter *.py,*.cpp,*.c,*.h,*.vim,*.json,*.rs,*.java call <SID>setup_lsp(&l:filetype)
-    autocmd FileType python,cpp,json,vim,rust,java call <SID>setup_lsp(&l:filetype)
+    autocmd FileType python,cpp,c,json,vim,rust,java call <SID>setup_lsp(&l:filetype)
 augroup END
 
 function! s:check_back_space() abort
@@ -544,8 +546,6 @@ inoremap <silent><expr> <S-TAB>
 
 nnoremap <silent> sli :call quickfix#show_item_in_preview(v:true, line('.'))<CR>
 nnoremap <silent> sci :call quickfix#show_item_in_preview(v:false, line('.'))<CR>
-
-" }}}
 
 " }}}
 
