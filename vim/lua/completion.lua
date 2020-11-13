@@ -114,9 +114,10 @@ end
 
 M.setup_completion = function()
     local bufnr = vim.api.nvim_get_current_buf()
-    local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_completion_configured")
 
-    if is_configured then
+    if vim.fn.exists("b:is_completion_configured") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "is_completion_configured", false)
+    elseif vim.api.nvim_buf_get_var(bufnr, "is_completion_configured") == 1 then
         return
     end
 

@@ -482,40 +482,30 @@ sign define LspDiagnosticsInformationSign text=ℹ
 sign define LspDiagnosticsHintSign text=⦿ texthl=LspDiagnosticsHint
             \ linehl= numhl=
 
-function! s:setup_lsp(file_type)
-    if !exists('s:are_lsp_plugins_loaded')
-        packadd SyntaxRange
-        packadd nvim-lspconfig
-        let s:are_lsp_plugins_loaded = v:true
-    endif
+if !exists('s:are_lsp_plugins_loaded')
+    packadd SyntaxRange
+    packadd nvim-lspconfig
+    let s:are_lsp_plugins_loaded = v:true
 
-    if luaeval("require'lsp'.is_lsp_running(" . bufnr() . ")")
-        return
-    endif
-
-    execute "lua require'lsp'.setup_lsp" . '("' . a:file_type . '")'
-endfunction
+lua << EOF
+    require'lsp'.setup_lsp()
+EOF
+endif
 
 function s:setup_completion()
     if &l:filetype == "dirvish" || &l:modifiable == 0
         return
     endif
 
-    if !exists("b:is_completion_configured")
-        let b:is_completion_configured = v:false
-    endif
-
-    execute "lua require'completion'.setup_completion()"
+lua << EOF
+    require'completion'.setup_completion()
+EOF
 endfunction
 
 augroup lsp_completion
     au!
 
-    autocmd BufEnter * call <SID>setup_completion()
-    autocmd FileType * call <SID>setup_completion()
-
-    autocmd BufEnter,WinEnter *.py,*.cpp,*.c,*.h,*.vim,*.json,*.rs,*.java call <SID>setup_lsp(&l:filetype)
-    autocmd FileType python,cpp,c,json,vim,rust,java call <SID>setup_lsp(&l:filetype)
+    autocmd BufEnter,FileType * call <SID>setup_completion()
 augroup END
 
 function! s:check_back_space() abort

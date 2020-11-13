@@ -27,8 +27,8 @@ function! s:lsp_dianostics(active) abort
     let l:warnings = get(l:dict, 'W', 0)
 
     if luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))')
-        let l:lsp_errors = luaeval("vim.lsp.util.buf_diagnostics_count([[Error]])")
-        let l:lsp_warnings = luaeval("vim.lsp.util.buf_diagnostics_count([[Warning]])")
+        let l:lsp_errors = luaeval("vim.lsp.diagnostic.get_count(" . bufnr("%") . ", [[Error]])")
+        let l:lsp_warnings = luaeval("vim.lsp.diagnostic.get_count(" . bufnr("%") . ", [[Warning]])")
 
         if l:lsp_errors != v:null
             let l:errors += l:lsp_errors

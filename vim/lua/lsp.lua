@@ -21,18 +21,17 @@ end
 
 function publish_diagnostics(bufnr)
     local api = vim.api
-    local callback = "textDocument/publishDiagnostics"
-    lsp.callbacks[callback] = function(_, _, result, _)
+    lsp.handlers["textDocument/publishDiagnostics"] = function(_, _, result, _)
         if not bufnr then
             lsp.err_message(
                 "LSP.publishDiagnostics: Couldn't find buffer for ", uri)
             return
         end
 
-        lsp.util.buf_clear_diagnostics(bufnr)
-        lsp.util.buf_diagnostics_save_positions(bufnr, result.diagnostics)
+        lsp.diagnostic.clear(bufnr)
+        lsp.diagnostic.save(result.diagnostics, bufnr)
         if vim.api.nvim_buf_get_var(bufnr, "vimrc_lsp_virtual_text_enabled") == 1 then
-            lsp.util.buf_diagnostics_virtual_text(bufnr, result.diagnostics)
+            lsp.diagnostic.set_virtual_text(result.diagnostics, bufnr)
         end
 
         if vim.api.nvim_buf_get_var(bufnr, "vimrc_lsp_location_list_enabled") == 1 then
@@ -40,7 +39,7 @@ function publish_diagnostics(bufnr)
         end
 
         if vim.api.nvim_buf_get_var(bufnr, "vimrc_lsp_signs_enabled") == 1 then
-            lsp.util.buf_diagnostics_signs(bufnr, result.diagnostics)
+            lsp.diagnostic.set_signs(result.diagnostics, bufnr)
         end
     end
 end
@@ -77,7 +76,7 @@ function set_up_keymap(bufnr)
         bufnr, "n", "g*", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "ge", "<cmd>lua vim.lsp.util.show_line_diagnostics()<CR>", opts)
+        bufnr, "n", "ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
 
     vim.api.nvim_buf_set_keymap(
         bufnr, "n", "g0", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
@@ -142,7 +141,7 @@ M.stop_buffer_clients = function(bufnr)
     lsp.stop_client(lsp.buf_get_clients(bufnr))
 end
 
-M.setup_lsp = function(file_type)
+M.setup_lsp = function()
     local setup = function(client)
         local bufnr = vim.api.nvim_get_current_buf()
         setup_buffer_vars(bufnr)
@@ -152,19 +151,32 @@ M.setup_lsp = function(file_type)
         publish_diagnostics(bufnr)
     end
 
-    if file_type == "python" then
-        require'nvim_lsp'.pyls.setup{on_attach=setup}
-    elseif file_type == "cpp" then
-        require'nvim_lsp'.clangd.setup{on_attach=setup}
-    elseif file_type == "rust" then
-        require'nvim_lsp'.rls.setup{on_attach=setup}
-    elseif file_type == "json" then
-        require'nvim_lsp'.jsonls.setup{on_attach=setup}
-    elseif file_type == "vim" then
-        require'nvim_lsp'.vimls.setup{on_attach=setup}
-    elseif file_type == "java" then
-        require'nvim_lsp'.jdtls.setup{on_attach=setup}
-    end
+    local nvim_lsp = require'nvim_lsp'
+
+    nvim_lsp.pyls.setup{
+        on_attach=setup,
+        filetypes={"python"},
+    }
+    nvim_lsp.clangd.setup{
+        on_attach=setup,
+        filetypes={"cpp", "c"},
+    }
+    nvim_lsp.rls.setup{
+        on_attach=setup,
+        filetypes={"rust"},
+    }
+    nvim_lsp.jsonls.setup{
+        on_attach=setup,
+        filetypes={"json"},
+    }
+    nvim_lsp.vimls.setup{
+        on_attach=setup,
+        filetypes={"vim"},
+    }
+    nvim_lsp.jdtls.setup{
+        on_attach=setup,
+        filetypes={"java"},
+}
 end
 
 return M
