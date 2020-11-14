@@ -11,7 +11,7 @@ setlocal suffixesadd=.cpp,.h,.hxx,.cxx
 
 " Override the default comment string from vim-commentary
 setlocal commentstring=//%s
-nnoremap <silent> <buffer> <nowait> <F4> :call <SID>swap_source_header()<CR>
+nnoremap <silent> <buffer> <nowait> <F4> :call cpp#swap_source_header()<CR>
 
 " Abbreviations {{{
 
@@ -23,27 +23,8 @@ inoremap <buffer> <c-l>fg <ESC>biget<ESC>l~A() const<CR>{<CR>}<Up><CR><ESC>i
 
 " }}}
 
-if get(s:, "functions_loaded", v:false)
+if get(b:, "did_cpp", v:false)
     finish
 endif
 
-function! s:swap_source_header()
-    let l:extension = expand('%:p:e')
-
-    setlocal path+=expand('%:h')
-    if l:extension == 'cpp'
-        let l:filename = expand('%:t:r') . '.h'
-    elseif l:extension =='h'
-        let l:filename = expand('%:t:r') . '.cpp'
-    endif
-
-    try
-        execute 'find ' . l:filename
-    catch
-        echo "Cannot file " . l:filename
-    endtry
-
-    setlocal path-=expand('%:h')
-endfunction
-
-let s:functions_loaded = v:true
+let b:did_cpp = v:true

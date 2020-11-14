@@ -28,7 +28,7 @@ setlocal indentexpr=
 setlocal includeexpr=python#includeexpr(v:fname)
 setlocal suffixesadd=.py
 
-nmap <buffer><silent> <leader>pi :call python#get_pylint_error_message(expand("<cword>"))<CR>
+nmap <buffer><silent> spw :call python#get_pylint_error_message(expand("<cword>"))<CR>
 
 " Abbreviations {{{
 

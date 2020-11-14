@@ -76,14 +76,14 @@ filetype plugin on
 filetype indent on
 
 set foldopen=block,hor,jump,mark,percent,quickfix,search,tag
-set complete=.,w,k
-set noshowmode
+set complete=.,w,k,kspell,b
+set completeopt=menuone,noinsert,noselect
 
 set termguicolors
 set nofoldenable
 set colorcolumn=81
 
-set completeopt=menuone,noinsert,noselect
+set noshowmode
 set shortmess+=c
 set splitbelow
 
