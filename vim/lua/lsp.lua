@@ -151,7 +151,7 @@ M.setup_lsp = function()
         publish_diagnostics(bufnr)
     end
 
-    local nvim_lsp = require'nvim_lsp'
+    local nvim_lsp = require'lspconfig'
 
     nvim_lsp.pyls.setup{
         on_attach=setup,

@@ -349,10 +349,10 @@ function! PackInit()
     call minpac#add('tmsvg/pear-tree')
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('Furkanzmc/firvish.nvim')
+    call minpac#add('neovim/nvim-lspconfig')
 
     " On Demand Plugins {{{
 
-    call minpac#add('neovim/nvim-lspconfig', {'type': 'opt'})
     call minpac#add('neomake/neomake', {'type': 'opt'})
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
     call minpac#add('majutsushi/tagbar', {'type': 'opt'})
