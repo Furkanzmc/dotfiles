@@ -22,18 +22,8 @@ endfunc
 
 " }}}
 
-function s:sort_modify_date(start_line, lines)
-    let l:sorted = sort(a:lines, expand("<SID>") . "compare_modified_time")
-    call setline(a:start_line, l:sorted)
-endfunction
-
-function s:sort_length(start_line, lines)
-    let l:sorted = sort(a:lines, expand("<SID>") . "compare_length")
-    call setline(a:start_line, l:sorted)
-endfunction
-
 function custom_sort#sort_command_completion(A,L,P)
-    return ["-modified", "-length"]
+    return ["-modified", "-length", "-uniq"]
 endfunction
 
 function custom_sort#sort(mode, start_line, end_line)
@@ -53,9 +43,14 @@ function custom_sort#sort(mode, start_line, end_line)
             return
         endif
 
-        call s:sort_modify_date(l:start_index, l:lines)
+        call sort(l:lines, expand("<SID>") . "compare_modified_time")
+        call setline(l:start_index, l:lines)
     elseif a:mode == "-length"
-        call s:sort_length(l:start_index, l:lines)
+        call sort(l:lines, expand("<SID>") . "compare_length")
+        call setline(l:start_index, l:lines)
+    elseif a:mode == "-uniq"
+        call uniq(l:lines)
+        call setline(l:start_index, l:lines)
     else
         echohl Error
         echo "[custom-sort] Unsupported mode: " . a:mode
