@@ -153,7 +153,7 @@ M.setup_lsp = function()
 
     local nvim_lsp = require'lspconfig'
 
-    nvim_lsp.pyls.setup{
+    nvim_lsp.pyright.setup{
         on_attach=setup,
         filetypes={"python"},
     }
