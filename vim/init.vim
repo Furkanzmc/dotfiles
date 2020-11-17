@@ -320,6 +320,8 @@ xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 
 command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE
 
+command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)
+
 " }}}
 
 " Plugins {{{
