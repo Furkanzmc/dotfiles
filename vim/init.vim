@@ -50,15 +50,6 @@ function s:count_conflicts()
     echohl Normal
 endfunction
 
-function s:glob_filter(start_line, end_line, matching, args)
-  let l:bang = a:matching ? "!" : ""
-  if a:start_line == a:end_line
-    execute "%g" . l:bang . "/" . a:args . "/d"
-  else
-    execute a:start_line . "," . a:end_line . "g" . l:bang . "/" . a:args . "/d"
-  end
-endfunction
-
 " Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 " Allows running macros only on selected files.
 function! s:execute_macro_on_visual_range()
@@ -308,19 +299,18 @@ nnoremap <silent> [b <cmd>execute ":" . v:count . "bprevious"<CR>
 imap <c-t> <tab>
 imap <c-d> <s-tab>
 
+xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
+
 " Pressing <leader>ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
 command! -nargs=1 StartTicket :let g:vimrc_active_jira_ticket=<f-args>
 command! CloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
-
-command! -buffer -bang -nargs=* -range FilterLines :call <SID>glob_filter(<line1>, <line2>, "<bang>" != "!", <q-args>)
-
-xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
+command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)
+command! -nargs=? JiraOpenTicketJson :call jira#open_ticket_in_json(<f-args>)
 
 command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE
 
-command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)
 
 " }}}
 
