@@ -6,7 +6,7 @@ endif
 
 setlocal foldmethod=indent
 setlocal signcolumn=yes
-setlocal suffixesadd=.cpp,.h,.hxx,.cxx
+setlocal suffixesadd=.c,.h
 
 let b:vimrc_clangd_lsp_signs_enabled = 1
 let b:vimrc_clangd_lsp_location_list_enabled = 1
@@ -27,8 +27,9 @@ inoremap <buffer> <c-l>fg <ESC>biget<ESC>l~A() const<CR>{<CR>}<Up><CR><ESC>i
 
 " }}}
 
-if get(b:, "did_cpp", v:false)
+if get(b:, "did_c", v:false)
     finish
 endif
 
 let b:did_cpp = v:true
+

@@ -28,6 +28,15 @@ tools:
     format-command: 'clang-format'
     format-stdin: true
 
+  cpp-clangcheck: &cpp-clangcheck
+    lint-command: 'clang-check'
+    lint-stdin: false
+    lint-formats:
+      - '%f:%l:%c: %trror: %m'
+      - '%f:%l:%c: %tarning: %m'
+      - '%f:%l:%c: %m'
+
+
   json-jq: &json-jq
     lint-command: 'jq . '
     format-command: 'jq . '
@@ -44,5 +53,7 @@ languages:
     - <<: *qml-qmllint
   cpp:
     - <<: *cpp-clangformat
+    - <<: *cpp-clangcheck
   c:
     - <<: *cpp-clangformat
+    - <<: *cpp-clangcheck
