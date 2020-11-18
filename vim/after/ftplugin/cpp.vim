@@ -10,7 +10,6 @@ setlocal signcolumn=yes
 setlocal suffixesadd=.cpp,.h,.hxx,.cxx
 
 if executable("clang-format")
-    setlocal equalprg=clang-format
     setlocal formatprg=clang-format
 
     nnoremap <buffer> <silent> <nowait> gq msHmtgggqG`tzt`s

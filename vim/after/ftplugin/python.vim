@@ -29,7 +29,6 @@ setlocal includeexpr=python#includeexpr(v:fname)
 setlocal suffixesadd=.py
 
 if executable("black")
-    setlocal equalprg=black\ --quiet\ -
     setlocal formatprg=black\ --quiet\ -
 
     nnoremap <buffer> <silent> <nowait> gq msHmtgggqG`tzt`s
