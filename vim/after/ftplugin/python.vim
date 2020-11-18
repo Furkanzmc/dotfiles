@@ -28,6 +28,13 @@ setlocal indentexpr=
 setlocal includeexpr=python#includeexpr(v:fname)
 setlocal suffixesadd=.py
 
+if executable("black")
+    setlocal equalprg=black\ --quiet\ -
+    setlocal formatprg=black\ --quiet\ -
+
+    nnoremap <buffer> <silent> <nowait> gq msHmtgggqG`tzt`s
+endif
+
 nmap <buffer><silent> spw :call python#get_pylint_error_message(expand("<cword>"))<CR>
 
 " Abbreviations {{{

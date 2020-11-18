@@ -366,7 +366,6 @@ function! PackInit()
                 \ })
     call minpac#add('rust-lang/rust.vim', {'type': 'opt'})
     call minpac#add('nvim-treesitter/nvim-treesitter', {'type': 'opt'})
-    call minpac#add('mhartington/formatter.nvim', {'type': 'opt'})
     call minpac#add('furkanzmc/nvim-http', {'type': 'opt', 'do': 'UpdateRemotePlugins'})
 
     " }}}
@@ -587,63 +586,6 @@ augroup END
 " codi {{{
 
 let g:codi#virtual_text=0
-
-" }}}
-
-" format.nvim {{{
-
-function s:setup_format_nvim()
-lua << EOF
-    require('format').setup({
-      javascript = {
-          prettier = function()
-            return {
-              exe = "prettier",
-              args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0), '--single-quote'},
-              stdin = true
-            }
-          end
-      },
-      python = {
-          black = function()
-            return {
-              exe = "black",
-              args = {"--quiet","-"},
-              stdin = true
-            }
-          end
-      },
-      cpp = {
-          clang_format = function()
-            return {
-              exe = "clang-format",
-              args = {},
-              stdin = true
-            }
-          end
-      },
-      qml = {
-          qmlformat = function()
-            return {
-              exe = "qmlformat",
-              args = {},
-              stdin = true
-            }
-          end
-      },
-    })
-EOF
-endfunction
-
-augroup plugin_format_nvim
-    au!
-    au FileType vim,javascript,python,cpp,qml
-                \   if !exists(":Format")
-                \ |     packadd formatter.nvim
-                \ |     call <SID>setup_format_nvim()
-                \ | endif
-                \ | nmap <buffer> <silent> gq :Format<CR>
-augroup END
 
 " }}}
 
