@@ -379,79 +379,6 @@ let g:tagbar_show_linenumbers = 1
 
 " }}}
 
-" Neomake {{{
-
-function s:setup_neomake()
-    if exists("g:vimrc_is_neomake_loaded")
-        return
-    endif
-
-    packadd neomake
-
-    call neomake#configure#automake('rw')
-
-    let g:vimrc_is_neomake_loaded = v:true
-endfunction
-
-augroup neomake_ft
-    au!
-    autocmd FileType python,qml,cpp,rust :call <SID>setup_neomake()
-augroup END
-
-let g:neomake_virtualtext_current_error = v:false
-
-" Python {{{
-
-let g:neomake_python_enabled_makers = ["pylint"]
-
-" }}}
-
-" QML {{{
-
-let g:neomake_qml_qmllint_maker = {
-    \ 'exe': 'qmllint',
-    \ 'args': ["--check-unqualified"],
-    \ 'errorformat': '%f:%l : %m',
-    \ }
-
-let g:neomake_qml_enabled_makers = ["qmllint"]
-
-" }}}
-
-function! s:neomake_job_finished(cancelled) abort
-    let l:context = g:neomake_hook_context
-    if l:context.jobinfo.file_mode == 1
-        return
-    endif
-
-    let l:current_time = strftime("%H:%M")
-    if a:cancelled
-        let l:message = "Finished with " . l:context.jobinfo.exit_code .
-                    \ " at " . l:current_time
-    else
-        let l:message = "Cancelled at " . l:current_time
-    endif
-
-    echohl IncSearch
-    echo l:message
-    echohl Normal
-
-    call setqflist(
-                \ [],
-                \ "a",
-                \ {"lines": [l:message]})
-endfunction
-
-augroup neomake_hooks
-    autocmd!
-    autocmd User NeomakeJobFinished
-                \ nested call <SID>neomake_job_finished(v:false)
-    autocmd User NeomakeJobCancelled
-                \ nested call <SID>neomake_job_finished(v:true)
-augroup END
-
-" }}}
-
 " nvim-lsp {{{
 
 " These are here so I remember to configure it when Neovim LSP supports it. {{{
@@ -473,15 +400,9 @@ sign define LspDiagnosticsInformationSign text=ℹ
 sign define LspDiagnosticsHintSign text=⦿ texthl=LspDiagnosticsHint
             \ linehl= numhl=
 
-if !exists('s:are_lsp_plugins_loaded')
-    packadd SyntaxRange
-    packadd nvim-lspconfig
-    let s:are_lsp_plugins_loaded = v:true
-
 lua << EOF
     require'lsp'.setup_lsp()
 EOF
-endif
 
 function s:setup_completion()
     if &l:filetype == "dirvish" || &l:modifiable == 0

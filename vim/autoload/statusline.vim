@@ -18,13 +18,8 @@ function! s:get_color(active, active_color, inactive_color)
 endfunction
 
 function! s:lsp_dianostics(active) abort
-    if !exists("*neomake#statusline#LoclistCounts") || !a:active
-        return ""
-    endif
-
-    let l:dict = neomake#statusline#LoclistCounts()
-    let l:errors = get(l:dict,'E', 0)
-    let l:warnings = get(l:dict, 'W', 0)
+    let l:errors = 0
+    let l:warnings = 0
 
     if luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))')
         let l:lsp_errors = luaeval("vim.lsp.diagnostic.get_count(" . bufnr("%") . ", [[Error]])")

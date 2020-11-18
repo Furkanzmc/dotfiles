@@ -1,5 +1,6 @@
 if !get(s:, "vimrc_python_plugins_loaded", v:false)
     packadd tagbar
+    packadd SyntaxRange
     let s:vimrc_python_plugins_loaded = v:true
 endif
 
@@ -28,11 +29,8 @@ setlocal indentexpr=
 setlocal includeexpr=python#includeexpr(v:fname)
 setlocal suffixesadd=.py
 
-if executable("black")
-    setlocal formatprg=black\ --quiet\ -
-
-    nnoremap <buffer> <silent> <nowait> gq msHmtgggqG`tzt`s
-endif
+let b:vimrc_efm_lsp_signs_enabled = 1
+let b:vimrc_efm_lsp_location_list_enabled = 1
 
 nmap <buffer><silent> spw :call python#get_pylint_error_message(expand("<cword>"))<CR>
 
@@ -41,15 +39,3 @@ nmap <buffer><silent> spw :call python#get_pylint_error_message(expand("<cword>"
 inoremap <buffer> <c-l>ff <ESC>bidef <ESC>$a():<Left><Left>
 
 " }}}
-
-if !exists("b:vimrc_lsp_location_list_enabled")
-    let b:vimrc_lsp_location_list_enabled = 0
-endif
-
-if !exists("b:vimrc_lsp_virtual_text_enabled")
-    let b:vimrc_lsp_virtual_text_enabled = 0
-endif
-
-if !exists("b:vimrc_lsp_signs_enabled")
-    let b:vimrc_lsp_signs_enabled = 0
-endif

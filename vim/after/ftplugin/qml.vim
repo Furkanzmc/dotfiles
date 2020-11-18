@@ -1,8 +1,3 @@
-if !get(s:, "vimrc_qml_plugins_loaded", v:false)
-    packadd neomake
-    let s:vimrc_qml_plugins_loaded = v:true
-endif
-
 setlocal suffixesadd=.qml
 setlocal foldmethod=indent
 setlocal signcolumn=yes
@@ -11,6 +6,9 @@ setlocal errorformat+=file://%f:%l:\ %s%trror:\ %m,file://%f:%l:%c:\ %m,%f:%l:%c
 if get(b:, "did_qml", v:false)
     finish
 endif
+
+let b:vimrc_efm_lsp_signs_enabled = 1
+let b:vimrc_efm_lsp_location_list_enabled = 1
 
 command -buffer -range RunQML :call qml#run(<line1>, <line2>)
 

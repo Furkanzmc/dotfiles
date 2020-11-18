@@ -1,8 +1,6 @@
 setlocal foldmethod=indent
 setlocal cursorline
 
-if executable("jq")
-    setlocal equalprg=jq
-    setlocal formatprg=jq
-    nnoremap <buffer> <silent> <nowait> gq msHmtgggqG`tzt`s
-endif
+let b:vimrc_jsonls_lsp_signs_enabled = 1
+let b:vimrc_jsonls_lsp_virtual_text_enabled = 1
+let b:vimrc_jsonls_lsp_location_list_enabled = 1

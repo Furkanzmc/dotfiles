@@ -9,11 +9,8 @@ setlocal foldmethod=indent
 setlocal signcolumn=yes
 setlocal suffixesadd=.cpp,.h,.hxx,.cxx
 
-if executable("clang-format")
-    setlocal formatprg=clang-format
-
-    nnoremap <buffer> <silent> <nowait> gq msHmtgggqG`tzt`s
-endif
+let b:vimrc_clangd_lsp_signs_enabled = 1
+let b:vimrc_clangd_lsp_location_list_enabled = 1
 
 " Override the default comment string from vim-commentary
 setlocal commentstring=//%s

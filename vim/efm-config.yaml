@@ -1,0 +1,46 @@
+version: 2
+log-file: /Users/Furkanzmc/Desktop/efm.log
+log-level: 1
+root-markers:
+  - .git/
+
+tools:
+  python-pylint: &python-pylint
+    lint-command: 'pylint'
+    lint-stdin: false
+    format-command: black --quiet -
+    format-stdin: true
+    lint-formats:
+      - '%f:%l:%c: %m'
+      - '%f:%l:%c: %t: %m'
+      - '%f:%l:%c: %t: %m'
+      - '%f:%l:%c: %t: %m'
+      - '%t:%l,%c: %m'
+
+  qml-qmllint: &qml-qmllint
+    lint-command: 'qmllint --check-unqualified'
+    lint-stdin: false
+    lint-formats:
+      - '%f:%l : %m'
+
+  cpp-clangformat: &cpp-clangformat
+    format-command: 'clang-format'
+    format-stdin: true
+
+  json-jq: &json-jq
+    lint-command: 'jq . '
+    format-command: 'jq . '
+    lint-stdin: true
+    format-stdin: true
+
+languages:
+  python:
+    - <<: *python-pylint
+  json:
+    - <<: *json-jq
+  qml:
+    - <<: *qml-qmllint
+  cpp:
+    - <<: *cpp-clangformat
+  c:
+    - <<: *cpp-clangformat
