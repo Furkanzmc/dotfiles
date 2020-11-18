@@ -4,7 +4,7 @@ local M = {}
 
 -- Implementation is from runtime/lua/vim/lsp/util.lua
 -- The original implementation uses the line as text, instead of the message.
-function locations_to_items(locations)
+function locations_to_items(client, locations)
     local function sort_by_key(fn)
         return function(a,b)
             local ka, kb = fn(a), fn(b)
@@ -53,7 +53,7 @@ function locations_to_items(locations)
                     filename = filename,
                     lnum = row + 1,
                     col = col + 1,
-                    text = temp.message;
+                    text = "[" .. client.name .. "] " .. temp.message;
                 })
         end
     end
@@ -62,7 +62,7 @@ function locations_to_items(locations)
 end
 
 
-function publish_to_location_list(bufnr, local_result)
+function publish_to_location_list(client, bufnr, local_result)
     if local_result and local_result.diagnostics then
         for _, v in ipairs(local_result.diagnostics) do
             v.uri = v.uri or local_result.uri
@@ -71,7 +71,7 @@ function publish_to_location_list(bufnr, local_result)
 
     -- TODO: Clear only the items that we add here so we can share the location
     -- list with others.
-    local items = locations_to_items(local_result.diagnostics)
+    local items = locations_to_items(client, local_result.diagnostics)
 
     vim.fn.setloclist(
         bufnr,
@@ -81,7 +81,8 @@ end
 
 function publish_diagnostics(client, bufnr)
     local api = vim.api
-    client.handlers["textDocument/publishDiagnostics"] = function(_, _, result, _)
+    client.handlers["textDocument/publishDiagnostics"] = function(_, _, result, client_id)
+        local client = lsp.get_client_by_id(client_id)
         if not bufnr then
             lsp.err_message(
                 "LSP.publishDiagnostics: Couldn't find buffer for ", uri)
@@ -95,7 +96,7 @@ function publish_diagnostics(client, bufnr)
         end
 
         if vim.api.nvim_buf_get_var(bufnr, "vimrc_" .. client.name .. "_lsp_location_list_enabled") == 1 then
-            publish_to_location_list(bufnr, result)
+            publish_to_location_list(client, bufnr, result)
         end
 
         if vim.api.nvim_buf_get_var(bufnr, "vimrc_" .. client.name .. "_lsp_signs_enabled") == 1 then

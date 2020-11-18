@@ -1,21 +1,22 @@
 version: 2
-log-file: /Users/Furkanzmc/Desktop/efm.log
 log-level: 1
 root-markers:
   - .git/
 
 tools:
   python-pylint: &python-pylint
-    lint-command: 'pylint'
+    lint-command: 'pylint --msg-template="{msg_id}:{path}:{line:3d}:{column} [pylint:{msg_id}] {msg} ({symbol})"'
     lint-stdin: false
+    lint-formats:
+      - '%t%n:%f:%l:%c %m'
     format-command: black --quiet -
     format-stdin: true
+
+  python-bandit: &python-bandit
+    lint-command: 'bandit --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"'
+    lint-stdin: false
     lint-formats:
-      - '%f:%l:%c: %m'
-      - '%f:%l:%c: %t: %m'
-      - '%f:%l:%c: %t: %m'
-      - '%f:%l:%c: %t: %m'
-      - '%t:%l,%c: %m'
+      - '%f:%l %m'
 
   qml-qmllint: &qml-qmllint
     lint-command: 'qmllint --check-unqualified'
@@ -36,6 +37,7 @@ tools:
 languages:
   python:
     - <<: *python-pylint
+    - <<: *python-bandit
   json:
     - <<: *json-jq
   qml:

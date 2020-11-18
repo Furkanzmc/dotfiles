@@ -391,13 +391,13 @@ let g:vimrc_lsp_virtual_text_include_error_message = 0
 
 " }}}
 
-sign define LspDiagnosticsErrorSign text=✖ texthl=LspDiagnosticsError
+sign define LspDiagnosticsSignError text=✖ texthl=LspDiagnosticsDefaultError
             \ linehl= numhl=
-sign define LspDiagnosticsWarningSign text=‼ texthl=LspDiagnosticsWarning
+sign define LspDiagnosticsSignWarning text=‼ texthl=LspDiagnosticsDefaultWarning
             \ linehl= numhl=
-sign define LspDiagnosticsInformationSign text=ℹ
-            \ texthl=LspDiagnosticsInformation linehl= numhl=
-sign define LspDiagnosticsHintSign text=⦿ texthl=LspDiagnosticsHint
+sign define LspDiagnosticsSignInformation text=ℹ
+            \ texthl=LspDiagnosticsDefaultInformation linehl= numhl=
+sign define LspDiagnosticsSignHint text=⦿ texthl=LspDiagnosticsDefaultHint
             \ linehl= numhl=
 
 lua << EOF
