@@ -503,7 +503,7 @@ lua << EOF
 EOF
 endfunction
 
-augroup lsp_completion
+augroup vimrc_completion
     au!
 
     autocmd BufEnter,FileType * call <SID>setup_completion()
