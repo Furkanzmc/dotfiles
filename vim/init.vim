@@ -132,6 +132,7 @@ set textwidth=500
 
 set autoindent
 set smartindent
+set foldtext=fold#fold_text()
 
 if executable("pwsh") && exists("$VIMRC_PWSH_ENABLED")
     set shell=pwsh
@@ -322,7 +323,16 @@ let loaded_netrwPlugin = 1
 
 " Disable markdown support for polyglot because it messes up with syntax
 " highlighting.
-let g:polyglot_is_disabled = {'markdown': v:true, 'python-indent': v:true}
+let g:polyglot_is_disabled = {
+            \ 'markdown': v:true,
+            \ 'python': v:true,
+            \ 'cpp': v:true,
+            \ 'json': v:true,
+            \ 'javascript': v:true,
+            \ 'html': v:true,
+            \ 'vue': v:true,
+            \ 'sensible': v:true,
+            \ }
 
 " }}}
 
@@ -466,6 +476,9 @@ let g:nvimgdb_config_override = {
 " nvim-treesitter {{{
 
 function s:setup_treesitter()
+    setlocal foldmethod=expr
+    setlocal foldexpr=nvim_treesitter#foldexpr()
+
 lua << EOF
     require'nvim-treesitter.configs'.setup {
       ensure_installed = {'python', 'html', 'cpp', 'vue', 'json'},
@@ -487,8 +500,6 @@ augroup plugin_nvim_treesitter
                 \ if !exists(":TSInstall")
                 \ | packadd nvim-treesitter
                 \ | call <SID>setup_treesitter()
-                \ | setlocal foldmethod=expr
-                \ | setlocal foldexpr=nvim_treesitter#foldexpr()
                 \ | endif
 augroup END
 

@@ -14,6 +14,7 @@ function! s:enable_highlight()
     call SyntaxRange#Include('```yaml', '```', 'yaml', 'NonText')
 
     setlocal foldmethod=expr
+    setlocal foldexpr=StackedMarkdownFolds()
     setlocal conceallevel=2
 endfunction
 

@@ -6,6 +6,8 @@ endif
 
 setlocal spell
 setlocal colorcolumn=80,100
+setlocal foldmethod=expr
+setlocal foldexpr=StackedMarkdownFolds()
 
 if get(s:, "markdown_plugin_loaded", v:false)
     finish

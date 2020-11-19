@@ -1,6 +1,5 @@
 if !get(s:, "vimrc_python_plugins_loaded", v:false)
     packadd tagbar
-    packadd SyntaxRange
     let s:vimrc_python_plugins_loaded = v:true
 endif
 
