@@ -325,11 +325,7 @@ let loaded_netrwPlugin = 1
 " highlighting.
 let g:polyglot_is_disabled = {
             \ 'markdown': v:true,
-            \ 'python': v:true,
-            \ 'cpp': v:true,
             \ 'json': v:true,
-            \ 'javascript': v:true,
-            \ 'html': v:true,
             \ 'vue': v:true,
             \ 'sensible': v:true,
             \ }

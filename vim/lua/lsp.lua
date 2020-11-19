@@ -4,7 +4,7 @@ local M = {}
 
 -- Implementation is from runtime/lua/vim/lsp/util.lua
 -- The original implementation uses the line as text, instead of the message.
-function locations_to_items(client, locations)
+function locations_to_items(client, bufnr, locations)
     local function sort_by_key(fn)
         return function(a,b)
             local ka, kb = fn(a), fn(b)
@@ -71,7 +71,7 @@ function publish_to_location_list(client, bufnr, local_result)
 
     -- TODO: Clear only the items that we add here so we can share the location
     -- list with others.
-    local items = locations_to_items(client, local_result.diagnostics)
+    local items = locations_to_items(client, bufnr, local_result.diagnostics)
 
     vim.fn.setloclist(
         bufnr,
@@ -79,18 +79,19 @@ function publish_to_location_list(client, bufnr, local_result)
         "r")
 end
 
-function publish_diagnostics(client, bufnr)
+function publish_diagnostics(client)
     local api = vim.api
     client.handlers["textDocument/publishDiagnostics"] = function(_, _, result, client_id)
         local client = lsp.get_client_by_id(client_id)
+        local bufnr = vim.uri_to_bufnr(result.uri)
         if not bufnr then
             lsp.err_message(
                 "LSP.publishDiagnostics: Couldn't find buffer for ", uri)
             return
         end
 
-        lsp.diagnostic.clear(bufnr)
-        lsp.diagnostic.save(result.diagnostics, bufnr)
+        lsp.diagnostic.clear(bufnr, client_id)
+        lsp.diagnostic.save(result.diagnostics, bufnr, client_id)
         if vim.api.nvim_buf_get_var(bufnr, "vimrc_" .. client.name .. "_lsp_virtual_text_enabled") == 1 then
             lsp.diagnostic.set_virtual_text(result.diagnostics, bufnr)
         end
@@ -100,7 +101,7 @@ function publish_diagnostics(client, bufnr)
         end
 
         if vim.api.nvim_buf_get_var(bufnr, "vimrc_" .. client.name .. "_lsp_signs_enabled") == 1 then
-            lsp.diagnostic.set_signs(result.diagnostics, bufnr)
+            lsp.diagnostic.set_signs(result.diagnostics, bufnr, client_id)
         end
     end
 end
@@ -110,6 +111,7 @@ function set_up_keymap(client, bufnr)
     local opts = { noremap=true, silent=true }
     local is_configured = vim.api.nvim_buf_get_var(bufnr, "is_vimrc_" .. client.name .. "_lsp_shortcuts_set")
     local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+    local resolved_capabilities = client.resolved_capabilities
 
     vim.api.nvim_buf_set_option(bufnr, "keywordprg", ":LspHover")
     vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -118,38 +120,63 @@ function set_up_keymap(client, bufnr)
         return
     end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
+    if resolved_capabilities.rename == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
+    end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "gs", "<Cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+    if resolved_capabilities.signature_help == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "gs", "<Cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+    end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    if resolved_capabilities.goto_definition == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+    if resolved_capabilities.declaration == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+    end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+    if resolved_capabilities.implementation == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+    end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "g*", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+    if resolved_capabilities.find_references == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "g*", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+    end
 
     vim.api.nvim_buf_set_keymap(
         bufnr, "n", "ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "g0", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
+    if resolved_capabilities.document_symbol == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "g0", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
+    end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "gw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
+    if resolved_capabilities.workspace_symbol == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "gw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
+    end
 
-    vim.api.nvim_buf_set_keymap(
-        bufnr, "n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+    if resolved_capabilities.code_action == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+    end
 
-    vim.api.nvim_command(
-        "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
+    if resolved_capabilities.document_formatting == true then
+        vim.api.nvim_buf_set_keymap(
+            bufnr, "n", "gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    end
+
+    if resolved_capabilities.hover == true then
+        vim.api.nvim_command(
+            "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
+    end
 
     vim.api.nvim_buf_set_var(bufnr, "is_vimrc_" .. client.name .. "_lsp_shortcuts_set", true)
 end
@@ -204,53 +231,48 @@ end
 
 M.setup_lsp = function()
     local setup = function(client)
-        client.resolved_capabilities.document_formatting = false
         local bufnr = vim.api.nvim_get_current_buf()
 
         setup_buffer_vars(client, bufnr)
-        set_up_keymap(client, bufnr)
         setup_auto_stop(client, bufnr)
-        publish_diagnostics(client, bufnr)
+        set_up_keymap(client, bufnr)
+        publish_diagnostics(client)
     end
 
-    local setup_efm = function(client)
-        local bufnr = vim.api.nvim_get_current_buf()
-        local opts = { noremap=true, silent=true }
-        vim.api.nvim_buf_set_keymap(
-            bufnr, "n", "gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-        setup_buffer_vars(client, bufnr)
-        publish_diagnostics(client, bufnr)
+    local setup_without_formatting = function(client)
+        client.resolved_capabilities.document_formatting = false
+        setup(client)
     end
 
     local lspconfig = require'lspconfig'
 
     lspconfig.pyright.setup{
-        on_attach=setup,
+        on_attach=setup_without_formatting,
         filetypes={"python"},
     }
     lspconfig.clangd.setup{
-        on_attach=setup,
+        on_attach=setup_without_formatting,
         filetypes={"cpp", "c"},
     }
     lspconfig.rls.setup{
-        on_attach=setup,
+        on_attach=setup_without_formatting,
         filetypes={"rust"},
     }
     lspconfig.jsonls.setup{
-        on_attach=setup,
+        on_attach=setup_without_formatting,
         filetypes={"json"},
     }
     lspconfig.vimls.setup{
-        on_attach=setup,
+        on_attach=setup_without_formatting,
         filetypes={"vim"},
     }
     lspconfig.jdtls.setup{
-        on_attach=setup,
+        on_attach=setup_without_formatting,
         filetypes={"java"},
     }
 
     lspconfig.efm.setup{
-        on_attach=setup_efm,
+        on_attach=setup,
         filetypes={"qml", "python", "cpp", "json", "c"}
     }
 end
