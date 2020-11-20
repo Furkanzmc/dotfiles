@@ -385,6 +385,42 @@ let g:tagbar_show_linenumbers = 1
 
 " }}}
 
+" neomake {{{
+
+function! s:neomake_job_finished(cancelled) abort
+    let l:context = g:neomake_hook_context
+    if l:context.jobinfo.file_mode == 1
+        return
+    endif
+
+    let l:current_time = strftime("%H:%M")
+    if a:cancelled
+        let l:message = "Canceled at " . l:current_time
+    else
+        let l:message = "Finished with " . l:context.jobinfo.exit_code .
+                    \ " at " . l:current_time
+    endif
+
+    echohl IncSearch
+    echo l:message
+    echohl Normal
+
+    call setqflist(
+                \ [],
+                \ "a",
+                \ {"lines": [l:message]})
+endfunction
+
+augroup neomake_hooks
+    autocmd!
+    autocmd User NeomakeJobFinished
+                \ nested call <SID>neomake_job_finished(v:false)
+    autocmd User NeomakeJobCanceled
+                \ nested call <SID>neomake_job_finished(v:true)
+augroup END
+
+" }}}
+
 " nvim-lsp {{{
 
 " These are here so I remember to configure it when Neovim LSP supports it. {{{
