@@ -297,9 +297,6 @@ nnoremap <silent> [q <cmd>execute ":" . v:count . "cprevious"<CR>
 nnoremap <silent> ]b <cmd>execute ":" . v:count . "bnext"<CR>
 nnoremap <silent> [b <cmd>execute ":" . v:count . "bprevious"<CR>
 
-imap <c-t> <tab>
-imap <c-d> <s-tab>
-
 xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 
 " Pressing <leader>ss will toggle and untoggle spell checking
@@ -311,7 +308,6 @@ command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)
 command! -nargs=? JiraOpenTicketJson :call jira#open_ticket_in_json(<f-args>)
 
 command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE
-
 
 " }}}
 
