@@ -394,7 +394,7 @@ function! s:neomake_job_finished(cancelled) abort
     endif
 
     let l:current_time = strftime("%H:%M")
-    if a:cancelled
+    if !has_key(l:context.jobinfo, "exit_code")
         let l:message = "Canceled at " . l:current_time
     else
         let l:message = "Finished with " . l:context.jobinfo.exit_code .
@@ -415,8 +415,6 @@ augroup neomake_hooks
     autocmd!
     autocmd User NeomakeJobFinished
                 \ nested call <SID>neomake_job_finished(v:false)
-    autocmd User NeomakeJobCanceled
-                \ nested call <SID>neomake_job_finished(v:true)
 augroup END
 
 " }}}
