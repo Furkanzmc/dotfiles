@@ -302,12 +302,31 @@ xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 " Pressing <leader>ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
-command! -nargs=1 StartTicket :let g:vimrc_active_jira_ticket=<f-args>
-command! CloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
+command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>
+command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
 command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)
 command! -nargs=? JiraOpenTicketJson :call jira#open_ticket_in_json(<f-args>)
 
 command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE
+
+command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
+command! PackClean  call PackInit() | call minpac#clean()
+command! PackStatus call PackInit() | call minpac#status()
+
+" Auto Pairs {{{
+
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<Up><CR>
+inoremap {;<CR> {<CR>};<Up><CR>
+inoremap <expr> ) strpart(getline('.'), col('.') - 1, 1) == ")" ? "\<Right>" : ")"
+inoremap <expr> } strpart(getline('.'), col('.') - 1, 1) == "}" ? "\<Right>" : "}"
+inoremap <expr> ] strpart(getline('.'), col('.') - 1, 1) == "]" ? "\<Right>" : "]"
+inoremap <expr> ' strpart(getline('.'), col('.') - 1, 1) == "\'" ? "\<Right>" : "\'\'\<Left>"
+inoremap <expr> " strpart(getline('.'), col('.') - 1, 1) == "\"" ? "\<Right>" : "\"\"\<Left>"
+
+" }}}
 
 " }}}
 
@@ -340,7 +359,6 @@ function! PackInit()
     call minpac#add('tpope/vim-fugitive')
     call minpac#add('machakann/vim-sandwich')
     call minpac#add('furkanzmc/cosmic_latte')
-    call minpac#add('tmsvg/pear-tree')
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('Furkanzmc/firvish.nvim')
     call minpac#add('neovim/nvim-lspconfig')
@@ -363,15 +381,6 @@ function! PackInit()
     " }}}
 
 endfunction
-
-packadd matchit
-if exists('*minpac#init')
-    call PackInit()
-endif
-
-command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
-command! PackClean  call PackInit() | call minpac#clean()
-command! PackStatus call PackInit() | call minpac#status()
 
 " }}}
 
