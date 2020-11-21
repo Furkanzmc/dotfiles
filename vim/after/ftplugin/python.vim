@@ -28,6 +28,8 @@ setlocal indentexpr=
 setlocal includeexpr=python#includeexpr(v:fname)
 setlocal suffixesadd=.py
 
+setlocal synmaxcol=120
+
 let b:vimrc_efm_lsp_signs_enabled = 1
 let b:vimrc_efm_lsp_location_list_enabled = 1
 
