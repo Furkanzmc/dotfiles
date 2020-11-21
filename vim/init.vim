@@ -446,7 +446,7 @@ sign define LspDiagnosticsSignHint text=⦿ texthl=LspDiagnosticsDefaultHint
             \ linehl= numhl=
 
 lua << EOF
-    require'lsp'.setup_lsp()
+    require'vimrc.lsp'.setup_lsp()
 EOF
 
 function s:setup_completion()
@@ -455,7 +455,7 @@ function s:setup_completion()
     endif
 
 lua << EOF
-    require'completion'.setup_completion()
+    require'vimrc.completion'.setup_completion()
 EOF
 endfunction
 
@@ -471,7 +471,7 @@ function! s:check_back_space() abort
 endfunction
 
 function init#completion_wrapper()
-    lua require'completion'.trigger_completion()
+    lua require'vimrc.completion'.trigger_completion()
     return ''
 endfunction
 

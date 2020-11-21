@@ -91,7 +91,7 @@ M.on_complete_done = function()
 end
 
 M.trigger_completion = function()
-    if require'lsp'.is_lsp_running() then
+    if require'vimrc.lsp'.is_lsp_running() then
         s_completion_index = 1
     else
         s_completion_index = 2
@@ -124,9 +124,9 @@ M.setup_completion = function()
     vim.api.nvim_command("augroup vimrc_completion_buf_" .. bufnr)
     vim.api.nvim_command("au!")
     vim.api.nvim_command(
-        "autocmd CompleteDonePre <buffer=" .. bufnr .. "> lua require'completion'.on_complete_done_pre()")
+        "autocmd CompleteDonePre <buffer=" .. bufnr .. "> lua require'vimrc.completion'.on_complete_done_pre()")
     vim.api.nvim_command(
-        "autocmd CompleteDone <buffer=" .. bufnr .. "> lua require'completion'.on_complete_done()")
+        "autocmd CompleteDone <buffer=" .. bufnr .. "> lua require'vimrc.completion'.on_complete_done()")
     vim.api.nvim_command("augroup END")
 
     vim.api.nvim_buf_set_var(bufnr, "is_completion_configured", true)
