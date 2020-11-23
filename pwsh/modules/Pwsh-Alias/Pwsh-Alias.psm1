@@ -23,6 +23,10 @@ if (Get-Command "rmtrash" -ErrorAction SilentlyContinue) {
     Set-Alias trash rmtrash
 }
 
+if (Get-Command "Source-Env" -ErrorAction SilentlyContinue) {
+    Set-Alias -Value Source-Env -Name :
+}
+
 function Pwsh-Exit() {
     exit
 }
