@@ -170,14 +170,14 @@ function Write-Prompt() {
     if (Test-Path env:VIRTUAL_ENV -ErrorAction SilentlyContinue) {
         Write-Host "(.venv" -ForegroundColor Yellow -NoNewLine
 
-        if (Test-Path env:_ENV_NAME -ErrorAction SilentlyContinue) {
-            Write-Host ":$env:_ENV_NAME" -ForegroundColor Green -NoNewLine
+        if (Test-Path env:ENV_NAME -ErrorAction SilentlyContinue) {
+            Write-Host ":$env:ENV_NAME" -ForegroundColor Green -NoNewLine
         }
 
         Write-Host ") " -ForegroundColor Yellow -NoNewLine
     }
-    elseif (Test-Path env:_ENV_NAME -ErrorAction SilentlyContinue) {
-        Write-Host "($env:_ENV_NAME) " -ForegroundColor Green -NoNewLine
+    elseif (Test-Path env:ENV_NAME -ErrorAction SilentlyContinue) {
+        Write-Host "($env:ENV_NAME) " -ForegroundColor Green -NoNewLine
     }
 
     Write-Current-Location

@@ -182,7 +182,6 @@ M.setup_lsp = function()
         setup_buffer_vars(client, bufnr)
         set_up_keymap(client, bufnr)
         publish_diagnostics(client, bufnr)
-        setup_auto_stop(client, bufnr)
     end
 
     local setup_without_formatting = function(client)

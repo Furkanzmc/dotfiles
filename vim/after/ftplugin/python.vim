@@ -29,6 +29,9 @@ setlocal includeexpr=python#includeexpr(v:fname)
 setlocal suffixesadd=.py
 
 setlocal synmaxcol=120
+if executable("black")
+    setlocal formatprg=black\ --quiet\ -
+endif
 
 let b:vimrc_efm_lsp_signs_enabled = 1
 let b:vimrc_efm_lsp_location_list_enabled = 1
