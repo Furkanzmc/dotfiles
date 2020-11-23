@@ -13,13 +13,16 @@ let b:vimrc_efm_lsp_location_list_enabled = 1
 
 command -buffer -range RunQML :call qml#run(<line1>, <line2>)
 
-inoremap <buffer> <c-l>s <ESC>bion<ESC>l~A: {<CR>}<ESC>O
-inoremap <buffer> <c-l>sh <ESC>bion<ESC>l~AChanged: {<CR>}<ESC>O
+" Create signal handler.
+abbreviate <silent> <buffer> s@ :<Esc>hxbion<Esc>l~$a<Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
 
-abbreviate <buffer> iqqc import QtQuick.Controls 2.<C-R>=abbreviations#eat_char('\s')<CR>
-abbreviate <buffer> iqq import QtQuick 2.<C-R>=abbreviations#eat_char('\s')<CR>
-abbreviate <buffer> iqql import QtQuick.Layouts 1.<C-R>=abbreviations#eat_char('\s')<CR>
-abbreviate <buffer> iqqw import QtQuick.Window 2.<C-R>=abbreviations#eat_char('\s')<CR>
-abbreviate <buffer> clog console.log("[=expand("%:t")<BS>::]")F:a<C-R>=abbreviations#eat_char('\s')<CR>
+" Create property change handler.
+abbreviate <silent> <buffer> p@ :<Esc>hxbion<Esc>l~$iChanged<Right><Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
+
+abbreviate <silent> <buffer> iqqc@ import QtQuick.Controls 3.<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> iqq@ import QtQuick 2.<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> iqql@ import QtQuick.Layouts 1.<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> iqqw@ import QtQuick.Window 2.<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> clog@ console.log("[=expand("%:t")<BS>::]")F:a<C-R>=abbreviations#eat_char('\s')<CR>
 
 let b:did_qml = v:true

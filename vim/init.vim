@@ -313,20 +313,12 @@ command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac
 command! PackClean  call PackInit() | call minpac#clean()
 command! PackStatus call PackInit() | call minpac#status()
 
-" Auto Pairs {{{
-
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<Up><CR>
-inoremap {;<CR> {<CR>};<Up><CR>
-inoremap <expr> ) strpart(getline('.'), col('.') - 1, 1) == ")" ? "\<Right>" : ")"
-inoremap <expr> } strpart(getline('.'), col('.') - 1, 1) == "}" ? "\<Right>" : "}"
-inoremap <expr> ] strpart(getline('.'), col('.') - 1, 1) == "]" ? "\<Right>" : "]"
-inoremap <expr> ' strpart(getline('.'), col('.') - 1, 1) == "\'" ? "\<Right>" : "\'\'\<Left>"
-inoremap <expr> " strpart(getline('.'), col('.') - 1, 1) == "\"" ? "\<Right>" : "\"\"\<Left>"
-
 " }}}
+
+" Abbreviations {{{
+
+abbreviate langauge language
+abbreviate Langauge Language
 
 " }}}
 
@@ -362,6 +354,7 @@ function! PackInit()
     call minpac#add('justinmk/vim-dirvish')
     call minpac#add('Furkanzmc/firvish.nvim')
     call minpac#add('neovim/nvim-lspconfig')
+    call minpac#add('tmsvg/pear-tree')
 
     " On Demand Plugins {{{
 

@@ -40,6 +40,9 @@ nmap <buffer><silent> spw :call python#get_pylint_error_message(expand("<cword>"
 
 " Abbreviations {{{
 
-inoremap <buffer> <c-l>ff <ESC>bidef <ESC>$a():<Left><Left>
+abbreviate <silent> <buffer> im@ import <C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> imdt@ from datetime import datetime<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> imtz@ from django.utils import timezone<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> im_@ from django.utils.translation import ugettext_lazy as _<C-R>=abbreviations#eat_char('\s')<CR>
 
 " }}}
