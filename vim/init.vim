@@ -358,7 +358,6 @@ function! PackInit()
 
     " On Demand Plugins {{{
 
-    call minpac#add('neomake/neomake', {'type': 'opt'})
     call minpac#add('vim-scripts/SyntaxRange', {'type': 'opt'})
     call minpac#add('majutsushi/tagbar', {'type': 'opt'})
     call minpac#add('masukomi/vim-markdown-folding', {'type': 'opt'})
@@ -380,40 +379,6 @@ endfunction
 " TagBar {{{
 
 let g:tagbar_show_linenumbers = 1
-
-" }}}
-
-" neomake {{{
-
-function! s:neomake_job_finished(cancelled) abort
-    let l:context = g:neomake_hook_context
-    if l:context.jobinfo.file_mode == 1
-        return
-    endif
-
-    let l:current_time = strftime("%H:%M")
-    if !has_key(l:context.jobinfo, "exit_code")
-        let l:message = "Canceled at " . l:current_time
-    else
-        let l:message = "Finished with " . l:context.jobinfo.exit_code .
-                    \ " at " . l:current_time
-    endif
-
-    echohl IncSearch
-    echo l:message
-    echohl Normal
-
-    call setqflist(
-                \ [],
-                \ "a",
-                \ {"lines": [l:message]})
-endfunction
-
-augroup neomake_hooks
-    autocmd!
-    autocmd User NeomakeJobFinished
-                \ nested call <SID>neomake_job_finished(v:false)
-augroup END
 
 " }}}
 
