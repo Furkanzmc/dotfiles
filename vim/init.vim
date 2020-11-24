@@ -469,9 +469,6 @@ let g:nvimgdb_config_override = {
 " nvim-treesitter {{{
 
 function s:setup_treesitter()
-    setlocal foldmethod=expr
-    setlocal foldexpr=nvim_treesitter#foldexpr()
-
 lua << EOF
     require'nvim-treesitter.configs'.setup {
       ensure_installed = {'python', 'html', 'cpp', 'vue', 'json'},
