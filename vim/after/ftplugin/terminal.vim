@@ -13,29 +13,23 @@ nmap <buffer> <silent> [t :call search('^\(!!\ =>\\|=>\)', 'Wb')<CR>
 " Jump to the next shell prompt
 nmap <buffer> <silent> ]t :call search('^\(!!\ =>\\|=>\)', 'W')<CR>
 
-" Jump to the previous pytest error
-nmap <buffer> <silent> [e :call search('^_\{10,\}\ \w\+.*\ _\{10,\}', 'Wb')<CR>
-" Jump to the next pytest error
-nmap <buffer> <silent> ]e :call search('^_\{10,}\ \w\+.*\ _\{10,}', 'W')<CR>
+nmap <buffer> <silent> [e :TerminalPreviousError<CR>
+nmap <buffer> <silent> ]e :TerminalNextError<CR>
 
 " Jump to the previous Python prompt
 nmap <buffer> <silent> [p :call search("^>>>", "Wb")<CR>
 " Jump to the next Python prompt
 nmap <buffer> <silent> ]p :call search("^>>>", "W")<CR>
 
-" Pastes the text in the register into the terminal.
-nmap <buffer> <leader>p :call <SID>send_to_terminal()<CR>
-
-if get(s:, "terminal_plugin_loaded", v:false)
+if get(b:, "did_terminal", v:false)
     finish
 endif
 
-augroup vimrc_terminal
-    autocmd!
+autocmd TermEnter <buffer> set scrolloff=0
+autocmd TermEnter,BufEnter,WinEnter <buffer> call setreg("t", trim(@*) . "")
+autocmd TermLeave <buffer> set scrolloff=3
 
-    autocmd TermEnter * set scrolloff=0
-    autocmd TermEnter,BufEnter,WinEnter <buffer> call setreg("t", trim(@*) . "")
-    autocmd TermLeave * set scrolloff=3
-augroup END
+command -buffer TerminalNextError call search('\(^_\{10,}\ \w\+.*\ _\{10,}\|^=\{10,\}\)', 'W')
+command -buffer TerminalPreviousError call search('\(^_\{10,}\ \w\+.*\ _\{10,}\|^=\{10,\}\)', 'Wb')
 
-let s:terminal_plugin_loaded = v:true
+let b:did_terminal = v:true

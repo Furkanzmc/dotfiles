@@ -191,7 +191,9 @@ function! statusline#configure(winnum)
 
     " LSP Diagnostic {{{
 
-    let l:status .= s:lsp_dianostics(l:active)
+    if l:active
+        let l:status .= s:lsp_dianostics(l:active)
+    endif
 
     " }}}
 
