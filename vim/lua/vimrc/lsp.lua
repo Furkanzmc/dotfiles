@@ -212,13 +212,13 @@ M.setup_lsp = function()
         filetypes={"vim"},
     }
     lspconfig.jdtls.setup{
-        on_attach=setup_without_formatting,
+        on_attach=setup,
         filetypes={"java"},
     }
 
     lspconfig.efm.setup{
         on_attach=setup,
-        filetypes={"qml", "python", "cpp", "json", "c"}
+        filetypes={"qml", "python", "cpp", "json", "c", "yaml"}
     }
 end
 

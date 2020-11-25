@@ -20,18 +20,21 @@ endfunction
 function! s:lsp_dianostics(active) abort
     let l:errors = 0
     let l:warnings = 0
+    let l:bufnr = bufnr("%")
 
-    if luaeval('not vim.tbl_isempty(vim.lsp.buf_get_clients(0))')
-        let l:lsp_errors = luaeval("vim.lsp.diagnostic.get_count(" . bufnr("%") . ", [[Error]])")
-        let l:lsp_warnings = luaeval("vim.lsp.diagnostic.get_count(" . bufnr("%") . ", [[Warning]])")
+    if luaeval('vim.tbl_isempty(vim.lsp.buf_get_clients(' . l:bufnr . '))')
+        retur ""
+    endif
 
-        if l:lsp_errors != v:null
-            let l:errors += l:lsp_errors
-        endif
+    let l:lsp_errors = luaeval("vim.lsp.diagnostic.get_count(" . l:bufnr . ", [[Error]])")
+    let l:lsp_warnings = luaeval("vim.lsp.diagnostic.get_count(" . l:bufnr . ", [[Warning]])")
 
-        if l:lsp_warnings != v:null
-            let l:warnings += l:lsp_warnings
-        endif
+    if l:lsp_errors != v:null
+        let l:errors += l:lsp_errors
+    endif
+
+    if l:lsp_warnings != v:null
+        let l:warnings += l:lsp_warnings
     endif
 
     let l:status = ""
@@ -188,12 +191,7 @@ function! statusline#configure(winnum)
 
     " LSP Diagnostic {{{
 
-    let l:diagnostic_enabled_types = get(
-                \ g:, "vimrc_statusline_lsp_diagnostics", ["python", "qml", "cpp"])
-
-    if index(l:diagnostic_enabled_types, &filetype) >= 0
-        let l:status .= s:lsp_dianostics(l:active)
-    endif
+    let l:status .= s:lsp_dianostics(l:active)
 
     " }}}
 

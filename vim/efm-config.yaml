@@ -19,8 +19,10 @@ tools:
       - '%f:%l %m'
 
   qml-qmllint: &qml-qmllint
-    lint-command: 'qmllint --check-unqualified'
+    lint-command: 'qmllint --check-unqualified ${INPUT}'
     lint-stdin: false
+    format-command: 'qmlformat ${INPUT}'
+    format-stdin: false
     lint-formats:
       - '%f:%l : %m'
 
@@ -36,12 +38,20 @@ tools:
       - '%f:%l:%c: %tarning: %m'
       - '%f:%l:%c: %m'
 
-
   json-jq: &json-jq
-    lint-command: 'jq . '
     format-command: 'jq . '
-    lint-stdin: true
     format-stdin: true
+    lint-command: 'jq . '
+    lint-stdin: true
+    lint-formats:
+      - 'parse error: %m %l, column %c'
+
+  yaml-yamllint: &yaml-yamllint
+    lint-command: 'yamllint -f parsable -'
+    lint-stdin: true
+    ling-formats:
+      - '%f:%l:%c: [%tarning] %m'
+      - '%f:%l:%c: [%trror] %m'
 
 languages:
   python:
@@ -49,6 +59,8 @@ languages:
     - <<: *python-bandit
   json:
     - <<: *json-jq
+  yaml:
+    - <<: *yaml-yamllint
   qml:
     - <<: *qml-qmllint
   cpp:

@@ -15,6 +15,5 @@ vimrc_rust_plugins_loaded
 vimrc_shell
 vimrc_spacehi_enabled_filetypes
 vimrc_spacehi_tab_color
-vimrc_statusline_lsp_diagnostics
 VIMRC_PWSH_ENABLED
 vimrc_jira_base_url
