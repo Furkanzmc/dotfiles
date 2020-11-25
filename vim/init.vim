@@ -302,6 +302,14 @@ xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 " Pressing <leader>ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
+tmap <C-d> <PageDown>
+tmap <C-u> <PageUp>
+tnoremap <C-w><C-q> <C-\><C-n>
+tnoremap <C-w><C-h> <C-\><C-n><C-w>h
+tnoremap <C-w><C-j> <C-\><C-n><C-w>j
+tnoremap <C-w><C-k> <C-\><C-n><C-w>k
+tnoremap <C-w><C-l> <C-\><C-n><C-w>l
+
 command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>
 command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif
 command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)
