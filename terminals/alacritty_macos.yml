@@ -205,7 +205,7 @@ schemes:
       cyan:    '0x459d90'
       white:   '0xc5cbdb'
 
-colors: *light
+colors: *dark
 
 # Visual Bell
 #
