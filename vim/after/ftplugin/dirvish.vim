@@ -65,12 +65,21 @@ function s:show_status(line1, line2)
     endif
 endfunction
 
+function s:toggle_conceal()
+    if &l:conceallevel == 0
+        setlocal conceallevel=2
+    else
+        setlocal conceallevel=0
+    endif
+endfunction
+
 if executable("qlmanage")
     nmap <buffer> <silent> L :call jobstart(["qlmanage", "-p", getline(".")])<CR>
 endif
 
 nmap <buffer> <silent> S :call <SID>show_status(1, line("$"))<CR>
 vmap <buffer> <silent> S :call <SID>show_status(line("'<"), line("'>"))<CR>
+nmap <buffer> <silent> C :call <SID>toggle_conceal()<CR>
 
 augroup dirvish_virtual_text
     au! * <buffer>
