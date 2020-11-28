@@ -189,7 +189,7 @@ LAlt & r::
     }
     return
 
-LAlt & s::
+LAlt & p::
     if GetKeyState("LShift")
     {
         id := WinExist("A")
