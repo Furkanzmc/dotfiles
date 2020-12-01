@@ -486,8 +486,11 @@ augroup plugin_nvim_treesitter
     au!
     au FileType python,cpp,json,javascript,html,vue
                 \ if !exists(":TSInstall")
-                \ | packadd nvim-treesitter
-                \ | call <SID>setup_treesitter()
+                \ |   packadd nvim-treesitter
+                \ |   call <SID>setup_treesitter()
+                \ |   augroup plugin_nvim_treesitter
+                \ |       au!
+                \ |   augroup END
                 \ | endif
 augroup END
 

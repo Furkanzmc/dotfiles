@@ -12,6 +12,7 @@ local s_completion_sources = {
 }
 local s_completion_index = nil
 local s_is_completion_dispatched = false
+local s_plugin_loaded = false
 
 function timer_handler()
     if s_completion_index == -1 then
@@ -113,23 +114,19 @@ end
 
 
 M.setup_completion = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-
-    if vim.fn.exists("b:is_completion_configured") == 0 then
-        vim.api.nvim_buf_set_var(bufnr, "is_completion_configured", false)
-    elseif vim.api.nvim_buf_get_var(bufnr, "is_completion_configured") == 1 then
+    if s_plugin_loaded == true then
         return
     end
 
-    vim.api.nvim_command("augroup vimrc_completion_buf_" .. bufnr)
+    s_plugin_loaded = true
+
+    vim.api.nvim_command("augroup vimrc_completion")
     vim.api.nvim_command("au!")
     vim.api.nvim_command(
-        "autocmd CompleteDonePre <buffer=" .. bufnr .. "> lua require'vimrc.completion'.on_complete_done_pre()")
+        "autocmd CompleteDonePre lua require'vimrc.completion'.on_complete_done_pre()")
     vim.api.nvim_command(
-        "autocmd CompleteDone <buffer=" .. bufnr .. "> lua require'vimrc.completion'.on_complete_done()")
+        "autocmd CompleteDone lua require'vimrc.completion'.on_complete_done()")
     vim.api.nvim_command("augroup END")
-
-    vim.api.nvim_buf_set_var(bufnr, "is_completion_configured", true)
 end
 
 return M

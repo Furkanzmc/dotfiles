@@ -1,6 +1,7 @@
 " Initial config from: https://jip.dev/posts/a-simpler-vim-statusline/
 
 " Utility Functions {{{
+
 function! statusline#is_fugitive_buffer(buffer_name) 
     if has('win32')
         return match(a:buffer_name, 'fugitive:\\') != -1
