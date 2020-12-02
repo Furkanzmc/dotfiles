@@ -415,20 +415,10 @@ lua << EOF
     require'vimrc.lsp'.setup_lsp()
 EOF
 
-function s:setup_completion()
-    if &l:filetype == "dirvish" || &l:modifiable == 0
-        return
-    endif
-
-lua << EOF
-    require'vimrc.completion'.setup_completion()
-EOF
-endfunction
-
 augroup vimrc_completion
     au!
 
-    autocmd BufEnter,FileType * call <SID>setup_completion()
+    autocmd BufReadPost * lua require'vimrc.completion'.setup_completion()
 augroup END
 
 function! s:check_back_space() abort
