@@ -86,24 +86,24 @@ function! statusline#configure(winnum)
     " Mode sign {{{
 
     let l:excluded_file_types = ["help", "qf"]
-    let l:status .= s:get_color(l:active, 'Visual', 'StatusLineNC')
     let l:handled = v:false
     let l:mode = mode()
+    let l:mode_status = ""
 
     if l:active && &filetype == "fugitive" && l:mode != "c"
         let l:handled = v:true
-        let l:status .= " GIT "
+        let l:mode_status = "GIT"
     elseif l:active && &filetype == "terminal" && l:mode != "c"
         if l:mode == "n"
             let l:handled = v:true
-            let l:status .= " N.TERMINAL "
+            let l:mode_status = "N.TERMINAL"
         elseif l:mode == "t"
             let l:handled = v:true
-            let l:status .= " TERMINAL "
+            let l:mode_status = "TERMINAL"
         endif
     elseif l:active && &filetype == "dirvish" && l:mode != "c"
         let l:handled = v:true
-        let l:status .= " DIRVISH "
+        let l:mode_status = "DIRVISH"
     endif
 
     if l:mode != "c" && index(l:excluded_file_types, &filetype) != -1
@@ -111,7 +111,12 @@ function! statusline#configure(winnum)
     endif
 
     if !l:handled && l:active
-        let l:status .= " %{toupper(g:vimrc_mode_map[mode()])} "
+        let l:mode_status = "%{toupper(g:vimrc_mode_map[mode()])}"
+    endif
+
+    if !empty(l:mode_status)
+        let l:status .= s:get_color(l:active, 'Visual', 'StatusLineNC')
+        let l:status .= " " . l:mode_status . " "
     endif
 
     " }}}
