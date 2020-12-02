@@ -28,7 +28,6 @@ setlocal indentexpr=
 setlocal includeexpr=python#includeexpr(v:fname)
 setlocal suffixesadd=.py
 
-setlocal synmaxcol=120
 if executable("black")
     setlocal formatprg=black\ --quiet\ -
 endif

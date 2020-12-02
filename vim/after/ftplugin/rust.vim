@@ -7,4 +7,3 @@ endif
 
 setlocal signcolumn=yes
 setlocal suffixesadd=.rs
-setlocal synmaxcol=120

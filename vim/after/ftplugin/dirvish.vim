@@ -1,5 +1,3 @@
-setlocal synmaxcol=256
-
 if get(b:, "vimrc_dirvish_did_dirvish", v:false)
     finish
 endif

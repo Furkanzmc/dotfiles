@@ -7,7 +7,6 @@ endif
 setlocal foldmethod=indent
 setlocal signcolumn=yes
 setlocal suffixesadd=.cpp,.h,.hxx,.cxx
-setlocal synmaxcol=120
 
 if executable("clang-format")
     setlocal formatprg=clang-format

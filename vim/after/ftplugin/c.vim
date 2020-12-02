@@ -7,7 +7,6 @@ endif
 setlocal foldmethod=indent
 setlocal signcolumn=yes
 setlocal suffixesadd=.c,.h
-setlocal synmaxcol=120
 
 let b:vimrc_clangd_lsp_signs_enabled = 1
 let b:vimrc_clangd_lsp_location_list_enabled = 1

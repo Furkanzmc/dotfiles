@@ -6,7 +6,6 @@ endif
 setlocal colorcolumn=
 setlocal cursorline
 setlocal foldmethod=expr
-setlocal synmaxcol=1000
 setlocal textwidth=1000
 
 setlocal foldexpr=todo#foldexpr(v:lnum)
