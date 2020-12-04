@@ -248,6 +248,12 @@ set encoding=utf8
 " Use Unix a the standard file type
 set ffs=unix,dos,mac
 
+try
+    set guifont=Fira\ Code:h12
+catch
+    set guifont=SauceCodePro\ Nerd\ Font\ Mono:h12
+endtry
+
 " }}}
 
 " }}}

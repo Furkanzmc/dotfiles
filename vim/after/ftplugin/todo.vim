@@ -1,6 +1,6 @@
-if !get(s:, "todo_plugins_loaded", v:false)
+if !get(g:, "vimrc_todo_plugins_loaded", v:false)
     packadd SyntaxRange
-    let s:todo_plugins_loaded = v:true
+    let g:vimrc_todo_plugins_loaded = v:true
 endif
 
 setlocal colorcolumn=
@@ -11,15 +11,16 @@ setlocal textwidth=1000
 setlocal foldexpr=todo#foldexpr(v:lnum)
 setlocal foldtext=todo#foldtext()
 
-nmap <buffer> <silent> <leader>x :normal! mt0f]hrxA finished:=strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
-nmap <buffer> <silent> <leader>i :normal! mt0f]hriA started:=strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
+nmap <buffer> <silent> <leader>x :normal! mt0f]hrxA finished: =strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
+nmap <buffer> <silent> <leader>i :normal! mt0f]hriA started: =strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
 nmap <buffer> <silent> <leader>t :normal! mt0f]hr `t<CR>
+nmap <buffer> <silent> <leader>d :normal! mt$a due: =strftime("%d-%m-%Y")<CR><ESC>`t
 
-if exists("s:todo_functions_loaded")
+if exists("g:vimrc_todo_functions_loaded")
     finish
 endif
 
-let s:todo_functions_loaded = v:true
+let g:vimrc_todo_functions_loaded = v:true
 let s:foldexpr_indent_blocks = v:false
 
 function todo#foldexpr(line_number)

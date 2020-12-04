@@ -12,6 +12,8 @@ function! s:enable_highlight()
     call SyntaxRange#Include('```js', '```', 'javascript', 'NonText')
     call SyntaxRange#Include('```diff', '```', 'diff', 'NonText')
     call SyntaxRange#Include('```yaml', '```', 'yaml', 'NonText')
+    call SyntaxRange#Include('```sh', '```', 'sh', 'NonText')
+    call SyntaxRange#Include('```ps1', '```', 'ps1', 'NonText')
 
     setlocal foldmethod=expr
     setlocal foldexpr=StackedMarkdownFolds()
