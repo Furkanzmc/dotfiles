@@ -15,7 +15,8 @@ function! qml#run(line1, line2)
             let l:qml_file = expand("%")
         endif
 
-        execute 'NeomakeSh! pwsh -NoProfile -NoLogo -NonInteractive -C "qmlscene ' . l:qml_file . '"'
+        botright split
+        execute 'FRun pwsh -NoProfile -NoLogo -NonInteractive -Command qmlscene ' . l:qml_file
     else
         echohl WarningMsg
         echo "Cannot find qmlscene in the path."
