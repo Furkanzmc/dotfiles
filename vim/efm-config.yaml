@@ -7,14 +7,28 @@ tools:
   python-pylint: &python-pylint
     lint-command: 'pylint --msg-template="{msg_id}:{path}:{line:3d}:{column} [pylint:{msg_id}] {msg} ({symbol})"'
     lint-stdin: false
+    lint-ignore-exit-code: true
     lint-formats:
       - '%t%n:%f:%l:%c %m'
     format-command: black --quiet -
     format-stdin: true
 
+  python-pyright: &python-pyright
+    lint-command: 'pyright'
+    lint-stdin: false
+    lint-ignore-exit-code: true
+    lint-formats:
+      - '%t%n:%f:%l:%c %m'
+      - '%-P%f'
+      - '  %#%l:%c - %# %tarning: %m'
+      - '  %#%l:%c - %# %trror: %m'
+      - '    %Eerror %m'
+      - '    %C%\s%+%m'
+
   python-bandit: &python-bandit
     lint-command: 'bandit --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"'
     lint-stdin: false
+    lint-ignore-exit-code: true
     lint-formats:
       - '%f:%l %m'
 
@@ -57,6 +71,7 @@ languages:
   python:
     - <<: *python-pylint
     - <<: *python-bandit
+    - <<: *python-pyright
   json:
     - <<: *json-jq
   yaml:
