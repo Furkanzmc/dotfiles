@@ -28,12 +28,13 @@ function publish_diagnostics(client, bufnr)
 
     client.handlers["textDocument/publishDiagnostics"] = lsp.with(
         lsp.diagnostic.on_publish_diagnostics, {
-            signs = signs_enabled,
-            virtual_text = virtual_text_enabled,
+            signs=signs_enabled,
+            virtual_text=virtual_text_enabled,
             -- This is a hanck to avoid setting a custom handler.
-            -- When update_in_insert is checked, the function will be called
+            -- When underline is checked, the function will be called
             -- and that's when I set the loclist.
-            update_in_insert = is_loclist_enabled,
+            underline=is_loclist_enabled,
+            update_in_insert=false
         }
         )
 end
