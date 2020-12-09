@@ -424,7 +424,7 @@ EOF
 augroup vimrc_completion
     au!
 
-    autocmd BufReadPost * lua require'vimrc.completion'.setup_completion()
+    autocmd BufReadPost * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())
 augroup END
 
 function! s:check_back_space() abort

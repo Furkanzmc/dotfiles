@@ -167,7 +167,9 @@ M.on_complete_done_pre = function()
     end
 
     s_completion_timer = vim.loop.new_timer()
-    s_completion_timer:start(250, 0, vim.schedule_wrap(timer_handler))
+    s_completion_timer:start(
+        vim.api.nvim_buf_get_var(bufnr, "vimrc_completion_timeout"), 0,
+        vim.schedule_wrap(timer_handler))
 end
 
 M.on_complete_done = function(bufnr)
@@ -208,13 +210,15 @@ M.trigger_completion = function()
 end
 
 
-M.setup_completion = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-
+M.setup_completion = function(bufnr)
     if vim.fn.exists("b:vimrc_is_completion_configured") == 0 then
         vim.api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", false)
     elseif vim.api.nvim_buf_get_var(bufnr, "vimrc_is_completion_configured") == 1 then
         return
+    end
+
+    if vim.fn.exists("b:vimrc_completion_timeout") == 0 then
+        vim.api.nvim_buf_set_var(bufnr, "vimrc_completion_timeout", 250)
     end
 
     vim.api.nvim_command("augroup vimrc_completion_buf_" .. bufnr)
