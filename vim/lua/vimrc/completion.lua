@@ -6,33 +6,40 @@ local s_completion_timer = nil
 local s_completion_sources = {
     omni={
         keys="<c-x><c-o>",
+        priority=1,
         prediciate=function()
             return vim.bo.omnifunc ~= "" or vim.o.omnifunc ~= ""
         end
     },
     keywords_current={
         keys="<c-x><c-n>",
+        priority=2,
     },
     file={
         keys="<c-x><c-f>",
+        priority=3,
     },
     dictionary={
         keys="<c-x><c-k>",
+        priority=4,
         prediciate=function()
             return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
     },
     keywords={
         keys="<c-g><c-g><c-n>",
+        priority=5,
     },
     spell={
         keys="<c-x><c-s>",
+        priority=6,
         prediciate=function()
             return vim.wo.spell
         end
     },
     user={
         keys="<c-x><c-u>",
+        priority=7,
         prediciate=function()
             return vim.bo.completefunc ~= "" or vim.o.completefunc ~= ""
         end
@@ -62,7 +69,7 @@ function get_completion_sources(bufnr)
     end
 
     for index, value in ipairs(additional_sources) do
-        new_list["custom_" .. index] = {keys=value}
+        new_list["custom_" .. index] = {keys=value, priority=-1}
     end
 
     s_buffer_completion_sources_cache[bufnr] = new_list
@@ -80,6 +87,18 @@ function get_source_names(bufnr)
     for key,_ in pairs(sources) do
         table.insert(names, key)
     end
+
+    table.sort(names, function(a, b)
+        if sources[a].priority == -1 or sources[a].priority == nil then
+            return false
+        end
+
+        if sources[b].priority == -1 or sources[b].priority == nil then
+            return false
+        end
+
+        return sources[a].priority < sources[b].priority
+    end)
 
     s_buffer_completion_source_names_cache[bufnr] = names
     return names
@@ -148,7 +167,7 @@ M.on_complete_done_pre = function()
     end
 
     s_completion_timer = vim.loop.new_timer()
-    s_completion_timer:start(100, 0, vim.schedule_wrap(timer_handler))
+    s_completion_timer:start(250, 0, vim.schedule_wrap(timer_handler))
 end
 
 M.on_complete_done = function(bufnr)
