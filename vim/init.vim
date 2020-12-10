@@ -271,12 +271,12 @@ set switchbuf=useopen,usetab
 set stal=2
 
 " Jump to the previous git conflict start
-nnoremap <silent> [cs :call search('^<\{4,\} \w\+.*$', 'Wb')<CR>
+nnoremap <silent> [cc :call search('^<\{4,\} \w\+.*$', 'Wb')<CR>
 " Jump to the previous git conflict end
 nnoremap <silent> [ce :call search('^>\{4,\} \w\+.*$', 'Wb')<CR>
 
 " Jump to the next git conflict start
-nnoremap <silent> ]cs :call search('^<\{4,\} \w\+.*$', 'W')<CR>
+nnoremap <silent> ]cc :call search('^<\{4,\} \w\+.*$', 'W')<CR>
 " Jump to the next git conflict end
 nnoremap <silent> ]ce :call search('^>\{4,\} \w\+.*$', 'W')<CR>
 
