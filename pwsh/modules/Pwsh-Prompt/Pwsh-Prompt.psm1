@@ -73,7 +73,7 @@ function Write-Git-Prompt() {
     $rebaseMergePath = Join-Path $gitDir -ChildPath rebase-merge
     $rebasing = Test-Path -Path $rebaseMergePath
     if ($rebasing) {
-        Write-Host " $branchName" -ForegroundColor Cyan -NoNewLine
+        Write-Host "  $branchName" -ForegroundColor Cyan -NoNewLine
         Write-Host ":" -ForegroundColor Green -NoNewLine
         $isInteractiveRebase = Test-Path -Path (`
                 Join-Path $rebaseMergePath -ChildPath interactive `
@@ -86,7 +86,7 @@ function Write-Git-Prompt() {
         }
     }
     else {
-        Write-Host " $branchName" -ForegroundColor Cyan -NoNewLine
+        Write-Host "  $branchName" -ForegroundColor Cyan -NoNewLine
     }
 
     if (Test-Path env:PWSH_GIT_PROMPT_DISABLED -ErrorAction SilentlyContinue) {
