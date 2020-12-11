@@ -4,41 +4,43 @@ local lsp = vim.lsp
 local lsp_utils = require"vimrc.lsp_utils"
 local M = {}
 
-function publish_diagnostics(client, bufnr)
+function on_publish_diagnostics(u1, u2, params, client_id, u3, config)
+    local bufnr = vim.uri_to_bufnr(params.uri)
+    if not api.nvim_buf_is_loaded(bufnr) then
+        return
+    end
+
+    lsp.diagnostic.on_publish_diagnostics(u1, u2, params, client_id, u3, config)
+
+    local client = lsp.get_client_by_id(client_id)
+    local loclist_enabled = api.nvim_buf_get_var(bufnr,
+        "vimrc_" .. client.name .. "_lsp_location_list_enabled") == 1
+
+    if loclist_enabled == true then
+        lsp_utils.set_loclist({
+                bufnr=bufnr,
+                open_loclist=false,
+                client_id=client_id
+            })
+    end
+end
+
+function set_handlers(client, bufnr)
     local signs_enabled = api.nvim_buf_get_var(bufnr,
         "vimrc_" .. client.name .. "_lsp_signs_enabled") == 1
 
     local virtual_text_enabled = api.nvim_buf_get_var(bufnr,
         "vimrc_" .. client.name .. "_lsp_virtual_text_enabled") == 1
 
-    local is_loclist_enabled = function(bufnr, client_id)
-        local client = lsp.get_client_by_id(client_id)
-        local loclist_enabled = api.nvim_buf_get_var(bufnr,
-            "vimrc_" .. client.name .. "_lsp_location_list_enabled") == 1
-
-        if loclist_enabled == true then
-            lsp_utils.set_loclist({
-                    bufnr=bufnr,
-                    open_loclist=false,
-                    client_id=client_id
-                })
-        end
-        return false
-    end
-
     client.handlers["textDocument/publishDiagnostics"] = lsp.with(
-        lsp.diagnostic.on_publish_diagnostics, {
+        on_publish_diagnostics, {
             signs=signs_enabled,
             virtual_text=virtual_text_enabled,
-            -- This is a hanck to avoid setting a custom handler.
-            -- When underline is checked, the function will be called
-            -- and that's when I set the loclist.
-            underline=is_loclist_enabled,
+            underline=false,
             update_in_insert=false
         }
         )
 end
-
 
 function set_up_keymap(client, bufnr)
     local opts = { noremap=true, silent=true }
@@ -182,7 +184,7 @@ M.setup_lsp = function()
 
         setup_buffer_vars(client, bufnr)
         set_up_keymap(client, bufnr)
-        publish_diagnostics(client, bufnr)
+        set_handlers(client, bufnr)
     end
 
     local setup_without_formatting = function(client)
@@ -216,7 +218,6 @@ M.setup_lsp = function()
         on_attach=setup,
         filetypes={"java"},
     }
-
     lspconfig.efm.setup{
         on_attach=setup,
         filetypes={"qml", "python", "cpp", "json", "c", "yaml"}
