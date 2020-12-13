@@ -206,17 +206,9 @@ M.setup_lsp = function()
         on_attach=setup_without_formatting,
         filetypes={"rust"},
     }
-    lspconfig.jsonls.setup{
-        on_attach=setup_without_formatting,
-        filetypes={"json"},
-    }
     lspconfig.vimls.setup{
         on_attach=setup_without_formatting,
         filetypes={"vim"},
-    }
-    lspconfig.jdtls.setup{
-        on_attach=setup,
-        filetypes={"java"},
     }
     lspconfig.efm.setup{
         on_attach=setup,
