@@ -57,9 +57,9 @@ endfunction
 let g:vimrc_mode_map = {
             \ 'n'      : 'Normal',
             \ 'no'     : 'N.Operator Pending ',
-            \ 'v'      : 'V',
+            \ 'v'      : 'Visual',
             \ 'V'      : 'V.Line',
-            \ '' : 'V.Block',
+            \ ''     : 'V.Block',
             \ 's'      : 'Select',
             \ 'S'      : 'S.Line',
             \ '\<C-S>' : 'S.Block',
