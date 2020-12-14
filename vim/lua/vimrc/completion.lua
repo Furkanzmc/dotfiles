@@ -97,7 +97,7 @@ function get_source_names(bufnr)
             return false
         end
 
-        return sources[a].priority < sources[b].priority
+        return sources[a].priority > sources[b].priority
     end)
 
     s_buffer_completion_source_names_cache[bufnr] = names
