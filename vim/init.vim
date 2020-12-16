@@ -427,9 +427,14 @@ augroup vimrc_completion
     autocmd BufReadPost * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())
 augroup END
 
-function! s:check_back_space() abort
+function! s:is_previous_character_space() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+function! s:is_previous_character_abbvr_char() abort
+    let col = col('.') - 1
+    return col && getline('.')[col - 1]  =~ '@'
 endfunction
 
 function init#completion_wrapper()
@@ -443,11 +448,12 @@ endfunction
 
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<TAB>" : <SID>trigger_completion()
+            \ <SID>is_previous_character_abbvr_char() ? "\<C-]>" :
+            \ <SID>is_previous_character_space() ? "\<TAB>" : <SID>trigger_completion()
 
 inoremap <silent><expr> <S-TAB>
             \ pumvisible() ? "\<C-p>" :
-            \ <SID>check_back_space() ? "\<S-TAB>" : <SID>trigger_completion()
+            \ <SID>is_previous_character_space() ? "\<S-TAB>" : <SID>trigger_completion()
 
 " }}}
 
