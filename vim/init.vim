@@ -417,16 +417,6 @@ sign define LspDiagnosticsSignInformation text=ℹ
 sign define LspDiagnosticsSignHint text=⦿ texthl=LspDiagnosticsDefaultHint
             \ linehl= numhl=
 
-lua << EOF
-    require'vimrc.lsp'.setup_lsp()
-EOF
-
-augroup vimrc_completion
-    au!
-
-    autocmd BufReadPost * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())
-augroup END
-
 function! s:is_previous_character_space() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
@@ -454,6 +444,12 @@ inoremap <silent><expr> <TAB>
 inoremap <silent><expr> <S-TAB>
             \ pumvisible() ? "\<C-p>" :
             \ <SID>is_previous_character_space() ? "\<S-TAB>" : <SID>trigger_completion()
+
+augroup vimrc_completion
+    au!
+
+    autocmd BufReadPost * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())
+augroup END
 
 " }}}
 
@@ -532,6 +528,8 @@ augroup vimrc_init
                 \ on_visual=false, higroup="IncSearch", timeout=100}
     autocmd VimEnter * call s:create_custom_nvim_server()
     autocmd VimEnter * colorscheme cosmic_latte
+    autocmd VimEnter * lua require'vimrc.lsp'.setup_lsp()
+
     " Return to last edit position when opening files (You want this!)
     au BufReadPost *
                 \ if line("'\"") > 1 && line("'\"") <= line("$")
