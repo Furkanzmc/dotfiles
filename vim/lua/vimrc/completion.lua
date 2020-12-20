@@ -15,6 +15,11 @@ local s_completion_sources = {
         keys="<c-x><c-n>",
         priority=2,
     },
+    vim_command={
+        keys="<c-x><c-v>",
+        priority=2,
+        filetypes={"vim"}
+    },
     file={
         keys="<c-x><c-f>",
         priority=3,
@@ -56,6 +61,7 @@ function get_completion_sources(bufnr)
         return s_buffer_completion_sources_cache[bufnr]
     end
 
+    local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
     local result = pcall(vim.api.nvim_buf_get_var, bufnr, "vimrc_completion_additional_sources")
     if result == false then
         return s_completion_sources
@@ -65,7 +71,11 @@ function get_completion_sources(bufnr)
     local new_list = {}
 
     for key, value in pairs(s_completion_sources) do
-        new_list[key] = value
+        if value.filetypes ~= nil and table.index_of(value.filetypes, filetype) == -1 then
+            -- Do nothing.
+        else
+            new_list[key] = value
+        end
     end
 
     for index, value in ipairs(additional_sources) do

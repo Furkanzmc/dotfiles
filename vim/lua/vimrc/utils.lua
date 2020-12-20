@@ -49,4 +49,14 @@ function M.set_loclist(bufnr, identifier, items, title)
         })
 end
 
+function table.index_of(tab, val)
+    for index, value in ipairs(tab) do
+        if value == val then
+            return index
+        end
+    end
+
+    return -1
+end
+
 return M
