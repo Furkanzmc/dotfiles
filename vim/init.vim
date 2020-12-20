@@ -305,6 +305,12 @@ nnoremap <silent> [b <cmd>execute ":" . v:count . "bprevious"<CR>
 
 xnoremap @ :<C-u>call <SID>execute_macro_on_visual_range()<CR>
 
+nmap L $
+vmap L $
+vmap H ^
+nmap H ^
+nmap Y y$
+
 " Pressing <leader>ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
