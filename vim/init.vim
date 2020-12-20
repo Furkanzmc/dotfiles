@@ -176,6 +176,8 @@ endif
 
 set wildignorecase
 
+set nocursorline
+
 "Always show current position
 set ruler
 

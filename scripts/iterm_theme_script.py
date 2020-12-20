@@ -51,7 +51,6 @@ async def main(connection):
                 ) as file_handle:
                     file_handle.write("light")
 
-            print(pwsh_args)
             run(pwsh_args)
 
             # Update the list of all profiles and iterate over them.
