@@ -68,6 +68,10 @@ tools:
       - '%f:%l:%c: [%tarning] %m'
       - '%f:%l:%c: [%trror] %m'
 
+  lua-lua-format: &lua-lua-format
+    format-command: 'lua-format -i'
+    format-stdin: true
+
 languages:
   python:
     - <<: *python-pylint
@@ -85,3 +89,5 @@ languages:
   c:
     - <<: *cpp-clangformat
     - <<: *cpp-clangcheck
+  lua:
+    - <<: *lua-lua-format

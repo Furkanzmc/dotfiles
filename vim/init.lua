@@ -1,7 +1,7 @@
 local vim = vim
 local api = vim.api
 local cmd = vim.cmd
-local fn =  vim.fn
+local fn = vim.fn
 local g = vim.g
 
 -- Functions {{{
@@ -13,15 +13,15 @@ local function map(mode, lhs, rhs, opts)
 end
 
 local function execute_macro_on_visual_range()
-    cmd[[echo "@".getcmdline()]]
-    cmd[[execute ":'<,'>normal @" . nr2char(getchar())]]
+    cmd [[echo "@".getcmdline()]]
+    cmd [[execute ":'<,'>normal @" . nr2char(getchar())]]
 end
 
 -- }}}
 
 -- General {{{
 
-cmd[[
+cmd [[
 set runtimepath^=~/.dotfiles/vim,~/.dotfiles/vim/after
 ]]
 
@@ -44,6 +44,8 @@ vim.o.splitright = true
 vim.wo.signcolumn = "no"
 vim.o.pumheight = 12
 
+vim.o.exrc = true
+
 -- Reduces the number of lines that are above the curser when I do zt.
 vim.o.scrolloff = 3
 
@@ -64,8 +66,8 @@ g.maplocalleader = " "
 
 -- Use ripgrep over grep, if possible
 if fn.executable("rg") then
-   vim.o.grepprg = "rg --vimgrep $*"
-   vim.o.grepformat = "%f:%l:%c:%m"
+    vim.o.grepprg = "rg --vimgrep $*"
+    vim.o.grepformat = "%f:%l:%c:%m"
 end
 
 -- Means that you can undo even when you close a buffer/VIM
@@ -92,14 +94,15 @@ vim.o.autoindent = true
 vim.o.smartindent = true
 
 -- TODO: Find a better way.
-cmd[[set foldtext=fold#fold_text()]]
+cmd [[set foldtext=fold#fold_text()]]
 
-if fn.executable("pwsh") and fn.exists("$VIMRC_PWSH_ENABLED") then
+if fn.executable("pwsh") == 1 and fn.exists("$VIMRC_PWSH_ENABLED") == 1 then
     vim.o.shell = "pwsh"
     vim.o.shellquote = ""
     vim.o.shellpipe = "| Out-File -Encoding UTF8"
     vim.o.shellxquote = ""
-    vim.o.shellcmdflag = "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command"
+    vim.o.shellcmdflag =
+        "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command"
     vim.o.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
 end
 
@@ -111,17 +114,16 @@ vim.o.switchbuf = "useopen,usetab"
 vim.o.stal = 2
 
 -- }}}
-
 -- User Interface {{{
 
 -- Always show the status line
 vim.o.laststatus = 2
 
 -- TODO: Find a better way.
-cmd[[set tabline=%!tabline#config()]]
+cmd [[set tabline=%!tabline#config()]]
 
 -- TODO: Using fn.expand is too flow here.
-cmd[[
+cmd [[
 if $VIMRC_BACKGROUND == "dark"
     set background=dark
 else
@@ -129,7 +131,8 @@ else
 endif
 ]]
 
-vim.o.diffopt = "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
+vim.o.diffopt =
+    "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
 
 vim.o.langmenu = "en"
 vim.wo.number = true
@@ -144,7 +147,8 @@ vim.o.wildignore = "*.o,*~,*.pyc,*.qmlc,*jsc"
 if fn.has("win32") == 1 then
     vim.o.wildignore = vim.o.wildignore .. ",.git*,.hg*,.svn*"
 else
-    vim.o.wildignore = vim.o.wildignore .. ",*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store"
+    vim.o.wildignore = vim.o.wildignore ..
+                           ",*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store"
 end
 
 vim.o.wildignorecase = true
@@ -197,13 +201,12 @@ vim.o.tm = 300
 -- Disable scrollbars (real hackers don't use scrollbars for navigation!)
 
 -- TODO: Find a better way.
-cmd[[set guioptions-=r]]
-cmd[[set guioptions-=R]]
-cmd[[set guioptions-=l]]
-cmd[[set guioptions-=L]]
+cmd [[set guioptions-=r]]
+cmd [[set guioptions-=R]]
+cmd [[set guioptions-=l]]
+cmd [[set guioptions-=L]]
 
-
-cmd[[
+cmd [[
 try
     set guifont=Fira\ Code:h12
 catch
@@ -213,76 +216,91 @@ endtry
 
 -- }}}
 
-
 -- Moving around, tabs, windows and buffers {{{
 
 -- Disable highlight when <leader><cr> is pressed
-map("n", "<leader><CR>", ":nohlsearch<CR>", {silent=true})
+map("n", "<leader><CR>", ":nohlsearch<CR>", {silent = true})
 
 -- Jump to the previous git conflict start
-map("n", "[cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'Wb')<CR>", {silent=true, noremap=true})
+map("n", "[cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'Wb')<CR>",
+    {silent = true, noremap = true})
 
 -- Jump to the previous git conflict end
-map("n", "[ce", ":call search('^>\\{4,\\} \\w\\+.*$', 'Wb')<CR>", {silent=true, noremap=true})
+map("n", "[ce", ":call search('^>\\{4,\\} \\w\\+.*$', 'Wb')<CR>",
+    {silent = true, noremap = true})
 
 -- Jump to the next git conflict start
-map("n", "]cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'W')<CR>", {silent=true, noremap=true})
+map("n", "]cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'W')<CR>",
+    {silent = true, noremap = true})
 
 -- Jump to the next git conflict end
-map("n", "]cc", ":call search('^>\\{4,\\} \\w\\+.*$', 'W')<CR>", {silent=true, noremap=true})
+map("n", "]cc", ":call search('^>\\{4,\\} \\w\\+.*$', 'W')<CR>",
+    {silent = true, noremap = true})
 
 -- Jump to previous divider
-map("n", "[cm", ":call search('^=\\{4,\\}$', 'Wb')<CR>", {silent=true, noremap=true})
+map("n", "[cm", ":call search('^=\\{4,\\}$', 'Wb')<CR>",
+    {silent = true, noremap = true})
 
 -- Jump to next divider
-map("n", "]cm", ":call search('^=\\{4,\\}$', 'W')<CR>", {silent=true, noremap=true})
+map("n", "]cm", ":call search('^=\\{4,\\}$', 'W')<CR>",
+    {silent = true, noremap = true})
 
 -- }}}
 
 -- Maps, Commands {{{
 
-map("n", "]a", ':execute ":" . v:count . "next"<CR>', {silent=true, noremap=true})
-map("n", "[a", ':execute ":" . v:count . "previous"<CR>', {silent=true, noremap=true})
+map("n", "]a", ':execute ":" . v:count . "next"<CR>',
+    {silent = true, noremap = true})
+map("n", "[a", ':execute ":" . v:count . "previous"<CR>',
+    {silent = true, noremap = true})
 
-map("n", "]l", ':execute ":" . v:count . "lnext"<CR>', {silent=true, noremap=true})
-map("n", "[l", ':execute ":" . v:count . "lprevious"<CR>', {silent=true, noremap=true})
+map("n", "]l", ':execute ":" . v:count . "lnext"<CR>',
+    {silent = true, noremap = true})
+map("n", "[l", ':execute ":" . v:count . "lprevious"<CR>',
+    {silent = true, noremap = true})
 
-map("n", "]q", ':execute ":" . v:count . "cnext"<CR>', {silent=true, noremap=true})
-map("n", "[q", ':execute ":" . v:count . "cprevious"<CR>', {silent=true, noremap=true})
+map("n", "]q", ':execute ":" . v:count . "cnext"<CR>',
+    {silent = true, noremap = true})
+map("n", "[q", ':execute ":" . v:count . "cprevious"<CR>',
+    {silent = true, noremap = true})
 
-map("n", "]b", ':execute ":" . v:count . "bnext"<CR>', {silent=true, noremap=true})
-map("n", "[b", ':execute ":" . v:count . "bprevious"<CR>', {silent=true, noremap=true})
+map("n", "]b", ':execute ":" . v:count . "bnext"<CR>',
+    {silent = true, noremap = true})
+map("n", "[b", ':execute ":" . v:count . "bprevious"<CR>',
+    {silent = true, noremap = true})
 
 -- Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 -- Allows running macros only on selected files.
-map("x", "@", ':<C-u>echo "@".getcmdline() | execute ":\'<,\'>normal @" . nr2char(getchar())<CR>', {silent=true})
+map("x", "@",
+    ':<C-u>echo "@".getcmdline() | execute ":\'<,\'>normal @" . nr2char(getchar())<CR>',
+    {silent = true})
 
-map("n", "L", "$", {silent=true})
-map("v", "L", "$", {silent=true})
+map("n", "L", "$", {silent = true})
+map("v", "L", "$", {silent = true})
 
-map("n", "H", "^", {silent=true})
-map("v", "H", "^", {silent=true})
+map("n", "H", "^", {silent = true})
+map("v", "H", "^", {silent = true})
 
-map("n", "Y", "y$", {silent=true})
+map("n", "Y", "y$", {silent = true})
 
 -- Pressing <leader>ss will toggle and untoggle spell checking
-map("n", "<leader>ss", ":setlocal spell!<CR>", {silent=true})
+map("n", "<leader>ss", ":setlocal spell!<CR>", {silent = true})
 
-map("t", "<C-d>", "<PageDown>", {silent=true})
-map("t", "<C-u>", "<PageUp>", {silent=true})
+map("t", "<C-d>", "<PageDown>", {silent = true})
+map("t", "<C-u>", "<PageUp>", {silent = true})
 
-map("t", "<C-w><C-q>", "<C-\\><C-n>", {silent=true, noremap=true})
-map("t", "<C-w><C-h>", "<C-\\><C-n><C-w>h", {silent=true, noremap=true})
-map("t", "<C-w><C-j>", "<C-\\><C-n><C-w>j", {silent=true, noremap=true})
-map("t", "<C-w><C-k>", "<C-\\><C-n><C-w>k", {silent=true, noremap=true})
-map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", {silent=true, noremap=true})
+map("t", "<C-w><C-q>", "<C-\\><C-n>", {silent = true, noremap = true})
+map("t", "<C-w><C-h>", "<C-\\><C-n><C-w>h", {silent = true, noremap = true})
+map("t", "<C-w><C-j>", "<C-\\><C-n><C-w>j", {silent = true, noremap = true})
+map("t", "<C-w><C-k>", "<C-\\><C-n><C-w>k", {silent = true, noremap = true})
+map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", {silent = true, noremap = true})
 
-cmd[[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
-cmd[[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
-cmd[[command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)]]
-cmd[[command! -nargs=? JiraOpenTicketJson :call jira#open_ticket_in_json(<f-args>)]]
+cmd [[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
+cmd [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
+cmd [[command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)]]
+cmd [[command! -nargs=? JiraOpenTicketJson :call jira#open_ticket_in_json(<f-args>)]]
 
-cmd[[command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE]]
+cmd [[command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE]]
 
 -- command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
 -- command! PackClean  call PackInit() | call minpac#clean()
@@ -292,8 +310,8 @@ cmd[[command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M'
 
 -- Abbreviations {{{
 
-cmd[[abbreviate langauge language]]
-cmd[[abbreviate Langauge Language]]
+cmd [[abbreviate langauge language]]
+cmd [[abbreviate Langauge Language]]
 
 -- }}}
 
@@ -307,15 +325,15 @@ g.loaded_netrwPlugin = 1
 -- Disable markdown support for polyglot because it messes up with syntax
 -- highlighting.
 g.polyglot_is_disabled = {
-    markdown=true,
-    json=true,
-    vue=true,
-    sensible=true,
+    markdown = true,
+    json = true,
+    vue = true,
+    sensible = true
 }
 
 -- }}}
 
-cmd[[command! InitPaq :lua require'vimrc.init_utils'.init_paq()]]
+cmd [[command! InitPaq :lua require'vimrc.init_utils'.init_paq()]]
 
 -- TagBar {{{
 
@@ -337,49 +355,71 @@ g.vimrc_lsp_virtual_text_include_error_message = 0
 
 -- }}}
 
-api.nvim_command("sign define LspDiagnosticsSignError text=✖ texthl=LspDiagnosticsDefaultError linehl= numhl=")
-api.nvim_command("sign define LspDiagnosticsSignWarning text=‼ texthl=LspDiagnosticsDefaultWarning linehl= numhl=")
+fn.sign_define("LspDiagnosticsSignError", {
+    text = "✖",
+    texthl = "LspDiagnosticsDefaultError",
+    linehl = "",
+    numhl = ""
+})
+fn.sign_define("LspDiagnosticsSignWarning", {
+    text = "‼",
+    texthl = "LspDiagnosticsDefaultWarning",
+    linehl = "",
+    numhl = ""
+})
 
-api.nvim_command("sign define LspDiagnosticsSignInformation text=ℹ texthl=LspDiagnosticsDefaultInformation linehl= numhl=")
-api.nvim_command("sign define LspDiagnosticsSignHint text=⦿ texthl=LspDiagnosticsDefaultHint linehl= numhl=")
+fn.sign_define("LspDiagnosticsSignInformation", {
+    text = "ℹ",
+    texthl = "LspDiagnosticsDefaultInformation",
+    linehl = "",
+    numhl = ""
+})
+fn.sign_define("LspDiagnosticsSignHint", {
+    text = "⦿",
+    texthl = "LspDiagnosticsDefaultHint",
+    linehl = "",
+    numhl = ""
+})
 
 -- }}}
 
 -- Completion {{{
 
-cmd[[source ~/.dotfiles/vim/completion.vim]]
+cmd [[source ~/.dotfiles/vim/completion.vim]]
 
-cmd[[augroup vimrc_completion]]
-cmd[[autocmd BufReadPost * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
-cmd[[augroup END]]
+cmd [[augroup vimrc_completion]]
+cmd [[autocmd BufReadPost * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
+cmd [[augroup END]]
 
 -- }}}
 
 -- Preview {{{
 
-map("n", "sli", ":call quickfix#show_item_in_preview(v:true, line('.'))<CR>", {silent=true, noremap=true})
-map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>", {silent=true, noremap=true})
+map("n", "sli", ":call quickfix#show_item_in_preview(v:true, line('.'))<CR>",
+    {silent = true, noremap = true})
+map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
+    {silent = true, noremap = true})
 
 -- }}}
 
 -- nvim-gdb {{{
 
 g.nvimgdb_config_override = {
-    key_step="<leader>s",
-    key_frameup="<leader>u",
-    key_framedown="<leader>d",
-    key_continue="<leader>c",
-    key_next="<leader>n",
+    key_step = "<leader>s",
+    key_frameup = "<leader>u",
+    key_framedown = "<leader>d",
+    key_continue = "<leader>c",
+    key_next = "<leader>n"
 }
 
 -- }}}
 
 -- nvim-treesitter {{{
 
-cmd[[augroup plugin_nvim_treesitter]]
-    cmd[[au!]]
-    cmd[[au FileType python,cpp,json,javascript,html,vue lua require'vimrc.init_utils'.setup_treesitter()]]
-cmd[[augroup END]]
+cmd [[augroup plugin_nvim_treesitter]]
+cmd [[au!]]
+cmd [[au FileType python,cpp,json,javascript,html,vue lua require'vimrc.init_utils'.setup_treesitter()]]
+cmd [[augroup END]]
 
 -- }}}
 
@@ -391,22 +431,19 @@ g.firvish_shell = "pwsh"
 
 -- }}}
 
-cmd[[augroup vimrc_init]]
-cmd[[autocmd!]]
-    cmd[[autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses") | packadd nvim-http | endif]]
-    cmd[[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
-    cmd[[autocmd VimEnter * lua require'vimrc.init_utils'.create_custom_nvim_server()]]
-    cmd[[autocmd VimEnter * colorscheme cosmic_latte]]
+cmd [[augroup vimrc_init]]
+cmd [[autocmd!]]
+cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses") | packadd nvim-http | endif]]
+cmd [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
+cmd [[autocmd VimEnter * lua require'vimrc.init_utils'.create_custom_nvim_server()]]
+cmd [[autocmd VimEnter * colorscheme cosmic_latte]]
 
-    cmd[[autocmd VimEnter * if filereadable(".nvimrc") | source .nvimrc | endif]]
-    -- Return to last edit position when opening files (You want this!)
-    cmd[[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]
-    cmd[[autocmd BufReadPost * lua require'vimrc.init_utils'.load_dictionary()]]
+-- Return to last edit position when opening files (You want this!)
+cmd [[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]
+cmd [[autocmd BufReadPost * lua require'vimrc.init_utils'.load_dictionary()]]
 
-cmd[[augroup END]]
+cmd [[augroup END]]
 
-if fn.filereadable("~/.vimrc") then
-    cmd "source ~/.vimrc"
-end
+if fn.filereadable("~/.vimrc") then cmd "source ~/.vimrc" end
 
 -- vim: foldmethod=marker

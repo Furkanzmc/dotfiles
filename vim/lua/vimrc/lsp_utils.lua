@@ -1,7 +1,7 @@
 local vim = vim
 local api = vim.api
 local lsp = vim.lsp
-local utils = require"vimrc.utils"
+local utils = require "vimrc.utils"
 local M = {}
 
 -- Utils {{{
@@ -35,47 +35,38 @@ function M.set_loclist(opts)
     local insert_diag = function(diag)
         if severity then
             -- Handle missing severities
-            if not diag.severity then
-                return
-            end
+            if not diag.severity then return end
 
-            if severity ~= diag.severity then
-                return
-            end
+            if severity ~= diag.severity then return end
         elseif severity_limit then
-            if not diag.severity then
-                return
-            end
+            if not diag.severity then return end
 
-            if severity_limit < diag.severity then
-                return
-            end
+            if severity_limit < diag.severity then return end
         end
 
         local pos = diag.range.start
         local row = pos.line
         local col = lsp.util.character_offset(bufnr, row, pos.character)
 
-        local line = (api.nvim_buf_get_lines(bufnr, row, row + 1, false) or {""})[1]
+        local line =
+            (api.nvim_buf_get_lines(bufnr, row, row + 1, false) or {""})[1]
 
         table.insert(items, {
-                bufnr = bufnr,
-                lnum = row + 1,
-                col = col + 1,
-                context = 320,
-                text = "[" .. client.name .. "]" .. " | " .. line .. " | " .. diag.message,
-                type = utils.loclist_type_map[diag.severity or DiagnosticSeverity.Error] or 'E',
-            })
+            bufnr = bufnr,
+            lnum = row + 1,
+            col = col + 1,
+            context = 320,
+            text = "[" .. client.name .. "]" .. " | " .. line .. " | " ..
+                diag.message,
+            type = utils.loclist_type_map[diag.severity or
+                DiagnosticSeverity.Error] or 'E'
+        })
     end
 
-    for _, diag in ipairs(buffer_diags) do
-        insert_diag(diag)
-    end
+    for _, diag in ipairs(buffer_diags) do insert_diag(diag) end
 
     utils.set_loclist(opts.bufnr, client.name, items, "LSP")
-    if open_loclist then
-        vim.cmd [[lopen]]
-    end
+    if open_loclist then vim.cmd [[lopen]] end
 end
 
 -- }}}
