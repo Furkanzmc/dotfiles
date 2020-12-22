@@ -143,13 +143,3 @@ function! buffers#visual_selection(direction, extra_filter) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
-
-let s:scratch_buffer_count = 0
-function! buffers#mark_scratch()
-    let s:scratch_buffer_count += 1
-    setlocal buftype=nofile
-    setlocal bufhidden=hide
-    setlocal noswapfile
-    setlocal buflisted
-    execute "file scratchpad-" . s:scratch_buffer_count
-endfunction

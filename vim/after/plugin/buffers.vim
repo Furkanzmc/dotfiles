@@ -1,4 +1,4 @@
-command! MarkScratch :call buffers#mark_scratch()
+command! MarkScratch :lua require"vimrc.buffers".mark_scratch(vim.api.nvim_get_current_buf())
 
 vmap <leader>s :call buffers#visual_selection('search', '')<CR>
 " When you press <leader>r you can search and replace the selected text
