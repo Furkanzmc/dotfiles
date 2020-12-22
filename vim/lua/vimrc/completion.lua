@@ -17,34 +17,34 @@ local s_completion_sources = {
     },
     vim_command={
         keys="<c-x><c-v>",
-        priority=2,
+        priority=3,
         filetypes={"vim"}
     },
     file={
         keys="<c-x><c-f>",
-        priority=3,
+        priority=4,
     },
     dictionary={
         keys="<c-x><c-k>",
-        priority=4,
+        priority=5,
         prediciate=function()
             return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
     },
     keywords={
         keys="<c-g><c-g><c-n>",
-        priority=5,
+        priority=6,
     },
     spell={
         keys="<c-x><c-s>",
-        priority=6,
+        priority=7,
         prediciate=function()
             return vim.wo.spell
         end
     },
     user={
         keys="<c-x><c-u>",
-        priority=7,
+        priority=8,
         prediciate=function()
             return vim.bo.completefunc ~= "" or vim.o.completefunc ~= ""
         end
