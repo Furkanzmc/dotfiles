@@ -114,6 +114,7 @@ vim.o.switchbuf = "useopen,usetab"
 vim.o.stal = 2
 
 -- }}}
+
 -- User Interface {{{
 
 -- Always show the status line
@@ -426,6 +427,65 @@ cmd [[augroup END]]
 -- firvish.nvim {{{
 
 g.firvish_shell = "pwsh"
+
+-- }}}
+
+-- }}}
+
+-- Local Plugins {{{
+
+-- Git {{{
+
+cmd [[command! -nargs=? StartReview :call git#start_review(<f-args>)]]
+cmd [[command! ReviewDiff :call git#review_diff()]]
+cmd [[command! FinishReview :call git#finish_review()]]
+
+-- }}}
+
+-- dotenv {{{
+
+cmd [[command! -nargs=1 -complete=file SourceEnv :call dotenv#source(<f-args>)]]
+cmd [[command! -nargs=1 -complete=file DeactivateEnv :call dotenv#deactivate(<f-args>)]]
+
+-- }}}
+
+-- Help {{{
+
+map("n", "gh", ":call help#search_docs()<CR>", {silent = true})
+cmd [[command! -nargs=1 Search :call help#search_docs(<f-args>)]]
+
+-- }}}
+
+-- Color Column {{{
+
+map("n", "gh", ":call help#search_docs()<CR>", {silent = true})
+cmd [[command! -nargs=1 Search :call help#search_docs(<f-args>)]]
+
+-- }}}
+
+-- Sort {{{
+
+cmd [[command -complete=customlist,custom_sort#sort_command_completion -range -nargs=1 Sort :call custom_sort#sort(<f-args>, <line1>, <line2>)]]
+
+-- }}}
+
+-- QuickFix {{{
+
+map("n", "<F10>", ":call quickfix#toggle()<CR>", {silent = true})
+cmd [[command! ClearQuickFix :call setqflist([])]]
+
+-- }}}
+
+-- Text Objects {{{
+
+-- URL text object.
+map("x", "iu", ":<C-u>call textobjects#url_text_object()<CR>",
+    {silent = true, noremap = true})
+map("o", "iu", ":<C-u>normal viu<CR>", {silent = true, noremap = true})
+
+-- Line text objects.
+map("x", "il", "g_o^", {silent = true, noremap = true})
+map("o", "il", ":<C-u>normal vil<CR>", {silent = true, noremap = true})
 
 -- }}}
 
