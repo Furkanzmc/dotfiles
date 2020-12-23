@@ -487,6 +487,22 @@ map("o", "il", ":<C-u>normal vil<CR>", {silent = true, noremap = true})
 
 -- }}}
 
+-- Buffers {{{
+
+map("v", "<leader>s", ":call buffers#visual_selection('search', '')<CR>",
+    {silent = true, noremap = true})
+map("v", "<leader>r", ":call buffers#visual_selection('replace', '')<CR>",
+    {silent = true, noremap = true})
+
+cmd [[command! MarkScratch :lua require"vimrc.plugins.buffers".mark_scratch(vim.api.nvim_get_current_buf())]]
+
+cmd [[command! Bclose :call buffers#close()]]
+cmd [[command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-bang>)]]
+cmd [[command! Bdhidden :call buffers#delete_hidden()]]
+cmd [[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]]
+
+-- }}}
+
 -- }}}
 
 cmd [[augroup vimrc_init]]

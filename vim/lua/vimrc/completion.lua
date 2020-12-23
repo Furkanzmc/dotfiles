@@ -42,7 +42,7 @@ local s_plugin_loaded = false
 local s_buffer_completion_sources_cache = {}
 local s_buffer_completion_source_names_cache = {}
 
-function get_completion_sources(bufnr)
+local function get_completion_sources(bufnr)
     if s_buffer_completion_sources_cache[bufnr] ~= nil then
         return s_buffer_completion_sources_cache[bufnr]
     end
@@ -73,7 +73,7 @@ function get_completion_sources(bufnr)
     return new_list
 end
 
-function get_source_names(bufnr)
+local function get_source_names(bufnr)
     if s_buffer_completion_source_names_cache[bufnr] ~= nil then
         return s_buffer_completion_source_names_cache[bufnr]
     end
@@ -99,7 +99,7 @@ function get_source_names(bufnr)
     return names
 end
 
-function timer_handler()
+local function timer_handler()
     if s_completion_index == -1 then return end
 
     if vim.api.nvim_get_mode().mode == "n" then
@@ -138,7 +138,7 @@ function timer_handler()
     end
 end
 
-M.on_complete_done_pre = function()
+function M.on_complete_done_pre()
     if vim.api.nvim_get_mode().mode == "n" then
         s_completion_index = -1
         return
@@ -163,7 +163,7 @@ M.on_complete_done_pre = function()
                              0, vim.schedule_wrap(timer_handler))
 end
 
-M.on_complete_done = function(bufnr)
+function M.on_complete_done(bufnr)
     if s_is_completion_dispatched == true then return end
 
     local completion_sources = get_completion_sources(bufnr)
@@ -178,7 +178,7 @@ M.on_complete_done = function(bufnr)
     end
 end
 
-M.trigger_completion = function()
+function M.trigger_completion()
     if require'vimrc.lsp'.is_lsp_running() then
         s_completion_index = 1
     else
@@ -200,7 +200,7 @@ M.trigger_completion = function()
         end))
 end
 
-M.setup_completion = function(bufnr)
+function M.setup_completion(bufnr)
     if vim.fn.exists("b:vimrc_is_completion_configured") == 0 then
         vim.api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", false)
     elseif vim.api.nvim_buf_get_var(bufnr, "vimrc_is_completion_configured") ==

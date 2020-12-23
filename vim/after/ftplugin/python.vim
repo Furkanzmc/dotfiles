@@ -38,6 +38,8 @@ let b:vimrc_efm_lsp_location_list_enabled = 1
 let b:vimrc_pyright_lsp_signs_enabled = 0
 let b:vimrc_pyright_lsp_location_list_enabled = 1
 
+let b:vimrc_completion_additional_sources = ["<C-x><C-]>"]
+
 nmap <buffer><silent> spw :call python#get_pylint_error_message(expand("<cword>"))<CR>
 
 " Abbreviations {{{
