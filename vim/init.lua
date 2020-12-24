@@ -477,13 +477,20 @@ cmd [[command! ClearQuickFix :call setqflist([])]]
 -- Text Objects {{{
 
 -- URL text object.
-map("x", "iu", ":<C-u>call textobjects#url_text_object()<CR>",
+map("x", "iu",
+    ":<C-u>lua require'vimrc.plugins.textobjects'.url_text_object()<CR>",
     {silent = true, noremap = true})
 map("o", "iu", ":<C-u>normal viu<CR>", {silent = true, noremap = true})
 
 -- Line text objects.
 map("x", "il", "g_o^", {silent = true, noremap = true})
 map("o", "il", ":<C-u>normal vil<CR>", {silent = true, noremap = true})
+
+-- Number
+map("x", "in",
+    ":<C-u>lua require'vimrc.plugins.textobjects'.number_text_object()<CR>",
+    {silent = true, noremap = true})
+map("o", "in", ":<C-u>normal viu<CR>", {silent = true, noremap = true})
 
 -- }}}
 
