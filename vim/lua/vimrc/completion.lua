@@ -225,3 +225,5 @@ function M.setup_completion(bufnr)
 end
 
 return M
+
+-- vim: foldmethod=marker

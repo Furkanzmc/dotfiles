@@ -72,3 +72,5 @@ end
 -- }}}
 
 return M
+
+-- vim: foldmethod=marker

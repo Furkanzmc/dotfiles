@@ -93,3 +93,5 @@ function M.load_dictionary()
 end
 
 return M
+
+-- vim: foldmethod=marker

@@ -217,7 +217,19 @@ M.setup_lsp = function()
 
     lspconfig.pyright.setup {
         on_attach = setup_without_formatting,
-        filetypes = {"python"}
+        filetypes = {"python"},
+        settings = {
+            python = {
+                analysis = {
+                    reportImportCycles = "error",
+                    reportUnusedImport = "error",
+                    reportUnusedClass = "error",
+                    reportUnusedFunction = "error",
+                    reportUnusedVariable = "error",
+                    reportDuplicateImport = "error"
+                }
+            }
+        }
     }
     lspconfig.clangd.setup {
         on_attach = setup_without_formatting,
@@ -238,3 +250,5 @@ M.setup_lsp = function()
 end
 
 return M
+
+-- vim: foldmethod=marker

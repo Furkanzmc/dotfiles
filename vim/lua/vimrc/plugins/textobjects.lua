@@ -25,3 +25,5 @@ function M.number_text_object()
 end
 
 return M
+
+-- vim: foldmethod=marker

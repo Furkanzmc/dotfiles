@@ -19,3 +19,5 @@ function M.mark_scratch(bufnr)
 end
 
 return M
+
+-- vim: foldmethod=marker

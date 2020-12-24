@@ -52,3 +52,5 @@ function table.index_of(tab, val)
 end
 
 return M
+
+-- vim: foldmethod=marker
