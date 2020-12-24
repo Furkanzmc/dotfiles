@@ -76,7 +76,6 @@ languages:
   python:
     - <<: *python-pylint
     - <<: *python-bandit
-    - <<: *python-pyright
   json:
     - <<: *json-jq
   yaml:

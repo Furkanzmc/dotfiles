@@ -503,6 +503,28 @@ cmd [[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]]
 
 -- }}}
 
+-- Terminal {{{
+
+cmd [[command! -nargs=? -complete=shellcmd Terminal :call term#open(v:false, <f-args>)]]
+cmd [[command! -nargs=? -complete=shellcmd TerminalFloating :call term#open(v:true, <f-args>)]]
+cmd [[command! -nargs=? -complete=shellcmd TerminalFloatingClose :call term#close(-1)]]
+
+cmd [[augroup term_plugin]]
+cmd [[autocmd!]]
+cmd [[autocmd TermOpen * startinsert]]
+cmd [[augroup END]]
+
+-- }}}
+
+-- Fold {{{
+
+cmd [[augroup plugin_fold]]
+cmd [[autocmd!]]
+cmd [[autocmd BufReadPost,BufNew,BufEnter * call fold#set_foldtext()]]
+cmd [[augroup END]]
+
+-- }}}
+
 -- }}}
 
 cmd [[augroup vimrc_init]]
