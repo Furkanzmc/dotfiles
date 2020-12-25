@@ -15,7 +15,7 @@ let b:vimrc_efm_lsp_location_list_enabled = 1
 
 " Override the default comment string from vim-commentary
 setlocal commentstring=//%s
-nnoremap <silent> <buffer> <nowait> <F4> :call cpp#swap_source_header()<CR>
+nnoremap <silent> <buffer> <nowait> <F4> :lua require"vimrc.plugins.cpp".swap_source_header()<CR>
 
 " Abbreviations {{{
 
