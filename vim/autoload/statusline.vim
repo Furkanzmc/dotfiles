@@ -2,7 +2,7 @@
 
 " Utility Functions {{{
 
-function! statusline#is_fugitive_buffer(buffer_name) 
+function! statusline#is_fugitive_buffer(buffer_name)
     if has('win32')
         return match(a:buffer_name, 'fugitive:\\') != -1
     endif

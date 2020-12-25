@@ -22,7 +22,7 @@ local s_completion_sources = {
                        pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
     },
-    keywords = {keys = "<c-g><c-g><c-n>", priority = 6},
+    keywords = {keys = "<c-n>", priority = 6},
     spell = {
         keys = "<c-x><c-s>",
         priority = 7,
@@ -125,6 +125,10 @@ local function timer_handler()
 
             local mode_keys = vim.api.nvim_replace_termcodes(source.keys, true,
                                                              false, true)
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-g><c-g>",
+                                                                 true, false,
+                                                                 true), 'n',
+                                  true)
             vim.api.nvim_feedkeys(mode_keys, 'n', true)
             s_is_completion_dispatched = true
             s_completion_index = s_completion_index + 1
@@ -179,11 +183,7 @@ function M.on_complete_done(bufnr)
 end
 
 function M.trigger_completion()
-    if require'vimrc.lsp'.is_lsp_running() then
-        s_completion_index = 1
-    else
-        s_completion_index = 2
-    end
+    s_completion_index = 1
 
     s_last_cursor_position = vim.api.nvim_win_get_cursor(0)
     timer_handler()
