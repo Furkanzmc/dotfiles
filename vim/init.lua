@@ -93,8 +93,7 @@ vim.o.textwidth = 500
 vim.o.autoindent = true
 vim.o.smartindent = true
 
--- TODO: Find a better way.
-cmd [[set foldtext=fold#fold_text()]]
+vim.o.foldtext = "fold#fold_text()"
 
 if fn.executable("pwsh") == 1 and fn.exists("$VIMRC_PWSH_ENABLED") == 1 then
     vim.o.shell = "pwsh"
@@ -120,8 +119,7 @@ vim.o.stal = 2
 -- Always show the status line
 vim.o.laststatus = 2
 
--- TODO: Find a better way.
-cmd [[set tabline=%!tabline#config()]]
+vim.o.tabline = "%!tabline#config()"
 
 -- TODO: Using fn.expand is too flow here.
 cmd [[
@@ -199,9 +197,8 @@ vim.o.visualbell = false
 vim.o.t_vb = ""
 vim.o.tm = 300
 
--- Disable scrollbars (real hackers don't use scrollbars for navigation!)
-
 -- TODO: Find a better way.
+-- Disable scrollbars.
 cmd [[set guioptions-=r]]
 cmd [[set guioptions-=R]]
 cmd [[set guioptions-=l]]

@@ -28,5 +28,4 @@ if get(b:, "did_c", v:false)
     finish
 endif
 
-let b:did_cpp = v:true
-
+let b:did_c = v:true
