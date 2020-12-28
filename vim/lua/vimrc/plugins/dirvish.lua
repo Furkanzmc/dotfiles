@@ -74,10 +74,10 @@ function M.show_status(line1, line2)
     if line1 == line2 then b.vimrc_dirvish_current_line = line1 end
 end
 
-function M.clear_status()
+function M.clear_status(all)
     if b.vimrc_dirvish_namespace == nil then return end
 
-    if fn.line(".") ~= b.vimrc_dirvish_current_line then
+    if all or fn.line(".") ~= b.vimrc_dirvish_current_line then
         api.nvim_buf_clear_namespace(0, b.vimrc_dirvish_namespace, 0, -1)
     end
 end
@@ -86,8 +86,8 @@ function M.init()
     cmd [[augroup dirvish_virtual_text]]
     cmd [[au! * <buffer>]]
     cmd [[autocmd CursorHold,BufEnter <buffer> lua require"vimrc.plugins.dirvish".show_status(vim.fn.line("."), vim.fn.line("."))]]
-    cmd [[autocmd CursorMoved <buffer> lua require"vimrc.plugins.dirvish".clear_status()]]
-    cmd [[autocmd BufLeave <buffer> lua vim.api.nvim_buf_clear_namespace(0, vim.b.vimrc_dirvish_namespace, 0, -1)]]
+    cmd [[autocmd CursorMoved <buffer> lua require"vimrc.plugins.dirvish".clear_status(false)]]
+    cmd [[autocmd BufLeave <buffer> lua require"vimrc.plugins.dirvish".clear_status(true)]]
     cmd [[augroup END]]
 end
 

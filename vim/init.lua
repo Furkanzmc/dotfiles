@@ -21,12 +21,11 @@ end
 
 -- General {{{
 
-cmd [[
-set runtimepath^=~/.dotfiles/vim,~/.dotfiles/vim/after
-]]
+cmd [[filetype plugin on]]
+cmd [[filetype indent on]]
 
--- cmd [[filetype plugin on]]
--- cmd [[filetype indent on]]
+cmd("set runtimepath+=" .. fn.expand("~/.dotfiles/vim"))
+cmd("set runtimepath+=" .. fn.expand("~/.dotfiles/vim/after"))
 
 vim.o.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
 vim.o.complete = ".,w,k,kspell,b"

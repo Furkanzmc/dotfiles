@@ -4,9 +4,9 @@ setlocal nonumber
 
 setlocal norelativenumber
 
-" Append JIRA ticket number to commit message {{{
+" Prepend JIRA ticket number to commit message {{{
 
-if (!exists("g:vimrc_active_jira_ticket") && !exists("b:ticket_number_appended")
+if (!exists("g:vimrc_active_jira_ticket") && !exists("b:vimrc_ticket_number_appended")
             \ && exists("*FugitiveHead()"))
     let s:head = FugitiveHead()
     let s:matches = matchlist(s:head, "\[A-Z\]\\+-\[0-9\]\\+")
@@ -15,7 +15,7 @@ if (!exists("g:vimrc_active_jira_ticket") && !exists("b:ticket_number_appended")
     endif
 endif
 
-if (exists("g:vimrc_active_jira_ticket") || exists("b:vimrc_active_jira_ticket")) && !exists("b:ticket_number_appended")
+if (exists("g:vimrc_active_jira_ticket") || exists("b:vimrc_active_jira_ticket")) && !exists("b:vimrc_ticket_number_appended")
     let s:ticket_number = ""
     if exists("g:vimrc_active_jira_ticket") && !empty("g:vimrc_active_jira_ticket")
         let s:ticket_number = g:vimrc_active_jira_ticket
@@ -26,7 +26,7 @@ if (exists("g:vimrc_active_jira_ticket") || exists("b:vimrc_active_jira_ticket")
     call append(line("^"), [s:ticket_number . ": "])
     execute ":normal gg$"
 
-    let b:ticket_number_appended = v:true
+    let b:vimrc_ticket_number_appended = v:true
 endif
 
 " }}}
