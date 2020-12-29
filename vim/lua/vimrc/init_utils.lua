@@ -10,8 +10,6 @@ function M.init_paq()
     cmd 'packadd paq-nvim'
     local paq = require'paq-nvim'.paq
 
-    paq {'savq/paq-nvim', opt = true}
-
     paq 'sheerun/vim-polyglot'
     paq 'tpope/vim-commentary'
     paq 'tpope/vim-fugitive'
@@ -24,15 +22,19 @@ function M.init_paq()
 
     -- Optional {{{
 
+    paq {'savq/paq-nvim', opt = true}
     paq {'vim-scripts/SyntaxRange', opt = true}
     paq {'majutsushi/tagbar', opt = true}
     paq {'masukomi/vim-markdown-folding', opt = true}
     paq {'junegunn/goyo.vim', opt = true}
-    paq {
-        'sakhnik/nvim-gdb',
-        opt = true,
-        hook = fn['remote#host#UpdateRemotePlugins']
-    }
+    if fn.has("win32") == 0 then
+        paq {
+            'sakhnik/nvim-gdb',
+            opt = true,
+            hook = fn['remote#host#UpdateRemotePlugins']
+        }
+    end
+
     paq {'rust-lang/rust.vim', opt = true}
     paq {'nvim-treesitter/nvim-treesitter', opt = true}
     paq {
