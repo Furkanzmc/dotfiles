@@ -15,6 +15,25 @@ function includeexpr#find(fname, additional_paths)
         call extend(l:files, split(l:gpath, "\n"))
     endfor
 
+    if empty(l:files)
+        let l:taglist = taglist(a:fname)
+        if !empty(l:taglist)
+            let l:tagfiles = tagfiles()
+            for item in l:taglist
+                for tagfile in l:tagfiles
+                    let l:tf = substitute(fnamemodify(tagfile, ":h") . "/", "\\", "/", "g")
+                    let l:filename_modified = substitute(item.filename, "\\", "/", "g")
+                    let l:filename_modified = expand(substitute(l:filename_modified, l:tf, "", "g"))
+                    if l:filename_modified != item.filename
+                        break
+                    endif
+                endfor
+
+                call add(l:files, l:filename_modified)
+            endfor
+        endif
+    endif
+
     call map(l:files, 'glob(v:val)')
     call filter(l:files, '!empty(v:val)')
     call uniq(l:files)

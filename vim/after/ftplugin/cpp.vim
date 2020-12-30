@@ -7,6 +7,7 @@ endif
 setlocal foldmethod=indent
 setlocal signcolumn=yes
 setlocal suffixesadd=.cpp,.h,.hxx,.cxx
+setlocal includeexpr=cpp#includeexpr(v:fname)
 
 if executable("clang-format")
     setlocal formatprg=clang-format
@@ -31,5 +32,9 @@ abbreviate <silent> <buffer> #i"@ #include ""<Left><C-R>=abbreviations#eat_char(
 if get(b:, "did_cpp", v:false)
     finish
 endif
+
+function cpp#includeexpr(fname)
+    return includeexpr#find(a:fname, [])
+endfunction
 
 let b:did_cpp = v:true
