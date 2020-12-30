@@ -20,7 +20,7 @@ function M.swap_source_header()
 
     if pcall(cmd, "execute 'find " .. filename .. "'") == false then
         cmd [[echohl ErrorMsg]]
-        cmd(echo "[cpp]: Cannot file " .. filename)
+        cmd('echo "[cpp]: Cannot file ' .. filename .. '"')
         cmd [[echohl Normal]]
     end
 
