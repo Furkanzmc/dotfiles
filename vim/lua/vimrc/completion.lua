@@ -4,31 +4,30 @@ local M = {}
 local s_last_cursor_position = nil
 local s_completion_timer = nil
 local s_completion_sources = {
-    omni = {
+    {
         keys = "<c-x><c-o>",
-        priority = 1,
         prediciate = function()
             return vim.bo.omnifunc ~= "" or vim.o.omnifunc ~= ""
         end
     },
-    keywords_current = {keys = "<c-x><c-n>", priority = 2},
-    vim_command = {keys = "<c-x><c-v>", priority = 3, filetypes = {"vim"}},
-    file = {keys = "<c-x><c-f>", priority = 4},
-    dictionary = {
+    {keys = "<c-x><c-n>"},
+    {keys = "<c-n>"},
+    {keys = "<c-x><c-v>", priority = 4, filetypes = {"vim"}},
+    {keys = "<c-x><c-f>", priority = 5},
+    {
         keys = "<c-x><c-k>",
-        priority = 5,
+        priority = 6,
         prediciate = function()
             return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or
                        pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
     },
-    keywords = {keys = "<c-n>", priority = 6},
-    spell = {
+    {
         keys = "<c-x><c-s>",
         priority = 7,
         prediciate = function() return vim.wo.spell end
     },
-    user = {
+    {
         keys = "<c-x><c-u>",
         priority = 8,
         prediciate = function()
@@ -38,16 +37,13 @@ local s_completion_sources = {
 }
 local s_completion_index = nil
 local s_is_completion_dispatched = false
-local s_plugin_loaded = false
 local s_buffer_completion_sources_cache = {}
-local s_buffer_completion_source_names_cache = {}
 
 local function get_completion_sources(bufnr)
     if s_buffer_completion_sources_cache[bufnr] ~= nil then
         return s_buffer_completion_sources_cache[bufnr]
     end
 
-    local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
     local result = pcall(vim.api.nvim_buf_get_var, bufnr,
                          "vimrc_completion_additional_sources")
     if result == false then return s_completion_sources end
@@ -56,47 +52,14 @@ local function get_completion_sources(bufnr)
                                                         "vimrc_completion_additional_sources")
     local new_list = {}
 
-    for key, value in pairs(s_completion_sources) do
-        if value.filetypes ~= nil and table.index_of(value.filetypes, filetype) ==
-            -1 then
-            -- Do nothing.
-        else
-            new_list[key] = value
-        end
-    end
+    table.extend(new_list, s_completion_sources)
 
     for index, value in ipairs(additional_sources) do
-        new_list["custom_" .. index] = {keys = value, priority = -1}
+        table.insert(new_list, {keys = value})
     end
 
     s_buffer_completion_sources_cache[bufnr] = new_list
     return new_list
-end
-
-local function get_source_names(bufnr)
-    if s_buffer_completion_source_names_cache[bufnr] ~= nil then
-        return s_buffer_completion_source_names_cache[bufnr]
-    end
-
-    local sources = get_completion_sources(bufnr)
-    local names = {}
-
-    for key, _ in pairs(sources) do table.insert(names, key) end
-
-    table.sort(names, function(a, b)
-        if sources[a].priority == -1 or sources[a].priority == nil then
-            return false
-        end
-
-        if sources[b].priority == -1 or sources[b].priority == nil then
-            return true
-        end
-
-        return sources[a].priority < sources[b].priority
-    end)
-
-    s_buffer_completion_source_names_cache[bufnr] = names
-    return names
 end
 
 local function timer_handler()
@@ -108,16 +71,16 @@ local function timer_handler()
     end
 
     local bufnr = vim.fn.bufnr()
+    local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
     local completion_sources = get_completion_sources(bufnr)
-    local completion_source_names = get_source_names(bufnr)
 
     if vim.fn.pumvisible() == 0 then
-        if s_completion_index == #completion_source_names + 1 then
+        if s_completion_index == #completion_sources + 1 then
             s_is_completion_dispatched = false
         else
             local source =
-                completion_sources[completion_source_names[s_completion_index]]
-            if source.prediciate ~= nil and source.prediciate() == false then
+                completion_sources[s_completion_index]
+            if (source.prediciate ~= nil and source.prediciate() == false) or source.filetype ~= nil and source.filetype ~= filetype then
                 s_completion_index = s_completion_index + 1
                 timer_handler()
                 return
