@@ -59,7 +59,9 @@ function! quickfix#remove_lines(line1, line2)
         return
     endif
 
+    let l:linenr = line(".")
     let l:qfall = getqflist()
     call remove(l:qfall, a:line1, a:line2)
     call setqflist(l:qfall, 'r')
+    execute "normal " . l:linenr . "G"
 endfunction
