@@ -9,25 +9,20 @@ local s_completion_sources = {
         prediciate = function()
             return vim.bo.omnifunc ~= "" or vim.o.omnifunc ~= ""
         end
-    },
-    {keys = "<c-x><c-n>"},
-    {keys = "<c-n>"},
+    }, {keys = "<c-x><c-n>"}, {keys = "<c-n>"},
     {keys = "<c-x><c-v>", priority = 4, filetypes = {"vim"}},
-    {keys = "<c-x><c-f>", priority = 5},
-    {
+    {keys = "<c-x><c-f>", priority = 5}, {
         keys = "<c-x><c-k>",
         priority = 6,
         prediciate = function()
             return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or
                        pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
-    },
-    {
+    }, {
         keys = "<c-x><c-s>",
         priority = 7,
         prediciate = function() return vim.wo.spell end
-    },
-    {
+    }, {
         keys = "<c-x><c-u>",
         priority = 8,
         prediciate = function()
@@ -78,9 +73,9 @@ local function timer_handler()
         if s_completion_index == #completion_sources + 1 then
             s_is_completion_dispatched = false
         else
-            local source =
-                completion_sources[s_completion_index]
-            if (source.prediciate ~= nil and source.prediciate() == false) or source.filetype ~= nil and source.filetype ~= filetype then
+            local source = completion_sources[s_completion_index]
+            if (source.prediciate ~= nil and source.prediciate() == false) or
+                source.filetype ~= nil and source.filetype ~= filetype then
                 s_completion_index = s_completion_index + 1
                 timer_handler()
                 return

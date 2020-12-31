@@ -497,12 +497,26 @@ map("v", "<leader>s", ":call buffers#visual_selection('search', '')<CR>",
 map("v", "<leader>r", ":call buffers#visual_selection('replace', '')<CR>",
     {silent = true, noremap = true})
 
+map("n", "<leader>cc",
+    ":lua require'vimrc.plugins.buffers'.toggle_colorcolumn(vim.api.nvim_win_get_cursor(0)[2] + 1)<CR>",
+    {silent = true, noremap = true})
+map("n", "<leader>cd",
+    ":lua require'vimrc.plugins.buffers'.toggle_colorcolumn(-1)<CR>",
+    {silent = true, noremap = true})
+
 cmd [[command! MarkScratch :lua require"vimrc.plugins.buffers".mark_scratch(vim.api.nvim_get_current_buf())]]
 
-cmd [[command! Bclose :call buffers#close()]]
+cmd [[command! Bclose :lua require"vimrc.plugins.buffers".close()]]
 cmd [[command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-bang>)]]
 cmd [[command! Bdhidden :call buffers#delete_hidden()]]
 cmd [[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]]
+
+cmd [[command! -nargs=1 SetIndentSize :setlocal tabstop=<args> softtabstop=<args> shiftwidth=<args>]]
+
+cmd [[augroup plugin_buffers]]
+cmd [[au!]]
+cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html :lua require"vimrc.plugins.buffers".clean_trailing_spaces()]]
+cmd [[augroup END]]
 
 -- }}}
 

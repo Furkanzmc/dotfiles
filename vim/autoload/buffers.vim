@@ -1,28 +1,3 @@
-function! buffers#close()
-    let l:currentBufNum = bufnr("%")
-    let l:alternateBufNum = bufnr("#")
-
-    if buflisted(l:alternateBufNum)
-        buffer #
-    else
-        bnext
-    endif
-
-    if bufnr("%") == l:currentBufNum
-        new
-    endif
-
-    if buflisted(l:currentBufNum)
-        execute("bdelete! " . l:currentBufNum)
-    endif
-endfunction
-
-function! buffers#set_indent(size)
-    let &l:tabstop = a:size
-    let &l:softtabstop = a:size
-    let &l:shiftwidth = a:size
-endfunction
-
 " Buffer related code from https://stackoverflow.com/a/4867969
 function! s:get_buflist()
     return filter(range(1, bufnr('$')), 'buflisted(v:val)')
@@ -30,6 +5,10 @@ endfunction
 
 function! s:matching_buffers(pattern)
     return filter(s:get_buflist(), 'bufname(v:val) =~ a:pattern')
+endfunction
+
+function! s:cmd_line(mode, str)
+    call feedkeys(a:mode . a:str)
 endfunction
 
 function! buffers#wipe_matching(pattern, bang)
@@ -102,29 +81,16 @@ endfunction
 
 " Code taken from here: https://stackoverflow.com/a/6271254
 function! buffers#get_visual_selection()
-    let [line_start, column_start] = getpos("'<")[1:2]
-    let [line_end, column_end] = getpos("'>")[1:2]
-    let lines = getline(line_start, line_end)
-    if len(lines) == 0
-        return lines
+    let [l:line_start, l:column_start] = getpos("'<")[1:2]
+    let [l:line_end, l:column_end] = getpos("'>")[1:2]
+    let l:lines = getline(l:line_start, l:line_end)
+    if len(l:lines) == 0
+        return l:lines
     endif
 
-    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
-    let lines[0] = lines[0][column_start - 1:]
-    return lines
-endfunction
-
-" Delete trailing white space on save, useful for some filetypes ;)
-function! buffers#clean_extra_spaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
-endfunction
-
-function! s:cmd_line(mode, str)
-    call feedkeys(a:mode . a:str)
+    let l:lines[-1] = l:lines[-1][: l:column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let l:lines[0] = l:lines[0][l:column_start - 1:]
+    return l:lines
 endfunction
 
 function! buffers#visual_selection(direction, extra_filter) range

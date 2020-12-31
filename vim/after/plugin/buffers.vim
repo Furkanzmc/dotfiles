@@ -1,9 +1,3 @@
-augroup plugin_buffers
-    au!
-    autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html
-                \ :call buffers#clean_extra_spaces()
-augroup END
-
 if !exists("g:vimrc_spacehi_enabled_filetypes")
     let g:vimrc_spacehi_enabled_filetypes = [
                 \ "cpp",

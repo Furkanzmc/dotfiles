@@ -51,11 +51,8 @@ function table.index_of(tab, val)
     return -1
 end
 
-
 function table.extend(source, target)
-    for _,v in ipairs(target) do
-        table.insert(source, v)
-    end 
+    for _, v in ipairs(target) do table.insert(source, v) end
 
     return source
 end
