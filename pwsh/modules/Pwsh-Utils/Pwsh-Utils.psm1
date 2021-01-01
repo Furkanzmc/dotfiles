@@ -254,6 +254,106 @@ function nman($Input) {
     $Input | nvim "+setlocal filetype=man"
 }
 
+function Build-Neovim() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [String]$SourcePath,
+        [Parameter(Mandatory=$true)]
+        [String]$InstallPath,
+        [Parameter(Mandatory=$true)]
+        [Switch]$Install
+     )
+
+    if (-not (Test-Path $SourcePath -ErrorAction SilentlyContinue)) {
+        Write-Host -ForegroundColor Red "$SourcePath does not exist."
+        exit 1
+    }
+
+    Push-Location $SourcePath
+
+    Write-Host -ForegroundColor Blue "Using $SourcePath as source directory."
+
+    if ($IsWindows) {
+        if (Test-Path build -ErrorAction SilentlyContinue) {
+            Write-Host -ForegroundColor Blue "Deleting the contents of the build directory."
+            Push-Location build
+            fd . -t f | rm -Force
+            Pop-Location
+        }
+        else {
+            mkdir build
+        }
+
+        if (Test-Path .deps -ErrorAction SilentlyContinue) {
+            Write-Host -ForegroundColor Blue "Deleting the contents of the .deps directory."
+            Push-Location .deps
+            fd . -t f | rm -Force
+            Pop-Location
+        }
+        else {
+            mkdir .deps
+        }
+
+        Import-VisualStudioVars
+
+        Write-Host -ForegroundColor Green "Changing directory to .deps"
+
+        Push-Location .deps
+        Write-Host -ForegroundColor Blue "Configuring the third party dependancies."
+
+        cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\third-party\
+
+        if (-not $?) {
+            Write-Host -ForegroundColor Red "Error while configuring the dependancies."
+            exit 1
+        }
+
+        Write-Host -ForegroundColor Blue "Building the third party dependancies."
+
+        jom -j12
+        if (-not $?) {
+            Write-Host -ForegroundColor Red "Error while building the dependancies."
+            exit 1
+        }
+        Pop-Location
+
+        Write-Host -ForegroundColor Green "Changing directory to build"
+
+        Push-Location build
+        Write-Host -ForegroundColor Blue "Configuring neovim."
+
+        cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
+        if (-not $?) {
+            Write-Host -ForegroundColor Red "Error while configuring the neovim."
+            exit 1
+        }
+
+        Write-Host -ForegroundColor Blue "Building neovim."
+
+        jom -j12
+        if (-not $?) {
+            Write-Host -ForegroundColor Red "Error while building neovim."
+            exit 1
+        }
+
+        if ($Install) {
+            Write-Host -ForegroundColor Blue "Installing neovim."
+            jom install
+        }
+        Pop-Location
+
+        Write-Host -ForegroundColor Green "Build succeeded."
+    }
+    else {
+        make CMAKE_BUILD_TYPE=Release -j12
+        if ($? -and $Install) {
+            make CMAKE_INSTALL_PREFIX=$HOME/local/nvim install
+        }
+    }
+
+    Pop-Location
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
