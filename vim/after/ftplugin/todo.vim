@@ -8,6 +8,7 @@ setlocal cursorline
 setlocal foldmethod=expr
 setlocal textwidth=1000
 
+setlocal spell
 setlocal foldexpr=todo#foldexpr(v:lnum)
 setlocal foldtext=todo#foldtext()
 

@@ -34,7 +34,7 @@ function includeexpr#find(fname, additional_paths)
         endif
     endif
 
-    call map(l:files, 'glob(v:val)')
+    call map(l:files, 'substitute(fnamemodify(glob(v:val), ":."), "\\", "/", "g")')
     call filter(l:files, '!empty(v:val)')
     call uniq(l:files)
 

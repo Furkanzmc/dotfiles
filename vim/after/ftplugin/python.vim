@@ -3,11 +3,6 @@ if !get(s:, "vimrc_python_plugins_loaded", v:false)
     let s:vimrc_python_plugins_loaded = v:true
 endif
 
-function python#includeexpr(fname)
-    let l:search_paths = [".venv/lib/*/site-packages"]
-    return includeexpr#find(substitute(a:fname, "\\.", "\/", "g"), l:search_paths)
-endfunction
-
 setlocal cindent
 setlocal expandtab
 setlocal autoindent
@@ -50,3 +45,8 @@ abbreviate <silent> <buffer> imtz@ from django.utils import timezone<C-R>=abbrev
 abbreviate <silent> <buffer> im_@ from django.utils.translation import ugettext_lazy as _<C-R>=abbreviations#eat_char('\s')<CR>
 
 " }}}
+
+function python#includeexpr(fname)
+    let l:search_paths = [".venv/lib/*/site-packages"]
+    return includeexpr#find(substitute(a:fname, "\\.", "\/", "g"), l:search_paths)
+endfunction
