@@ -10,21 +10,18 @@ local s_completion_sources = {
             return vim.bo.omnifunc ~= "" or vim.o.omnifunc ~= ""
         end
     }, {keys = "<c-x><c-n>"}, {keys = "<c-n>"},
-    {keys = "<c-x><c-v>", priority = 4, filetypes = {"vim"}},
-    {keys = "<c-x><c-f>", priority = 5}, {
+    {keys = "<c-x><c-v>", filetypes = {"vim"}},
+    {keys = "<c-x><c-f>"}, {
         keys = "<c-x><c-k>",
-        priority = 6,
         prediciate = function()
             return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or
                        pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
     }, {
         keys = "<c-x><c-s>",
-        priority = 7,
         prediciate = function() return vim.wo.spell end
     }, {
         keys = "<c-x><c-u>",
-        priority = 8,
         prediciate = function()
             return vim.bo.completefunc ~= "" or vim.o.completefunc ~= ""
         end
