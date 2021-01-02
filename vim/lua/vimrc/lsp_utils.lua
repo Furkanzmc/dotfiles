@@ -48,8 +48,12 @@ function M.set_loclist(opts)
         local row = pos.line
         local col = lsp.util.character_offset(bufnr, row, pos.character)
 
-        local line =
-            (api.nvim_buf_get_lines(bufnr, row, row + 1, false) or {""})[1]
+        local line = api.nvim_buf_get_lines(bufnr, row, row + 1, false)
+        if line == nil then
+            line = "N/A"
+        else
+            line = line[1]
+        end
 
         table.insert(items, {
             bufnr = bufnr,
