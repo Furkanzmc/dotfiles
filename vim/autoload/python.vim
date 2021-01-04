@@ -1,8 +1,8 @@
 function! python#get_pylint_error_message(error_code)
-    if !exists('~/.dotfiles/vim/temp_dirs/tmp_files/pylint_messages.txt')
+    if !filereadable("~/.dotfiles/vim/temp_dirs/tmp_files/pylint_messages.txt")
         call system(
-                    \ 'pylint --list-msgs > ' .
-                    \ '~/.dotfiles/vim/temp_dirs/tmp_files/pylint_messages.txt')
+                    \ "pylint --list-msgs > " .
+                    \ "~/.dotfiles/vim/temp_dirs/tmp_files/pylint_messages.txt")
     endif
 
     " 50 is an arbitrary context so I can show the description of the pylint

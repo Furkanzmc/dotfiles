@@ -70,7 +70,7 @@ if fn.executable("rg") then
 end
 
 -- Means that you can undo even when you close a buffer/VIM
-vim.o.undodir = "~/.dotfiles/vim/temp_dirs/undodir"
+vim.o.undodir = fn.expand("~/.dotfiles/vim/temp_dirs/undodir")
 vim.o.undofile = true
 
 -- Turn backup off, since most stuff is in SVN, git et.c anyway...
