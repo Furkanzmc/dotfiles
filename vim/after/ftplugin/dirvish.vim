@@ -15,10 +15,6 @@ if executable("qlmanage")
     nmap <buffer> <silent> L :call jobstart(["qlmanage", "-p", getline(".")])<CR>
 endif
 
-if has("mac")
-    nmap <buffer> <silent> R :call jobstart(["open", "--reveal", getline(".")])<CR>
-endif
-
 nmap <buffer> <silent> S :lua require"vimrc.plugins.dirvish".show_status(1, vim.fn.line("$"))<CR>
 vmap <buffer> <silent> S :lua require"vimrc.plugins.dirvish".show_status(vim.fn.line("'<"), vim.fn.line("'>"))<CR>
 nmap <buffer> <silent> C :lua require"vimrc.plugins.dirvish".toggle_conceal()<CR>
