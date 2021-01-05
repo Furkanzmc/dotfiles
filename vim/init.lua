@@ -557,6 +557,6 @@ cmd [[autocmd BufReadPost * lua require'vimrc.init_utils'.load_dictionary()]]
 
 cmd [[augroup END]]
 
-if fn.filereadable("~/.vimrc") then cmd "source ~/.vimrc" end
+if fn.filereadable(fn.expand("~/.vimrc")) == 1 then cmd "source ~/.vimrc" end
 
 -- vim: foldmethod=marker
