@@ -2,6 +2,7 @@
 " Example: {{{
 " [ ] (A) A todo item. +Project @Context
 " [x] (A) Prepend `x` to mark it as done.
+" [~] (A) This task will no longer be worked on but here for recording.
 " [ ] (B) A todo item with a subtask.
 "     [ ] Here's a subtask.
 "     > It can contain comments.
@@ -33,6 +34,7 @@ function! s:enable_highlight()
 endfunction
 
 let b:done_task_pattern = '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$'
+let b:removed_task_pattern = '\(^\[[\~]\]\|^\ \{4,\}\[[\~]\]\)\s.\+$'
 let b:task_pattern  ='^\ \{4,\}\[\ \]'
 let b:comment_patten = '^\ \{4,\}>\s.\+$'
 
@@ -43,6 +45,7 @@ syntax match TodoContext '\(^\|\W\)@[^[:blank:]]\+' contains=NONE
 
 syntax match TodoLeadingWhiteSpace '^\ \{1,\}' contains=NONE
 syntax match TodoDone '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$' contains=TodoLeadingWhiteSpace
+syntax match TodoRemoved '\(^\[[\~]\]\|^\ \{4,\}\[[\~]\]\)\s.\+$' contains=TodoLeadingWhiteSpace
 syntax match TodoInProgress '\(^\[[iI]\]\|^\ \{4,\}\[[iI]\]\)' contains=TodoLeadingWhiteSpace
 
 syntax match TodoPriorityA '\(^\(\[\ \]\|\[[iI]\]\)\|^\ \{4,\}\(\[\ \]\|\[[iI]\]\)\) ([aA])\s.\+$' contains=TodoInProgress,TodoDate,TodoTime,TodoProject,TodoContext,OverDueDate
@@ -57,6 +60,7 @@ syntax match TodoSubTask '\(^\ \{4,\}\[[iI]\]\|^\ \{4,\}\[ \]\)\s.\+$' contains=
 
 " Other priority colours might be defined by the user
 highlight default link TodoDone Comment
+highlight default link TodoRemoved DiffDelete
 highlight default link TodoInProgress WarningMsg
 highlight default link TodoPriorityA Identifier
 
