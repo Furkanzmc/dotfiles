@@ -245,7 +245,7 @@ M.setup_lsp = function()
     }
     lspconfig.efm.setup {
         on_attach = setup,
-        filetypes = {"qml", "python", "cpp", "json", "c", "yaml", "lua"}
+        filetypes = {"*"}
     }
 end
 

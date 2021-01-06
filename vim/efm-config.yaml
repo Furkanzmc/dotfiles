@@ -72,21 +72,37 @@ tools:
     format-command: 'lua-format -i'
     format-stdin: true
 
+  any-completion: &any-completion
+    completion-command: >-
+      cat ${INPUT} | rg "\w+" --no-filename --no-column --no-line-number
+      --only-matching | sort -u
+    completion-stdin: false
+    lint-source: "efm-langserver"
+
 languages:
   python:
     - <<: *python-pylint
     - <<: *python-bandit
+    - <<: *any-completion
   json:
     - <<: *json-jq
+    - <<: *any-completion
   yaml:
     - <<: *yaml-yamllint
+    - <<: *any-completion
   qml:
     - <<: *qml-qmllint
+    - <<: *any-completion
   cpp:
     - <<: *cpp-clangformat
     - <<: *cpp-clangcheck
+    - <<: *any-completion
   c:
     - <<: *cpp-clangformat
     - <<: *cpp-clangcheck
+    - <<: *any-completion
   lua:
     - <<: *lua-lua-format
+    - <<: *any-completion
+  _:
+    - <<: *any-completion
