@@ -54,6 +54,8 @@ endfunction
 
 " }}}
 
+" Modes {{{
+
 let g:vimrc_mode_map = {
             \ 'n'      : 'Normal',
             \ 'no'     : 'N.Operator Pending ',
@@ -75,6 +77,8 @@ let g:vimrc_mode_map = {
             \ '!'      : 'Shell',
             \ 't'      : 'Terminal'
             \}
+
+" }}}
 
 " This function just outputs the content colored by the
 " supplied colorgroup number, e.g. num = 2 -> User2
@@ -215,11 +219,23 @@ function! statusline#configure(winnum)
 
     " }}}
 
-
+    " Line and column {{{
+  
     if l:active
         let l:status .= s:get_color(l:active, 'Comment', 'StatusLineNC')
-            let l:status .= " [%l:%c] "
+        let l:status .= " [%l:%c] "
     endif
+
+    "  }}}
+
+    " Jira {{{
+  
+    if !empty(get(g:, "vimrc_active_jira_ticket", ""))
+        let l:status .= s:get_color(l:active, 'Comment', 'StatusLineNC')
+        let l:status .= g:vimrc_active_jira_ticket . " "
+    endif
+
+    "  }}}
 
     " Branch name {{{
 
