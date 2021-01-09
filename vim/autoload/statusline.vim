@@ -220,7 +220,7 @@ function! statusline#configure(winnum)
     " }}}
 
     " Line and column {{{
-  
+
     if l:active
         let l:status .= s:get_color(l:active, 'Comment', 'StatusLineNC')
         let l:status .= " [%l:%c] "
@@ -229,8 +229,8 @@ function! statusline#configure(winnum)
     "  }}}
 
     " Jira {{{
-  
-    if !empty(get(g:, "vimrc_active_jira_ticket", ""))
+
+    if !l:active && !empty(get(g:, "vimrc_active_jira_ticket", ""))
         let l:status .= s:get_color(l:active, 'Comment', 'StatusLineNC')
         let l:status .= g:vimrc_active_jira_ticket . " "
     endif

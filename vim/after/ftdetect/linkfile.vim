@@ -1,9 +1,12 @@
 function s:open_link()
-    let l:prompt = "Open it in the browser? (y/n): "
+    let l:prompt = "Open it in the browser? (y/n/c): "
     let l:selection = input(l:prompt)
+    let l:filepath = expand("%")
     if l:selection == "y"
-        let l:filepath = expand("%")
         execute "!open " . l:filepath
+        normal 
+        execute "bdelete! " . l:filepath
+    elseif l:selection == "c"
         normal 
         execute "bdelete! " . l:filepath
     else
