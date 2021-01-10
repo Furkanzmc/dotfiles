@@ -542,6 +542,21 @@ cmd [[augroup END]]
 
 -- }}}
 
+-- Highlight Trailing Whitespace {{{
+
+cmd [[highlight link TrailingWhiteSpace Error]]
+cmd [[match TrailingWhiteSpace /\s\+$/]]
+
+cmd [[augroup trailing_white_space_highlight]]
+cmd [[autocmd!]]
+cmd [[autocmd BufWinEnter * match TrailingWhiteSpace /\s\+$/]]
+cmd [[autocmd InsertEnter * match TrailingWhiteSpace /\s\+\%#\@<!$/]]
+cmd [[autocmd InsertLeave * match TrailingWhiteSpace /\s\+$/]]
+cmd [[autocmd BufWinLeave * call clearmatches()]]
+cmd [[augroup END]]
+
+-- }}}
+
 -- }}}
 
 cmd [[augroup vimrc_init]]

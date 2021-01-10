@@ -13,6 +13,10 @@ if executable("clang-format")
     setlocal formatprg=clang-format
 endif
 
+if executable("cppman")
+    setlocal keywordprg=cppman
+endif
+
 let b:vimrc_clangd_lsp_signs_enabled = 1
 let b:vimrc_clangd_lsp_location_list_enabled = 1
 let b:vimrc_efm_lsp_signs_enabled = 1
