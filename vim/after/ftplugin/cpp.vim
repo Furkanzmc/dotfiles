@@ -8,6 +8,7 @@ setlocal foldmethod=indent
 setlocal signcolumn=yes
 setlocal suffixesadd=.cpp,.h,.hxx,.cxx
 setlocal includeexpr=cpp#includeexpr(v:fname)
+setlocal commentstring=//%s
 
 if executable("clang-format")
     setlocal formatprg=clang-format
@@ -22,14 +23,32 @@ let b:vimrc_clangd_lsp_location_list_enabled = 1
 let b:vimrc_efm_lsp_signs_enabled = 1
 let b:vimrc_efm_lsp_location_list_enabled = 1
 
-" Override the default comment string from vim-commentary
-setlocal commentstring=//%s
 nnoremap <silent> <buffer> <nowait> <F4> :lua require"vimrc.plugins.cpp".swap_source_header()<CR>
 
 " Abbreviations {{{
 
 abbreviate <silent> <buffer> #i@ #include <><Left><C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> #i"@ #include ""<Left><C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> once@ #ifndef MY_HEADER_H<CR>#define MY_HEADER_H<CR><CR><CR>#endif<Up><Up><CR><Up><Up><Up><Esc>fMciw<C-R>=abbreviations#eat_char('\s')<CR>
+
+abbreviate <silent> <buffer> cout@ std::cout << "\n";<Left><Left><Left><Left><C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> clog@ std::clog << "\n";<Left><Left><Left><Left><C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> cerr@ std::cerr << "\n";<Left><Left><Left><Left><C-R>=abbreviations#eat_char('\s')<CR>
+
+" Q_PROPERTY abbreviation.
+abbreviate <silent> <buffer> QP@ Q_PROPERTY(TYPE PH READ PH WRITE setPH NOTIFY PHChanged)<Esc>F(/PH<CR><C-R>=abbreviations#eat_char('\s')<CR>
+
+" Abbreviation to create a getter and setter.
+" Example: int count sg@<Space>
+abbreviate <silent> <buffer> sg@ <BS><Esc>"nyiwhml^tc`lA() const;<CR>void<Space>set<Esc>"npT<Space>lll~$a(<Esc>"tpa<Space>value);<C-R>=abbreviations#eat_char('\s')<CR>
+
+" Abbreviation to getter.
+" Example: int count g@<Space>
+abbreviate <silent> <buffer> g@ <BS><Esc>"nyiwA() const;<C-R>=abbreviations#eat_char('\s')<CR>
+
+" Create a setter.
+" Example: int count s@<Space>
+abbreviate <silent> <buffer> s@ <BS><Esc>"nyiwhml^"tc`lvoid<Right>set<Esc>l~A(<Esc>"tpa<Space>value);<C-R>=abbreviations#eat_char('\s')<CR>
 
 " }}}
 
