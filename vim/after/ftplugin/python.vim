@@ -44,6 +44,8 @@ abbreviate <silent> <buffer> imdt@ from datetime import datetime<C-R>=abbreviati
 abbreviate <silent> <buffer> imtz@ from django.utils import timezone<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> im_@ from django.utils.translation import ugettext_lazy as _<C-R>=abbreviations#eat_char('\s')<CR>
 
+abbreviate <silent> <buffer> pr@ print("[lame_debugging::<C-r>=expand("%:t")<CR>::<C-r>=line('.')<CR>]")<Esc>F"a,<Space><C-R>=abbreviations#eat_char('\s')<CR>
+
 " }}}
 
 function python#includeexpr(fname)
