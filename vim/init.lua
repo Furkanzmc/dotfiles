@@ -44,6 +44,7 @@ vim.wo.signcolumn = "no"
 vim.o.pumheight = 12
 
 vim.o.exrc = true
+vim.o.shiftround = true
 
 -- Reduces the number of lines that are above the curser when I do zt.
 vim.o.scrolloff = 3
