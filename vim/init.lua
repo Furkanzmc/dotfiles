@@ -519,16 +519,11 @@ cmd [[au!]]
 cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html :lua require"vimrc.plugins.buffers".clean_trailing_spaces()]]
 cmd [[augroup END]]
 
-
 cmd [[highlight link TrailingWhiteSpace Error]]
-cmd [[match TrailingWhiteSpace /\s\+$/]]
 
 cmd [[augroup trailing_white_space_highlight]]
 cmd [[autocmd!]]
-cmd [[autocmd BufWinEnter * match TrailingWhiteSpace /\s\+$/]]
-cmd [[autocmd InsertEnter * match TrailingWhiteSpace /\s\+\%#\@<!$/]]
-cmd [[autocmd InsertLeave * match TrailingWhiteSpace /\s\+$/]]
-cmd [[autocmd BufWinLeave * call clearmatches()]]
+cmd [[autocmd BufReadPost * lua require"vimrc.init_utils".setup_white_space_highlight(vim.fn.bufnr())]]
 cmd [[augroup END]]
 
 -- }}}

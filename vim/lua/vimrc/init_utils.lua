@@ -94,6 +94,28 @@ function M.load_dictionary()
     b.vimrc_dictionary_loaded = true
 end
 
+function M.setup_white_space_highlight(bufnr)
+    if b.vimrc_trailing_white_space_highlight_enabled then
+        return
+    end
+
+    local excluded_filetypes = {"qf"}
+
+    if bo.filetype == "" or table.index_of(excluded_filetypes, bo.filetype) ~= -1 then
+        return
+    end
+
+    cmd("augroup trailing_white_space_highlight_buffer_" .. bufnr)
+    cmd [[autocmd! * <buffer>]]
+    cmd [[autocmd BufWinEnter <buffer> match TrailingWhiteSpace /\s\+$/]]
+    cmd [[autocmd InsertEnter <buffer> match TrailingWhiteSpace /\s\+\%#\@<!$/]]
+    cmd [[autocmd InsertLeave <buffer> match TrailingWhiteSpace /\s\+$/]]
+    cmd [[autocmd BufWinLeave <buffer> call clearmatches()]]
+    cmd [[augroup END]]
+
+    b.vimrc_trailing_white_space_highlight_enabled = true
+end
+
 return M
 
 -- vim: foldmethod=marker
