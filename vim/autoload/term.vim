@@ -1,4 +1,5 @@
 let s:term_floating_buffer = v:null
+let s:term_count = 0
 
 function! term#close(code) abort
     if a:code == 0
@@ -37,6 +38,9 @@ function! term#open(is_floating, ...)
         enew
         call termopen(l:program)
     endif
+
+    let s:term_count = s:term_count + 1
+    execute ":file terminal-" . s:term_count
 endfunction
 
 function! term#open_named_list(names)

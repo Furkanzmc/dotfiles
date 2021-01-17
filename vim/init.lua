@@ -267,6 +267,11 @@ map("n", "]b", ':execute ":" . v:count . "bnext"<CR>',
 map("n", "[b", ':execute ":" . v:count . "bprevious"<CR>',
     {silent = true, noremap = true})
 
+-- Switch to a terminal buffer using [count]gs.
+map("n", "gs",
+    '<cmd>execute "lua require\\"vimrc\\".switch_to_buffer(" . bufnr("terminal-" . v:count) . ")"<CR>',
+    {silent = true, noremap = true})
+
 -- Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 -- Allows running macros only on selected files.
 map("x", "@",
