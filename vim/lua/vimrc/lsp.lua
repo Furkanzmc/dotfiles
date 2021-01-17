@@ -66,7 +66,8 @@ function set_up_keymap(client, bufnr)
                                 "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
     end
 
-    if resolved_capabilities.signature_help == true then
+    if resolved_capabilities.signature_help == true and
+        vim.fn.mapcheck("gs", "n") == 0 then
         api.nvim_buf_set_keymap(bufnr, "n", "gs",
                                 "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
                                 opts)
@@ -243,10 +244,7 @@ M.setup_lsp = function()
         on_attach = setup_without_formatting,
         filetypes = {"vim"}
     }
-    lspconfig.efm.setup {
-        on_attach = setup,
-        filetypes = {"*"}
-    }
+    lspconfig.efm.setup {on_attach = setup, filetypes = {"*"}}
 end
 
 return M
