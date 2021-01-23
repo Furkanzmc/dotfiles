@@ -320,10 +320,17 @@ cmd [[abbreviate Langauge Language]]
 
 -- Plugins {{{
 
+g.markdown_fenced_languages = {
+    "qml", "css", "html", "cpp", "json", "python", "javascript", "diff", "yaml",
+    "sh", "ps1"
+}
+
 -- Pre-configuration {{{
 
 -- Disable netrw in favor of vim-dirvish
 g.loaded_netrwPlugin = 1
+
+-- vim-polyglot {{{
 
 -- Disable markdown support for polyglot because it messes up with syntax
 -- highlighting.
@@ -333,6 +340,8 @@ g.polyglot_is_disabled = {
     vue = true,
     sensible = true
 }
+
+-- }}}
 
 -- }}}
 
