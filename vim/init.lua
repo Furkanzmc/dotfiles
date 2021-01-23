@@ -435,6 +435,12 @@ g.firvish_shell = "pwsh"
 
 -- }}}
 
+-- vim-markdown-folding {{{
+
+g.markdown_fold_style = "nested"
+
+-- }}}
+
 -- }}}
 
 -- Local Plugins {{{
