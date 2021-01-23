@@ -14,7 +14,7 @@ function! python#get_pylint_error_message(error_code)
                 \ . " --after-context 20")
     if len(l:output_lines) == 0
         echohl Error
-        echo "No pylint message for '" . a:error_code . "'"
+        echo "[vimrc] No pylint message for '" . a:error_code . "'"
         echohl Normal
         return
     endif

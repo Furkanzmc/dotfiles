@@ -57,6 +57,14 @@ function table.extend(source, target)
     return source
 end
 
+function table.filter(t, pred)
+    local out = {}
+
+    for k, v in pairs(t) do if pred(v, k, t) then table.insert(out, v) end end
+
+    return out
+end
+
 return M
 
 -- vim: foldmethod=marker

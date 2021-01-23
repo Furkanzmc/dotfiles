@@ -269,7 +269,7 @@ map("n", "[b", ':execute ":" . v:count . "bprevious"<CR>',
 
 -- Switch to a terminal buffer using [count]gs.
 map("n", "gs",
-    '<cmd>execute "lua require\\"vimrc\\".switch_to_buffer(" . bufnr("terminal-" . v:count) . ")"<CR>',
+    '<cmd>execute "lua require\\"vimrc.terminal\\".switch_to_terminal(" . v:count . ")"<CR>',
     {silent = true, noremap = true})
 
 -- Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
@@ -303,11 +303,7 @@ cmd [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet 
 cmd [[command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)]]
 cmd [[command! -nargs=? JiraOpenTicketJson :call jira#open_ticket_in_json(<f-args>)]]
 
-cmd [[command Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE]]
-
--- command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
--- command! PackClean  call PackInit() | call minpac#clean()
--- command! PackStatus call PackInit() | call minpac#status()
+cmd [[command! Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE]]
 
 -- }}}
 
@@ -544,13 +540,12 @@ cmd [[augroup END]]
 
 -- Terminal {{{
 
-cmd [[command! -nargs=? -complete=shellcmd Terminal :call term#open(v:false, <f-args>)]]
-cmd [[command! -nargs=? -complete=shellcmd TerminalFloating :call term#open(v:true, <f-args>)]]
-cmd [[command! -nargs=? -complete=shellcmd TerminalFloatingClose :call term#close(-1)]]
+cmd [[command! -nargs=? -complete=shellcmd Terminal :call term#open(<f-args>)]]
 
 cmd [[augroup term_plugin]]
 cmd [[autocmd!]]
 cmd [[autocmd TermOpen * startinsert]]
+cmd [[autocmd TermOpen * lua require"vimrc.terminal".index_terminals()]]
 cmd [[augroup END]]
 
 -- }}}
