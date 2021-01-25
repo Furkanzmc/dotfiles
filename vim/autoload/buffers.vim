@@ -20,7 +20,9 @@ function! buffers#wipe_matching(pattern, bang)
 
     let l:count = len(l:matchList)
     if l:count < 1
-        echo 'No buffers found matching pattern ' . a:pattern
+        echohl WarningMsg
+        echo '[vimrc] No buffers found matching pattern "' . a:pattern . '"'
+        echohl Normal
         return
     endif
 
@@ -36,7 +38,9 @@ function! buffers#wipe_matching(pattern, bang)
         exec 'bw ' . join(l:matchList, ' ')
     endif
 
-    echo 'Wiped ' . l:count . ' buffer' . l:suffix . '.'
+    echohl IncSearch
+    echo '[vimrc] Wiped ' . l:count . ' buffer' . l:suffix . '.'
+    echohl Normal
 endfunction
 
 " Delete all hidden buffers
@@ -52,11 +56,13 @@ function! buffers#delete_hidden()
         silent execute 'bwipeout' buf
     endfor
 
+    echohl IncSearch
     if l:count > 0
-        echo 'Closed ' . l:count . ' hidden buffers.'
+        echo '[vimrc] Closed ' . l:count . ' hidden buffers.'
     else
-        echo 'No hidden buffer present.'
+        echo '[vimrc] No hidden buffer present.'
     endif
+    echohl Normal
 endfunction
 
 function! buffers#wipe_nonexisting_files()
@@ -76,7 +82,9 @@ function! buffers#wipe_nonexisting_files()
 
     exec 'bw! ' . join(l:matchList, ' ')
 
-    echo 'Wiped ' . l:count . ' buffer' . l:suffix . '.'
+    echohl IncSearch
+    echo '[vimrc] Wiped ' . l:count . ' buffer' . l:suffix . '.'
+    echohl Normal
 endfunction
 
 " Code taken from here: https://stackoverflow.com/a/6271254
