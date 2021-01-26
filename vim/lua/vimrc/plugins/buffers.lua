@@ -47,7 +47,7 @@ end
 function M.toggle_colorcolumn(col)
     local columns = fn.split(wo.colorcolumn, ",")
     if col == -1 then
-        columns = {columns[0]}
+        columns = {columns[1]}
     else
         local found = table.index_of(columns, tostring(col))
         if found > -1 then
