@@ -121,6 +121,9 @@ languages:
     - <<: *lua-lua-format
     - <<: *any-completion
     - <<: *any-hover
+  markdown:
+    - <<: *any-completion
+    - <<: *any-hover
   _:
     - <<: *any-completion
     - <<: *any-hover
