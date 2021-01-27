@@ -122,7 +122,7 @@ function set_up_keymap(client, bufnr)
 
     if resolved_capabilities.hover ~= false then
         api.nvim_command(
-            "command -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
+            "command! -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
     end
 
     api.nvim_buf_set_var(bufnr,

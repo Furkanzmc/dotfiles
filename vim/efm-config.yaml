@@ -27,11 +27,16 @@ tools:
       - '    %C%\s%+%m'
 
   python-bandit: &python-bandit
-    lint-command: 'bandit --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"'
+    lint-command: 'bandit --skips B101 --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"'
     lint-stdin: false
     lint-ignore-exit-code: true
     lint-formats:
       - '%f:%l %m'
+
+  python-pylint-hover: &python-pylint-hover
+    hover-command: >-
+      python3 ~/.dotfiles/vim/scripts/lsp_hover.py --describe-code ${INPUT}
+    hover-stdin: false
 
   qml-qmllint: &qml-qmllint
     lint-command: 'qmllint --check-unqualified ${INPUT}'
@@ -84,6 +89,7 @@ languages:
     - <<: *python-pylint
     - <<: *python-bandit
     - <<: *any-completion
+    - <<: *python-pylint-hover
   json:
     - <<: *json-jq
     - <<: *any-completion
