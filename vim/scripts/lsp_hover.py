@@ -2,7 +2,7 @@ from subprocess import run
 from typing import List
 from argparse import ArgumentParser, Namespace
 from os.path import expanduser
-from urllib.request import urlopen
+from distutils.spawn import find_executable
 
 
 def parse_args() -> Namespace:
@@ -97,6 +97,9 @@ def define_word(word: str) -> bool:
 
 
 def pydoc(word: str) -> bool:
+    if not find_executable("pydoc"):
+        return False
+
     result = run(["pydoc", word], capture_output=True)
     if result.returncode == 0:
         output = result.stdout.decode("utf-8")

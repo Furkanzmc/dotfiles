@@ -84,7 +84,7 @@ tools:
       python3 ~/.dotfiles/vim/scripts/lsp_hover.py --hover ${INPUT}
     hover-stdin: false
 
-  any-python-hover: &any-python-hover
+  python-hover: &python-hover
     hover-command: >-
       python3 ~/.dotfiles/vim/scripts/lsp_hover.py --language python --hover ${INPUT}
     hover-stdin: false
@@ -94,7 +94,7 @@ languages:
     - <<: *python-pylint
     - <<: *python-bandit
     - <<: *any-completion
-    - <<: *any-python-hover
+    - <<: *python-hover
   json:
     - <<: *json-jq
     - <<: *any-completion
