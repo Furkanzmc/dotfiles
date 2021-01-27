@@ -103,8 +103,6 @@ def hover(token: str, language: str = None):
     if define_word(token):
         return
 
-    print("[custom] No hover information for '{}'.".format(token))
-
 
 def main() -> None:
     args = parse_args()
