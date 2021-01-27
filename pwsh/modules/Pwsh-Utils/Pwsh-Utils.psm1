@@ -249,6 +249,11 @@ function Set-Terminal-Theme() {
     }
 }
 
+function Define-Word($word) {
+    curl dict://dict.org/d:"$word" | nvim --noplugin "+setlocal filetype=man"
+}
+Set-Alias -Name dict -Value Define-Word
+
 # Sample usage: `git --help | nman`
 function nman($Input) {
     $Input | nvim "+setlocal filetype=man"
