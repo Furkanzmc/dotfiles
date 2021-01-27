@@ -20,6 +20,13 @@ def parse_args() -> Namespace:
     )
 
     parser.add_argument(
+        "--language",
+        type=str,
+        default=None,
+        help="Outputs word definition.",
+    )
+
+    parser.add_argument(
         "--hover",
         type=str,
         help="Runs all the hover functions one by one until one returns output",
@@ -89,14 +96,15 @@ def define_word(word: str) -> bool:
     return False
 
 
-def hover(token: str):
-    if describe_pylint_code(token):
+def hover(token: str, language: str = None):
+    if language == "python" and describe_pylint_code(token):
         return
 
     if define_word(token):
         return
 
     print("[custom] No hover information for '{}'.".format(token))
+
 
 def main() -> None:
     args = parse_args()
@@ -105,7 +113,7 @@ def main() -> None:
     elif args.define:
         define_word(args.define)
     elif args.hover:
-        hover(args.hover)
+        hover(args.hover, args.language)
 
 
 if __name__ == "__main__":
