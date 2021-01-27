@@ -33,11 +33,6 @@ tools:
     lint-formats:
       - '%f:%l %m'
 
-  python-pylint-hover: &python-pylint-hover
-    hover-command: >-
-      python3 ~/.dotfiles/vim/scripts/lsp_hover.py --describe-code ${INPUT}
-    hover-stdin: false
-
   qml-qmllint: &qml-qmllint
     lint-command: 'qmllint --check-unqualified ${INPUT}'
     lint-stdin: false
@@ -84,31 +79,43 @@ tools:
     completion-stdin: false
     lint-source: "efm-langserver"
 
+  any-custom-hover: &any-custom-hover
+    hover-command: >-
+      python3 ~/.dotfiles/vim/scripts/lsp_hover.py --hover ${INPUT}
+    hover-stdin: false
+
 languages:
   python:
     - <<: *python-pylint
     - <<: *python-bandit
     - <<: *any-completion
-    - <<: *python-pylint-hover
+    - <<: *any-custom-hover
   json:
     - <<: *json-jq
     - <<: *any-completion
+    - <<: *any-custom-hover
   yaml:
     - <<: *yaml-yamllint
     - <<: *any-completion
+    - <<: *any-custom-hover
   qml:
     - <<: *qml-qmllint
     - <<: *any-completion
+    - <<: *any-custom-hover
   cpp:
     - <<: *cpp-clangformat
     - <<: *cpp-clangcheck
     - <<: *any-completion
+    - <<: *any-custom-hover
   c:
     - <<: *cpp-clangformat
     - <<: *cpp-clangcheck
     - <<: *any-completion
+    - <<: *any-custom-hover
   lua:
     - <<: *lua-lua-format
     - <<: *any-completion
+    - <<: *any-custom-hover
   _:
     - <<: *any-completion
+    - <<: *any-custom-hover
