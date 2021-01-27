@@ -96,11 +96,25 @@ def define_word(word: str) -> bool:
     return False
 
 
+def pydoc(word: str) -> bool:
+    result = run(["pydoc", word], capture_output=True)
+    if result.returncode == 0:
+        output = result.stdout.decode("utf-8")
+        if output.find("no Python documentation found for") == -1:
+            print(output)
+            return True
+
+    return False
+
+
 def hover(token: str, language: str = None):
     if language == "python" and describe_pylint_code(token):
         return
 
-    if define_word(token):
+    if language == "python" and pydoc(token):
+        return
+
+    if language not in ("python",) and define_word(token):
         return
 
 
