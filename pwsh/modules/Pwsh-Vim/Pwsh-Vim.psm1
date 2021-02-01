@@ -4,7 +4,7 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 
 if (Test-Path env:NVIM_LISTEN_ADDRESS -ErrorAction SilentlyContinue) {
     if (-not (Get-Command "nvr" -ErrorAction SilentlyContinue)) {
-        Write-Error "Install neovim-remote"
+        Write-Host -ForegroundColor Blue "[dotfiles] neovim-remote is not installed."
         return
     }
 
