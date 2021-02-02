@@ -27,14 +27,14 @@
     {
         "defaults": {
             // Put settings here that you want to apply to all profiles.
-            "fontSize": 9,
-            "fontFace": "SauceCodePro NF",
+            "fontSize": 10,
+            "fontFace": "Fira Code",
             "fontWeight": "medium",
             "padding": "0",
             "antialiasingMode": "cleartype",
-            "colorScheme": "dark",
+            "colorScheme": "light",
             "cursorShape": "filledBox",
-            "scrollbarState": "hidden"
+            "scrollbarState": "visible"
         },
         "list":
         [

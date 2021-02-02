@@ -238,6 +238,13 @@ function Set-Terminal-Theme() {
         $env:VIMRC_TERMINAL_THEME = $Color
         $env:FZF_DEFAULT_OPTS = "--bind='ctrl-l:toggle-preview' --color=$Color"
         _Set-Alacritty-Color $Color
+
+        if ($Color -eq "light") {
+            $env:BAT_THEME = "gruvbox-light"
+        }
+        else {
+            $env:BAT_THEME = "gruvbox"
+        }
     }
 
     if ($IsWindows -and (Test-Path env:PWSH_WINDOWS_TERMINAL_SETTINGS -ErrorAction SilentlyContinue)) {

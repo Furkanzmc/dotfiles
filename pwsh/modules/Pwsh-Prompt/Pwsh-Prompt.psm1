@@ -44,6 +44,10 @@ function Get-Git-Status-Dict() {
 
 function Cache-Git-Status() {
     $gitDir = &git rev-parse --git-dir
+    if (! $?) {
+        return
+    }
+
     $gitStatusFile = Join-Path -Path $gitDir -ChildPath status_prompt.json
     $lockFile = Join-Path -Path $gitDir -ChildPath index.lock
     if (Test-Path $lockFile -ErrorAction SilentlyContinue) {
