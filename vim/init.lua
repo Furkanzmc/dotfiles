@@ -522,6 +522,7 @@ map("n", "<leader>cd",
     {silent = true, noremap = true})
 
 cmd [[command! MarkScratch :lua require"vimrc.plugins.buffers".mark_scratch(vim.api.nvim_get_current_buf())]]
+cmd [[command! CleanTrailingWhiteSpace :lua require"vimrc.plugins.buffers".clean_trailing_spaces()]]
 
 cmd [[command! Bclose :lua require"vimrc.plugins.buffers".close()]]
 cmd [[command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-bang>)]]
