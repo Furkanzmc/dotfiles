@@ -130,29 +130,6 @@ function set_up_keymap(client, bufnr)
                          true)
 end
 
-function setup_auto_stop(client, bufnr)
-    if api.nvim_buf_get_var(bufnr,
-                            "is_vimrc_" .. client.name .. "_lsp_auto_stop") == 0 then
-        return
-    end
-
-    local is_configured = api.nvim_buf_get_var(bufnr,
-                                               "is_vimrc_" .. client.name ..
-                                                   "_lsp_events_set")
-    if is_configured then return end
-
-    api.nvim_command("augroup vimrc_" .. client.name .. "_lsp_" .. bufnr ..
-                         "_events")
-    api.nvim_command("au!")
-    api.nvim_command(
-        "autocmd BufLeave,WinLeave,BufDelete,BufWipeout <buffer> lua require'vimrc.lsp'.stop_buffer_clients(" ..
-            client.id .. ")")
-    api.nvim_command("augroup END")
-
-    api.nvim_buf_set_var(bufnr, "is_vimrc_" .. client.name .. "_lsp_events_set",
-                         true)
-end
-
 function setup_buffer_vars(client, bufnr)
     if vim.fn.exists("b:is_vimrc_" .. client.name .. "_lsp_auto_stop") == 0 then
         api.nvim_buf_set_var(bufnr,
@@ -232,9 +209,16 @@ M.setup_lsp = function()
             }
         }
     }
-    lspconfig.clangd.setup {
-        on_attach = setup_without_formatting,
-        filetypes = {"cpp", "c"}
+    lspconfig.clangd.setup{
+        on_attach=setup_without_formatting,
+        filetypes={"cpp", "c"},
+        cmd = {
+            "clangd",
+            "--background-index",
+            "--clang-tidy",
+            "--completion-style=detailed",
+            "--recovery-ast",
+        }
     }
     lspconfig.rls.setup {
         on_attach = setup_without_formatting,
