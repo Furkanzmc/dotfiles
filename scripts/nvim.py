@@ -8,14 +8,21 @@ from typing import List
 from logging import getLogger, Logger, DEBUG
 
 # Thid Party
-from pynvim import attach
-from psutil import (
-    process_iter,
-    NoSuchProcess,
-    AccessDenied,
-    ZombieProcess,
-    Process,
-)
+try:
+    from pynvim import attach
+except ImportError:
+    exit(0)
+
+try:
+    from psutil import (
+        process_iter,
+        NoSuchProcess,
+        AccessDenied,
+        ZombieProcess,
+        Process,
+    )
+except ImportError:
+    exit(0)
 
 logger: Logger = getLogger("zmc.dotfiles.nvim")
 logger.setLevel(getenv("ZMC_DOTFILES_DEBUG_LEVEL", DEBUG))
