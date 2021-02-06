@@ -11,6 +11,11 @@ setlocal textwidth=1000
 setlocal spell
 setlocal foldexpr=todo#foldexpr(v:lnum)
 setlocal foldtext=todo#foldtext()
+setlocal expandtab
+
+setlocal tabstop=4
+setlocal softtabstop=4
+setlocal shiftwidth=4
 
 nmap <buffer> <silent> <leader>x :normal! mt0f]hrxA finished: =strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
 nmap <buffer> <silent> <leader>i :normal! mt0f]hriA started: =strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
