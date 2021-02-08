@@ -178,6 +178,10 @@ M.stop_buffer_clients =
     function(client_id, bufnr) lsp.stop_client(client_id) end
 
 M.setup_lsp = function()
+    if vim.fn.exists(":LspInfo") == 0 then
+        return
+    end
+
     local setup = function(client)
         local bufnr = api.nvim_get_current_buf()
 

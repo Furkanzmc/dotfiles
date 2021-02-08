@@ -23,7 +23,7 @@ let b:vimrc_clangd_lsp_location_list_enabled = 1
 let b:vimrc_efm_lsp_signs_enabled = 1
 let b:vimrc_efm_lsp_location_list_enabled = 1
 
-nnoremap <silent> <buffer> <nowait> <F4> :lua require"vimrc.plugins.cpp".swap_source_header()<CR>
+nnoremap <silent> <buffer> <nowait> <F4> :lua require"vimrc.cpp".swap_source_header()<CR>
 
 " Abbreviations {{{
 

@@ -85,9 +85,9 @@ end
 function M.init()
     cmd [[augroup dirvish_virtual_text]]
     cmd [[au! * <buffer>]]
-    cmd [[autocmd CursorHold,BufEnter <buffer> lua require"vimrc.plugins.dirvish".show_status(vim.fn.line("."), vim.fn.line("."))]]
-    cmd [[autocmd CursorMoved <buffer> lua require"vimrc.plugins.dirvish".clear_status(false)]]
-    cmd [[autocmd BufLeave <buffer> lua require"vimrc.plugins.dirvish".clear_status(true)]]
+    cmd [[autocmd CursorHold,BufEnter <buffer> lua require"vimrc.dirvish".show_status(vim.fn.line("."), vim.fn.line("."))]]
+    cmd [[autocmd CursorMoved <buffer> lua require"vimrc.dirvish".clear_status(false)]]
+    cmd [[autocmd BufLeave <buffer> lua require"vimrc.dirvish".clear_status(true)]]
     cmd [[augroup END]]
 end
 

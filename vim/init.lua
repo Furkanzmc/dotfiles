@@ -491,7 +491,7 @@ cmd [[command! ClearQuickFix :call setqflist([])]]
 
 -- URL text object.
 map("x", "iu",
-    ":<C-u>lua require'vimrc.plugins.textobjects'.url_text_object()<CR>",
+    ":<C-u>lua require'vimrc.textobjects'.url_text_object()<CR>",
     {silent = true, noremap = true})
 map("o", "iu", ":<C-u>normal viu<CR>", {silent = true, noremap = true})
 
@@ -501,7 +501,7 @@ map("o", "il", ":<C-u>normal vil<CR>", {silent = true, noremap = true})
 
 -- Number
 map("x", "in",
-    ":<C-u>lua require'vimrc.plugins.textobjects'.number_text_object()<CR>",
+    ":<C-u>lua require'vimrc.textobjects'.number_text_object()<CR>",
     {silent = true, noremap = true})
 map("o", "in", ":<C-u>normal viu<CR>", {silent = true, noremap = true})
 
@@ -515,16 +515,16 @@ map("v", "<leader>r", ":call buffers#visual_selection('replace', '')<CR>",
     {silent = true, noremap = true})
 
 map("n", "<leader>cc",
-    ":lua require'vimrc.plugins.buffers'.toggle_colorcolumn(vim.api.nvim_win_get_cursor(0)[2] + 1)<CR>",
+    ":lua require'vimrc.buffers'.toggle_colorcolumn(vim.api.nvim_win_get_cursor(0)[2] + 1)<CR>",
     {silent = true, noremap = true})
 map("n", "<leader>cd",
-    ":lua require'vimrc.plugins.buffers'.toggle_colorcolumn(-1)<CR>",
+    ":lua require'vimrc.buffers'.toggle_colorcolumn(-1)<CR>",
     {silent = true, noremap = true})
 
-cmd [[command! MarkScratch :lua require"vimrc.plugins.buffers".mark_scratch(vim.api.nvim_get_current_buf())]]
-cmd [[command! CleanTrailingWhiteSpace :lua require"vimrc.plugins.buffers".clean_trailing_spaces()]]
+cmd [[command! MarkScratch :lua require"vimrc.buffers".mark_scratch(vim.api.nvim_get_current_buf())]]
+cmd [[command! CleanTrailingWhiteSpace :lua require"vimrc.buffers".clean_trailing_spaces()]]
 
-cmd [[command! Bclose :lua require"vimrc.plugins.buffers".close()]]
+cmd [[command! Bclose :lua require"vimrc.buffers".close()]]
 cmd [[command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-bang>)]]
 cmd [[command! Bdhidden :call buffers#delete_hidden()]]
 cmd [[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]]
@@ -533,7 +533,7 @@ cmd [[command! -nargs=1 SetIndentSize :setlocal tabstop=<args> softtabstop=<args
 
 cmd [[augroup plugin_buffers]]
 cmd [[au!]]
-cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html :lua require"vimrc.plugins.buffers".clean_trailing_spaces()]]
+cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html :lua require"vimrc.buffers".clean_trailing_spaces()]]
 cmd [[augroup END]]
 
 cmd [[highlight link TrailingWhiteSpace Error]]
@@ -573,7 +573,7 @@ cmd [[autocmd!]]
 cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses") | packadd nvim-http | endif]]
 cmd [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
 cmd [[autocmd VimEnter * lua require'vimrc.init_utils'.create_custom_nvim_server()]]
-cmd [[autocmd VimEnter * colorscheme cosmic_latte]]
+cmd [[autocmd VimEnter * colorscheme cosmic_latte ]]
 
 -- Return to last edit position when opening files (You want this!)
 cmd [[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]

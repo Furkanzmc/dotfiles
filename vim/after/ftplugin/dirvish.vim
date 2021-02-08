@@ -15,10 +15,10 @@ if executable("qlmanage")
     nmap <buffer> <silent> L :call jobstart(["qlmanage", "-p", getline(".")])<CR>
 endif
 
-nmap <buffer> <silent> S :lua require"vimrc.plugins.dirvish".show_status(1, vim.fn.line("$"))<CR>
-vmap <buffer> <silent> S :lua require"vimrc.plugins.dirvish".show_status(vim.fn.line("'<"), vim.fn.line("'>"))<CR>
-nmap <buffer> <silent> C :lua require"vimrc.plugins.dirvish".toggle_conceal()<CR>
+nmap <buffer> <silent> S :lua require"vimrc.dirvish".show_status(1, vim.fn.line("$"))<CR>
+vmap <buffer> <silent> S :lua require"vimrc.dirvish".show_status(vim.fn.line("'<"), vim.fn.line("'>"))<CR>
+nmap <buffer> <silent> C :lua require"vimrc.dirvish".toggle_conceal()<CR>
 
-lua require"vimrc.plugins.dirvish".init()
+lua require"vimrc.dirvish".init()
 
 let b:vimrc_dirvish_did_dirvish = v:true
