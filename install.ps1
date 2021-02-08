@@ -9,10 +9,9 @@ echo '. "~/.dotfiles/pwsh_profile.ps1"' >> $profile
 New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/tmux.conf" -Target "~/.tmux.conf"
 New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/terminals/alacritty.yml" -Target "~/.alacritty.yml"
 
-New-Item -Force -ItemType SymbolicLink -Path "~/.config/karabiner/assets/complex_modifications/karabiner_vi_style.json" -Target "~/.dotfiles/karabiner_vi_style.json"
+New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/karabiner_vi_style.json" -Target "~/.config/karabiner/assets/complex_modifications/karabiner_vi_style.json"
 
 New-Item -ItemType Directory -Force -Path "~/.hammerspoon"
-New-Item -Force -ItemType SymbolicLink -Path "~/.dotfiles/karabiner_vi_style.json" -Target "~/.config/karabiner/assets/complex_modifications/"
 
 foreach ($file in Get-ChildItem -Path "~/.dotfiles/hammerspoon/") {
     $fileName = Split-Path $file -Leaf

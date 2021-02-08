@@ -351,7 +351,10 @@ g.tagbar_show_linenumbers = 1
 
 -- nvim-lsp {{{
 
-require'vimrc.lsp'.setup_lsp()
+cmd [[augroup nvim_lsp_config]]
+cmd [[autocmd!]]
+cmd [[autocmd VimEnter * lua require'vimrc.lsp'.setup_lsp()]]
+cmd [[augroup END]]
 
 -- These are here so I remember to configure it when Neovim LSP supports it. {{{
 
@@ -394,6 +397,7 @@ fn.sign_define("LspDiagnosticsSignHint", {
 -- Completion {{{
 
 cmd [[augroup vimrc_completion]]
+cmd [[autocmd!]]
 cmd [[autocmd BufReadPost,BufNewFile,BufEnter * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
 cmd [[augroup END]]
 
@@ -415,7 +419,9 @@ g.nvimgdb_config_override = {
     key_frameup = "<leader>u",
     key_framedown = "<leader>d",
     key_continue = "<leader>c",
-    key_next = "<leader>n"
+    key_next = "<leader>n",
+    key_breakpoint = "<leader>b",
+    key_eval = "<leader>e",
 }
 
 -- }}}
