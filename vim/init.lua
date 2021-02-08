@@ -424,6 +424,15 @@ g.nvimgdb_config_override = {
     key_eval = "<leader>e",
 }
 
+cmd [[augroup nvim_gdb_config]]
+cmd [[autocmd!]]
+cmd [[autocmd User NvimGdbStart nmap <silent> <leader>f :GdbFrame<CR>]]
+cmd [[autocmd User NvimGdbStart vmap <silent> <leader>e :GdbEvalRange<CR>]]
+
+cmd [[autocmd User NvimGdbCleanup unmap <leader>f]]
+cmd [[autocmd User NvimGdbCleanup vunmap <leader>e]]
+cmd [[augroup END]]
+
 -- }}}
 
 -- nvim-treesitter {{{
