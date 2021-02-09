@@ -4,6 +4,7 @@ local cmd = vim.cmd
 local g = vim.g
 local b = vim.b
 local bo = vim.bo
+local utils = require"vimrc.utils"
 local M = {}
 
 function M.init_paq()
