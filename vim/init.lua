@@ -414,24 +414,18 @@ map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
 
 -- nvim-gdb {{{
 
-g.nvimgdb_config_override = {
-    key_step = "<leader>s",
-    key_frameup = "<leader>u",
-    key_framedown = "<leader>d",
-    key_continue = "<leader>c",
-    key_next = "<leader>n",
-    key_breakpoint = "<leader>b",
-    key_eval = "<leader>e",
-}
-
-cmd [[augroup nvim_gdb_config]]
-cmd [[autocmd!]]
-cmd [[autocmd User NvimGdbStart nmap <silent> <leader>f :GdbFrame<CR>]]
-cmd [[autocmd User NvimGdbStart vmap <silent> <leader>e :GdbEvalRange<CR>]]
-
-cmd [[autocmd User NvimGdbCleanup unmap <leader>f]]
-cmd [[autocmd User NvimGdbCleanup vunmap <leader>e]]
-cmd [[augroup END]]
+map("n", "<F5>", ":lua require'dap'.continue()<CR>", { silent=true, noremap=true})
+map("n", "<F6>", ":lua require'dap'.stop()<CR>", { silent=true, noremap=true})
+map("n", "<leader>ds",":lua require'dap'.step_into()<CR>", { silent=true, noremap=true})
+map("n", "<leader>do",":lua require'dap'.step_out()<CR>", { silent=true, noremap=true})
+map("n", "<leader>dn",":lua require'dap'.step_over()<CR>", { silent=true, noremap=true})
+map("n", "<leader>du",":lua require'dap'.up()<CR>", { silent=true, noremap=true})
+map("n", "<leader>dd",":lua require'dap'.down()<CR>", { silent=true, noremap=true})
+map("n", "<leader>db",":lua require'dap'.toggle_breakpoint()<CR>", { silent=true, noremap=true})
+map("n", "<leader>dB",":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", { silent=true, noremap=true})
+map("n", "<leader>dlp",":lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", { silent=true, noremap=true})
+map("n", "<leader>dr",":lua require'dap'.repl.open()<CR>", { silent=true, noremap=true})
+map("n", "<leader>dl",":lua require'dap'.list_breakpoints(true)<CR>", { silent=true, noremap=true})
 
 -- }}}
 

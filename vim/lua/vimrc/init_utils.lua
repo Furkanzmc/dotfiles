@@ -28,13 +28,7 @@ function M.init_paq()
     paq {'majutsushi/tagbar', opt = true}
     paq {'masukomi/vim-markdown-folding', opt = true}
     paq {'junegunn/goyo.vim', opt = true}
-    if fn.has("win32") == 0 then
-        paq {
-            'sakhnik/nvim-gdb',
-            opt = true,
-            hook = fn['remote#host#UpdateRemotePlugins']
-        }
-    end
+    paq { 'mfussenegger/nvim-dap', opt = true }
 
     paq {'rust-lang/rust.vim', opt = true}
     paq {'nvim-treesitter/nvim-treesitter', opt = true}
