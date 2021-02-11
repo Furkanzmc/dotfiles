@@ -417,15 +417,22 @@ map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
 map("n", "<F5>", ":lua require'dap'.continue()<CR>", { silent=true, noremap=true})
 map("n", "<F6>", ":lua require'dap'.stop()<CR>", { silent=true, noremap=true})
 map("n", "<leader>ds",":lua require'dap'.step_into()<CR>", { silent=true, noremap=true})
+
+map("n", "<leader>dh",":lua require'dap.ui.variables'.hover()<CR>", { silent=true, noremap=true})
+map("v", "<leader>dh",":lua require'dap.ui.variables'.visual_hover()<CR>", { silent=true, noremap=true})
 map("n", "<leader>do",":lua require'dap'.step_out()<CR>", { silent=true, noremap=true})
+
 map("n", "<leader>dn",":lua require'dap'.step_over()<CR>", { silent=true, noremap=true})
 map("n", "<leader>du",":lua require'dap'.up()<CR>", { silent=true, noremap=true})
 map("n", "<leader>dd",":lua require'dap'.down()<CR>", { silent=true, noremap=true})
+
 map("n", "<leader>db",":lua require'dap'.toggle_breakpoint()<CR>", { silent=true, noremap=true})
 map("n", "<leader>dB",":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", { silent=true, noremap=true})
 map("n", "<leader>dlp",":lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", { silent=true, noremap=true})
-map("n", "<leader>dr",":lua require'dap'.repl.open()<CR>", { silent=true, noremap=true})
+
+map("n", "<leader>dr",":lua require'dap'.repl.toggle()<CR>", { silent=true, noremap=true})
 map("n", "<leader>dl",":lua require'dap'.list_breakpoints(true)<CR>", { silent=true, noremap=true})
+map("n", "<leader>dc",":lua require'dap.ui.variables'.scopes()<CR>", { silent=true, noremap=true})
 
 -- }}}
 
