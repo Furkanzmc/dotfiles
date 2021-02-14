@@ -1,5 +1,9 @@
-local vim = vim
 local M = {}
+
+print("[completion] Trying out nvim-compe.")
+return M
+
+local vim = vim
 
 local s_last_cursor_position = nil
 local s_completion_timer = nil

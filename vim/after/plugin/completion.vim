@@ -9,7 +9,7 @@ function! s:is_previous_character_abbvr_char() abort
 endfunction
 
 function completion#completion_wrapper()
-    lua require'vimrc.completion'.trigger_completion()
+    lua require"compe"._complete()
     return ''
 endfunction
 
@@ -25,3 +25,11 @@ inoremap <silent><expr> <TAB>
 inoremap <silent><expr> <S-TAB>
             \ pumvisible() ? "\<C-p>" :
             \ <SID>is_previous_character_space() ? "\<S-TAB>" : <SID>trigger_completion()
+
+inoremap <silent><expr> <C-n>
+            \ pumvisible() ? "\<C-n>" : <SID>trigger_completion()
+
+inoremap <silent><expr> <C-p>
+            \ pumvisible() ? "\<C-p>" : <SID>trigger_completion()
+
+inoremap <silent><expr> <C-e> compe#close('<C-e>')
