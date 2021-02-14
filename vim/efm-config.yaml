@@ -26,6 +26,11 @@ tools:
       - '    %Eerror %m'
       - '    %C%\s%+%m'
 
+  python-hover: &python-hover
+    hover-command: >-
+      python3 ~/.dotfiles/vim/scripts/lsp_hover.py --language python --hover ${INPUT}
+    hover-stdin: false
+
   python-bandit: &python-bandit
     lint-command: 'bandit --skips B101 --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"'
     lint-stdin: false
@@ -84,46 +89,32 @@ tools:
       python3 ~/.dotfiles/vim/scripts/lsp_hover.py --hover ${INPUT}
     hover-stdin: false
 
-  python-hover: &python-hover
-    hover-command: >-
-      python3 ~/.dotfiles/vim/scripts/lsp_hover.py --language python --hover ${INPUT}
-    hover-stdin: false
-
 languages:
   python:
     - <<: *python-pylint
     - <<: *python-bandit
-    - <<: *any-completion
     - <<: *python-hover
   json:
     - <<: *json-jq
-    - <<: *any-completion
     - <<: *any-hover
   yaml:
     - <<: *yaml-yamllint
-    - <<: *any-completion
     - <<: *any-hover
   qml:
     - <<: *qml-qmllint
-    - <<: *any-completion
     - <<: *any-hover
   cpp:
     - <<: *cpp-clangformat
     - <<: *cpp-clangcheck
-    - <<: *any-completion
     - <<: *any-hover
   c:
     - <<: *cpp-clangformat
     - <<: *cpp-clangcheck
-    - <<: *any-completion
     - <<: *any-hover
   lua:
     - <<: *lua-lua-format
-    - <<: *any-completion
     - <<: *any-hover
   markdown:
-    - <<: *any-completion
     - <<: *any-hover
   _:
-    - <<: *any-completion
     - <<: *any-hover
