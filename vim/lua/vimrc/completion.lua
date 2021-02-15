@@ -1,9 +1,6 @@
 local M = {}
-
-print("[completion] Trying out nvim-compe.")
-return M
-
 local vim = vim
+local fn = vim.fn
 
 local s_last_cursor_position = nil
 local s_completion_timer = nil
@@ -181,6 +178,39 @@ function M.setup_completion(bufnr)
     vim.api.nvim_command("augroup END")
 
     vim.api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", true)
+end
+
+function M.setup()
+    if fn.exists("g:loaded_compe") == 0 then
+        return
+    end
+
+    require"compe".setup {
+        enabled = true;
+        debug = false;
+        autocomplete = false;
+        min_length = 1;
+        preselect = 'disable';
+        throttle_time = 80;
+        source_timeout = 200;
+        incomplete_delay = 400;
+        max_abbr_width = 100;
+        max_kind_width = 100;
+        max_menu_width = 100;
+        documentation = true;
+        source = {
+            path = true;
+            buffer = true;
+            calc = true;
+            vsnip = false;
+            nvim_lsp = true;
+            nvim_lua = true;
+            spell = true;
+            tags = true;
+            snippets_nvim = false;
+            treesitter = true;
+        };
+    }
 end
 
 return M

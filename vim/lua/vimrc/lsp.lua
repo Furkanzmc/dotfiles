@@ -232,7 +232,7 @@ M.setup_lsp = function()
         on_attach = setup_without_formatting,
         filetypes = {"vim"}
     }
-    lspconfig.efm.setup {on_attach = setup, filetypes = {"*"}}
+    lspconfig.efm.setup {on_attach = setup}
 end
 
 return M

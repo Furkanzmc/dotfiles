@@ -345,32 +345,10 @@ cmd [[command! InitPaq :lua require'vimrc.init_utils'.init_paq()]]
 
 -- nvim-compe {{{
 
-require'compe'.setup {
-    enabled = true;
-    debug = false;
-    autocomplete = false;
-    min_length = 1;
-    preselect = 'disable';
-    throttle_time = 80;
-    source_timeout = 200;
-    incomplete_delay = 400;
-    max_abbr_width = 100;
-    max_kind_width = 100;
-    max_menu_width = 100;
-    documentation = true;
-    source = {
-        path = true;
-        buffer = true;
-        calc = true;
-        vsnip = false;
-        nvim_lsp = true;
-        nvim_lua = true;
-        spell = true;
-        tags = true;
-        snippets_nvim = false;
-        treesitter = true;
-    };
-}
+cmd [[augroup nvim_compe_config]]
+cmd [[autocmd!]]
+cmd [[autocmd VimEnter * lua require'vimrc.completion'.setup()]]
+cmd [[augroup END]]
 
 -- }}}
 
