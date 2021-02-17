@@ -29,7 +29,7 @@ cmd("set runtimepath+=" .. fn.expand("~/.dotfiles/vim/after"))
 
 vim.o.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
 vim.o.complete = ".,w,k,kspell,b"
-vim.o.completeopt = "menuone,noselect"
+vim.o.completeopt = "menuone,noinsert,noselect"
 
 vim.o.termguicolors = true
 vim.o.foldenable = false
@@ -343,15 +343,6 @@ g.polyglot_is_disabled = {
 
 cmd [[command! InitPaq :lua require'vimrc.init_utils'.init_paq()]]
 
--- nvim-compe {{{
-
-cmd [[augroup nvim_compe_config]]
-cmd [[autocmd!]]
-cmd [[autocmd VimEnter * lua require'vimrc.completion'.setup()]]
-cmd [[augroup END]]
-
--- }}}
-
 -- TagBar {{{
 
 g.tagbar_show_linenumbers = 1
@@ -405,12 +396,10 @@ fn.sign_define("LspDiagnosticsSignHint", {
 
 -- Completion {{{
 
-if false then
-    cmd [[augroup vimrc_completion]]
-    cmd [[autocmd!]]
-    cmd [[autocmd BufReadPost,BufNewFile,BufEnter * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
-    cmd [[augroup END]]
-end
+cmd [[augroup vimrc_completion]]
+cmd [[autocmd!]]
+cmd [[autocmd BufReadPost,BufNewFile,BufEnter * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
+cmd [[augroup END]]
 
 -- }}}
 

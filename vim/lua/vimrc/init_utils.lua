@@ -20,7 +20,6 @@ function M.init_paq()
     paq 'Furkanzmc/firvish.nvim'
     paq 'neovim/nvim-lspconfig'
     paq 'tmsvg/pear-tree'
-    paq 'hrsh7th/nvim-compe'
 
     -- Optional {{{
 
