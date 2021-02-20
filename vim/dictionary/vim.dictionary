@@ -19,3 +19,4 @@ VIMRC_PWSH_ENABLED
 vimrc_jira_base_url
 vimrc_dirvish_virtual_text_enabled
 vimrc_dirvish_virtual_text_prefix
+VIMRC_DISABLE_LSP

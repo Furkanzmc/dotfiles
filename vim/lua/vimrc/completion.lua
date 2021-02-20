@@ -11,17 +11,13 @@ local s_completion_sources = {
             return vim.bo.omnifunc ~= "" or vim.o.omnifunc ~= ""
         end
     }, {keys = "<c-x><c-n>"}, {keys = "<c-n>"},
-    {keys = "<c-x><c-v>", filetypes = {"vim"}},
-    {keys = "<c-x><c-f>"}, {
+    {keys = "<c-x><c-v>", filetypes = {"vim"}}, {keys = "<c-x><c-f>"}, {
         keys = "<c-x><c-k>",
         prediciate = function()
             return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or
                        pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
-    }, {
-        keys = "<c-x><c-s>",
-        prediciate = function() return vim.wo.spell end
-    }, {
+    }, {keys = "<c-x><c-s>", prediciate = function() return vim.wo.spell end}, {
         keys = "<c-x><c-u>",
         prediciate = function()
             return vim.bo.completefunc ~= "" or vim.o.completefunc ~= ""
@@ -37,22 +33,8 @@ local function get_completion_sources(bufnr)
         return s_buffer_completion_sources_cache[bufnr]
     end
 
-    local result = pcall(vim.api.nvim_buf_get_var, bufnr,
-                         "vimrc_completion_additional_sources")
-    if result == false then return s_completion_sources end
-
-    local additional_sources = vim.api.nvim_buf_get_var(bufnr,
-                                                        "vimrc_completion_additional_sources")
-    local new_list = {}
-
-    table.extend(new_list, s_completion_sources)
-
-    for index, value in ipairs(additional_sources) do
-        table.insert(new_list, {keys = value})
-    end
-
-    s_buffer_completion_sources_cache[bufnr] = new_list
-    return new_list
+    s_buffer_completion_sources_cache[bufnr] = s_completion_sources
+    return s_buffer_completion_sources_cache[bufnr]
 end
 
 local function timer_handler()
@@ -180,37 +162,13 @@ function M.setup_completion(bufnr)
     vim.api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", true)
 end
 
-function M.setup()
-    if fn.exists("g:loaded_compe") == 0 then
-        return
-    end
+function M.add_source(source, bufnr)
+    assert(source.keys ~= nil)
+    table.insert(s_completion_sources, source)
 
-    require"compe".setup {
-        enabled = true;
-        debug = false;
-        autocomplete = false;
-        min_length = 1;
-        preselect = 'disable';
-        throttle_time = 80;
-        source_timeout = 200;
-        incomplete_delay = 400;
-        max_abbr_width = 100;
-        max_kind_width = 100;
-        max_menu_width = 100;
-        documentation = true;
-        source = {
-            path = true;
-            buffer = true;
-            calc = true;
-            vsnip = false;
-            nvim_lsp = true;
-            nvim_lua = true;
-            spell = true;
-            tags = true;
-            snippets_nvim = false;
-            treesitter = true;
-        };
-    }
+    if s_buffer_completion_sources_cache[bufnr] ~= nil then
+        s_buffer_completion_sources_cache[bufnr] = nil
+    end
 end
 
 return M
