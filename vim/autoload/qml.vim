@@ -1,3 +1,5 @@
+let s:vimrc_qml_run_output_buffer = -1
+
 function! qml#run(line1, line2)
     if executable('qmlscene')
         if a:line1 != a:line2
@@ -15,8 +17,20 @@ function! qml#run(line1, line2)
             let l:qml_file = expand("%")
         endif
 
-        botright split
+        if s:vimrc_qml_run_output_buffer == -1
+            botright split new
+        else
+            let l:open_buf = luaeval("require'vimrc.utils'.find_open_window(" . s:vimrc_qml_run_output_buffer . ")")
+            if l:open_buf.winnr != -1
+                execute l:open_buf.winnr . " wincmd w"
+            else
+                botright split new
+            endif
+        endif
+
         execute 'FRun pwsh -NoProfile -NoLogo -NonInteractive -Command qmlscene ' . l:qml_file
+
+        let s:vimrc_qml_run_output_buffer = bufnr()
     else
         echohl WarningMsg
         echo "Cannot find qmlscene in the path."
