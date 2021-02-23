@@ -318,7 +318,7 @@ cmd [[abbreviate Langauge Language]]
 
 g.markdown_fenced_languages = {
     "qml", "css", "html", "cpp", "json", "python", "javascript", "diff", "yaml",
-    "sh", "ps1", "todo", "cmake", "qmake"
+    "sh", "ps1", "todo", "cmake", "qmake", "log"
 }
 
 -- Pre-configuration {{{
