@@ -298,6 +298,9 @@ map("t", "<C-w><C-j>", "<C-\\><C-n><C-w>j", {silent = true, noremap = true})
 map("t", "<C-w><C-k>", "<C-\\><C-n><C-w>k", {silent = true, noremap = true})
 map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", {silent = true, noremap = true})
 
+map("n", "gx", "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>",
+    {silent = true, noremap = true})
+
 cmd [[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
 cmd [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
 cmd [[command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)]]
