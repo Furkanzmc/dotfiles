@@ -29,7 +29,7 @@ cmd("set runtimepath+=" .. fn.expand("~/.dotfiles/vim/after"))
 
 vim.o.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
 vim.o.complete = ".,w,k,kspell,b"
-vim.o.completeopt = "menuone,noinsert,noselect"
+vim.o.completeopt = "menuone,noselect"
 
 vim.o.termguicolors = true
 vim.o.foldenable = false
