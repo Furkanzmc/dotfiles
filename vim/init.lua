@@ -316,6 +316,7 @@ cmd [[abbreviate langauge language]]
 cmd [[abbreviate Langauge Language]]
 
 cmd [[cnoreabbrev git Git]]
+cmd [[cnoreabbrev gst Gstatus]]
 cmd [[cnoreabbrev mkdir !mkdir]]
 cmd [[cnoreabbrev rm !rm]]
 cmd [[cnoreabbrev fd Fd]]
