@@ -48,6 +48,9 @@ abbreviate <silent> <buffer> im_@ from django.utils.translation import ugettext_
 
 abbreviate <silent> <buffer> pr@ print("[lame_debugging::<C-r>=expand("%:t")<CR>::<C-r>=line('.')<CR>]")<Esc>F"a,<Space><C-R>=abbreviations#eat_char('\s')<CR>
 
+abbreviate <silent> <buffer> true True
+abbreviate <silent> <buffer> false False
+
 " }}}
 
 function python#includeexpr(fname)
