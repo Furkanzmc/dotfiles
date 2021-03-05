@@ -315,6 +315,12 @@ cmd [[command! Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%
 cmd [[abbreviate langauge language]]
 cmd [[abbreviate Langauge Language]]
 
+cmd [[cnoreabbrev git Git]]
+cmd [[cnoreabbrev mkdir !mkdir]]
+cmd [[cnoreabbrev rm !rm]]
+cmd [[cnoreabbrev fd Fd]]
+cmd [[cnoreabbrev rg Rg]]
+
 -- }}}
 
 -- Plugins {{{
