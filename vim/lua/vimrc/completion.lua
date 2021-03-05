@@ -87,80 +87,26 @@ local function timer_handler()
     end
 end
 
--- }}}
-
--- Public API {{{
-
--- Event Handlers {{{
-
-function M.on_complete_done_pre()
-    if vim.api.nvim_get_mode().mode == "n" then
-        s_completion_index = -1
-        return
-    end
-
-    if s_completion_index == -1 or vim.fn.pumvisible() == 1 then return end
-
-    local info = vim.fn.complete_info()
-    if #info.items > 0 then
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-y>", true,
-                                                             false, true), "n",
-                              true)
-        s_completion_index = -1
-        return
-    end
-
-    if s_completion_timer ~= nil then return end
-
-    s_completion_timer = vim.loop.new_timer()
-    s_completion_timer:start(vim.api.nvim_buf_get_var(bufnr,
-                                                      "vimrc_completion_timeout"),
-                             0, vim.schedule_wrap(timer_handler))
-end
-
-function M.on_complete_done(bufnr)
-    if s_is_completion_dispatched == true then return end
-    if s_last_cursor_position == nil then
-        s_completion_index = -1
-        return
-    end
-
-    local completion_sources = get_completion_sources(bufnr)
-    local cursorPosition = vim.api.nvim_win_get_cursor(0)
-    if cursorPosition[1] == s_last_cursor_position[1] and cursorPosition[2] ==
-        s_last_cursor_position[2] and s_completion_index == #completion_sources +
-        1 then
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-y>", true,
-                                                             false, true), "n",
-                              true)
-        s_completion_index = -1
-    end
-end
-
--- }}}
-
 -- Completion Functions {{{
 
-function M.complete_custom(findstart, base)
-    if base == "" then
-        local line = vim.fn.getline('.')
-        local start = vim.fn.col('.') - 1
-        while start > 0 and string.sub(line, start, 1) ~= ' ' do
-            start = start - 1
+local function complete_fzf(lines, base)
+    local input = {}
+    for _, line in ipairs(lines) do
+        for token in string.gmatch(line, "[^%s. ]+") do
+            table.insert(input, token)
         end
-
-        return start
     end
 
     local completions = {}
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-    table.extend(completions, M.complete_mnemonic(lines, base))
+    local output = vim.fn.systemlist("fzf --filter=" .. base, input)
+    for _, value in ipairs(output) do
+        table.insert(completions, {word = value})
+    end
 
     return completions
 end
 
-function M.complete_mnemonic(lines, base)
+local function complete_mnemonic(lines, base)
     local words = {}
 
     local function split_token(str, sep)
@@ -216,6 +162,78 @@ function M.complete_mnemonic(lines, base)
 end
 
 -- }}}
+
+-- }}}
+
+-- Public API {{{
+
+-- Event Handlers {{{
+
+function M.on_complete_done_pre()
+    if vim.api.nvim_get_mode().mode == "n" then
+        s_completion_index = -1
+        return
+    end
+
+    if s_completion_index == -1 or vim.fn.pumvisible() == 1 then return end
+
+    local info = vim.fn.complete_info()
+    if #info.items > 0 then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-y>", true,
+                                                             false, true), "n",
+                              true)
+        s_completion_index = -1
+        return
+    end
+
+    if s_completion_timer ~= nil then return end
+
+    s_completion_timer = vim.loop.new_timer()
+    s_completion_timer:start(vim.api.nvim_buf_get_var(bufnr,
+                                                      "vimrc_completion_timeout"),
+                             0, vim.schedule_wrap(timer_handler))
+end
+
+function M.on_complete_done(bufnr)
+    if s_is_completion_dispatched == true then return end
+    if s_last_cursor_position == nil then
+        s_completion_index = -1
+        return
+    end
+
+    local completion_sources = get_completion_sources(bufnr)
+    local cursorPosition = vim.api.nvim_win_get_cursor(0)
+    if cursorPosition[1] == s_last_cursor_position[1] and cursorPosition[2] ==
+        s_last_cursor_position[2] and s_completion_index == #completion_sources +
+        1 then
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-y>", true,
+                                                             false, true), "n",
+                              true)
+        s_completion_index = -1
+    end
+end
+
+-- }}}
+
+function M.complete_custom(findstart, base)
+    local line = vim.fn.getline('.')
+    if base == "" then
+        local start = vim.fn.col('.')
+        while start > 0 and string.sub(line, start, start) ~= " " do
+            start = start - 1
+        end
+
+        return start
+    end
+
+    local completions = {}
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+    table.extend(completions, complete_mnemonic(lines, base))
+    table.extend(completions, complete_fzf(lines, base))
+
+    return completions
+end
 
 function M.trigger_completion()
     s_completion_index = 1
