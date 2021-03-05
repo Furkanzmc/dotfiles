@@ -1,6 +1,9 @@
 local M = {}
 local vim = vim
 local fn = vim.fn
+local utils = require 'vimrc.utils'
+
+-- Variables {{{
 
 local s_last_cursor_position = nil
 local s_completion_timer = nil
@@ -10,6 +13,11 @@ local s_completion_sources = {
         prediciate = function()
             return vim.bo.omnifunc ~= "" or vim.o.omnifunc ~= ""
         end
+    }, {
+        keys = "<c-x><c-u>",
+        prediciate = function()
+            return vim.bo.completefunc ~= "" or vim.o.completefunc ~= ""
+        end
     }, {keys = "<c-x><c-n>"}, {keys = "<c-n>"},
     {keys = "<c-x><c-v>", filetypes = {"vim"}}, {keys = "<c-x><c-f>"}, {
         keys = "<c-x><c-k>",
@@ -17,16 +25,15 @@ local s_completion_sources = {
             return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or
                        pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
-    }, {keys = "<c-x><c-s>", prediciate = function() return vim.wo.spell end}, {
-        keys = "<c-x><c-u>",
-        prediciate = function()
-            return vim.bo.completefunc ~= "" or vim.o.completefunc ~= ""
-        end
-    }
+    }, {keys = "<c-x><c-s>", prediciate = function() return vim.wo.spell end}
 }
 local s_completion_index = nil
 local s_is_completion_dispatched = false
 local s_buffer_completion_sources_cache = {}
+
+-- }}}
+
+-- Local Functions {{{
 
 local function get_completion_sources(bufnr)
     if s_buffer_completion_sources_cache[bufnr] ~= nil then
@@ -80,6 +87,12 @@ local function timer_handler()
     end
 end
 
+-- }}}
+
+-- Public API {{{
+
+-- Event Handlers {{{
+
 function M.on_complete_done_pre()
     if vim.api.nvim_get_mode().mode == "n" then
         s_completion_index = -1
@@ -107,6 +120,10 @@ end
 
 function M.on_complete_done(bufnr)
     if s_is_completion_dispatched == true then return end
+    if s_last_cursor_position == nil then
+        s_completion_index = -1
+        return
+    end
 
     local completion_sources = get_completion_sources(bufnr)
     local cursorPosition = vim.api.nvim_win_get_cursor(0)
@@ -119,6 +136,86 @@ function M.on_complete_done(bufnr)
         s_completion_index = -1
     end
 end
+
+-- }}}
+
+-- Completion Functions {{{
+
+function M.complete_custom(findstart, base)
+    if base == "" then
+        local line = vim.fn.getline('.')
+        local start = vim.fn.col('.') - 1
+        while start > 0 and string.sub(line, start, 1) ~= ' ' do
+            start = start - 1
+        end
+
+        return start
+    end
+
+    local completions = {}
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+    table.extend(completions, M.complete_mnemonic(lines, base))
+
+    return completions
+end
+
+function M.complete_mnemonic(lines, base)
+    local words = {}
+
+    local function split_token(str, sep)
+        local res = {}
+        local mn = {}
+        local func = function(w) table.insert(res, w) end
+
+        string.gsub(str, sep, func)
+        if #res > 0 then
+            for _, v in ipairs(res) do
+                table.insert(mn, string.sub(v, 1, 1))
+            end
+        end
+
+        return mn
+    end
+
+    local function get_mnemonics(token, sep)
+        local characters = split_token(token, sep)
+        local words = {}
+        if #characters > 0 then
+            if characters[1] ~= string.sub(token, 1, 1) then
+                mnemonic = string.lower(string.sub(token, 1, 1) ..
+                                            string.join(characters, ""))
+            else
+                mnemonic = string.lower(string.join(characters, ""))
+            end
+
+            if mnemonic == base then
+                table.insert(words, {word = token})
+            end
+        end
+
+        return words
+    end
+
+    for _, line in ipairs(lines) do
+        for token in string.gmatch(line, "[^%s. ]+") do
+            local characters = split_token(token, "[^_]+")
+            if #characters > 0 then
+                mnemonic = string.join(characters, "")
+                if mnemonic == base then
+                    table.insert(words, {word = token})
+                end
+            end
+
+            table.extend(words, get_mnemonics(token, "[A-Z][a-z]*"))
+            table.extend(words, get_mnemonics(token, "[A-Z]*"))
+        end
+    end
+
+    return words
+end
+
+-- }}}
 
 function M.trigger_completion()
     s_completion_index = 1
@@ -150,6 +247,8 @@ function M.setup_completion(bufnr)
         vim.api.nvim_buf_set_var(bufnr, "vimrc_completion_timeout", 250)
     end
 
+    vim.bo[bufnr].completefunc = "completion#trigger_custom"
+
     vim.api.nvim_command("augroup vimrc_completion_buf_" .. bufnr)
     vim.api.nvim_command("au!")
     vim.api.nvim_command("autocmd CompleteDonePre <buffer=" .. bufnr ..
@@ -170,6 +269,8 @@ function M.add_source(source, bufnr)
         s_buffer_completion_sources_cache[bufnr] = nil
     end
 end
+
+-- }}}
 
 return M
 

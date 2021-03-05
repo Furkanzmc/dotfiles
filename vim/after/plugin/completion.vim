@@ -17,6 +17,12 @@ function s:trigger_completion()
     return "\<c-r>=completion#completion_wrapper()\<CR>"
 endfunction
 
+function completion#trigger_custom(findstart, base)
+    return luaeval(
+                \ "require'vimrc.completion'.complete_custom(" . a:findstart .
+                \ ", '" . a:base . "')")
+endfunction
+
 inoremap <silent><expr> <TAB>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>is_previous_character_abbvr_char() ? "\<C-]>" :

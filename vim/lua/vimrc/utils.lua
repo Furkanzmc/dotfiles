@@ -65,6 +65,13 @@ function table.filter(t, pred)
     return out
 end
 
+function string.join(str, ch)
+    local joined = ""
+    for _, word in ipairs(str) do joined = joined .. ch .. word end
+
+    return joined
+end
+
 return M
 
 -- vim: foldmethod=marker
