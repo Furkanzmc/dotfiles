@@ -226,7 +226,8 @@ function M.complete_custom(findstart, base)
     if base == "" then
         local start = vim.fn.col('.') - 1
         local current_char = string.sub(line, start, start)
-        while start > 0 and string.match(current_char, "%w+") ~= nil do
+        while start > 0 and string.match(current_char, "[%w+]?[.*_[a-zA-Z]+]?") ~=
+            nil do
             start = start - 1
             current_char = string.sub(line, start, start)
         end
