@@ -92,7 +92,7 @@ end
 local function complete_fzf(lines, base)
     local input = {}
     for _, line in ipairs(lines) do
-        for token in string.gmatch(line, "%w+") do
+        for token in string.gmatch(line, "[%w+]?[.*_[a-zA-Z]+]?") do
             table.insert(input, token)
         end
     end
@@ -238,7 +238,7 @@ function M.complete_custom(findstart, base)
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
     table.extend(completions, complete_mnemonic(lines, base))
-    -- table.extend(completions, complete_fzf(lines, base))
+    table.extend(completions, complete_fzf(lines, base))
 
     return completions
 end
