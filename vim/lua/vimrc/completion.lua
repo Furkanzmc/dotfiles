@@ -109,34 +109,40 @@ end
 local function complete_mnemonic(lines, base)
     local words = {}
 
-    local function split_token(str, sep)
+    local function split_token(str, sep, sep2)
         local res = {}
-        local mn = {}
-        local func = function(w) table.insert(res, w) end
+        local mn_chars = {}
 
-        string.gsub(str, sep, func)
+        local ww = {}
+        string.gsub(str, sep, function(w) table.insert(res, w) end)
+        for _, v in ipairs(res) do
+            string.gsub(v, sep2, function(w) table.insert(ww, w) end)
+        end
+
         if #res > 0 then
-            for _, v in ipairs(res) do
-                table.insert(mn, string.sub(v, 1, 1))
+            for _, v in ipairs(ww) do
+                table.insert(mn_chars, string.sub(v, 1, 1))
             end
         end
 
-        return mn
+        if #res == 0 then return {mn = {}, word = str} end
+        return {mn = mn_chars, word = res[1]}
     end
 
     local function get_mnemonics(token, sep)
-        local characters = split_token(token, sep)
+        local result = split_token(token, sep, "[A-Z]+")
+        local characters = result.mn
         local words = {}
         if #characters > 0 then
-            if characters[1] ~= string.sub(token, 1, 1) then
-                mnemonic = string.lower(string.sub(token, 1, 1) ..
+            if characters[1] ~= string.sub(result.word, 1, 1) then
+                mnemonic = string.lower(string.sub(result.word, 1, 1) ..
                                             string.join(characters, ""))
             else
                 mnemonic = string.lower(string.join(characters, ""))
             end
 
             if mnemonic == base then
-                table.insert(words, {word = token})
+                table.insert(words, {word = result.word})
             end
         end
 
@@ -145,16 +151,16 @@ local function complete_mnemonic(lines, base)
 
     for _, line in ipairs(lines) do
         for token in string.gmatch(line, "[^%s. ]+") do
-            local characters = split_token(token, "[^_]+")
+            local result = split_token(token, ".*_[a-zA-Z]+", "[^_]+")
+            local characters = result.mn
             if #characters > 0 then
                 mnemonic = string.join(characters, "")
                 if mnemonic == base then
-                    table.insert(words, {word = token})
+                    table.insert(words, {word = result.word})
                 end
             end
 
-            table.extend(words, get_mnemonics(token, "[A-Z][a-z]*"))
-            table.extend(words, get_mnemonics(token, "[A-Z]*"))
+            table.extend(words, get_mnemonics(token, "[a-zA-Z]+"))
         end
     end
 
@@ -232,7 +238,7 @@ function M.complete_custom(findstart, base)
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
     table.extend(completions, complete_mnemonic(lines, base))
-    table.extend(completions, complete_fzf(lines, base))
+    -- table.extend(completions, complete_fzf(lines, base))
 
     return completions
 end
