@@ -92,7 +92,7 @@ end
 local function complete_fzf(lines, base)
     local input = {}
     for _, line in ipairs(lines) do
-        for token in string.gmatch(line, "[^%s. ]+") do
+        for token in string.gmatch(line, "%w+") do
             table.insert(input, token)
         end
     end
@@ -218,9 +218,11 @@ end
 function M.complete_custom(findstart, base)
     local line = vim.fn.getline('.')
     if base == "" then
-        local start = vim.fn.col('.')
-        while start > 0 and string.sub(line, start, start) ~= " " do
+        local start = vim.fn.col('.') - 1
+        local current_char = string.sub(line, start, start)
+        while start > 0 and string.match(current_char, "%w+") ~= nil do
             start = start - 1
+            current_char = string.sub(line, start, start)
         end
 
         return start
