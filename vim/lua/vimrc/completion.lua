@@ -100,7 +100,7 @@ local function complete_fzf(lines, base)
     local completions = {}
     local output = vim.fn.systemlist("fzf --filter=" .. base, input)
     for _, value in ipairs(output) do
-        table.insert(completions, {word = value})
+        table.insert(completions, {word = value, menu = "fzf"})
     end
 
     return completions
@@ -142,7 +142,7 @@ local function complete_mnemonic(lines, base)
             end
 
             if mnemonic == base then
-                table.insert(words, {word = result.word})
+                table.insert(words, {word = result.word, menu = "mnemonic"})
             end
         end
 
@@ -156,7 +156,7 @@ local function complete_mnemonic(lines, base)
             if #characters > 0 then
                 mnemonic = string.join(characters, "")
                 if mnemonic == base then
-                    table.insert(words, {word = result.word})
+                    table.insert(words, {word = result.word, menu = "mnemonic"})
                 end
             end
 
