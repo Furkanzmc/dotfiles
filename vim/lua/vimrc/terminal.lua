@@ -11,10 +11,9 @@ function M.index_terminals(exclude_bufnr)
     s_terminals = {}
     local buffers = table.filter(fn.range(1, fn.bufnr('$')),
                                  function(value, key, _)
-        return
-            exclude_bufnr ~= key and fn.buflisted(key) == 1 and bo[key].filetype ==
-                "terminal" and api.nvim_buf_get_var(key, "terminal_closing") ~=
-                true
+        return exclude_bufnr ~= key and fn.buflisted(key) == 1 and
+                   bo[key].filetype == "terminal" and
+                   api.nvim_buf_get_var(key, "terminal_closing") ~= true
     end)
 
     for index, bufnr in ipairs(buffers) do s_terminals[index] = bufnr end

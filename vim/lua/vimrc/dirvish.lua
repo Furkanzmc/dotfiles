@@ -7,14 +7,6 @@ local b = vim.b
 local wo = vim.wo
 local M = {}
 
-function M.toggle_conceal()
-    if wo.conceallevel == 0 then
-        wo.conceallevel = 2
-    else
-        wo.conceallevel = 0
-    end
-end
-
 local function get_info(path)
     local lines = {}
     local size = fn.getfsize(path)
@@ -36,6 +28,14 @@ local function get_info(path)
     end
 
     return lines
+end
+
+function M.toggle_conceal()
+    if wo.conceallevel == 0 then
+        wo.conceallevel = 2
+    else
+        wo.conceallevel = 0
+    end
 end
 
 function M.show_status(line1, line2)

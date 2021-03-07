@@ -178,13 +178,9 @@ M.stop_buffer_clients =
     function(client_id, bufnr) lsp.stop_client(client_id) end
 
 M.setup_lsp = function()
-    if vim.fn.exists("$VIMRC_DISABLE_LSP") == 1 then
-        return
-    end
+    if vim.fn.exists("$VIMRC_DISABLE_LSP") == 1 then return end
 
-    if vim.fn.exists(":LspInfo") == 0 then
-        return
-    end
+    if vim.fn.exists(":LspInfo") == 0 then return end
 
     local setup = function(client)
         local bufnr = api.nvim_get_current_buf()
@@ -217,15 +213,12 @@ M.setup_lsp = function()
             }
         }
     }
-    lspconfig.clangd.setup{
-        on_attach=setup_without_formatting,
-        filetypes={"cpp", "c"},
+    lspconfig.clangd.setup {
+        on_attach = setup_without_formatting,
+        filetypes = {"cpp", "c"},
         cmd = {
-            "clangd",
-            "--background-index",
-            "--clang-tidy",
-            "--completion-style=detailed",
-            "--recovery-ast",
+            "clangd", "--background-index", "--clang-tidy",
+            "--completion-style=detailed", "--recovery-ast"
         }
     }
     lspconfig.rls.setup {

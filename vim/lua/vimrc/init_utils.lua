@@ -4,7 +4,7 @@ local cmd = vim.cmd
 local g = vim.g
 local b = vim.b
 local bo = vim.bo
-local utils = require"vimrc.utils"
+local utils = require "vimrc.utils"
 local M = {}
 
 function M.init_paq()
@@ -28,7 +28,7 @@ function M.init_paq()
     paq {'majutsushi/tagbar', opt = true}
     paq {'masukomi/vim-markdown-folding', opt = true}
     paq {'junegunn/goyo.vim', opt = true}
-    paq { 'mfussenegger/nvim-dap', opt = true }
+    paq {'mfussenegger/nvim-dap', opt = true}
 
     paq {'rust-lang/rust.vim', opt = true}
     paq {'nvim-treesitter/nvim-treesitter', opt = true}
@@ -90,15 +90,12 @@ function M.load_dictionary()
 end
 
 function M.setup_white_space_highlight(bufnr)
-    if b.vimrc_trailing_white_space_highlight_enabled then
-        return
-    end
+    if b.vimrc_trailing_white_space_highlight_enabled then return end
 
     local excluded_filetypes = {"qf"}
 
-    if bo.filetype == "" or table.index_of(excluded_filetypes, bo.filetype) ~= -1 then
-        return
-    end
+    if bo.filetype == "" or table.index_of(excluded_filetypes, bo.filetype) ~=
+        -1 then return end
 
     cmd("augroup trailing_white_space_highlight_buffer_" .. bufnr)
     cmd [[autocmd! * <buffer>]]

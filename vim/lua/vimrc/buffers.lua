@@ -61,15 +61,15 @@ function M.toggle_colorcolumn(col)
 end
 
 function M.open_uri_under_cursor()
-  local uri = fn.expand('<cWORD>')
-  uri = fn.substitute(uri, '?', '\\\\?', '')
-  uri = fn.substitute(uri, ' ', '\\ ', '')
-  uri = fn.shellescape(uri, 1)
+    local uri = fn.expand('<cWORD>')
+    uri = fn.substitute(uri, '?', '\\\\?', '')
+    uri = fn.substitute(uri, ' ', '\\ ', '')
+    uri = fn.shellescape(uri, 1)
 
-  if uri ~= '' then
-    cmd("silent !open '" .. uri .. "'")
-    cmd(":redraw!")
-  end
+    if uri ~= '' then
+        cmd("silent !open '" .. uri .. "'")
+        cmd(":redraw!")
+    end
 end
 
 return M

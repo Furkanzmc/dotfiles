@@ -1,4 +1,5 @@
 echoerr "Not using this anymore."
+finish
 " Functions {{{
 
 function! s:create_custom_nvim_server()
