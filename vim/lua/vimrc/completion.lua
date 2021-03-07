@@ -92,9 +92,7 @@ end
 local function complete_fzf(lines, base)
     local input = {}
     for _, line in ipairs(lines) do
-        for token in string.gmatch(line, "[a-zA-Z0-9_%-]+") do
-            table.insert(input, token)
-        end
+        table.extend(input, vim.fn.split(line, "[^a-zA-Z0-9\\-_]"))
     end
 
     local completions = {}
