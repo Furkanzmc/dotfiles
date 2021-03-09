@@ -7,7 +7,14 @@ local b = vim.b
 local wo = vim.wo
 local M = {}
 
-local function get_info(path)
+local function get_longest_line_length(lines)
+    local tmp_list = {}
+    table.extend(tmp_list, lines)
+    table.sort(tmp_list, function(a, b) return #a > #b end)
+    return #tmp_list[1]
+end
+
+local function get_info(path, padding)
     local lines = {}
     local size = fn.getfsize(path)
 
@@ -22,6 +29,8 @@ local function get_info(path)
         end
 
         table.extend(lines, {
+            {fn["repeat"](" ", padding), "String"},
+            {g.vimrc_dirvish_virtual_text_prefix, "SpecialKey"},
             {last_modified, "String"}, {" | ", "Operator"},
             {size_text, "Number"}
         })
@@ -56,13 +65,13 @@ function M.show_status(line1, line2)
 
     local lines = api.nvim_buf_get_lines(bufnr, line1 - 1, line2, true)
     local linenr = line1 - 1
+    local longest_line_length = get_longest_line_length(lines)
 
     for _, line in pairs(lines) do
         local status_lines = {}
 
-        table.insert(status_lines,
-                     {g.vimrc_dirvish_virtual_text_prefix, "SpecialKey"})
-        table.extend(status_lines, get_info(fn.fnamemodify(line, ":.")))
+        local padding = longest_line_length - #line + 1
+        table.extend(status_lines, get_info(fn.fnamemodify(line, ":."), padding))
         if #status_lines > 1 then
             api.nvim_buf_set_virtual_text(bufnr, b.vimrc_dirvish_namespace,
                                           linenr, status_lines, {})
