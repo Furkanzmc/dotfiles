@@ -8,6 +8,7 @@ local wo = vim.wo
 local M = {}
 
 local s_scratch_buffer_count = 1
+local s_line_highlight_matches = {}
 
 function M.mark_scratch(bufnr)
     bo[bufnr].buftype = "nofile"
@@ -69,6 +70,27 @@ function M.open_uri_under_cursor()
     if uri ~= '' then
         cmd("silent !open '" .. uri .. "'")
         cmd(":redraw!")
+    end
+end
+
+function M.highlight_line(winnr, linenr)
+    linenr = linenr or fn.line('.')
+    winnr = winnr or fn.winnr()
+    local match = fn.matchadd('CursorLine', '\\%' .. linenr .. 'l', 10, -1, {window=winnr})
+    table.insert(s_line_highlight_matches, {linenr=linenr, match=match})
+end
+
+function M.clear_line_highlight(winnr, linenr)
+    local clear_all = linenr == -1
+    linenr = linenr or fn.line('.')
+    winnr = winnr or fn.winnr()
+
+    local found = false
+    for index,value in ipairs(s_line_highlight_matches) do
+        if value.linenr == linenr or clear_all then
+            fn.matchdelete(value.match, winnr)
+            s_line_highlight_matches[index] = nil
+        end
     end
 end
 
