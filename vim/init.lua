@@ -327,6 +327,7 @@ cmd [[cnoreabbrev rg Rg]]
 
 cmd [[cnoreabbrev frun FRun]]
 cmd [[cnoreabbrev fhdo Fhdo]]
+cmd [[cnoreabbrev time Time]]
 
 -- }}}
 
