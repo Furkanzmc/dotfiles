@@ -308,6 +308,8 @@ cmd(
 cmd(
     "command! -bang -range NextLineHighlight :lua require'vimrc.buffers'.jump_to_next_line_highlight()")
 
+cmd[[ command! -bang -nargs=* -range FGit :lua require'vimrc.init'.run_git(<q-args>, <q-bang> == '!')]]
+
 cmd [[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
 cmd [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
 cmd [[command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)]]
@@ -331,7 +333,9 @@ cmd [[cnoreabbrev rg Rg]]
 
 cmd [[cnoreabbrev frun FRun]]
 cmd [[cnoreabbrev fhdo Fhdo]]
+
 cmd [[cnoreabbrev time Time]]
+cmd [[cnoreabbrev fgit FGit]]
 
 -- }}}
 
