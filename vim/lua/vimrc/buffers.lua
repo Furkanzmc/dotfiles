@@ -73,23 +73,47 @@ function M.open_uri_under_cursor()
     end
 end
 
-function M.highlight_line(winnr, linenr)
-    linenr = linenr or fn.line('.')
+function M.highlight_line(winnr, start_line, end_line)
+    start_line = start_line or fn.line('.')
+    end_line = end_line or fn.line('.')
     winnr = winnr or fn.winnr()
-    local match = fn.matchadd('CursorLine', '\\%' .. linenr .. 'l', 10, -1, {window=winnr})
-    table.insert(s_line_highlight_matches, {linenr=linenr, match=match})
+    local range = fn.range(start_line, end_line)
+    for _, linenr in ipairs(range) do
+        local match = fn.matchadd('CursorLine', '\\%' .. linenr .. 'l', 10, -1,
+                                  {window = winnr})
+        table.insert(s_line_highlight_matches, {linenr = linenr, match = match})
+    end
+
+    table.sort(s_line_highlight_matches,
+               function(a, b) return a.linenr > b.linenr end)
 end
 
-function M.clear_line_highlight(winnr, linenr)
-    local clear_all = linenr == -1
-    linenr = linenr or fn.line('.')
+function M.clear_line_highlight(winnr, start_line, end_line, clear_all)
+    start_line = start_line or fn.line('.')
+    end_line = end_line or fn.line('.')
     winnr = winnr or fn.winnr()
 
-    local found = false
-    for index,value in ipairs(s_line_highlight_matches) do
-        if value.linenr == linenr or clear_all then
+    local range = fn.range(start_line, end_line)
+    for index, value in ipairs(s_line_highlight_matches) do
+        if table.index_of(range, value.linenr) > -1 or clear_all then
             fn.matchdelete(value.match, winnr)
             s_line_highlight_matches[index] = nil
+        end
+    end
+
+    table.sort(s_line_highlight_matches,
+               function(a, b) return a.linenr > b.linenr end)
+end
+
+function M.jump_to_next_line_highlight(winnr, linenr)
+    linenr = linenr or fn.line('.')
+    local target_linenr = linenr + 1
+    winnr = winnr or fn.winnr()
+
+    local range = fn.range(start_line, end_line)
+    for _, value in ipairs(s_line_highlight_matches) do
+        if value.linenr >= target_linenr then
+            cmd("normal " .. value.linenr .. "G")
         end
     end
 end

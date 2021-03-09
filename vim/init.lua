@@ -301,8 +301,12 @@ map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", {silent = true, noremap = true})
 map("n", "gx", "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>",
     {silent = true, noremap = true})
 
-cmd("command! HighlightLine :lua require'vimrc.buffers'.highlight_line()")
-cmd("command! ClearLineHighlights :lua require'vimrc.buffers'.clear_line_highlight(nil, -1)")
+cmd(
+    "command! -range HighlightLine :lua require'vimrc.buffers'.highlight_line(0, <line1>, <line2>)")
+cmd(
+    "command! -bang -range ClearLineHighlights :lua require'vimrc.buffers'.clear_line_highlight(0, <line1>, <line2>, <q-bang> == '!')")
+cmd(
+    "command! -bang -range NextLineHighlight :lua require'vimrc.buffers'.jump_to_next_line_highlight()")
 
 cmd [[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
 cmd [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
