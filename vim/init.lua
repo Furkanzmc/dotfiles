@@ -308,7 +308,7 @@ cmd(
 cmd(
     "command! -bang -range NextLineHighlight :lua require'vimrc.buffers'.jump_to_next_line_highlight()")
 
-cmd[[ command! -bang -nargs=* -range FGit :lua require'vimrc.init'.run_git(<q-args>, <q-bang> == '!')]]
+cmd[[ command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc.init'.run_git(<q-args>, <q-bang> == '!')]]
 
 cmd [[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
 cmd [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
