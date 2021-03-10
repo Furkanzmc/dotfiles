@@ -119,6 +119,7 @@ function M.run_git(args, is_background_job)
         title="Git",
         is_background_job=is_background_job,
         cwd=vim.fn.FugitiveGitDir(),
+        listed=true,
     })
 end
 
