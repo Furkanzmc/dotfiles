@@ -4,9 +4,10 @@ if !get(s:, "vimrc_markdown_plugin_loaded", v:false)
 endif
 
 setlocal spell
-setlocal colorcolumn=80,100
+setlocal colorcolumn=81,101
 setlocal foldmethod=expr
 setlocal conceallevel=2
+setlocal textwidth=100
 
 if get(s:, "vimrc_markdown_plugin_loaded", v:false)
     finish
