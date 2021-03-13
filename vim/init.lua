@@ -345,7 +345,7 @@ cmd [[cnoreabbrev bc Bclose]]
 
 g.markdown_fenced_languages = {
     "qml", "css", "html", "cpp", "json", "python", "javascript", "diff", "yaml",
-    "sh", "ps1", "todo", "cmake", "qmake", "log"
+    "sh", "ps1", "todo", "cmake", "qmake", "log", "vim"
 }
 
 -- Pre-configuration {{{
