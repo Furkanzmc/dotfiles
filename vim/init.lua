@@ -337,6 +337,8 @@ cmd [[cnoreabbrev fhdo Fhdo]]
 cmd [[cnoreabbrev time Time]]
 cmd [[cnoreabbrev fgit FGit]]
 
+cmd [[cnoreabbrev bc Bclose]]
+
 -- }}}
 
 -- Plugins {{{
