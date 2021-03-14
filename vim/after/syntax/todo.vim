@@ -19,14 +19,20 @@ if exists("b:current_syntax")
 endif
 
 function! s:enable_highlight()
-    call SyntaxRange#Include('```qml', '```', 'qml', 'NonText')
-    call SyntaxRange#Include('```css', '```', 'css', 'NonText')
-    call SyntaxRange#Include('```html', '```', 'html', 'NonText')
+    let l:fenced_languages = [
+                \ "qml",
+                \ "css",
+                \ "html",
+                \ "cpp",
+                \ "json",
+                \ "python",
+                \ "javascript",
+                \ "log"
+                \ ]
 
-    call SyntaxRange#Include('```cpp', '```', 'cpp', 'NonText')
-    call SyntaxRange#Include('```json', '```', 'json', 'NonText')
-    call SyntaxRange#Include('```python', '```', 'python', 'NonText')
-    call SyntaxRange#Include('```js', '```', 'javascript', 'NonText')
+    for lang in l:fenced_languages
+        call SyntaxRange#Include('```' . lang, '```', lang, 'NonText')
+    endfor
 
     setlocal foldmethod=expr
     setlocal foldexpr=todo#foldexpr(v:lnum)
