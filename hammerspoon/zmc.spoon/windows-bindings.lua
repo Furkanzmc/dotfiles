@@ -24,6 +24,7 @@ return {
             true -- Whether the commands auto disables the mode.
         }, {{}, 'return', 'maximize', true},
         {{'shift'}, 'c', 'centerWithFullHeight', true},
+        {{'shift'}, 'n', 'centerWithNarrowSize', true},
         {{}, 'c', 'center', true}, {{'shift'}, 'w', 'expandCenter', true},
         {{'shift'}, 'a', 'left', true}, {{}, 's', 'down', true},
         {{}, 'w', 'up', true}, {{'shift'}, 'd', 'right', true},

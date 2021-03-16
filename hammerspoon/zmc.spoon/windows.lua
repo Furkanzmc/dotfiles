@@ -324,6 +324,23 @@ function hs.window.centerWithFullHeight(win)
     win:setFrame(f)
 end
 
+-- +--------------+
+-- |    |    |    |
+-- |    |HERE|    |
+-- |    |    |    |
+-- +---------------+
+function hs.window.centerWithNarrowSize(win)
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:fullFrame()
+
+    f.w = max.w * 0.3
+    f.h = max.h
+    f.x = max.x + (max.w / 2) - f.w / 2
+    f.y = max.y
+    win:setFrame(f)
+end
+
 -- +------------------+
 -- | |              | |
 -- | |  HERE        | |
