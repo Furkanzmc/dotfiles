@@ -25,7 +25,8 @@ local s_completion_sources = {
             return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or
                        pcall(vim.api.nvim_get_option, '.', "dictionary")
         end
-    }, {keys = "<c-x><c-s>", prediciate = function() return vim.wo.spell end}
+    }, {keys = "<c-x><c-s>", prediciate = function() return vim.wo.spell end},
+    {keys = "<c-x><c-l>"}
 }
 local s_completion_index = nil
 local s_is_completion_dispatched = false
