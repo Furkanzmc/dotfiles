@@ -3,8 +3,6 @@
 For easy manipulation of some configurations, the following environment variables
 are used:
 
-- `VIMRC_RUST_ENABLED`: Enables Rust support. Defaults to `0`.
-  Defaults to `No`.
 - `VIMRC_BACKGROUND`: Changes `background`. Defaults to `dark`.
 
 # Configuration Variables
