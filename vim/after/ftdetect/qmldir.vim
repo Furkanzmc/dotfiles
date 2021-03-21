@@ -1,4 +1,4 @@
-augroup ft_qmltypes
+augroup ft_qmldir
     au!
 
     autocmd BufNewFile,BufRead qmldir setlocal filetype=qmldir
