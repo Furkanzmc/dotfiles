@@ -2,19 +2,18 @@ if exists("b:current_syntax")
     finish
 endif
 
-syntax match QmlModule '^module' contains=NONE
-syntax match QmlModuleName '[aA-zZ]\w\+\.[aA-zZ]\w\+$' contains=NONE
-syntax match QmlFileName '[aA-zZ]\w\+\.qml$' contains=NONE
-syntax match QmlComponentName '[aA-zZ]\w\+' contains=NONE
-syntax match QmlComponentVersion '[0-9]\.[0-9]\+' contains=NONE
-syntax match QmlComponentVersion '[0-9]\.[0-9]\+' contains=NONE
-syntax match QmlSingleton '^singleton$' contains=NONE
+syntax match QmlDirComponentName '\([A-Z]\w\+\)' contains=NONE
+syntax match QmlDirComponentVersion '[0-9]\.[0-9]\+' contains=NONE
+syntax match QmlDirKeywords '\(^singleton\|^module\|internal\|plugin\|typeinfo\|classname\|depends\)' contains=NONE
+syntax match QmlDirComment '^#.*$' contains=NONE
+syntax match QmlDirModuleName '[aA-zZ]\w\+\.[aA-zZ]\w\+.*$' contains=NONE
+syntax match QmlDirFileName '\([A-Z]\w\+\)\(\.qml\)' contains=NONE
 
-highlight default link QmlModule Keyword
-highlight default link QmlModuleName Structure
-highlight default link QmlFileName Label
-highlight default link QmlComponentName Tag
-highlight default link QmlComponentVersion Number
-highlight default link QmlSingleton Keyword
+highlight default link QmlDirComponentName Type
+highlight default link QmlDirComponentVersion Number
+highlight default link QmlDirKeywords Keyword
+highlight default link QmlDirComment Comment
+highlight default link QmlDirFileName Normal
+highlight default link QmlDirModuleName Tag
 
-let b:current_syntax = "todo"
+let b:current_syntax = "qmldir"

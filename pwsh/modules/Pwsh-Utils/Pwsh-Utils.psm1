@@ -359,7 +359,7 @@ function Build-Neovim() {
     else {
         make CMAKE_BUILD_TYPE=Release -j12
         if ($? -and $Install) {
-            make CMAKE_INSTALL_PREFIX=$HOME/local/nvim install
+            make CMAKE_INSTALL_PREFIX=$InstallPath install
         }
     }
 
