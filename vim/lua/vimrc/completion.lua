@@ -221,17 +221,11 @@ end
 -- }}}
 
 function M.complete_custom(findstart, base)
-    local line = vim.fn.getline('.')
     if base == "" then
-        local start = vim.fn.col('.') - 1
-        local current_char = string.sub(line, start, start)
-        while start > 0 and string.match(current_char, "[%w+]?[.*_[a-zA-Z]+]?") ~=
-            nil do
-            start = start - 1
-            current_char = string.sub(line, start, start)
-        end
-
-        return start
+        local pos = vim.api.nvim_win_get_cursor(0)
+        local line = vim.api.nvim_get_current_line()
+        local line_to_cursor = line:sub(1, pos[2])
+        return vim.fn.match(line_to_cursor, '\\k*$')
     end
 
     local completions = {}
