@@ -232,7 +232,7 @@ map("n", "]cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'W')<CR>",
     {silent = true, noremap = true})
 
 -- Jump to the next git conflict end
-map("n", "]cc", ":call search('^>\\{4,\\} \\w\\+.*$', 'W')<CR>",
+map("n", "]ce", ":call search('^>\\{4,\\} \\w\\+.*$', 'W')<CR>",
     {silent = true, noremap = true})
 
 -- Jump to previous divider
