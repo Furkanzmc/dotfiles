@@ -38,6 +38,8 @@ function M.init_paq()
         hook = fn['remote#host#UpdateRemotePlugins']
     }
 
+    paq {'Furkanzmc/nvim-qt', opt = true}
+
     -- }}}
 end
 
@@ -109,17 +111,17 @@ function M.setup_white_space_highlight(bufnr)
 end
 
 function M.run_git(args, is_background_job)
-    local firvish = require"firvish.job_control"
+    local firvish = require "firvish.job_control"
 
     local cmd = {"git"}
     table.extend(cmd, fn.split(args, " "))
     firvish.start_job({
-        cmd=cmd,
-        filetype="job-output",
-        title="Git",
-        is_background_job=is_background_job,
-        cwd=vim.fn.FugitiveGitDir(),
-        listed=true,
+        cmd = cmd,
+        filetype = "job-output",
+        title = "Git",
+        is_background_job = is_background_job,
+        cwd = vim.fn.FugitiveGitDir(),
+        listed = true
     })
 end
 
