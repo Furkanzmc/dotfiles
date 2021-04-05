@@ -425,7 +425,7 @@ fn.sign_define("LspDiagnosticsSignHint", {
 
 cmd [[augroup vimrc_completion]]
 cmd [[autocmd!]]
-cmd [[autocmd BufReadPost,BufNewFile,BufEnter * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
+cmd [[autocmd BufReadPost,BufNewFile * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
 cmd [[augroup END]]
 
 -- }}}
@@ -435,46 +435,6 @@ cmd [[augroup END]]
 map("n", "sli", ":call quickfix#show_item_in_preview(v:true, line('.'))<CR>",
     {silent = true, noremap = true})
 map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
-    {silent = true, noremap = true})
-
--- }}}
-
--- nvim-gdb {{{
-
-map("n", "<F5>", ":lua require'dap'.continue()<CR>",
-    {silent = true, noremap = true})
-map("n", "<F6>", ":lua require'dap'.stop()<CR>", {silent = true, noremap = true})
-map("n", "<leader>ds", ":lua require'dap'.step_into()<CR>",
-    {silent = true, noremap = true})
-
-map("n", "<leader>dh", ":lua require'dap.ui.variables'.hover()<CR>",
-    {silent = true, noremap = true})
-map("v", "<leader>dh", ":lua require'dap.ui.variables'.visual_hover()<CR>",
-    {silent = true, noremap = true})
-map("n", "<leader>do", ":lua require'dap'.step_out()<CR>",
-    {silent = true, noremap = true})
-
-map("n", "<leader>dn", ":lua require'dap'.step_over()<CR>",
-    {silent = true, noremap = true})
-map("n", "<leader>du", ":lua require'dap'.up()<CR>",
-    {silent = true, noremap = true})
-map("n", "<leader>dd", ":lua require'dap'.down()<CR>",
-    {silent = true, noremap = true})
-
-map("n", "<leader>db", ":lua require'dap'.toggle_breakpoint()<CR>",
-    {silent = true, noremap = true})
-map("n", "<leader>dB",
-    ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
-    {silent = true, noremap = true})
-map("n", "<leader>dlp",
-    ":lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
-    {silent = true, noremap = true})
-
-map("n", "<leader>dr", ":lua require'dap'.repl.toggle()<CR>",
-    {silent = true, noremap = true})
-map("n", "<leader>dl", ":lua require'dap'.list_breakpoints(true)<CR>",
-    {silent = true, noremap = true})
-map("n", "<leader>dc", ":lua require'dap.ui.variables'.scopes()<CR>",
     {silent = true, noremap = true})
 
 -- }}}
@@ -617,7 +577,7 @@ cmd [[augroup END]]
 
 cmd [[augroup plugin_fold]]
 cmd [[autocmd!]]
-cmd [[autocmd BufReadPost,BufNew,BufEnter * call fold#set_foldtext()]]
+cmd [[autocmd BufReadPost,BufNew,BufEnter * if &foldtext != "fold#fold_text()" | setlocal foldtext=fold#fold_text() | endif]]
 cmd [[augroup END]]
 
 -- }}}
@@ -626,7 +586,7 @@ cmd [[augroup END]]
 
 cmd [[augroup vimrc_init]]
 cmd [[autocmd!]]
-cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses") | packadd nvim-http | endif]]
+cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses") && &loadplugins | packadd nvim-http | endif]]
 cmd [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
 cmd [[autocmd VimEnter * lua require'vimrc.init'.create_custom_nvim_server()]]
 cmd [[autocmd VimEnter * colorscheme cosmic_latte ]]

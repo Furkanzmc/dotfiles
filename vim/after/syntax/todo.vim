@@ -33,10 +33,6 @@ function! s:enable_highlight()
     for lang in l:fenced_languages
         call SyntaxRange#Include('```' . lang, '```', lang, 'NonText')
     endfor
-
-    setlocal foldmethod=expr
-    setlocal foldexpr=todo#foldexpr(v:lnum)
-    setlocal conceallevel=2
 endfunction
 
 let b:done_task_pattern = '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$'
@@ -81,12 +77,6 @@ highlight default link TodoContext Label
 
 highlight default link TodoComment String
 highlight default link TodoSubTask NONE
-
-augroup syn_todo
-    au!
-    autocmd BufReadPost,FilterReadPost,FileReadPost,FileReadCmd todo.txt
-                \ :call s:enable_highlight()
-augroup END
 
 call s:enable_highlight()
 

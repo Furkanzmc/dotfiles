@@ -1,4 +1,4 @@
-if !get(g:, "vimrc_todo_plugins_loaded", v:false)
+if !get(g:, "vimrc_todo_plugins_loaded", v:false) && &loadplugins
     packadd SyntaxRange
     let g:vimrc_todo_plugins_loaded = v:true
 endif

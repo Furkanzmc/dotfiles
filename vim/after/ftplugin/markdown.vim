@@ -1,4 +1,4 @@
-if !get(s:, "vimrc_markdown_plugin_loaded", v:false)
+if !get(s:, "vimrc_markdown_plugin_loaded", v:false) && &loadplugins
     packadd vim-markdown-folding
     packadd SyntaxRange
 endif

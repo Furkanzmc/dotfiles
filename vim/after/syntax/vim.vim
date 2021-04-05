@@ -1,9 +1,11 @@
-function! s:enable_highlight()
-    if !exists(":SyntaxInclude")
-        packadd SyntaxRange
-    endif
+if exists("b:current_syntax")
+    finish
+endif
 
-    call SyntaxRange#Include('lua << EOF', 'EOF', 'lua', 'NonText')
-endfunction
+if !exists(":SyntaxInclude") && &loadplugins
+    packadd SyntaxRange
+endif
 
-call s:enable_highlight()
+call SyntaxRange#Include('lua << EOF', 'EOF', 'lua', 'NonText')
+
+let b:current_syntax = "vim"

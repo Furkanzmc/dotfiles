@@ -1,4 +1,4 @@
-if !get(s:, "vimrc_python_plugins_loaded", v:false)
+if !get(s:, "vimrc_python_plugins_loaded", v:false) && &loadplugins
     packadd tagbar
     let s:vimrc_python_plugins_loaded = v:true
 endif

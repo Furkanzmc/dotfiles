@@ -1,6 +1,5 @@
-if !get(s:, "vimrc_cpp_plugins_loaded", v:false)
-    packadd nvim-gdb
-    packadd tagbar
+if !get(s:, "vimrc_cpp_plugins_loaded", v:false) && &loadplugins
+    packadd! tagbar
     let s:vimrc_cpp_plugins_loaded = v:true
 endif
 

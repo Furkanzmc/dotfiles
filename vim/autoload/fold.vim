@@ -65,9 +65,3 @@ function! fold#fold_text()
                 \ foldlines_padding,
                 \ foldlines)
 endfunction
-
-function! fold#set_foldtext()
-    if &foldtext == "foldtext()" && &foldtext != "fold#fold_text()"
-        setlocal foldtext=fold#fold_text()
-    endif
-endfunction

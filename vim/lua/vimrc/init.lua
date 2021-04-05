@@ -8,6 +8,10 @@ local utils = require "vimrc.utils"
 local M = {}
 
 function M.init_paq()
+    if vim.o.loadplugins == false then
+        return
+    end
+
     cmd 'packadd paq-nvim'
     local paq = require'paq-nvim'.paq
 
@@ -44,13 +48,14 @@ function M.init_paq()
 end
 
 function M.setup_treesitter()
-    if fn.exists(":TSInstall") == 1 then return end
+    if fn.exists(":TSInstall") == 1 or vim.o.loadplugins == false then return end
 
     cmd [[packadd nvim-treesitter]]
-    require'nvim-treesitter.configs'.setup {
+
+    local config = require 'nvim-treesitter.configs'
+    config.setup {
         ensure_installed = {'python', 'html', 'cpp', 'vue', 'json'},
         highlight = {enable = true},
-        refactor = {highlight_definitions = {enable = true}}
     }
 
     cmd [[augroup plugin_nvim_treesitter]]
