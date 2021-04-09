@@ -6,11 +6,10 @@ function! qml#run(line1, line2)
             let l:lines = buffers#get_visual_selection()
             let l:qml_file = tempname() . '.qml'
 
-            call insert(l:lines, "import QtQuick 2.12")
-            call insert(l:lines, "import QtQuick.Controls 2.4")
-            call insert(l:lines, "import QtQuick.Layouts 1.3")
-            call insert(l:lines, "import QtQuick.Window 2.12")
-            call insert(l:lines, "import QtQuick.Dialogs 1.3")
+            call insert(l:lines, "import QtQuick 2.15")
+            call insert(l:lines, "import QtQuick.Controls 2.15")
+            call insert(l:lines, "import QtQuick.Layouts 1.5")
+            call insert(l:lines, "import QtQuick.Window 2.15")
 
             call writefile(l:lines, l:qml_file)
         else
