@@ -1,10 +1,83 @@
 local vim = vim
 local api = vim.api
 local lsp = vim.lsp
-local lsp_utils = require "vimrc.lsp_utils"
+local utils = require "vimrc.utils"
 local M = {}
 
-function on_publish_diagnostics(u1, u2, params, client_id, u3, config)
+-- Local Functions {{{
+
+-- Utils {{{
+
+-- Taken from vim/lsp/doagnostic.lua from v0.5.0-832-g35325ddac
+-- Sets the location list
+-- @param opts table|nil Configuration table. Keys:
+--   - {open_loclist}: (boolean, default true)
+--     - Open loclist after set
+--   - {client_id}: (number)
+--     - If nil, will consider all clients attached to buffer.
+--   - {severity}: (DiagnosticSeverity)
+--     - Exclusive severity to consider. Overrides {severity_limit}
+--   - {severity_limit}: (DiagnosticSeverity)
+--     - Limit severity of diagnostics found. E.g. "Warning" means { "Error", "Warning" } will be valid.
+local function set_loclist(opts)
+    opts = opts or {}
+    assert(opts.client_id ~= nil)
+    assert(opts.bufnr ~= nil)
+
+    local open_loclist = vim.F.if_nil(opts.open_loclist, true)
+
+    local bufnr = api.nvim_get_current_buf()
+    local buffer_diags = lsp.diagnostic.get(bufnr, opts.client_id)
+    local client = lsp.get_client_by_id(opts.client_id)
+
+    local severity = utils.to_severity(opts.severity)
+    local severity_limit = utils.to_severity(opts.severity_limit)
+
+    local items = {}
+    local insert_diag = function(diag)
+        if severity then
+            -- Handle missing severities
+            if not diag.severity then return end
+
+            if severity ~= diag.severity then return end
+        elseif severity_limit then
+            if not diag.severity then return end
+
+            if severity_limit < diag.severity then return end
+        end
+
+        local pos = diag.range.start
+        local row = pos.line
+        local col = lsp.util.character_offset(bufnr, row, pos.character)
+
+        local line = api.nvim_buf_get_lines(bufnr, row, row + 1, false)
+        if line == nil then
+            line = "N/A"
+        else
+            line = line[1]
+        end
+
+        table.insert(items, {
+            bufnr = bufnr,
+            lnum = row + 1,
+            col = col + 1,
+            context = 320,
+            text = "[" .. client.name .. "]" .. " | " .. line .. " | " ..
+                diag.message,
+            type = utils.loclist_type_map[diag.severity or
+                DiagnosticSeverity.Error] or 'E'
+        })
+    end
+
+    for _, diag in ipairs(buffer_diags) do insert_diag(diag) end
+
+    set_loclist(opts.bufnr, client.name, items, "LSP")
+    if open_loclist then vim.cmd [[lopen]] end
+end
+
+-- }}}
+
+local function on_publish_diagnostics(u1, u2, params, client_id, u3, config)
     local bufnr = vim.uri_to_bufnr(params.uri)
     if not api.nvim_buf_is_loaded(bufnr) then return end
 
@@ -17,15 +90,11 @@ function on_publish_diagnostics(u1, u2, params, client_id, u3, config)
                                 1
 
     if loclist_enabled == true then
-        lsp_utils.set_loclist({
-            bufnr = bufnr,
-            open_loclist = false,
-            client_id = client_id
-        })
+        set_loclist({bufnr = bufnr, open_loclist = false, client_id = client_id})
     end
 end
 
-function set_handlers(client, bufnr)
+local function set_handlers(client, bufnr)
     local signs_enabled = api.nvim_buf_get_var(bufnr, "vimrc_" .. client.name ..
                                                    "_lsp_signs_enabled") == 1
 
@@ -43,7 +112,7 @@ function set_handlers(client, bufnr)
         })
 end
 
-function set_up_keymap(client, bufnr)
+local function set_up_keymap(client, bufnr)
     local opts = {noremap = true, silent = true}
     local is_configured = api.nvim_buf_get_var(bufnr,
                                                "is_vimrc_" .. client.name ..
@@ -130,7 +199,7 @@ function set_up_keymap(client, bufnr)
                          true)
 end
 
-function setup_buffer_vars(client, bufnr)
+local function setup_buffer_vars(client, bufnr)
     if vim.fn.exists("b:is_vimrc_" .. client.name .. "_lsp_auto_stop") == 0 then
         api.nvim_buf_set_var(bufnr,
                              "is_vimrc_" .. client.name .. "_lsp_auto_stop",
@@ -167,17 +236,19 @@ function setup_buffer_vars(client, bufnr)
     end
 end
 
-M.print_buffer_clients = function(bufnr)
+-- }}}
+
+-- Public Functions {{{
+
+function M.print_buffer_clients(bufnr)
     print(vim.inspect(lsp.buf_get_clients(bufnr)))
 end
 
-M.is_lsp_running = function(bufnr) return
-    next(lsp.buf_get_clients(bufnr)) ~= nil end
+function M.is_lsp_running(bufnr) return next(lsp.buf_get_clients(bufnr)) ~= nil end
 
-M.stop_buffer_clients =
-    function(client_id, bufnr) lsp.stop_client(client_id) end
+function M.stop_buffer_clients(client_id, bufnr) lsp.stop_client(client_id) end
 
-M.setup_lsp = function()
+function M.setup_lsp()
     if vim.fn.exists("$VIMRC_DISABLE_LSP") == 1 then return end
 
     if vim.fn.exists(":LspInfo") == 0 then return end
@@ -231,6 +302,8 @@ M.setup_lsp = function()
     }
     lspconfig.efm.setup {on_attach = setup}
 end
+
+-- }}}
 
 return M
 
