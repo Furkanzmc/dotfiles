@@ -168,6 +168,18 @@ function Write-Current-Location() {
     Write-Host "$currentLocation" -NoNewLine -ForegroundColor Blue
 }
 
+# Has to be called before running Write-Prompt
+function Source-Local-Profile() {
+    # Source the local profile.
+    if (Test-Path "$PWD/.profile.ps1" -ErrorAction SilentlyContinue) {
+        $lastWriteTick = $(Get-ItemProperty "$PWD/.profile.ps1").LastAccessTime.Ticks
+        if ($lastWriteTick -ne $env:_PWSH_LOCAL_PROFILE_LAST_WRITE_TICK) {
+            . $PWD/.profile.ps1
+            $env:_PWSH_LOCAL_PROFILE_LAST_WRITE_TICK = $lastWriteTick
+        }
+    }
+}
+
 function Write-Prompt() {
     $lastCommandSucceeded = $?
     $exitCode = $LastExitCode
@@ -215,4 +227,5 @@ function Write-Prompt() {
 }
 
 Export-ModuleMember -Function Write-Prompt
+Export-ModuleMember -Function Source-Local-Profile
 Export-ModuleMember -Function Cache-Git-Status

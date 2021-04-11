@@ -70,6 +70,7 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 
 Import-Module Pwsh-Prompt -DisableNameChecking
 function Prompt() {
+    Source-Local-Profile
     Write-Prompt
     return " "
 }
