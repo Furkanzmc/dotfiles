@@ -19,7 +19,7 @@ local M = {}
 --     - Exclusive severity to consider. Overrides {severity_limit}
 --   - {severity_limit}: (DiagnosticSeverity)
 --     - Limit severity of diagnostics found. E.g. "Warning" means { "Error", "Warning" } will be valid.
-local function set_loclist(opts)
+local function update_loc_list(opts)
     opts = opts or {}
     assert(opts.client_id ~= nil)
     assert(opts.bufnr ~= nil)
@@ -71,7 +71,7 @@ local function set_loclist(opts)
 
     for _, diag in ipairs(buffer_diags) do insert_diag(diag) end
 
-    set_loclist(opts.bufnr, client.name, items, "LSP")
+    utils.set_loclist(opts.bufnr, client.name, items, "LSP")
     if open_loclist then vim.cmd [[lopen]] end
 end
 
@@ -90,7 +90,7 @@ local function on_publish_diagnostics(u1, u2, params, client_id, u3, config)
                                 1
 
     if loclist_enabled == true then
-        set_loclist({bufnr = bufnr, open_loclist = false, client_id = client_id})
+        update_loc_list({bufnr = bufnr, open_loclist = false, client_id = client_id})
     end
 end
 
