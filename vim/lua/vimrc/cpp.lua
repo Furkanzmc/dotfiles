@@ -4,27 +4,39 @@ local cmd = vim.cmd
 local g = vim.g
 local b = vim.b
 local bo = vim.bo
+local utils = require "vimrc.utils"
+local log = require "vimrc.log"
 local M = {}
 
 function M.swap_source_header()
-    local extension = fn.expand('%:p:e')
+    local suffixes = string.split(bo.suffixesadd, ",")
 
-    cmd [[setlocal path+=expand('%:h')]]
-
-    local filename = ""
-    if extension == 'cpp' then
-        filename = fn.expand('%:t:r') .. '.h'
-    elseif extension == 'h' then
-        filename = fn.expand('%:t:r') .. '.cpp'
+    local filename = fn.expand('%:t')
+    for index, suffix in ipairs(suffixes) do
+        local tmp = string.gsub(filename, suffix .. "$", "")
+        if filename ~= tmp then
+            filename = tmp
+            table.remove(suffixes, index)
+        end
     end
 
-    if pcall(cmd, "execute 'find " .. filename .. "'") == false then
-        cmd [[echohl ErrorMsg]]
-        cmd('echo "[cpp]: Cannot file ' .. filename .. '"')
-        cmd [[echohl Normal]]
+    cmd("execute 'setlocal path+=' . expand('%:h')")
+
+    local found = false
+    for _, suffix in ipairs(suffixes) do
+        local found_file = fn.findfile(filename .. suffix)
+        if found_file ~= "" then
+            found = true
+            cmd("edit " .. found_file)
+            break
+        end
     end
 
-    cmd [[setlocal path-=expand('%:h')]]
+    cmd("execute 'setlocal path-=' . expand('%:h')")
+
+    if found == false then
+        log.error("cpp", "Cannot swap source/header for " .. fn.expand('%:t'))
+    end
 end
 
 return M
