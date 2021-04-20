@@ -5,6 +5,7 @@ local g = vim.g
 local b = vim.b
 local bo = vim.bo
 local wo = vim.wo
+local options = require"vimrc.options"
 local M = {}
 
 local s_scratch_buffer_count = 1
@@ -38,6 +39,14 @@ function M.close()
 end
 
 function M.clean_trailing_spaces()
+    if options.get_option("clstrailingwhitespace") == false then
+        return
+    end
+
+    if g.vimrc_no_clean_trailing_spaces == 1 or g.vimrc_no_clean_trailing_spaces == true then
+        return
+    end
+
     local save_cursor = fn.getpos(".")
     local old_query = fn.getreg('/')
     cmd [[silent! %s/\s\+$//e]]

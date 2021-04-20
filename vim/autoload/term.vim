@@ -12,7 +12,7 @@ function! term#open(...) abort
     if a:0 == 1
         let l:program = a:1
     else
-        let l:program = get(g:, "vimrc_shell", &shell)
+        let l:program = options#get("shell")
     endif
 
     enew

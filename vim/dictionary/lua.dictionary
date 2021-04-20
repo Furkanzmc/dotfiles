@@ -1,5 +1,6 @@
 vimrc_active_jira_ticket
 vimrc_cpp_plugins_loaded
+vimrc_cpp_remove_whitespace
 vimrc_dictionary_loaded
 vimrc_dictionary_paths
 vimrc_http_plugins_loaded

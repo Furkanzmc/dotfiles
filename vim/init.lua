@@ -504,6 +504,19 @@ map("n", "<leader>dc", ":lua require'dap.ui.variables'.scopes()<CR>",
 
 -- Local Plugins {{{
 
+-- Custom Options {{{
+
+cmd [[command! -nargs=* -complete=customlist,options#complete Set :lua require'vimrc.options'.set(<q-args>)]]
+
+if fn.has("mac") == 1 then
+    cmd[[set shell=zsh]]
+    require"vimrc.options".set("shell=pwsh")
+else
+    require"vimrc.options".set("shell=cmd")
+end
+
+-- }}}
+
 -- Git {{{
 
 cmd [[command! -nargs=? StartReview :call git#start_review(<f-args>)]]
@@ -520,13 +533,6 @@ cmd [[command! -nargs=1 -complete=file DeactivateEnv :call dotenv#deactivate(<f-
 -- }}}
 
 -- Help {{{
-
-map("n", "gh", ":call help#search_docs()<CR>", {silent = true})
-cmd [[command! -nargs=1 Search :call help#search_docs(<f-args>)]]
-
--- }}}
-
--- Color Column {{{
 
 map("n", "gh", ":call help#search_docs()<CR>", {silent = true})
 cmd [[command! -nargs=1 Search :call help#search_docs(<f-args>)]]
@@ -585,8 +591,6 @@ cmd [[command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-
 cmd [[command! Bdhidden :call buffers#delete_hidden()]]
 cmd [[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]]
 
-cmd [[command! -nargs=1 SetIndentSize :setlocal tabstop=<args> softtabstop=<args> shiftwidth=<args>]]
-
 cmd [[augroup plugin_buffers]]
 cmd [[au!]]
 cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html :lua require"vimrc.buffers".clean_trailing_spaces()]]
@@ -597,6 +601,11 @@ cmd [[highlight link TrailingWhiteSpace Error]]
 cmd [[augroup trailing_white_space_highlight]]
 cmd [[autocmd!]]
 cmd [[autocmd BufReadPost * lua require"vimrc.init".setup_white_space_highlight(vim.fn.bufnr())]]
+cmd [[augroup END]]
+
+cmd [[augroup vimrc_buffer_events]]
+cmd [[autocmd!]]
+cmd [[autocmd User VimrcOptionSet lua local isize=require'vimrc.options'.get_option('indentsize'); vim.cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s", isize, isize, isize))]]
 cmd [[augroup END]]
 
 -- }}}
