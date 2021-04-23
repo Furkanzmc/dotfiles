@@ -332,12 +332,13 @@ cmd [[cnoreabbrev fd Fd]]
 cmd [[cnoreabbrev rg Rg]]
 
 cmd [[cnoreabbrev frun FRun]]
-cmd [[cnoreabbrev fhdo Fhdo]]
+cmd [[cnoreabbrev fh Fhdo]]
 
 cmd [[cnoreabbrev time Time]]
 cmd [[cnoreabbrev fgit FGit]]
 
 cmd [[cnoreabbrev bc Bclose]]
+cmd [[cnoreabbrev sh Shdo]]
 
 -- }}}
 
