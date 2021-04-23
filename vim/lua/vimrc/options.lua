@@ -10,9 +10,9 @@ local typing = require"vimrc.typing"
 local M = {}
 
 local s_registered_options = {
-    clstrailingwhitespace={default=true, type_info="bool"},
-    indentsize={default=4, type_info="int"},
-    shell={default="pwsh", type_info="string"}
+    clstrailingwhitespace={default=true, type_info="bool", source="buffers"},
+    indentsize={default=4, type_info="int", source="buffers"},
+    shell={default="pwsh", type_info="string", source="vimrc"}
 }
 local s_current_options = {}
 
@@ -24,18 +24,29 @@ local function is_option_registered(name)
     return true
 end
 
+local function get_option_info(name)
+    if is_option_registered(name) == false then
+        log.error("options", "This option is not registered: " .. name)
+        return nil
+    end
+
+    if s_registered_options[name] ~= nil then
+        return s_registered_options[name]
+    end
+end
+
 local function echo_options()
     local processed = {}
     local message = "--"
 
     for key,value in pairs(s_current_options) do
         table.insert(processed, key)
-        message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" .. tostring(value.value)
+        message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" .. tostring(value.value) .. ", " .. "[" .. get_option_info(key).source .. "]"
     end
 
     for key,value in pairs(s_registered_options) do
         if table.index_of(processed, key) == -1 then
-            message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" .. tostring(value.default)
+            message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" .. tostring(value.default) .. ", " .. "[" .. get_option_info(key).source .. "]"
         end
     end
 
@@ -90,7 +101,7 @@ function M.get_option(name)
     end
 end
 
-function M.register_option(name, type_info, default)
+function M.register_option(name, type_info, default, source)
     if s_registered_options[name] ~= nil then
         log.error("options", "This option is already registered: " .. name)
         return
@@ -98,7 +109,8 @@ function M.register_option(name, type_info, default)
 
     s_registered_options[name] = {
         default=default,
-        type_info=type_info
+        type_info=type_info,
+        source=source
     }
 end
 
@@ -122,7 +134,7 @@ function M.set(option_str)
     end
 
     if value == nil then
-        log.info("options", name .. "=" .. tostring(M.get_option(name)))
+        log.info(get_option_info(name).source, name .. "=" .. tostring(M.get_option(name)))
         return
     end
 
