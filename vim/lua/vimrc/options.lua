@@ -12,9 +12,11 @@ local M = {}
 local s_registered_options = {
     clstrailingwhitespace={default=true, type_info="bool", source="buffers"},
     indentsize={default=4, type_info="int", source="buffers"},
-    shell={default="pwsh", type_info="string", source="vimrc"}
+    shell={default="pwsh", type_info="string", source="vimrc"},
+    scratchpad={default=false, type_info="bool", source="vimrc", buffer_only=true}
 }
 local s_current_options = {}
+local s_callbacks = {}
 
 local function is_option_registered(name)
     if s_current_options[name] == nil and s_registered_options[name] == nil then
@@ -166,6 +168,12 @@ function M.list_options(arg_lead)
     end
 
     return options
+end
+
+function M.register_callback(option_name, func)
+    assert(s_callbacks[option_name] == nil)
+
+    s_callbacks[option_name] = func
 end
 
 return M

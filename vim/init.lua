@@ -326,8 +326,6 @@ cmd [[abbreviate Langauge Language]]
 
 cmd [[cnoreabbrev git Git]]
 cmd [[cnoreabbrev gst Gstatus]]
-cmd [[cnoreabbrev mkdir !mkdir]]
-cmd [[cnoreabbrev rm !rm]]
 cmd [[cnoreabbrev fd Fd]]
 cmd [[cnoreabbrev rg Rg]]
 
@@ -339,6 +337,7 @@ cmd [[cnoreabbrev fgit FGit]]
 
 cmd [[cnoreabbrev bc Bclose]]
 cmd [[cnoreabbrev sh Shdo]]
+cmd [[cnoreabbrev sh! Shdo!]]
 
 -- }}}
 
