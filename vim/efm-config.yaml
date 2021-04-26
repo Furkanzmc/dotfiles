@@ -59,7 +59,7 @@ tools:
       - '%f:%l:%c: %m'
 
   json-jq: &json-jq
-    format-command: 'jq . '
+    format-command: 'jq --tab . | expand -t4'
     format-stdin: true
     lint-command: 'jq . '
     lint-stdin: true
