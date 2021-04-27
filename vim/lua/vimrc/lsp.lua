@@ -90,7 +90,11 @@ local function on_publish_diagnostics(u1, u2, params, client_id, u3, config)
                                 1
 
     if loclist_enabled == true then
-        update_loc_list({bufnr = bufnr, open_loclist = false, client_id = client_id})
+        update_loc_list({
+            bufnr = bufnr,
+            open_loclist = false,
+            client_id = client_id
+        })
     end
 end
 

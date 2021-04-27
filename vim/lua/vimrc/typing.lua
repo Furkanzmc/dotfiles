@@ -10,7 +10,7 @@ local TRUE = {
     ['T'] = true,
     ['true'] = true,
     ['TRUE'] = true,
-    ['True'] = true,
+    ['True'] = true
 }
 local FALSE = {
     ['0'] = false,
@@ -18,9 +18,8 @@ local FALSE = {
     ['F'] = false,
     ['false'] = false,
     ['FALSE'] = false,
-    ['False'] = false,
+    ['False'] = false
 }
-
 
 function M.toboolean(str)
     assert(type(str) == "string", "str must be string")

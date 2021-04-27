@@ -8,9 +8,7 @@ function M.error(modl, message)
     cmd [[echohl Normal]]
 end
 
-function M.info(modl, message)
-    cmd('echo "[' .. modl .. ']: ' .. message .. '"')
-end
+function M.info(modl, message) cmd('echo "[' .. modl .. ']: ' .. message .. '"') end
 
 return M
 

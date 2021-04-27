@@ -4,16 +4,25 @@
 -- [ ] Add support for options.indentsize=4 syntax for init.lua
 local vim = vim
 local cmd = vim.cmd
-local log = require"vimrc.log"
-local utils = require"vimrc.utils"
-local typing = require"vimrc.typing"
+local log = require "vimrc.log"
+local utils = require "vimrc.utils"
+local typing = require "vimrc.typing"
 local M = {}
 
 local s_registered_options = {
-    clstrailingwhitespace={default=true, type_info="bool", source="buffers"},
-    indentsize={default=4, type_info="int", source="buffers"},
-    shell={default="pwsh", type_info="string", source="vimrc"},
-    scratchpad={default=false, type_info="bool", source="vimrc", buffer_only=true}
+    clstrailingwhitespace = {
+        default = true,
+        type_info = "bool",
+        source = "buffers"
+    },
+    indentsize = {default = 4, type_info = "int", source = "buffers"},
+    shell = {default = "pwsh", type_info = "string", source = "vimrc"},
+    scratchpad = {
+        default = false,
+        type_info = "bool",
+        source = "vimrc",
+        buffer_only = true
+    }
 }
 local s_current_options = {}
 local s_callbacks = {}
@@ -41,18 +50,28 @@ local function echo_options()
     local processed = {}
     local message = "--"
 
-    for key,value in pairs(s_current_options) do
+    for key, value in pairs(s_current_options) do
         table.insert(processed, key)
-        message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" .. tostring(value.value) .. ", " .. "[" .. get_option_info(key).source .. "]"
+        message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" ..
+                      tostring(value.value) .. ", " .. "[" ..
+                      get_option_info(key).source .. "]"
     end
 
-    for key,value in pairs(s_registered_options) do
+    for key, value in pairs(s_registered_options) do
         if table.index_of(processed, key) == -1 then
-            message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" .. tostring(value.default) .. ", " .. "[" .. get_option_info(key).source .. "]"
+            message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" ..
+                          tostring(value.default) .. ", " .. "[" ..
+                          get_option_info(key).source .. "]"
         end
     end
 
     log.info("options", message)
+end
+
+local function execute_callbacks(option_name)
+    if s_callbacks[option_name] == nil then return end
+
+    for _, func in ipairs(s_callbacks[option_name]) do func() end
 end
 
 local function is_option_set(name)
@@ -61,9 +80,7 @@ local function is_option_set(name)
         return false
     end
 
-    if s_current_options[name] == nil then
-        return s_current_options[name]
-    end
+    if s_current_options[name] == nil then return s_current_options[name] end
 
     if s_registered_options[name] == nil then
         return s_registered_options[name]
@@ -78,13 +95,13 @@ local function set_option(name, value)
 
     local existing = s_current_options[name]
     if existing == nil then
-        s_current_options[name] = {
-            value=value
-        }
-        cmd[[doautocmd User VimrcOptionSet]]
+        s_current_options[name] = {value = value}
+        execute_callbacks(name)
+        cmd [[doautocmd User VimrcOptionSet]]
     elseif existing.value ~= value then
         existing.value = value
-        cmd[[doautocmd User VimrcOptionSet]]
+        execute_callbacks(name)
+        cmd [[doautocmd User VimrcOptionSet]]
     end
 end
 
@@ -110,9 +127,9 @@ function M.register_option(name, type_info, default, source)
     end
 
     s_registered_options[name] = {
-        default=default,
-        type_info=type_info,
-        source=source
+        default = default,
+        type_info = type_info,
+        source = source
     }
 end
 
@@ -131,12 +148,11 @@ function M.set(option_str)
     end
 
     local value = nil
-    if #cmps == 2 then
-        value = cmps[2]
-    end
+    if #cmps == 2 then value = cmps[2] end
 
     if value == nil then
-        log.info(get_option_info(name).source, name .. "=" .. tostring(M.get_option(name)))
+        log.info(get_option_info(name).source,
+                 name .. "=" .. tostring(M.get_option(name)))
         return
     end
 
@@ -161,7 +177,7 @@ end
 function M.list_options(arg_lead)
     local options = {}
 
-    for key,_ in pairs(s_registered_options) do
+    for key, _ in pairs(s_registered_options) do
         if string.match(key, "^" .. arg_lead) then
             table.insert(options, key)
         end
@@ -171,9 +187,11 @@ function M.list_options(arg_lead)
 end
 
 function M.register_callback(option_name, func)
-    assert(s_callbacks[option_name] == nil)
-
-    s_callbacks[option_name] = func
+    if s_callbacks[option_name] == nil then
+        s_callbacks[option_name] = {func}
+    else
+        table.insert(s_callbacks[option_name], func)
+    end
 end
 
 return M
