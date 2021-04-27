@@ -11,7 +11,7 @@ local M = {}
 local s_scratch_buffer_count = 1
 local s_line_highlight_matches = {}
 
-function M.mark_scratch(bufnr)
+local function mark_scratch(bufnr)
     if options.get_option("scratchpad", bufnr) == true then
         bo[bufnr].buftype = "nofile"
         bo[bufnr].bufhidden = "hide"
@@ -137,7 +137,7 @@ end
 
 function M.init()
     options.register_callback("scratchpad", function()
-        M.mark_scratch(vim.api.nvim_get_current_buf())
+        mark_scratch(vim.api.nvim_get_current_buf())
     end)
 end
 
