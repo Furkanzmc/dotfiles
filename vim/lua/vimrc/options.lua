@@ -186,16 +186,20 @@ function M.get_option(name, bufnr)
     end
 end
 
-function M.register_option(name, type_info, default, source)
-    if s_registered_options[name] ~= nil then
-        log.error("options", "This option is already registered: " .. name)
+function M.register_option(opts)
+    if s_registered_options[opts.name] ~= nil then
+        log.error("options", "This option is already registered: " .. opts.name)
         return
     end
 
-    s_registered_options[name] = {
-        default = default,
-        type_info = type_info,
-        source = source
+    opts.buffer_local = opts.buffer_local or false
+    opts.global = opts.global or true
+    s_registered_options[opts.name] = {
+        default = opts.default,
+        type_info = opts.type_info,
+        source = opts.source,
+        buffer_local = opts.buffer_local,
+        global = opts.global
     }
 end
 
