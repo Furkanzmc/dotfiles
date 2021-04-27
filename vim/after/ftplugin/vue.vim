@@ -1,7 +1,7 @@
 setlocal commentstring=//\ %s
 setlocal colorcolumn=120
 
-execute "SetIndentSize 2"
+execute "Setlocal indentsize=2"
 
 if get(s:, "vue_plugin_loaded", v:false)
     finish

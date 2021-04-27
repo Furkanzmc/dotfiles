@@ -506,13 +506,14 @@ map("n", "<leader>dc", ":lua require'dap.ui.variables'.scopes()<CR>",
 
 -- Custom Options {{{
 
-cmd [[command! -nargs=* -complete=customlist,options#complete Set :lua require'vimrc.options'.set(<q-args>)]]
+cmd [[command! -nargs=* -complete=customlist,options#complete Set :lua require'vimrc.options'.set(<q-args>, 0)]]
+cmd [[command! -nargs=* -complete=customlist,options#complete_buf_local Setlocal :lua require'vimrc.options'.set(<q-args>, vim.fn.bufnr())]]
 
 if fn.has("mac") == 1 then
-    cmd[[set shell=zsh]]
-    require"vimrc.options".set("shell=pwsh")
+    cmd [[set shell=zsh]]
+    require"vimrc.options".set("shell=pwsh", 0)
 else
-    require"vimrc.options".set("shell=cmd")
+    require"vimrc.options".set("shell=cmd", 0)
 end
 
 -- }}}
@@ -572,6 +573,8 @@ map("o", "in", ":<C-u>normal viu<CR>", {silent = true, noremap = true})
 
 -- Buffers {{{
 
+require"vimrc.buffers".init()
+
 map("v", "<leader>s", ":call buffers#visual_selection('search', '')<CR>",
     {silent = true, noremap = true})
 map("v", "<leader>r", ":call buffers#visual_selection('replace', '')<CR>",
@@ -583,7 +586,6 @@ map("n", "<leader>cc",
 map("n", "<leader>cd", ":lua require'vimrc.buffers'.toggle_colorcolumn(-1)<CR>",
     {silent = true, noremap = true})
 
-cmd [[command! MarkScratch :lua require"vimrc.buffers".mark_scratch(vim.api.nvim_get_current_buf())]]
 cmd [[command! CleanTrailingWhiteSpace :lua require"vimrc.buffers".clean_trailing_spaces()]]
 
 cmd [[command! Bclose :lua require"vimrc.buffers".close()]]
@@ -605,7 +607,7 @@ cmd [[augroup END]]
 
 cmd [[augroup vimrc_buffer_events]]
 cmd [[autocmd!]]
-cmd [[autocmd User VimrcOptionSet lua local isize=require'vimrc.options'.get_option('indentsize'); vim.cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s", isize, isize, isize))]]
+cmd [[autocmd User VimrcOptionSet lua local isize=require'vimrc.options'.get_option('indentsize', vim.fn.bufnr()); vim.cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s", isize, isize, isize))]]
 cmd [[augroup END]]
 
 -- }}}

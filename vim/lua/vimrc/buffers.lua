@@ -12,13 +12,22 @@ local s_scratch_buffer_count = 1
 local s_line_highlight_matches = {}
 
 function M.mark_scratch(bufnr)
-    bo[bufnr].buftype = "nofile"
-    bo[bufnr].bufhidden = "hide"
-    bo[bufnr].swapfile = false
-    bo[bufnr].buflisted = true
-    cmd("file scratchpad-" .. s_scratch_buffer_count)
+    if options.get_option("scratchpad", bufnr) == true then
+        bo[bufnr].buftype = "nofile"
+        bo[bufnr].bufhidden = "hide"
+        bo[bufnr].swapfile = false
+        bo[bufnr].buflisted = true
+        cmd("file scratchpad-" .. s_scratch_buffer_count)
 
-    s_scratch_buffer_count = s_scratch_buffer_count + 1
+        s_scratch_buffer_count = s_scratch_buffer_count + 1
+    else
+        bo[bufnr].buftype = ""
+        bo[bufnr].bufhidden = ""
+        bo[bufnr].swapfile = false
+        bo[bufnr].buflisted = true
+
+        s_scratch_buffer_count = s_scratch_buffer_count + 1
+    end
 end
 
 function M.close()
@@ -39,7 +48,9 @@ function M.close()
 end
 
 function M.clean_trailing_spaces()
-    if options.get_option("clstrailingwhitespace") == false then return end
+    if options.get_option("clstrailingwhitespace", fn.bufnr()) == false then
+        return
+    end
 
     if g.vimrc_no_clean_trailing_spaces == 1 or g.vimrc_no_clean_trailing_spaces ==
         true then return end
@@ -122,6 +133,12 @@ function M.jump_to_next_line_highlight(winnr, linenr)
             cmd("normal " .. value.linenr .. "G")
         end
     end
+end
+
+function M.init()
+    options.register_callback("scratchpad", function()
+        M.mark_scratch(vim.api.nvim_get_current_buf())
+    end)
 end
 
 return M
