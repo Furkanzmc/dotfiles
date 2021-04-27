@@ -3,6 +3,7 @@ local api = vim.api
 local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
+local options = require"vimrc.options"
 
 -- Functions {{{
 
@@ -511,9 +512,9 @@ cmd [[command! -nargs=* -complete=customlist,options#complete_buf_local Setlocal
 
 if fn.has("mac") == 1 then
     cmd [[set shell=zsh]]
-    require"vimrc.options".set("shell=pwsh", 0)
+    options.set("shell=pwsh", 0)
 else
-    require"vimrc.options".set("shell=cmd", 0)
+    options.set("shell=cmd", 0)
 end
 
 -- }}}
