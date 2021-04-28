@@ -39,7 +39,7 @@ abbreviate <silent> <buffer> QP@ Q_PROPERTY(TYPE PH READ PH WRITE setPH NOTIFY P
 
 " Abbreviation to create a getter and setter.
 " Example: int count sg@<Space>
-abbreviate <silent> <buffer> sg@ <BS><Esc>"nyiwhml^tc`lA() const;<CR>void<Space>set<Esc>"npT<Space>lll~$a(<Esc>"tpa<Space>value);<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> sg@ <BS><Esc>Hyt<Esc>"tyt f e"nyiwA() const;<Enter>void set<Esc>"npHf llll~A(<Esc>"tpava<BS><BS> value<Esc>A;<C-R>=abbreviations#eat_char('\s')<CR>
 
 " Abbreviation to getter.
 " Example: int count g@<Space>
@@ -48,6 +48,14 @@ abbreviate <silent> <buffer> g@ <BS><Esc>"nyiwA() const;<C-R>=abbreviations#eat_
 " Create a setter.
 " Example: int count s@<Space>
 abbreviate <silent> <buffer> s@ <BS><Esc>"nyiwhml^"tc`lvoid<Right>set<Esc>l~A(<Esc>"tpa<Space>value);<C-R>=abbreviations#eat_char('\s')<CR>
+
+" Abbreviation to getter implementation.
+" Example: int MyClass::count(); ig@<Space>
+abbreviate <silent> <buffer> ig@ <BS><Esc>F:lyt(A<BS><Enter>{<Enter>return m_<Esc>pa;<Esc>
+
+" Abbreviation to setter implementation.
+" Example: int MyClass::setCount(int value); ig@<Space>
+abbreviate <silent> <buffer> is@ <BS><Esc>F:ftl"nyt(f)b"pyiwA<BS><Enter>{<Enter>if (m_<Esc>"npF_l~"nyiwea==<Esc>"ppo{<Enter>return;<Esc>jo<Esc>"npa=value;<Enter>emit <Esc>"npaChanged();<Esc>Bdf_L
 
 " }}}
 
