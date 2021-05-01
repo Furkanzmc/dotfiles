@@ -30,3 +30,5 @@ end
 dofile(hs.spoons.resourcePath("windows.lua"))
 
 hs.notify.new({title = 'Hammerspoon', informativeText = 'Config loaded.'}):send()
+
+return {}
