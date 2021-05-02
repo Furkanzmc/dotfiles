@@ -304,7 +304,101 @@ function M.setup_lsp()
         on_attach = setup_without_formatting,
         filetypes = {"vim"}
     }
-    lspconfig.efm.setup {on_attach = setup}
+
+    local unused_pyright_config = {
+        lintCommand = 'pyright',
+        lintStdin = false,
+        lintIgnoreExitCode = true,
+        lintFormats = {
+            "%t%n:%f:%l:%c %m", "%-P%f", "  %#%l:%c - %# %tarning: %m",
+            "  %#%l:%c - %# %trror: %m", "    %Eerror %m", "    %C%\\s%+%m"
+        }
+    }
+    lspconfig.efm.setup {
+        on_attach = setup,
+        init_options = {documentFormatting = true},
+        settings = {
+            rootMarkers = {".git/"},
+            logLevel = 2,
+            commands = {
+                {command = "open", arguments = {"${INPUT}"}, title = "ASd"}
+            },
+            languages = {
+                ["="] = {
+                    {
+                        completionCommand = 'cat ${INPUT} | rg "\\w+" --no-filename --no-column --no-line-number --only-matching | sort -u',
+                        completionStdin = false,
+                        lintSource = "efm-completion",
+                        hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp_hover.py --hover ${INPUT}",
+                        hoverStdin = false
+                    }
+                },
+                lua = {{formatCommand = "lua-format -i", formatStdin = true}},
+                yaml = {
+                    {
+                        lintCommand = "yamllint -f parsable -",
+                        lintStdin = true,
+                        lintFormats = {
+                            "%f:%l:%c: [%tarning] %m", "%f:%l:%c: [%trror] %m"
+                        },
+                        lintSource = "yamllint"
+                    }
+                },
+                json = {
+                    {
+                        formatCommand = "jq --tab . | expand -t4",
+                        formatStdin = true,
+                        lintCommand = "jq . ",
+                        lintStdin = true,
+                        lintFormats = {"parse error: %m %l, column %c"},
+                        lintSource = "jq"
+                    }
+                },
+                cpp = {
+                    {
+                        formatCommand = "clang-format",
+                        formatStdin = true,
+                        lintCommand = "clang-check",
+                        lintStdin = false,
+                        lintSource = "clang-check",
+                        lintFormats = {
+                            "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m",
+                            "%f:%l:%c: %m"
+                        }
+                    }
+                },
+                qml = {
+                    {
+                        formatCommand = "qmlformat ${INPUT}",
+                        formatStdin = false,
+                        lintCommand = "qmllint --check-unqualified ${INPUT}",
+                        lintStdin = false,
+                        lintFormats = {"%trror: %m", "%f:%l : %m"},
+                        lintSource = "qmllint"
+                    }
+                },
+                python = {
+                    {
+                        lintCommand = 'bandit --skips B101 --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"',
+                        lintStdin = false,
+                        lintFormats = {"%f:%l %m"},
+                        lintSource = "bandit"
+                    }, {
+                        hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp_hover.py --language python --hover ${INPUT}",
+                        hoverStdin = false
+                    }, {
+
+                        lintCommand = 'pylint --msg-template="{msg_id}:{path}:{line:3d}:{column} [pylint:{msg_id}] {msg} ({symbol})"',
+                        lintStdin = false,
+                        lintSource = "pylint",
+                        lintFormats = {"%t%n:%f:%l:%c %m"},
+                        formatCommand = "black --quiet -",
+                        formatStdin = true
+                    }
+                }
+            }
+        }
+    }
 end
 
 -- }}}
