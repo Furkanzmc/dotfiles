@@ -1,9 +1,5 @@
 local M = {}
 
-local type = type;
-local assert = assert;
-local strformat = string.format;
-
 local TRUE = {
     ['1'] = true,
     ['t'] = true,
