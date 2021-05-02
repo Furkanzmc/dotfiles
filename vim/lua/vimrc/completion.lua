@@ -166,6 +166,23 @@ local function complete_mnemonic(lines, base)
     return words
 end
 
+local function complete_custom(findstart, base)
+    if base == "" then
+        local pos = vim.api.nvim_win_get_cursor(0)
+        local line = vim.api.nvim_get_current_line()
+        local line_to_cursor = line:sub(1, pos[2])
+        return vim.fn.match(line_to_cursor, '\\k*$')
+    end
+
+    local completions = {}
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+    table.extend(completions, complete_mnemonic(lines, base))
+    table.extend(completions, complete_fzf(lines, base))
+
+    return completions
+end
+
 -- }}}
 
 -- }}}
@@ -220,23 +237,6 @@ end
 
 -- }}}
 
-function M.complete_custom(findstart, base)
-    if base == "" then
-        local pos = vim.api.nvim_win_get_cursor(0)
-        local line = vim.api.nvim_get_current_line()
-        local line_to_cursor = line:sub(1, pos[2])
-        return vim.fn.match(line_to_cursor, '\\k*$')
-    end
-
-    local completions = {}
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-    table.extend(completions, complete_mnemonic(lines, base))
-    table.extend(completions, complete_fzf(lines, base))
-
-    return completions
-end
-
 function M.trigger_completion()
     s_completion_index = 1
 
@@ -267,7 +267,7 @@ function M.setup_completion(bufnr)
         vim.api.nvim_buf_set_var(bufnr, "vimrc_completion_timeout", 250)
     end
 
-    vim.bo[bufnr].completefunc = "completion#trigger_custom"
+    vim.bo[bufnr].completefunc = "v:lua.trigger_custom_completion"
 
     vim.api.nvim_command("augroup vimrc_completion_buf_" .. bufnr)
     vim.api.nvim_command("au!")
@@ -288,6 +288,10 @@ function M.add_source(source, bufnr)
     if s_buffer_completion_sources_cache[bufnr] ~= nil then
         s_buffer_completion_sources_cache[bufnr] = nil
     end
+end
+
+_G.trigger_custom_completion = function(find_start, base)
+    return complete_custom(find_start, base)
 end
 
 -- }}}
