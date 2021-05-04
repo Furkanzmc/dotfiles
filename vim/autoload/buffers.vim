@@ -67,7 +67,7 @@ endfunction
 
 function! buffers#wipe_nonexisting_files()
     let l:matchList = filter(s:get_buflist(),
-                \ '!file_readable(bufname(v:val))')
+                \ '!file_readable(bufname(v:val)) && !has_key(getbufinfo(v:val)[0].variables, "terminal_job_id")')
 
     let l:count = len(l:matchList)
     if l:count < 1
