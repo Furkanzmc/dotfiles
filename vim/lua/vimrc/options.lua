@@ -189,7 +189,7 @@ function M.get_option(name, bufnr)
     if s_current_options[name] ~= nil and bufnr ~= 0 then
         if buffer_option ~= nil then return buffer_option.value end
 
-        return s_current_options[name] .. value
+        return s_current_options[name].value
     elseif s_current_options[name] ~= nil and bufnr == 0 then
         return s_current_options[name].value
     end
