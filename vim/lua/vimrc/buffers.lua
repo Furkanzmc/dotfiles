@@ -6,6 +6,7 @@ local b = vim.b
 local bo = vim.bo
 local wo = vim.wo
 local options = require "vimrc.options"
+local typing = require "vimrc.typing"
 local M = {}
 
 local s_scratch_buffer_count = 1
@@ -52,12 +53,38 @@ function M.clean_trailing_spaces()
         return
     end
 
-    if g.vimrc_no_clean_trailing_spaces == 1 or g.vimrc_no_clean_trailing_spaces ==
-        true then return end
-
     local save_cursor = fn.getpos(".")
     local old_query = fn.getreg('/')
-    cmd [[silent! %s/\s\+$//e]]
+    local threshold = options.get_option("clstrailingspacelimit", fn.bufnr())
+    if threshold > 0 then
+        cmd[[redir => g:trailing_space_count]]
+        cmd[[silent %s/\s\+$//egn]]
+        cmd[[redir END]]
+        local result = fn.matchstr(g.trailing_space_count, '\\d\\+')
+        cmd[[unlet g:trailing_space_count]]
+
+        if result ~= "" then
+            result = tonumber(result)
+        else
+            return
+        end
+
+        if result <= threshold then
+            cmd [[silent! %s/\s\+$//e]]
+        else
+            local choice = fn.inputdialog(
+                "[buffers] Found " .. result .. " trailing white spaces. Do you want to clean? [y/n/p] "
+                )
+            if choice == "p" then
+                cmd [[%s/\s\+$//ec]]
+            elseif typing.toboolean(choice) == true then
+                cmd [[%s/\s\+$//e]]
+            end
+        end
+    else
+        cmd [[%s/\s\+$//e]]
+    end
+
     fn.setpos('.', save_cursor)
     fn.setreg('/', old_query)
 end
@@ -139,6 +166,25 @@ function M.init()
     options.register_callback("scratchpad", function()
         mark_scratch(vim.api.nvim_get_current_buf())
     end)
+end
+
+function M.setup_white_space_highlight(bufnr)
+    if b.vimrc_trailing_white_space_highlight_enabled then return end
+
+    if options.get_option("trailingwhitespacehighlight") == false then return end
+
+    cmd [[highlight link TrailingWhiteSpace Error]]
+
+    cmd("augroup trailing_white_space_highlight_buffer_" .. bufnr)
+    cmd [[autocmd! * <buffer>]]
+    cmd [[autocmd BufRead <buffer> match TrailingWhiteSpace /\s\+$/]]
+    cmd [[autocmd BufEnter <buffer> match TrailingWhiteSpace /\s\+$/]]
+    cmd [[autocmd BufWinEnter <buffer> match TrailingWhiteSpace /\s\+$/]]
+    cmd [[autocmd InsertEnter <buffer> match TrailingWhiteSpace /\s\+\%#\@<!$/]]
+    cmd [[autocmd InsertLeave <buffer> match TrailingWhiteSpace /\s\+$/]]
+    cmd [[augroup END]]
+
+    b.vimrc_trailing_white_space_highlight_enabled = true
 end
 
 return M

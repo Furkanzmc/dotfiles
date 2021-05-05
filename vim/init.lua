@@ -598,11 +598,9 @@ cmd [[au!]]
 cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html :lua require"vimrc.buffers".clean_trailing_spaces()]]
 cmd [[augroup END]]
 
-cmd [[highlight link TrailingWhiteSpace Error]]
-
 cmd [[augroup trailing_white_space_highlight]]
 cmd [[autocmd!]]
-cmd [[autocmd BufReadPost * lua require"vimrc.init".setup_white_space_highlight(vim.fn.bufnr())]]
+cmd [[autocmd BufReadPost * lua require"vimrc.buffers".setup_white_space_highlight(vim.fn.bufnr())]]
 cmd [[augroup END]]
 
 cmd [[augroup vimrc_buffer_events]]

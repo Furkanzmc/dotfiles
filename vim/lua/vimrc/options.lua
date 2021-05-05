@@ -16,6 +16,19 @@ local s_registered_options = {
         source = "buffers",
         buffer_local = true
     },
+    clstrailingspacelimit = {
+        default = 0,
+        type_info = "int",
+        source = "buffers",
+        buffer_local = true,
+        description = "If the number of trailing white spaces below this number, they will be cleared automatically. Otherwise you will be prompted for each one."
+    },
+    trailingwhitespacehighlight = {
+        default = true,
+        type_info = "bool",
+        source = "buffers",
+        buffer_local = true
+    },
     indentsize = {
         default = 4,
         type_info = "int",
