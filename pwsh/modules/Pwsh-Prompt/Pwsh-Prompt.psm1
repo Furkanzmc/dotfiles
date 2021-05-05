@@ -217,12 +217,7 @@ function Write-Prompt() {
     $themeFile = "~/.dotfiles/pwsh/tmp_dirs/system_theme"
     if (Test-Path $themeFile -ErrorAction SilentlyContinue) {
         $content = Get-Content $themeFile
-        if ($content -match "dark") {
-            Set-Terminal-Theme dark | Out-Null
-        }
-        else {
-            Set-Terminal-Theme light | Out-Null
-        }
+        Set-Terminal-Theme $content | Out-Null
     }
 }
 

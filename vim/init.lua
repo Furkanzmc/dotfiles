@@ -345,7 +345,7 @@ cmd [[cnoreabbrev sh! Shdo!]]
 
 g.markdown_fenced_languages = {
     "qml", "css", "html", "cpp", "json", "python", "javascript", "diff", "yaml",
-    "sh", "ps1", "todo", "cmake", "qmake", "log", "vim", "sh"
+    "sh", "ps1", "todo", "cmake", "qmake", "log", "vim", "sh", "gitconfig"
 }
 
 -- Pre-configuration {{{

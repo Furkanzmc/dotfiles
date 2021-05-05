@@ -71,7 +71,7 @@ Checkout `hammerspoon/windows-bindings.lua` for details.
 
 Add the following to your local `.gitconfig` file:
 
-```git
+```gitconfig
 [include]
     path = ~/.dotfiles/gitconfig
 ```
