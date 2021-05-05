@@ -166,20 +166,29 @@ function M.init()
     options.register_callback("scratchpad", function()
         mark_scratch(vim.api.nvim_get_current_buf())
     end)
+    options.register_callback("trailingwhitespacehighlight", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        if options.get_option("trailingwhitespacehighlight") then
+            M.setup_white_space_highlight(bufnr)
+        else
+            fn.clearmatches()
+            cmd("augroup trailing_white_space_highlight_buffer_" .. bufnr)
+            cmd [[autocmd! * <buffer>]]
+            cmd [[augroup END]]
+        end
+    end)
 end
 
 function M.setup_white_space_highlight(bufnr)
     if b.vimrc_trailing_white_space_highlight_enabled then return end
 
-    if options.get_option("trailingwhitespacehighlight") == false then return end
+    if options.get_option("trailingwhitespacehighlight", bufnr) == false then return end
 
     cmd [[highlight link TrailingWhiteSpace Error]]
 
     cmd("augroup trailing_white_space_highlight_buffer_" .. bufnr)
     cmd [[autocmd! * <buffer>]]
-    cmd [[autocmd BufRead <buffer> match TrailingWhiteSpace /\s\+$/]]
-    cmd [[autocmd BufEnter <buffer> match TrailingWhiteSpace /\s\+$/]]
-    cmd [[autocmd BufWinEnter <buffer> match TrailingWhiteSpace /\s\+$/]]
+    cmd [[autocmd BufReadPost <buffer> match TrailingWhiteSpace /\s\+$/]]
     cmd [[autocmd InsertEnter <buffer> match TrailingWhiteSpace /\s\+\%#\@<!$/]]
     cmd [[autocmd InsertLeave <buffer> match TrailingWhiteSpace /\s\+$/]]
     cmd [[augroup END]]
