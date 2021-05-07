@@ -498,6 +498,9 @@ map("n", "<leader>dl", ":lua require'dap'.list_breakpoints(true)<CR>",
 map("n", "<leader>dp", ":lua require'dap.ui.variables'.scopes()<CR>",
     {silent = true, noremap = true})
 
+cmd [[command! DapScopes :lua require'dap.ui.widgets'.sidebar(require'dap.ui.widgets'.scopes).open()]]
+cmd [[command! DapFrames :lua require'dap.ui.widgets'.sidebar(require'dap.ui.widgets'.frames).open()]]
+
 -- }}}
 
 -- }}}
