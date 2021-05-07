@@ -462,9 +462,9 @@ g.markdown_fold_style = "nested"
 
 -- nvim-dap {{{
 
-map("n", "<F5>", ":lua require'dap'.continue()<CR>",
+map("n", "<leader>dc", ":lua require'dap'.continue()<CR>",
     {silent = true, noremap = true})
-map("n", "<F6>", ":lua require'dap'.stop()<CR>", {silent = true, noremap = true})
+map("n", "<leader>dt", ":lua require'dap'.stop()<CR>", {silent = true, noremap = true})
 map("n", "<leader>ds", ":lua require'dap'.step_into()<CR>",
     {silent = true, noremap = true})
 
@@ -495,7 +495,7 @@ map("n", "<leader>dr", ":lua require'dap'.repl.toggle()<CR>",
     {silent = true, noremap = true})
 map("n", "<leader>dl", ":lua require'dap'.list_breakpoints(true)<CR>",
     {silent = true, noremap = true})
-map("n", "<leader>dc", ":lua require'dap.ui.variables'.scopes()<CR>",
+map("n", "<leader>dp", ":lua require'dap.ui.variables'.scopes()<CR>",
     {silent = true, noremap = true})
 
 -- }}}

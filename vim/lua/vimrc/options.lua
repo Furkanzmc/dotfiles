@@ -186,17 +186,14 @@ function M.get_option(name, bufnr)
     end
 
     local buffer_option = get_buffer_option(name, bufnr)
-    if s_current_options[name] ~= nil and bufnr ~= 0 then
-        if buffer_option ~= nil then return buffer_option.value end
-
-        return s_current_options[name].value
-    elseif s_current_options[name] ~= nil and bufnr == 0 then
+    if s_current_options[name] ~= nil and buffer_option ~= nil then
+        return buffer_option.value
+    elseif s_current_options[name] ~= nil and s_current_options[name].value ~= nil and buffer_option == nil then
         return s_current_options[name].value
     end
 
-    if s_registered_options[name] ~= nil then
-        return s_registered_options[name].default
-    end
+    assert(s_registered_options[name] ~= nil)
+    return s_registered_options[name].default
 end
 
 function M.register_option(opts)
