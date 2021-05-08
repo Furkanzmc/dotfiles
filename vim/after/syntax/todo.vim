@@ -61,8 +61,6 @@ highlight default link TodoContext Label
 highlight default link TodoComment String
 highlight default link TodoSubTask NONE
 
-call todo#enable_highlight()
-
 call matchadd('Conceal', '^\ \{4,\}```[a-z]\+$', 10, -1, {'conceal':' '})
 call matchadd('Conceal', '^\ \{4,\}```$', 10, -1, {'conceal':' '})
 
