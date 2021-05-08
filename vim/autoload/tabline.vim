@@ -1,12 +1,4 @@
 " Based on https://github.com/mkitt/tabline.vim
-
-" Rename tabs to show tab# and # of viewports
-if (exists("g:vimrc_loaded_tabline") && g:vimrc_loaded_tabline) || &cp
-    finish
-endif
-
-let g:vimrc_loaded_tabline = v:true
-
 " ${TAB_NUMBER}:[${FILE_NAME}] [${MODIFIED}]
 function! tabline#config()
     let l:line = ''
@@ -19,7 +11,8 @@ function! tabline#config()
 
         " Show the modified symbol if any of the buffers in the tab is modified.
         let l:modified_buf_count = 0
-        for buf_index in l:buflist
+        let l:uniq_buflist = uniq(copy(l:buflist))
+        for buf_index in l:uniq_buflist
             if getbufvar(buf_index, "&mod")
                 let l:modified_buf_count += 1
             endif
@@ -31,7 +24,7 @@ function! tabline#config()
         let l:line .= (l:tab_number == tabpagenr() ? '%#TabLineSel#' : '%#TabLine#')
         let l:line .= ' ' . l:tab_number .':'
         let l:line .= (
-                    \ l:bufname != '' ? '['. fnamemodify(l:bufname, ':t') . '] '
+                    \ l:bufname != '' ? fnamemodify(l:bufname, ':t') . ' '
                     \ : '[No Name] '
                     \ )
 
@@ -43,5 +36,3 @@ function! tabline#config()
     let l:line .= '%#TabLineFill#'
     return l:line
 endfunction
-
-set tabline=%!tabline#config()
