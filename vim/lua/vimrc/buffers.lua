@@ -57,11 +57,11 @@ function M.clean_trailing_spaces()
     local old_query = fn.getreg('/')
     local threshold = options.get_option("clstrailingspacelimit", fn.bufnr())
     if threshold > 0 then
-        cmd[[redir => g:trailing_space_count]]
-        cmd[[silent %s/\s\+$//egn]]
-        cmd[[redir END]]
+        cmd [[redir => g:trailing_space_count]]
+        cmd [[silent %s/\s\+$//egn]]
+        cmd [[redir END]]
         local result = fn.matchstr(g.trailing_space_count, '\\d\\+')
-        cmd[[unlet g:trailing_space_count]]
+        cmd [[unlet g:trailing_space_count]]
 
         if result ~= "" then
             result = tonumber(result)
@@ -73,8 +73,8 @@ function M.clean_trailing_spaces()
             cmd [[silent! %s/\s\+$//e]]
         else
             local choice = fn.inputdialog(
-                "[buffers] Found " .. result .. " trailing white spaces. Do you want to clean? [y/n/p] "
-                )
+                               "[buffers] Found " .. result ..
+                                   " trailing white spaces. Do you want to clean? [y/n/p] ")
             if choice == "p" then
                 cmd [[%s/\s\+$//ec]]
             elseif typing.toboolean(choice) == true then
@@ -182,7 +182,9 @@ end
 function M.setup_white_space_highlight(bufnr)
     if b.vimrc_trailing_white_space_highlight_enabled then return end
 
-    if options.get_option("trailingwhitespacehighlight", bufnr) == false then return end
+    if options.get_option("trailingwhitespacehighlight", bufnr) == false then
+        return
+    end
 
     cmd [[highlight link TrailingWhiteSpace Error]]
 

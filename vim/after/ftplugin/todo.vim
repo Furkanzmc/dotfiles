@@ -79,3 +79,24 @@ function todo#foldtext()
 
     return l:foldlevel . " [" . l:line_count . "]"
 endfunction
+
+function! todo#enable_highlight()
+    if &loadplugins == 0
+        return
+    endif
+
+    let l:fenced_languages = [
+                \ "qml",
+                \ "css",
+                \ "html",
+                \ "cpp",
+                \ "json",
+                \ "python",
+                \ "javascript",
+                \ "log"
+                \ ]
+
+    for lang in l:fenced_languages
+        call SyntaxRange#Include('```' . lang, '```', lang, 'NonText')
+    endfor
+endfunction

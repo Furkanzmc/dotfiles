@@ -464,7 +464,8 @@ g.markdown_fold_style = "nested"
 
 map("n", "<leader>dc", ":lua require'dap'.continue()<CR>",
     {silent = true, noremap = true})
-map("n", "<leader>dt", ":lua require'dap'.stop()<CR>", {silent = true, noremap = true})
+map("n", "<leader>dt", ":lua require'dap'.stop()<CR>",
+    {silent = true, noremap = true})
 map("n", "<leader>ds", ":lua require'dap'.step_into()<CR>",
     {silent = true, noremap = true})
 
@@ -500,6 +501,12 @@ map("n", "<leader>dp", ":lua require'dap.ui.variables'.scopes()<CR>",
 
 cmd [[command! DapScopes :lua require'dap.ui.widgets'.sidebar(require'dap.ui.widgets'.scopes).open()]]
 cmd [[command! DapFrames :lua require'dap.ui.widgets'.sidebar(require'dap.ui.widgets'.frames).open()]]
+
+-- }}}
+
+-- nvim-comment {{{
+
+if vim.o.loadplugins == true then require'nvim_comment'.setup() end
 
 -- }}}
 
@@ -641,8 +648,9 @@ cmd [[autocmd!]]
 cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses") && &loadplugins | packadd nvim-http | endif]]
 cmd [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
 cmd [[autocmd VimEnter * lua require'vimrc.init'.create_custom_nvim_server()]]
-cmd [[autocmd VimEnter * colorscheme cosmic_latte ]]
-
+if vim.o.loadplugins == true then
+    cmd [[autocmd VimEnter * colorscheme cosmic_latte ]]
+end
 -- Return to last edit position when opening files (You want this!)
 cmd [[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]
 cmd [[autocmd BufReadPost * lua require'vimrc.init'.load_dictionary()]]

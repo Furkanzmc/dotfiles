@@ -18,23 +18,6 @@ if exists("b:current_syntax")
     finish
 endif
 
-function! s:enable_highlight()
-    let l:fenced_languages = [
-                \ "qml",
-                \ "css",
-                \ "html",
-                \ "cpp",
-                \ "json",
-                \ "python",
-                \ "javascript",
-                \ "log"
-                \ ]
-
-    for lang in l:fenced_languages
-        call SyntaxRange#Include('```' . lang, '```', lang, 'NonText')
-    endfor
-endfunction
-
 let b:done_task_pattern = '\(^\[[xX]\]\|^\ \{4,\}\[[xX]\]\)\s.\+$'
 let b:removed_task_pattern = '\(^\[[\~]\]\|^\ \{4,\}\[[\~]\]\)\s.\+$'
 let b:task_pattern  ='^\ \{4,\}\[\ \]'
@@ -78,7 +61,7 @@ highlight default link TodoContext Label
 highlight default link TodoComment String
 highlight default link TodoSubTask NONE
 
-call s:enable_highlight()
+call todo#enable_highlight()
 
 call matchadd('Conceal', '^\ \{4,\}```[a-z]\+$', 10, -1, {'conceal':' '})
 call matchadd('Conceal', '^\ \{4,\}```$', 10, -1, {'conceal':' '})

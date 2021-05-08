@@ -14,7 +14,7 @@ function M.init_paq()
     local paq = require'paq-nvim'.paq
 
     paq 'sheerun/vim-polyglot'
-    paq 'tpope/vim-commentary'
+    paq 'terrortylor/nvim-comment'
     paq 'tpope/vim-fugitive'
     paq 'machakann/vim-sandwich'
     paq 'furkanzmc/cosmic_latte'

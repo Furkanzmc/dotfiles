@@ -188,7 +188,8 @@ function M.get_option(name, bufnr)
     local buffer_option = get_buffer_option(name, bufnr)
     if s_current_options[name] ~= nil and buffer_option ~= nil then
         return buffer_option.value
-    elseif s_current_options[name] ~= nil and s_current_options[name].value ~= nil and buffer_option == nil then
+    elseif s_current_options[name] ~= nil and s_current_options[name].value ~=
+        nil and buffer_option == nil then
         return s_current_options[name].value
     end
 

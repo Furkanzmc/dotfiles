@@ -6,6 +6,8 @@ if !exists(":SyntaxInclude") && &loadplugins
     packadd SyntaxRange
 endif
 
-call SyntaxRange#Include('lua << EOF', 'EOF', 'lua', 'NonText')
+if &loadplugins
+    call SyntaxRange#Include('lua << EOF', 'EOF', 'lua', 'NonText')
+endif
 
 let b:current_syntax = "vim"
