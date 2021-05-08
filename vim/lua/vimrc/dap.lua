@@ -1,9 +1,8 @@
 local vim = vim
-local dap = require "dap"
 local M = {}
 
 function M.init()
-    dap.adapters.cpp = {
+    require"dap".adapters.cpp = {
         name = "lldb",
         type = 'executable',
         attach = {pidProperty = "pid", pidSelect = "ask"},
