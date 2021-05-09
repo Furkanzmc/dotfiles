@@ -648,7 +648,7 @@ cmd [[augroup END]]
 
 cmd [[augroup vimrc_statusline]]
 cmd [[autocmd!]]
-cmd [[autocmd BufWinEnter * call setwinvar(winnr(), '&statusline', '%!statusline#configure(' . winnr() . ')')]]
+cmd [[autocmd BufWinEnter,WinEnter * call setwinvar(winnr(), '&statusline', '%!statusline#configure(' . winnr() . ')')]]
 cmd [[augroup END]]
 
 -- }}}
