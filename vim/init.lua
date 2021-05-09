@@ -425,7 +425,7 @@ fn.sign_define("LspDiagnosticsSignHint", {
 
 cmd [[augroup vimrc_completion]]
 cmd [[autocmd!]]
-cmd [[autocmd BufReadPost,BufNewFile * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
+cmd [[autocmd BufEnter * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]]
 cmd [[augroup END]]
 
 -- }}}
