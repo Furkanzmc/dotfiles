@@ -608,7 +608,7 @@ cmd [[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]]
 
 cmd [[augroup plugin_buffers]]
 cmd [[au!]]
-cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html :lua require"vimrc.buffers".clean_trailing_spaces()]]
+cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html,*.lua :lua require"vimrc.buffers".clean_trailing_spaces()]]
 cmd [[augroup END]]
 
 cmd [[augroup trailing_white_space_highlight]]
