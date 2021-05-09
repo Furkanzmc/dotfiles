@@ -23,7 +23,8 @@ nmap <buffer> <silent> <leader>i :normal! mt0f]hriA started: =strftime("%d-%m-%
 nmap <buffer> <silent> <leader>t :normal! mt0f]hr `t<CR>
 nmap <buffer> <silent> <leader>d :normal! mt$a due: =strftime("%d-%m-%Y")<CR><ESC>`t
 
-augroup todo_buf
+augroup todo_buf_fenced
     au! * <buffer>
     autocmd BufEnter <buffer> :call todo#enable_highlight()
+    autocmd BufReadPre <buffer> :if exists("b:todo_fenced_languages_applied") | unlet b:todo_fenced_languages_applied | endif
 augroup END
