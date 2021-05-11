@@ -122,7 +122,7 @@ vim.o.laststatus = 2
 vim.o.tabline = "%!tabline#config()"
 vim.o.title = true
 vim.o.titlelen = 80
-vim.o.titlestring = '%<%{strftime(\"%b\\ %d\\ %A,\\ %H:%M\")}%= %{exists(\"$ENV_NAME\") ? expand(\"$ENV_NAME\") : ""}'
+vim.o.titlestring = '%<%{strftime(\"%b\\ %d\\ %A,\\ %H:%M\")}%= %{exists(\"$VIRTUAL_ENV\") ? "(.venv)" : ""} %{exists(\"$ENV_NAME\") ? expand(\" / $ENV_NAME\") : ""}'
 
 -- TODO: Using fn.expand is too flow here.
 cmd [[
