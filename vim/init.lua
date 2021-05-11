@@ -122,7 +122,7 @@ vim.o.laststatus = 2
 vim.o.tabline = "%!tabline#config()"
 vim.o.title = true
 vim.o.titlelen = 80
-vim.o.titlestring = '%<%{exists(\"$VIRTUAL_ENV\") ? "(.venv)" : ""} %{exists(\"$ENV_NAME\") ? expand(\" / $ENV_NAME\") : ""}%= %{strftime(\"%b\\ %d\\ %A,\\ %H:%M\")}'
+vim.o.titlestring = '%<%{exists(\"$VIRTUAL_ENV\") ? "(.venv)" : ""} %{exists(\"$VIRTUAL_ENV\") && exists(\"$ENV_NAME\") ? " / " : ""} %{exists(\"$ENV_NAME\") ? expand(\"$ENV_NAME\") : ""}%= %{strftime(\"%b\\ %d\\ %A,\\ %H:%M\")}'
 
 -- TODO: Using fn.expand is too flow here.
 cmd [[
@@ -311,7 +311,7 @@ cmd(
 cmd(
     "command! -bang -range NextLineHighlight :lua require'vimrc.buffers'.jump_to_next_line_highlight()")
 
-cmd [[ command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc.init'.run_git(<q-args>, <q-bang> ~= '!')]]
+cmd [[ command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')]]
 
 cmd [[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
 cmd [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
@@ -371,7 +371,7 @@ g.polyglot_is_disabled = {
 
 -- }}}
 
-cmd [[command! InitPaq :lua require'vimrc.init'.init_paq()]]
+cmd [[command! InitPaq :lua require'vimrc'.init_paq()]]
 
 -- TagBar {{{
 
@@ -446,7 +446,7 @@ map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
 
 cmd [[augroup plugin_nvim_treesitter]]
 cmd [[au!]]
-cmd [[au FileType python,cpp,json,javascript,html,vue lua require'vimrc.init'.setup_treesitter()]]
+cmd [[au FileType python,cpp,json,javascript,html,vue lua require'vimrc'.setup_treesitter()]]
 cmd [[augroup END]]
 
 -- }}}
@@ -659,13 +659,13 @@ cmd [[augroup vimrc_init]]
 cmd [[autocmd!]]
 cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses") && &loadplugins | packadd nvim-http | endif]]
 cmd [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
-cmd [[autocmd VimEnter * lua require'vimrc.init'.create_custom_nvim_server()]]
+cmd [[autocmd VimEnter * lua require'vimrc'.create_custom_nvim_server()]]
 if vim.o.loadplugins == true then
     cmd [[autocmd VimEnter * colorscheme cosmic_latte ]]
 end
 -- Return to last edit position when opening files (You want this!)
 cmd [[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]
-cmd [[autocmd BufReadPost * lua require'vimrc.init'.load_dictionary()]]
+cmd [[autocmd BufReadPost * lua require'vimrc'.load_dictionary()]]
 
 cmd [[augroup END]]
 
