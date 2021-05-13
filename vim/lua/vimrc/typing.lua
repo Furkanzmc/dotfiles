@@ -6,7 +6,10 @@ local TRUE = {
     ['T'] = true,
     ['true'] = true,
     ['TRUE'] = true,
-    ['True'] = true
+    ['True'] = true,
+    ['YES'] = true,
+    ['Y'] = true,
+    ['y'] = true
 }
 local FALSE = {
     ['0'] = false,
@@ -14,7 +17,10 @@ local FALSE = {
     ['F'] = false,
     ['false'] = false,
     ['FALSE'] = false,
-    ['False'] = false
+    ['False'] = false,
+    ['NO'] = false,
+    ['no'] = false,
+    ['n'] = false
 }
 
 function M.toboolean(str)
