@@ -18,17 +18,12 @@ function! s:get_color(active, active_color, inactive_color)
     endif
 endfunction
 
-function! s:lsp_dianostics(active) abort
+function! s:lsp_dianostics(active, bufnr) abort
     let l:errors = 0
     let l:warnings = 0
-    let l:bufnr = bufnr("%")
 
-    if luaeval('vim.tbl_isempty(vim.lsp.buf_get_clients(' . l:bufnr . '))')
-        retur ""
-    endif
-
-    let l:lsp_errors = luaeval("vim.lsp.diagnostic.get_count(" . l:bufnr . ", [[Error]])")
-    let l:lsp_warnings = luaeval("vim.lsp.diagnostic.get_count(" . l:bufnr . ", [[Warning]])")
+    let l:lsp_errors = luaeval("vim.lsp.diagnostic.get_count(" . a:bufnr . ", [[Error]])")
+    let l:lsp_warnings = luaeval("vim.lsp.diagnostic.get_count(" . a:bufnr . ", [[Warning]])")
 
     if l:lsp_errors != v:null
         let l:errors += l:lsp_errors
@@ -86,6 +81,7 @@ let g:vimrc_mode_map = {
 " focused one
 function! statusline#configure(winnum)
     let l:active = a:winnum == winnr()
+    let l:bufnr = bufnr()
     let l:status = ""
 
     " Mode sign {{{
@@ -150,7 +146,7 @@ function! statusline#configure(winnum)
         " FIXME: nvim-lsp somtimes stops working. This is a convenient way to
         " see If LSP is working or not.
         try
-            let l:is_lsp_active = luaeval("require'vimrc.lsp'.is_lsp_running(" . bufnr("%") . ")")
+            let l:is_lsp_active = luaeval("require'vimrc.lsp'.is_lsp_running(" . l:bufnr . ")")
         catch
             let l:is_lsp_active = v:false
         endtry
@@ -201,8 +197,8 @@ function! statusline#configure(winnum)
 
     " LSP Diagnostic {{{
 
-    if l:active
-        let l:status .= s:lsp_dianostics(l:active)
+    if l:active && l:is_lsp_active
+        let l:status .= s:lsp_dianostics(l:active, l:bufnr)
     endif
 
     " }}}
