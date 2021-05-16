@@ -1,0 +1,241 @@
+-- Initial config from: https://jip.dev/posts/a-simpler-vim-statusline/
+local vim = vim
+local api = vim.api
+local fn = vim.fn
+local wo = vim.wo
+local g = vim.g
+local M = {}
+
+-- Utility Functions {{{
+
+local function statusline_mode(abbvr)
+    if abbvr == 'n' then return 'Normal' end
+    if abbvr == 'no' then return 'N.Operator Pending ' end
+    if abbvr == 'v' then return 'Visual' end
+    if abbvr == 'V' then return 'V.Line' end
+    if abbvr == '' then return 'V.Block' end
+    if abbvr == 's' then return 'Select' end
+    if abbvr == 'S' then return 'S.Line' end
+    if abbvr == '\\<C-S>' then return 'S.Block' end
+    if abbvr == 'i' then return 'Insert' end
+    if abbvr == 'R' then return 'Replace' end
+    if abbvr == 'Rv' then return 'V.Replace' end
+    if abbvr == 'c' then return 'Command' end
+    if abbvr == 'cv' then return 'Vim Ex' end
+    if abbvr == 'ce' then return 'Ex' end
+    if abbvr == 'r' then return 'Prompt' end
+    if abbvr == 'rm' then return 'More' end
+    if abbvr == 'r?' then return 'Confirm' end
+    if abbvr == '!' then return 'Shell' end
+    if abbvr == 't' then return 'Terminal' end
+end
+
+local function color(str, active, active_color, inactive_color, padding)
+    if padding == nil then padding = 0 end
+
+    local cl = '%#' .. inactive_color .. '#'
+    if active then cl = '%#' .. active_color .. '#' end
+
+    return cl .. string.rep(" ", padding) .. str .. string.rep(" ", padding) ..
+               "%0*"
+end
+
+local function lsp_dianostics(active, bufnr)
+    local errors = 0
+    local warnings = 0
+
+    local lsp_errors = vim.lsp.diagnostic.get_count(bufnr, [[Error]])
+    local lsp_warnings = vim.lsp.diagnostic.get_count(bufnr, [[Warning]])
+
+    if lsp_errors ~= nil then errors = lsp_errors end
+
+    if lsp_warnings ~= nil then warnings = lsp_warnings end
+
+    local status = {}
+    if errors > 0 then
+        table.insert(status, color("E:" .. errors, active, 'Identifier',
+                                   'StatusLineNC', 1))
+    end
+
+    if warnings > 0 then
+        table.insert(status,
+                     color("W:" .. warnings, active, 'Type', 'StatusLineNC', 1))
+    end
+
+    return table.concat(status)
+end
+
+-- }}}
+
+-- Global Functions {{{
+
+function _G.is_fugitive_buffer(bufnr)
+    return pcall(api.nvim_buf_get_var, bufnr, "fugitive_type")
+end
+
+function _G.statusline_file(file_path)
+    if file_path == "" or file_path == nil then return "" end
+
+    if _G.is_fugitive_buffer(fn.bufnr()) then
+        return fn.fnamemodify(file_path, ':t')
+    end
+
+    local path = fn.fnamemodify(file_path, ":~:.")
+
+    if path == "" then path = fn.fnamemodify(file_path, ":~") end
+
+    return path
+end
+
+function _G.statusline(txt, padding)
+    if txt == "" or txt == nil then return "" end
+
+    return string.rep(" ", padding) .. txt .. string.rep(" ", padding)
+end
+
+-- }}}
+
+function M.init(winnr)
+    local active = winnr == fn.win_getid()
+    local bufnr = fn.bufnr()
+    local status = {}
+    local st = function(str, active, active_color, inactive_color, padding)
+        if str ~= "" then
+            table.insert(status, color(str, active, active_color,
+                                       inactive_color, padding))
+        end
+    end
+
+    -- Left side {{{
+
+    -- Mode sign {{{
+
+    if active and _G.is_fugitive_buffer(bufnr) then
+        st("FUGITIVE", active, 'Visual', 'StatusLineNC', 1)
+        st("|", active, 'Visual', 'StatusLineNC')
+    end
+
+    if active then
+        st(string.upper(statusline_mode(vim.fn.mode())), active, 'Visual',
+           'StatusLineNC', 1)
+    end
+
+    -- }}}
+
+    -- Help, Quickfix, and Preview signs {{{
+
+    st('%h', active, 'TooLong', 'StatusLineTermNC') -- Help
+    st('%q', active, 'TooLong', 'StatusLineTermNC') -- Quickfix
+    st('%w', active, 'TooLong', 'StatusLineTermNC') -- Preview
+
+    -- }}}
+
+    -- File path {{{
+
+    st(
+        "%{luaeval('_G.statusline(_G.statusline_file(\"' . expand('%') . '\"), 1)')}",
+        active, 'Normal', 'StatusLineNC')
+
+    -- }}}
+
+    -- LSP Status {{{
+
+    local is_lsp_running = require'vimrc.lsp'.is_lsp_running(bufnr)
+    if active and is_lsp_running then
+        st("⚙", active, 'SpecialKey', 'StatusLineNC', 1)
+    end
+
+    -- }}}
+
+    -- Diff file signs {{{
+
+    local buffer_git_tag = {
+        "%{", "!&diff ? '' : ",
+        "(luaeval('_G.is_fugitive_buffer(vim.fn.bufnr())') ? '[head]' : '[local]')",
+        "}"
+    }
+
+    st(table.concat(buffer_git_tag), active, 'StatusDiffFileSign',
+       'StatusDiffFileSignNC')
+
+    -- }}}
+
+    -- Read only and spell sign {{{
+
+    st('%r', active, 'Identifier', 'StatusLineNC')
+    if wo.spell then st('☰', active, 'Identifier', 'StatusLineNC', 1) end
+
+    -- }}}
+
+    -- Modified sign {{{
+
+    st("%{&modified ? '+' : ''}", active, 'SpecialChar', 'StatusLineNC',
+       active and 0 or 1)
+    if active then
+        -- "%{'[✎ ' . len(filter(getbufinfo(), 'v:val.changed == 1')) . ']'}"
+        -- Code from: https://vi.stackexchange.com/a/14313
+        local modified_buf_count = #fn.filter(fn.getbufinfo(),
+                                              'v:val.changed == 1 && v:val.bufnr != ' ..
+                                                  bufnr)
+        if modified_buf_count > 0 then
+            st('[✎ ' .. modified_buf_count .. ']', active, 'SpecialChar',
+               'StatusLineNC', 1)
+        else
+            st("%{&modified ? ' ' : ''}", active, 'SpecialChar', 'StatusLineNC')
+        end
+    end
+
+    -- }}}
+
+    -- }}}
+
+    -- Right side {{{
+
+    table.insert(status, "%=")
+
+    -- LSP Diagnostic {{{
+
+    if is_lsp_running then
+        table.insert(status, lsp_dianostics(active, bufnr))
+    end
+
+    -- }}}
+
+    -- HTTP Request Status {{{
+
+    if fn.exists(":SendHttpRequest") > 0 and g.nvim_http_request_in_progress ==
+        1 then st("[Http]", active, 'Special', 'StatusLineNC', 1) end
+
+    -- }}}
+
+    -- Line and column {{{
+
+    if active then st("[%l:%c]", active, 'Comment', 'StatusLineNC', 1) end
+
+    -- }}}
+
+    -- Branch name {{{
+
+    if fn.exists("*FugitiveHead") > 0 and active then
+        local head = fn["FugitiveHead"]()
+        if head == "" and fn.exists('*FugitiveDetect') > 0 and
+            fn.exists('b:git_dir') == 0 then
+            fn["FugitiveDetect"](fn.expand("%"))
+            head = fn["fugitive#head"]()
+        end
+
+        if head ~= "" then
+            st(' ' .. head, active, 'Visual', 'StatusLineNC', 1)
+        end
+    end
+
+    -- }}}
+
+    -- }}}
+
+    return table.concat(status)
+end
+
+return M
+
+-- vim: foldmethod=marker

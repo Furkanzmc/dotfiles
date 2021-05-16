@@ -122,7 +122,14 @@ vim.o.laststatus = 2
 vim.o.tabline = "%!tabline#config()"
 vim.o.title = true
 vim.o.titlelen = 80
-vim.o.titlestring = '%<%{exists(\"$VIRTUAL_ENV\") ? "(.venv)" : ""} %{exists(\"$VIRTUAL_ENV\") && exists(\"$ENV_NAME\") ? " / " : ""} %{exists(\"$ENV_NAME\") ? expand(\"$ENV_NAME\") : ""}%= %{strftime(\"%b\\ %d\\ %A,\\ %H:%M\")}'
+vim.o.titlestring = table.concat({
+    "%<", '%{exists(\"$VIRTUAL_ENV\") ? ".venv" : ""}',
+    '%{exists(\"$VIRTUAL_ENV\") && exists(\"$ENV_NAME\") ? "://" : ""}',
+    '%{exists(\"$ENV_NAME\") ? expand(\"$ENV_NAME\") : ""}', '%=',
+    '%{strftime(\"%b\\ %d\\ %A,\\ %H:%M\")}'
+})
+vim.o.statusline =
+    '%!luaeval("require\'vimrc.statusline\'.init(" . g:statusline_winid . ")")'
 
 -- TODO: Using fn.expand is too flow here.
 cmd [[
@@ -362,9 +369,17 @@ g.loaded_netrwPlugin = 1
 -- highlighting.
 g.polyglot_is_disabled = {
     markdown = true,
-    json = true,
+    sensible = true,
+    python = true,
+    html = true,
+    cpp = true,
     vue = true,
-    sensible = true
+    json = true,
+    lua = true,
+    yaml = true,
+    bash = true,
+    comment = true,
+    rust = true
 }
 
 -- }}}
@@ -446,7 +461,7 @@ map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
 
 cmd [[augroup plugin_nvim_treesitter]]
 cmd [[au!]]
-cmd [[au FileType python,cpp,json,javascript,html,vue lua require'vimrc'.setup_treesitter()]]
+cmd [[au FileType python,cpp,json,javascript,html,vue,bash,yaml,rust,lua lua require'vimrc'.setup_treesitter()]]
 cmd [[augroup END]]
 
 -- }}}
@@ -640,15 +655,6 @@ cmd [[augroup END]]
 cmd [[augroup plugin_fold]]
 cmd [[autocmd!]]
 cmd [[autocmd BufReadPost,BufNew,BufEnter * if &foldtext != "fold#fold_text()" | setlocal foldtext=fold#fold_text() | endif]]
-cmd [[augroup END]]
-
--- }}}
-
--- Statusline {{{
-
-cmd [[augroup vimrc_statusline]]
-cmd [[autocmd!]]
-cmd [[autocmd BufWinEnter,WinEnter * call setwinvar(winnr(), '&statusline', '%!statusline#configure(' . winnr() . ')')]]
 cmd [[augroup END]]
 
 -- }}}

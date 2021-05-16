@@ -52,7 +52,10 @@ function M.setup_treesitter()
 
     local config = require 'nvim-treesitter.configs'
     config.setup {
-        ensure_installed = {'python', 'html', 'cpp', 'vue', 'json'},
+        ensure_installed = {
+            'python', 'html', 'cpp', 'vue', 'json', 'lua', 'yaml', 'bash',
+            'comment', 'rust'
+        },
         highlight = {enable = true}
     }
 
