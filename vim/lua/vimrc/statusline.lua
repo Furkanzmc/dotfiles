@@ -53,13 +53,13 @@ local function lsp_dianostics(active, bufnr)
 
     local status = {}
     if errors > 0 then
-        table.insert(status, color("E:" .. errors, active, 'Identifier',
+        table.insert(status, color("E:" .. errors, active, 'StatusLineError',
                                    'StatusLineNC', 1))
     end
 
     if warnings > 0 then
-        table.insert(status,
-                     color("W:" .. warnings, active, 'Type', 'StatusLineNC', 1))
+        table.insert(status, color("W:" .. warnings, active,
+                                   'StatusLineWarning', 'StatusLineNC', 1))
     end
 
     return table.concat(status)
@@ -111,22 +111,22 @@ function M.init(winnr)
     -- Mode sign {{{
 
     if active and _G.is_fugitive_buffer(bufnr) then
-        st("FUGITIVE", active, 'Visual', 'StatusLineNC', 1)
-        st("|", active, 'Visual', 'StatusLineNC')
+        st("FUGITIVE", active, 'StatusLineMode', 'StatusLineNC', 1)
+        st("|", active, 'StatusLineMode', 'StatusLineNC')
     end
 
     if active then
-        st(string.upper(statusline_mode(vim.fn.mode())), active, 'Visual',
-           'StatusLineNC', 1)
+        st(string.upper(statusline_mode(vim.fn.mode())), active,
+           'StatusLineMode', 'StatusLineNC', 1)
     end
 
     -- }}}
 
     -- Help, Quickfix, and Preview signs {{{
 
-    st('%h', active, 'TooLong', 'StatusLineTermNC') -- Help
-    st('%q', active, 'TooLong', 'StatusLineTermNC') -- Quickfix
-    st('%w', active, 'TooLong', 'StatusLineTermNC') -- Preview
+    st('%h', active, 'StatusLineSpecialWindow', 'StatusLineTermNC') -- Help
+    st('%q', active, 'StatusLineSpecialWindow', 'StatusLineTermNC') -- Quickfix
+    st('%w', active, 'StatusLineSpecialWindow', 'StatusLineTermNC') -- Preview
 
     -- }}}
 
@@ -134,7 +134,7 @@ function M.init(winnr)
 
     st(
         "%{luaeval('_G.statusline(_G.statusline_file(\"' . expand('%') . '\"), 1)')}",
-        active, 'Normal', 'StatusLineNC')
+        active, 'StatusLineFilePath', 'StatusLineNC')
 
     -- }}}
 
@@ -142,7 +142,7 @@ function M.init(winnr)
 
     local is_lsp_running = require'vimrc.lsp'.is_lsp_running(bufnr)
     if active and is_lsp_running then
-        st("⚙", active, 'SpecialKey', 'StatusLineNC', 1)
+        st("⚙", active, 'StatusLineLspStatus', 'StatusLineNC', 1)
     end
 
     -- }}}
@@ -162,26 +162,26 @@ function M.init(winnr)
 
     -- Read only and spell sign {{{
 
-    st('%r', active, 'Identifier', 'StatusLineNC')
-    if wo.spell then st('☰', active, 'Identifier', 'StatusLineNC', 1) end
+    st('%r', active, 'StatusLineError', 'StatusLineNC')
+    if wo.spell then st('☰', active, 'StatusLineError', 'StatusLineNC', 1) end
 
     -- }}}
 
     -- Modified sign {{{
 
-    st("%{&modified ? '+' : ''}", active, 'SpecialChar', 'StatusLineNC',
+    st("%{&modified ? '+' : ''}", active, 'StatusLineModified', 'StatusLineNC',
        active and 0 or 1)
     if active then
-        -- "%{'[✎ ' . len(filter(getbufinfo(), 'v:val.changed == 1')) . ']'}"
         -- Code from: https://vi.stackexchange.com/a/14313
         local modified_buf_count = #fn.filter(fn.getbufinfo(),
                                               'v:val.changed == 1 && v:val.bufnr != ' ..
                                                   bufnr)
         if modified_buf_count > 0 then
-            st('[✎ ' .. modified_buf_count .. ']', active, 'SpecialChar',
-               'StatusLineNC', 1)
+            st('[✎ ' .. modified_buf_count .. ']', active,
+               'StatusLineModified', 'StatusLineNC', 1)
         else
-            st("%{&modified ? ' ' : ''}", active, 'SpecialChar', 'StatusLineNC')
+            st("%{&modified ? ' ' : ''}", active, 'StatusLineModified',
+               'StatusLineNC')
         end
     end
 
@@ -204,13 +204,17 @@ function M.init(winnr)
     -- HTTP Request Status {{{
 
     if fn.exists(":SendHttpRequest") > 0 and g.nvim_http_request_in_progress ==
-        1 then st("[Http]", active, 'Special', 'StatusLineNC', 1) end
+        true then
+        st("[Http]", active, 'StatusLineLspStatus', 'StatusLineNC', 1)
+    end
 
     -- }}}
 
     -- Line and column {{{
 
-    if active then st("[%l:%c]", active, 'Comment', 'StatusLineNC', 1) end
+    if active then
+        st("[%l:%c]", active, 'StatusLineRowColumn', 'StatusLineNC', 1)
+    end
 
     -- }}}
 
@@ -225,7 +229,7 @@ function M.init(winnr)
         end
 
         if head ~= "" then
-            st(' ' .. head, active, 'Visual', 'StatusLineNC', 1)
+            st(' ' .. head, active, 'StatusLineBranch', 'StatusLineNC', 1)
         end
     end
 
