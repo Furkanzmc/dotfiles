@@ -8,7 +8,8 @@ function! tabline#config()
         let l:buflist = tabpagebuflist(l:tab_number)
         let l:bufnr = l:buflist[l:winnr - 1]
         let l:bufname = bufname(l:bufnr)
-        let l:active = l:tab_number == tabpagenr()
+        let l:current_tabnr = tabpagenr()
+        let l:active = l:tab_number == l:current_tabnr
 
         " Show the modified symbol if any of the buffers in the tab is modified.
         let l:modified_buf_count = 0
@@ -25,7 +26,7 @@ function! tabline#config()
         let l:line .= (l:active ? '%#TabLineSel#' : '%#TabLine#')
         let l:line .= ' ' . l:tab_number .':'
         let l:line .= (
-                    \ l:bufname != '' ? fnamemodify(l:bufname, ':t')
+                    \ l:bufname != '' ? fnamemodify(l:bufname, ':t') . ' '
                     \ : ' No Name '
                     \ )
 
@@ -33,7 +34,7 @@ function! tabline#config()
             let l:line .= '[+' . l:modified_buf_count . ']'
         endif
 
-        if !l:active
+        if !l:active && l:tab_number != l:current_tabnr - 1
             let l:line .=  '|'
         endif
     endfor
