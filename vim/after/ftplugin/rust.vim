@@ -6,3 +6,18 @@ endif
 
 setlocal signcolumn=yes
 setlocal suffixesadd=.rs
+
+if executable("rustfmt")
+    setlocal formatprg=rustmft
+endif
+
+if executable("rustup")
+    setlocal keywordprg=rustup\ doc
+endif
+
+let b:vimrc_rls_lsp_signs_enabled = 1
+let b:vimrc_rls_lsp_location_list_enabled = 1
+let b:vimrc_efm_lsp_signs_enabled = 1
+let b:vimrc_efm_lsp_location_list_enabled = 1
+
+let b:did_rust = v:true
