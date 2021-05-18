@@ -8,7 +8,7 @@ setlocal signcolumn=yes
 setlocal suffixesadd=.rs
 
 if executable("rustfmt")
-    setlocal formatprg=rustmft
+    setlocal formatprg=rustfmt
 endif
 
 if executable("rustup")
