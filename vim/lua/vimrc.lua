@@ -10,7 +10,8 @@ local M = {}
 function M.init_paq()
     if vim.o.loadplugins == false then return end
 
-    cmd 'packadd paq-nvim'
+    cmd[[packadd paq-nvim]]
+
     local paq = require'paq-nvim'.paq
 
     paq 'sheerun/vim-polyglot'
@@ -29,9 +30,7 @@ function M.init_paq()
     paq {'vim-scripts/SyntaxRange', opt = true}
     paq {'majutsushi/tagbar', opt = true}
     paq {'masukomi/vim-markdown-folding', opt = true}
-    paq {'junegunn/goyo.vim', opt = true}
     paq {'mfussenegger/nvim-dap', opt = true}
-
     paq {'rust-lang/rust.vim', opt = true}
     paq {'nvim-treesitter/nvim-treesitter', opt = true}
     paq {
