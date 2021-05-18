@@ -53,7 +53,7 @@ function M.setup_treesitter()
     config.setup {
         ensure_installed = {
             'python', 'html', 'cpp', 'vue', 'json', 'lua', 'yaml', 'bash',
-            'comment', 'rust'
+            'comment', 'rust', 'toml'
         },
         highlight = {enable = true}
     }

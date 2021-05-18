@@ -379,7 +379,8 @@ g.polyglot_is_disabled = {
     yaml = true,
     bash = true,
     comment = true,
-    rust = true
+    rust = true,
+    toml = true
 }
 
 -- }}}
@@ -461,7 +462,7 @@ map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
 
 cmd [[augroup plugin_nvim_treesitter]]
 cmd [[au!]]
-cmd [[au FileType python,cpp,json,javascript,html,vue,bash,yaml,rust,lua lua require'vimrc'.setup_treesitter()]]
+cmd [[au FileType python,cpp,json,javascript,html,vue,bash,yaml,rust,lua,toml lua require'vimrc'.setup_treesitter()]]
 cmd [[augroup END]]
 
 -- }}}
