@@ -1,6 +1,7 @@
 local vim = vim
 local fn = vim.fn
 local cmd = vim.cmd
+local api = vim.api
 local g = vim.g
 local b = vim.b
 local bo = vim.bo
@@ -20,7 +21,12 @@ function M.swap_source_header()
         end
     end
 
-    cmd("execute 'setlocal path+=' . expand('%:h')")
+    local status, path_backup = pcall(api.nvim_buf_get_option, fn.bufnr(), "path")
+    if status == false then
+        path_backup = ""
+    end
+
+    bo.path = fn.expand("%:h")
 
     local found = false
     for _, suffix in ipairs(suffixes) do
@@ -32,7 +38,7 @@ function M.swap_source_header()
         end
     end
 
-    cmd("execute 'setlocal path-=' . expand('%:h')")
+    bo.path = path_backup
 
     if found == false then
         log.error("cpp", "Cannot swap source/header for " .. fn.expand('%:t'))
