@@ -31,7 +31,7 @@ function! tabline#config()
                     \ )
 
         if l:modified_buf_count > 0
-            let l:line .= '[+' . l:modified_buf_count . ']'
+            let l:line .= '[+' . l:modified_buf_count . '] '
         endif
 
         if !l:active && l:tab_number != l:current_tabnr - 1
