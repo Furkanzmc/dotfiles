@@ -40,6 +40,7 @@ function M.init_paq()
     }
 
     paq {'Furkanzmc/nvim-qt', opt = true}
+    paq {'sindrets/diffview.nvim', opt = true}
 
     -- }}}
 end

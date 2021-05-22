@@ -529,6 +529,20 @@ if vim.o.loadplugins == true then require'nvim_comment'.setup() end
 
 -- }}}
 
+-- diffview.nvim {{{
+
+if vim.o.loadplugins == true then
+
+    cmd [[augroup plugin_diffvim]]
+    cmd [[au!]]
+    cmd [[autocmd SourcePost * if expand("<afile>") =~ "diffview.vim$" | call luaeval("require'diffview'.setup {file_panel = {use_icons = false}}") | augroup plugin_diffvim | au! | augroup END | endif]]
+    cmd [[augroup END]]
+
+    -- require'diffview'.setup {file_panel = {use_icons = false}}
+end
+
+-- }}}
+
 -- }}}
 
 -- Local Plugins {{{
@@ -544,14 +558,6 @@ if fn.has("mac") == 1 then
 else
     require"vimrc.options".set("shell=cmd", 0)
 end
-
--- }}}
-
--- Git {{{
-
-cmd [[command! -nargs=? StartReview :call git#start_review(<f-args>)]]
-cmd [[command! ReviewDiff :call git#review_diff()]]
-cmd [[command! FinishReview :call git#finish_review()]]
 
 -- }}}
 
