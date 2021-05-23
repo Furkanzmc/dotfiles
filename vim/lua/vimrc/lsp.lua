@@ -405,7 +405,8 @@ function M.setup_lsp()
                         formatCommand = "black --quiet -",
                         formatStdin = true
                     }
-                }
+                },
+                rust = {{formatCommand = "rustfmt", formatStdin = true}},
             }
         }
     }
