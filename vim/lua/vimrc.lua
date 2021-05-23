@@ -7,10 +7,14 @@ local bo = vim.bo
 local utils = require "vimrc.utils"
 local M = {}
 
+local function init_nvim_colorizer(bufnr)
+    cmd [[command! EnableNvimColorizer :lua require"vimrc".enable_nvim_colorizer(vim.api.nvim_get_current_buf())]]
+end
+
 function M.init_paq()
     if vim.o.loadplugins == false then return end
 
-    cmd[[packadd paq-nvim]]
+    cmd [[packadd paq-nvim]]
 
     local paq = require'paq-nvim'.paq
 
@@ -41,6 +45,8 @@ function M.init_paq()
 
     paq {'Furkanzmc/nvim-qt', opt = true}
     paq {'sindrets/diffview.nvim', opt = true}
+    paq {'norcalli/nvim-colorizer.lua', opt = true}
+    paq {'lifepillar/vim-colortemplate', opt = true}
 
     -- }}}
 end
@@ -112,6 +118,34 @@ function M.run_git(args, is_background_job)
     })
 end
 
+function M.enable_nvim_colorizer(bufnr)
+    require'colorizer'.setup()
+    cmd("augroup nvim_colorizer_buf_" .. bufnr)
+    cmd [[ColorizerAttachToBuffer]]
+    cmd [[au!]]
+    cmd("autocmd FileType <buffer=" .. bufnr ..
+            "> lua require'colorizer'.setup()")
+    cmd [[augroup END]]
+    cmd [[command! -buffer DisableNvimColorizer :lua require"vimrc".disable_nvim_colorizer(vim.api.nvim_get_current_buf())]]
+end
+
+function M.disable_nvim_colorizer(bufnr)
+    cmd("augroup nvim_colorizer_buf_" .. bufnr)
+    cmd [[au!]]
+    cmd [[augroup END]]
+    cmd [[delcommand DisableNvimColorizer]]
+    cmd [[ColorizerDetachFromBuffer]]
+end
+
+function M.on_source_post()
+    local file_path = fn.expand("<afile>")
+    if string.match(file_path, "diffvim.vim") ~= nil then
+        require'diffview'.setup {file_panel = {use_icons = false}}
+    elseif string.match(file_path, "colorizer.vim") ~= nil then
+        init_nvim_colorizer()
+    end
+end
+
 return M
 
--- vim: foldmethod=marker
+-- vim: foldmethod=marker filetype=lua

@@ -353,12 +353,19 @@ cmd [[cnoreabbrev sh! Shdo!]]
 
 -- Plugins {{{
 
+-- Pre-configuration {{{
+
+if vim.o.loadplugins == true then
+    cmd [[augroup vimrc_sourcee_post]]
+    cmd [[au!]]
+    cmd [[autocmd SourcePost * lua require"vimrc".on_source_post()]]
+    cmd [[augroup END]]
+end
+
 g.markdown_fenced_languages = {
     "qml", "css", "html", "cpp", "json", "python", "javascript", "diff", "yaml",
     "sh", "ps1", "todo", "cmake", "qmake", "log", "vim", "sh", "gitconfig"
 }
-
--- Pre-configuration {{{
 
 -- Disable netrw in favor of vim-dirvish
 g.loaded_netrwPlugin = 1
@@ -526,20 +533,6 @@ cmd [[command! DapFrames :lua require'dap.ui.widgets'.sidebar(require'dap.ui.wid
 -- nvim-comment {{{
 
 if vim.o.loadplugins == true then require'nvim_comment'.setup() end
-
--- }}}
-
--- diffview.nvim {{{
-
-if vim.o.loadplugins == true then
-
-    cmd [[augroup plugin_diffvim]]
-    cmd [[au!]]
-    cmd [[autocmd SourcePost * if expand("<afile>") =~ "diffview.vim$" | call luaeval("require'diffview'.setup {file_panel = {use_icons = false}}") | augroup plugin_diffvim | au! | augroup END | endif]]
-    cmd [[augroup END]]
-
-    -- require'diffview'.setup {file_panel = {use_icons = false}}
-end
 
 -- }}}
 
