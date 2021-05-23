@@ -296,9 +296,19 @@ function M.setup_lsp()
             "--completion-style=detailed", "--recovery-ast"
         }
     }
-    lspconfig.rls.setup {
+    lspconfig.rust_analyzer.setup {
         on_attach = setup_without_formatting,
-        filetypes = {"rust"}
+        filetypes = {"rust"},
+        settings = {
+            ["rust-analyzer"] = {
+                assist = {
+                    importMergeBehavior = "last",
+                    importPrefix = "by_self"
+                },
+                cargo = {loadOutDirsFromCheck = true},
+                procMacro = {enable = true}
+            }
+        }
     }
     lspconfig.vimls.setup {
         on_attach = setup_without_formatting,
