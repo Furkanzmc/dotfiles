@@ -68,6 +68,8 @@ function M.setup_treesitter()
     cmd [[augroup plugin_nvim_treesitter]]
     cmd [[au!]]
     cmd [[augroup END]]
+
+    cmd [[syntax off]]
 end
 
 function M.create_custom_nvim_server()
