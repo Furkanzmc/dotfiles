@@ -369,20 +369,14 @@ g.loaded_netrwPlugin = 1
 
 -- Disable markdown support for polyglot because it messes up with syntax
 -- highlighting.
-g.polyglot_is_disabled = {
-    markdown = true,
-    sensible = true,
-    python = true,
-    html = true,
-    cpp = true,
-    vue = true,
-    json = true,
-    lua = true,
-    yaml = true,
-    bash = true,
-    comment = true,
-    rust = true,
-    toml = true
+g.polyglot_disabled = {
+    "bash", "beancount", "bibtex", "c", "c_sharp", "clojure", "comment", "cpp",
+    "css", "dart", "devicetree", "dockerfile", "erlang", "fennel", "fish", "go",
+    "gomod", "graphql", "html", "java", "javascript", "jsdoc", "json", "JSON",
+    "julia", "kotlin", "latex", "ledger", "lua", "nix", "ocaml",
+    "ocaml_interface", "ocamllex", "php", "python", "ql", "r", "regex", "rst",
+    "ruby", "rust", "sparql", "supercollider", "svelte", "teal", "toml", "tsx",
+    "turtle", "typescript", "verilog", "vue", "yaml", "zig"
 }
 
 -- }}}
@@ -464,7 +458,8 @@ map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
 
 cmd [[augroup plugin_nvim_treesitter]]
 cmd [[au!]]
-cmd [[au FileType python,cpp,json,javascript,html,vue,bash,yaml,rust,lua,toml lua require'vimrc'.setup_treesitter()]]
+cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
+        " lua require'vimrc'.setup_treesitter()")
 cmd [[augroup END]]
 
 -- }}}

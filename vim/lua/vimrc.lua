@@ -52,24 +52,20 @@ function M.init_paq()
 end
 
 function M.setup_treesitter()
-    if fn.exists(":TSInstall") == 1 or vim.o.loadplugins == false then return end
+    assert(fn.exists(":TSInstall") == 0)
 
     cmd [[packadd nvim-treesitter]]
 
     local config = require 'nvim-treesitter.configs'
     config.setup {
-        ensure_installed = {
-            'python', 'html', 'cpp', 'vue', 'json', 'lua', 'yaml', 'bash',
-            'comment', 'rust', 'toml'
-        },
-        highlight = {enable = true}
+        ensure_installed = g.polyglot_disabled,
+        highlight = {enable = true},
+        indent = {enabled = true}
     }
 
     cmd [[augroup plugin_nvim_treesitter]]
     cmd [[au!]]
     cmd [[augroup END]]
-
-    cmd [[syntax off]]
 end
 
 function M.create_custom_nvim_server()
