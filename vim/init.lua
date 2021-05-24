@@ -362,11 +362,6 @@ if vim.o.loadplugins == true then
     cmd [[augroup END]]
 end
 
-g.markdown_fenced_languages = {
-    "qml", "css", "html", "cpp", "json", "python", "javascript", "diff", "yaml",
-    "sh", "ps1", "todo", "cmake", "qmake", "log", "vim", "sh", "gitconfig"
-}
-
 -- Disable netrw in favor of vim-dirvish
 g.loaded_netrwPlugin = 1
 
@@ -544,6 +539,10 @@ if vim.o.loadplugins == true then require'nvim_comment'.setup() end
 
 cmd [[command! -nargs=* -complete=customlist,options#complete Set :lua require'vimrc.options'.set(<q-args>, 0)]]
 cmd [[command! -nargs=* -complete=customlist,options#complete_buf_local Setlocal :lua require'vimrc.options'.set(<q-args>, vim.fn.bufnr())]]
+
+cmd [[augroup options_plugin]]
+cmd [[autocmd BufReadPost *.md :lua require"vimrc.options".set_modeline(vim.fn.bufnr())]]
+cmd [[augroup END]]
 
 if fn.has("mac") == 1 then
     cmd [[set shell=zsh]]

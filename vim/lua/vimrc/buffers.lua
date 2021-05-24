@@ -177,6 +177,12 @@ function M.init()
             cmd [[augroup END]]
         end
     end)
+
+    options.register_callback("markdownfenced", function()
+        g.markdown_fenced_languages = options.get_option("markdownfenced",
+                                                         vim.api
+                                                             .nvim_get_current_buf())
+    end)
 end
 
 function M.setup_white_space_highlight(bufnr)

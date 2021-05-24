@@ -1,9 +1,10 @@
 -- TODO
 -- [ ] Add support for more types.
--- [ ] Add support for window and buffer local options.
+-- [-] Add support for window and buffer local options.
 -- [ ] Add support for options.indentsize=4 syntax for init.lua
 local vim = vim
 local cmd = vim.cmd
+local fn = vim.fn
 local log = require "vimrc.log"
 local utils = require "vimrc.utils"
 local typing = require "vimrc.typing"
@@ -46,6 +47,13 @@ local s_registered_options = {
         type_info = "bool",
         source = "vimrc",
         buffer_local = true
+    },
+    markdownfenced = {
+        default = {},
+        type_info = "string",
+        source = "vimrc",
+        buffer_local = true,
+        parser = function(value) return string.split(value, ",") end
     }
 }
 local s_current_options = {}
@@ -247,8 +255,14 @@ function M.set(option_str, bufnr)
     end
 
     if option_info.buffer_local == true and bufnr == 0 then
-        log.warning("options",
-                    "This is only a local option. Use `:Setlocal` instead.")
+        log.warning("options", "This is only a local option. Use `:Setlocal " ..
+                        option_str .. "` instead.")
+        return nil
+    end
+
+    if option_info.buffer_local ~= true and bufnr ~= 0 then
+        log.warning("options", "This is only a global option. Use `:Set " ..
+                        option_str .. "` instead.")
         return nil
     end
 
@@ -265,6 +279,10 @@ function M.set(option_str, bufnr)
         log.error("options", "Cannot convert `" .. value .. "` to " ..
                       option_info.type_info .. ".")
         return
+    end
+
+    if option_info.parser ~= nil then
+        converted_value = option_info.parser(converted_value)
     end
 
     set_option(name, converted_value, bufnr)
@@ -294,6 +312,24 @@ function M.register_callback(option_name, func)
     else
         table.insert(s_callbacks[option_name], func)
     end
+end
+
+function M.set_modeline(bufnr)
+    local last_linenr = fn.line("$")
+    if last_linenr == 1 then return end
+
+    local last_line = vim.api.nvim_buf_get_lines(bufnr, last_linenr - 1,
+                                                 last_linenr, true)[1]
+    if string.match(last_line, "vimrc:") == nil then return end
+
+    local start_index = string.find(last_line, "Setlocal")
+    if start_index == nil then
+        log.error("options", "Only Setlocal is supported.")
+        return
+    end
+    local modeline = string.sub(last_line, start_index, #last_line)
+    modeline = string.split(string.gsub(modeline, "Setlocal ", ""), " ")
+    for _, opt in ipairs(modeline) do cmd("Setlocal " .. opt) end
 end
 
 return M
