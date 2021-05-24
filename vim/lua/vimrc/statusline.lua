@@ -169,7 +169,7 @@ function M.init(winnr)
 
     -- Modified sign {{{
 
-    st("%{&modified ? '+' : ''}", active, 'StatusLineModified', 'StatusLineNC',
+    st("%{&modified ? ' +' : ''}", active, 'StatusLineModified', 'StatusLineNC',
        active and 0 or 1)
     if active then
         -- Code from: https://vi.stackexchange.com/a/14313
