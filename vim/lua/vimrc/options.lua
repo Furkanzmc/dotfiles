@@ -89,9 +89,16 @@ local function echo_options(bufnr)
         end
 
         if val ~= nil then
+            local val_str = ""
+            if type(val) == "table" then
+                val_str = vim.inspect(val)
+            else
+                val_str = tostring(val)
+            end
+
             message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" ..
-                          tostring(val) .. ", " .. "[" ..
-                          get_option_info(key).source .. "]"
+                          val_str .. ", " .. "[" .. get_option_info(key).source ..
+                          "]"
             table.insert(processed, key)
         end
     end
@@ -106,10 +113,17 @@ local function echo_options(bufnr)
             end
 
             if can_echo then
+                local val_str = ""
+                if type(info.default) == "table" then
+                    val_str = vim.inspect(info.default)
+                else
+                    val_str = tostring(info.default)
+                end
+
                 message =
                     message .. "\n" .. string.rep(" ", 11) .. key .. "=" ..
-                        tostring(info.default) .. ", " .. "[" ..
-                        get_option_info(key).source .. "]"
+                        val_str .. ", " .. "[" .. get_option_info(key).source ..
+                        "]"
             end
         end
     end

@@ -541,7 +541,7 @@ cmd [[command! -nargs=* -complete=customlist,options#complete Set :lua require'v
 cmd [[command! -nargs=* -complete=customlist,options#complete_buf_local Setlocal :lua require'vimrc.options'.set(<q-args>, vim.fn.bufnr())]]
 
 cmd [[augroup options_plugin]]
-cmd [[autocmd BufReadPost *.md :lua require"vimrc.options".set_modeline(vim.fn.bufnr())]]
+cmd [[autocmd BufReadPost *.md :lua require"vimrc.options".set_modeline(vim.api.nvim_get_current_buf())]]
 cmd [[augroup END]]
 
 if fn.has("mac") == 1 then

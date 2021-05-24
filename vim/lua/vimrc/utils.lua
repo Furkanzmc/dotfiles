@@ -65,6 +65,20 @@ function table.filter(t, pred)
     return out
 end
 
+
+function table.uniq(t)
+    local new_table = {}
+    local hash = {}
+    for _, v in pairs(t) do
+        if not hash[v] then
+            table.insert(new_table, v)
+            hash[v] = true
+        end
+    end
+
+    return new_table
+end
+
 function string.join(str, ch)
     local joined = ""
     for _, word in ipairs(str) do joined = joined .. ch .. word end

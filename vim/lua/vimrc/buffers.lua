@@ -179,9 +179,11 @@ function M.init()
     end)
 
     options.register_callback("markdownfenced", function()
-        g.markdown_fenced_languages = options.get_option("markdownfenced",
-                                                         vim.api
-                                                             .nvim_get_current_buf())
+        local langs = options.get_option("markdownfenced",
+                                         vim.api.nvim_get_current_buf())
+        g.markdown_fenced_languages = table.uniq(
+                                          table.extend(
+                                              g.markdown_fenced_languages, langs))
     end)
 end
 
