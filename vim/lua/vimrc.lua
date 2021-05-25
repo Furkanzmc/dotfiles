@@ -18,7 +18,6 @@ function M.init_paq()
 
     local paq = require'paq-nvim'.paq
 
-    paq 'sheerun/vim-polyglot'
     paq 'terrortylor/nvim-comment'
     paq 'tpope/vim-fugitive'
     paq 'machakann/vim-sandwich'
@@ -30,6 +29,7 @@ function M.init_paq()
 
     -- Optional {{{
 
+    paq {'sheerun/vim-polyglot', opt = true}
     paq {'savq/paq-nvim', opt = true}
     paq {'vim-scripts/SyntaxRange', opt = true}
     paq {'majutsushi/tagbar', opt = true}

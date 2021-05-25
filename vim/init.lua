@@ -379,6 +379,11 @@ g.polyglot_disabled = {
     "turtle", "typescript", "verilog", "vue", "yaml", "zig"
 }
 
+cmd [[augroup vimrc_polyglot]]
+cmd [[autocmd!]]
+cmd [[autocmd FileType * :if index(g:polyglot_disabled, &filetype) == -1 | packadd vim-polyglot | augroup vimrc_polyglot | au! | augroup END | endif]]
+cmd [[augroup END]]
+
 -- }}}
 
 -- }}}
