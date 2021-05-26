@@ -311,13 +311,6 @@ map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", {silent = true, noremap = true})
 map("n", "gx", "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>",
     {silent = true, noremap = true})
 
-cmd(
-    "command! -range HighlightLine :lua require'vimrc.buffers'.highlight_line(0, <line1>, <line2>)")
-cmd(
-    "command! -bang -range ClearLineHighlights :lua require'vimrc.buffers'.clear_line_highlight(0, <line1>, <line2>, <q-bang> == '!')")
-cmd(
-    "command! -bang -range NextLineHighlight :lua require'vimrc.buffers'.jump_to_next_line_highlight()")
-
 cmd [[ command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')]]
 
 cmd [[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
