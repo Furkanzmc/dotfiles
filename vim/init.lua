@@ -517,7 +517,11 @@ cmd [[command! DapFrames :lua require'dap.ui.widgets'.sidebar(require'dap.ui.wid
 
 -- nvim-comment {{{
 
-if vim.o.loadplugins == true then require'nvim_comment'.setup() end
+if vim.o.loadplugins == true then
+    require'nvim_comment'.setup({
+        comment_empty = false,
+    })
+end
 
 -- }}}
 
