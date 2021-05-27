@@ -70,7 +70,7 @@ end
 -- Global Functions {{{
 
 function _G.is_fugitive_buffer(bufnr)
-    return pcall(api.nvim_buf_get_var, bufnr, "fugitive_type")
+    return pcall(api.nvim_buf_get_var, bufnr, "fugitive_type") or string.match(fn.expand("%"), "^diffview") ~= nil
 end
 
 function _G.statusline_file(file_path)

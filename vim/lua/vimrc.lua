@@ -60,7 +60,16 @@ function M.setup_treesitter()
     config.setup {
         ensure_installed = g.polyglot_disabled,
         highlight = {enable = true},
-        indent = {enabled = true}
+        indent = {enabled = true},
+        incremental_selection = {
+            enable = true,
+            keymaps = {
+                init_selection = "gis",
+                node_incremental = "gni",
+                node_decremental = "gnd",
+                scope_incremental = "gsi",
+            },
+        },
     }
 
     cmd [[augroup plugin_nvim_treesitter_init]]
