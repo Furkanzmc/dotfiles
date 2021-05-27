@@ -454,8 +454,6 @@ map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
 cmd [[augroup plugin_nvim_treesitter]]
 cmd [[au!]]
 cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
-        " lua require'vimrc'.setup_treesitter()")
-cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
         " setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()")
 cmd [[augroup END]]
 
