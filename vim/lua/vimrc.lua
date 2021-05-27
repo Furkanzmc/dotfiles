@@ -63,7 +63,7 @@ function M.setup_treesitter()
         indent = {enabled = true}
     }
 
-    cmd [[augroup plugin_nvim_treesitter]]
+    cmd [[augroup plugin_nvim_treesitter_init]]
     cmd [[au!]]
     cmd [[augroup END]]
 end

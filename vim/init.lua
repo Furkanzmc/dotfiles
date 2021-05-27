@@ -455,6 +455,14 @@ cmd [[augroup plugin_nvim_treesitter]]
 cmd [[au!]]
 cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
         " lua require'vimrc'.setup_treesitter()")
+cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
+        " setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()")
+cmd [[augroup END]]
+
+cmd [[augroup plugin_nvim_treesitter_init]]
+cmd [[au!]]
+cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
+        " lua require'vimrc'.setup_treesitter()")
 cmd [[augroup END]]
 
 -- }}}
@@ -518,9 +526,7 @@ cmd [[command! DapFrames :lua require'dap.ui.widgets'.sidebar(require'dap.ui.wid
 -- nvim-comment {{{
 
 if vim.o.loadplugins == true then
-    require'nvim_comment'.setup({
-        comment_empty = false,
-    })
+    require'nvim_comment'.setup({comment_empty = false})
 end
 
 -- }}}
