@@ -24,8 +24,8 @@ end
 cmd [[filetype plugin on]]
 cmd [[filetype indent on]]
 
-cmd("set runtimepath+=" .. fn.expand("~/.dotfiles/vim"))
-cmd("set runtimepath+=" .. fn.expand("~/.dotfiles/vim/after"))
+vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
+vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 
 vim.o.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
 vim.o.complete = ".,w,k,kspell,b"
@@ -131,14 +131,11 @@ vim.o.titlestring = table.concat({
 vim.o.statusline =
     '%!luaeval("require\'vimrc.statusline\'.init(" . g:statusline_winid . ")")'
 
--- TODO: Using fn.expand is too flow here.
-cmd [[
-if $VIMRC_BACKGROUND == "dark"
-    set background=dark
+if vim.env.VIMRC_BACKGROUND == "dark" then
+    vim.opt.background = "dark"
 else
-    set background=light
-endif
-]]
+    vim.opt.background = "light"
+end
 
 vim.o.diffopt =
     "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
@@ -204,15 +201,7 @@ vim.o.matchtime = 3
 -- No annoying sound on errors
 vim.o.errorbells = false
 vim.o.visualbell = false
-vim.o.t_vb = ""
 vim.o.tm = 300
-
--- TODO: Find a better way.
--- Disable scrollbars.
-cmd [[set guioptions-=r]]
-cmd [[set guioptions-=R]]
-cmd [[set guioptions-=l]]
-cmd [[set guioptions-=L]]
 
 cmd [[
 try
