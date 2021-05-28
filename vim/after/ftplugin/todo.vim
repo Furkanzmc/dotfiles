@@ -25,6 +25,6 @@ nmap <buffer> <silent> <leader>d :normal! mt$a due: =strftime("%d-%m-%Y")<CR><E
 
 augroup todo_buf_fenced
     au! * <buffer>
-    autocmd BufEnter <buffer> :call todo#enable_highlight()
+    autocmd BufEnter <buffer> :lua require"vimrc.todo".enable_highlight()
     autocmd BufReadPre <buffer> :if exists("b:todo_fenced_languages_applied") | unlet b:todo_fenced_languages_applied | endif
 augroup END

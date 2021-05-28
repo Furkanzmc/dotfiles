@@ -51,7 +51,14 @@ local s_registered_options = {
     markdownfenced = {
         default = {},
         type_info = "string",
-        source = "vimrc",
+        source = "buffers",
+        buffer_local = true,
+        parser = function(value) return string.split(value, ",") end
+    },
+    todofenced = {
+        default = {},
+        type_info = "string",
+        source = "todo",
         buffer_local = true,
         parser = function(value) return string.split(value, ",") end
     }

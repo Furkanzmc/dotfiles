@@ -49,15 +49,3 @@ function todo#foldtext()
 
     return l:foldlevel . " [" . l:line_count . "]"
 endfunction
-
-function! todo#enable_highlight()
-    if &loadplugins == 0 || exists("b:todo_fenced_languages_applied") || !exists("g:markdown_fenced_languages")
-        return
-    endif
-
-    for lang in g:markdown_fenced_languages
-        call SyntaxRange#Include('```' . lang, '```', lang, 'NonText')
-    endfor
-
-    let b:todo_fenced_languages_applied = v:true
-endfunction
