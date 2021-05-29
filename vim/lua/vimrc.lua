@@ -52,6 +52,8 @@ function M.init_paq()
 end
 
 function M.setup_treesitter()
+    if vim.o.loadplugins == false then return end
+
     assert(fn.exists(":TSInstall") == 0)
 
     cmd [[packadd nvim-treesitter]]

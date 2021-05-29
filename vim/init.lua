@@ -361,7 +361,9 @@ g.polyglot_disabled = {
     "turtle", "typescript", "verilog", "vue", "yaml", "zig"
 }
 
-cmd [[packadd vim-polyglot]]
+if vim.o.loadplugins == true then
+    cmd [[packadd vim-polyglot]]
+end
 
 -- }}}
 
