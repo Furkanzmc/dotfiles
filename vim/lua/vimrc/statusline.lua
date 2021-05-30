@@ -4,6 +4,7 @@ local api = vim.api
 local fn = vim.fn
 local wo = vim.wo
 local g = vim.g
+local buffers = require "vimrc.buffers"
 local M = {}
 
 -- Utility Functions {{{
@@ -70,7 +71,8 @@ end
 -- Global Functions {{{
 
 function _G.is_fugitive_buffer(bufnr)
-    return pcall(api.nvim_buf_get_var, bufnr, "fugitive_type") or string.match(fn.expand("%"), "^diffview") ~= nil
+    return pcall(api.nvim_buf_get_var, bufnr, "fugitive_type") or
+               string.match(fn.expand("%"), "^diffview") ~= nil
 end
 
 function _G.statusline_file(file_path)
@@ -173,9 +175,7 @@ function M.init(winnr)
        active and 0 or 1)
     if active then
         -- Code from: https://vi.stackexchange.com/a/14313
-        local modified_buf_count = #fn.filter(fn.getbufinfo(),
-                                              'v:val.changed == 1 && v:val.bufnr != ' ..
-                                                  bufnr)
+        local modified_buf_count = buffers.get_modified_buf_count(-1, {bufnr})
         if modified_buf_count > 0 then
             st('[✎ ' .. modified_buf_count .. ']', active,
                'StatusLineModified', 'StatusLineNC', 1)

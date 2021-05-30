@@ -119,7 +119,7 @@ vim.o.stal = 2
 -- Always show the status line
 vim.o.laststatus = 2
 
-vim.o.tabline = "%!tabline#config()"
+vim.o.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
 vim.o.title = true
 vim.o.titlelen = 80
 vim.o.titlestring = table.concat({

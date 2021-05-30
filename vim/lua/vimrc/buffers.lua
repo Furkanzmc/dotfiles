@@ -164,6 +164,28 @@ function M.setup_white_space_highlight(bufnr)
     b.vimrc_trailing_white_space_highlight_enabled = true
 end
 
-return M
+function M.get_modified_buf_count(tabnr, exclude)
+    if exclude == nil then exclude = {} end
 
--- vim: foldmethod=marker
+    local modified_buf_count = 0
+    if tabnr == -1 then
+        local modified_list = fn.filter(fn.getbufinfo(), 'v:val.changed == 1')
+        modified_list = table.filter(modified_list, function(buf_info)
+            return table.index_of(modified_list, buf_info.bufnr) == -1
+        end)
+
+        modified_buf_count = #modified_list
+    else
+        local buflist = table.uniq(fn.tabpagebuflist(tabnr))
+        local modified_list = table.filter(buflist, function(bufnr)
+            if fn.getbufvar(bufnr, "&mod") == 1 then return true end
+            return false
+        end)
+
+        modified_buf_count = #modified_list
+    end
+
+    return modified_buf_count
+end
+
+return M
