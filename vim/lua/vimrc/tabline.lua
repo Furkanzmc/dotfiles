@@ -34,12 +34,19 @@ function M.tablabel(tabnr)
         table.insert(label, " [+" .. modified_count .. "]")
     end
 
+    if tabnr ~= fn.tabpagenr() then
+        table.insert(label, " |")
+    else
+        table.insert(label, " ")
+    end
+
     return table.concat(label)
 end
 
 function M.init()
     local s = {}
-    for tabnr in utils.range(fn.tabpagenr('$')) do
+    local last_tabnr = fn.tabpagenr('$')
+    for tabnr in utils.range(last_tabnr) do
         -- Select the highlighting
         if tabnr == fn.tabpagenr() then
             table.insert(s, '%#TabLineSel#')
@@ -47,19 +54,15 @@ function M.init()
             table.insert(s, '%#TabLine#')
         end
 
-        -- set the tab page number (for mouse clicks)
-        table.insert(s, '%' .. tabnr .. 'T')
+        table.insert(s, ' %' .. tabnr .. 'T')
 
-        -- the label is made by MyTabLabel()
-        table.insert(s, ' %{luaeval("' .. "require'vimrc.tabline'" ..
-                         '.tablabel(' .. tabnr .. ')")} ')
+        -- the label is made by tablabel()
+        table.insert(s, '%{luaeval("' .. "require'vimrc.tabline'" ..
+                         '.tablabel(' .. tabnr .. ')")}')
     end
 
     -- after the last tab fill with TabLineFill and reset tab page nr
     table.insert(s, '%#TabLineFill#%T')
-
-    -- right-align the label to close the current tab page
-    if fn.tabpagenr('$') > 1 then table.insert(s, '%=%#TabLine#%999Xclose') end
 
     return table.concat(s)
 end
