@@ -34,7 +34,8 @@ function M.tablabel(tabnr)
         table.insert(label, " [+" .. modified_count .. "]")
     end
 
-    if tabnr ~= fn.tabpagenr() then
+    local current_tabnr = fn.tabpagenr()
+    if tabnr < current_tabnr - 1 or tabnr > current_tabnr then
         table.insert(label, " |")
     else
         table.insert(label, " ")
