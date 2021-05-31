@@ -290,11 +290,13 @@ function M.setup_lsp()
     }
     lspconfig.clangd.setup {
         on_attach = setup_without_formatting,
-        filetypes = {"cpp", "c"},
         cmd = {
             "clangd", "--background-index", "--clang-tidy",
             "--completion-style=detailed", "--recovery-ast"
         }
+    }
+    lspconfig.ccls.setup {
+        on_attach = setup_without_formatting,
     }
     lspconfig.rust_analyzer.setup {
         on_attach = setup_without_formatting,
