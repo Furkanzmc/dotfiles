@@ -297,6 +297,11 @@ function M.setup_lsp()
     }
     lspconfig.ccls.setup {
         on_attach = setup_without_formatting,
+        settings = {
+            index = {
+                threads = 1
+            }
+        }
     }
     lspconfig.rust_analyzer.setup {
         on_attach = setup_without_formatting,
