@@ -126,9 +126,11 @@ function M.init(winnr)
 
     -- Help, Quickfix, and Preview signs {{{
 
-    st('%h', active, 'StatusLineSpecialWindow', 'StatusLineTermNC') -- Help
-    st('%q', active, 'StatusLineSpecialWindow', 'StatusLineTermNC') -- Quickfix
-    st('%w', active, 'StatusLineSpecialWindow', 'StatusLineTermNC') -- Preview
+    st(
+        '%{&filetype == "help" ? " [Help] " : (&filetype == "qf" ? " [QuickFix] " : (&previewwindow ? " [Preview] " : ""))}',
+        active,
+        'StatusLineSpecialWindow',
+        'StatusLineTermNC')
 
     -- }}}
 
