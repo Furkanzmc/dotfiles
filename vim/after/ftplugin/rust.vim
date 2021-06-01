@@ -15,8 +15,8 @@ if executable("rustup")
     setlocal keywordprg=rustup\ doc
 endif
 
-let b:vimrc_rls_lsp_signs_enabled = 1
-let b:vimrc_rls_lsp_location_list_enabled = 1
+let b:vimrc_rust_analyzer_lsp_signs_enabled = 1
+let b:vimrc_rust_analyzer_lsp_location_list_enabled = 1
 let b:vimrc_efm_lsp_signs_enabled = 1
 let b:vimrc_efm_lsp_location_list_enabled = 1
 
