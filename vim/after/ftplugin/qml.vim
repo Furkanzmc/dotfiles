@@ -5,7 +5,15 @@ endif
 setlocal suffixesadd=.qml
 setlocal foldmethod=indent
 setlocal signcolumn=yes
-setlocal errorformat+=file://%f:%l:\ %s%trror:\ %m,file://%f:%l:%c:\ %m,%f:%l:%c:\ %t%*[^:]:%m,%f:%l:\ %t%*[^:]:%m,%m\ (file://%f:%l),%m\ file\ %f\,\ line\ %l,file://%f:%l\ %m
+
+setlocal errorformat+=file://%f:%l:\ %s%trror:\ %m
+setlocal errorformat+=file://%f:%l:%c:\ %m
+setlocal errorformat=%f:%l:%c:\ %t%*[^:]:%m
+setlocal errorformat=%f:%l:\ %t%*[^:]:%m
+setlocal errorformat=%m\ (file://%f:%l)
+setlocal errorformat=%m\ file\ %f\,\ line\ %l
+setlocal errorformat=file://%f:%l\ %m
+
 setlocal colorcolumn=81,101
 
 let b:vimrc_efm_lsp_signs_enabled = 1
