@@ -10,18 +10,21 @@ setlocal includeexpr=cpp#includeexpr(v:fname)
 setlocal commentstring=//%s
 
 " Clang errorformat
-set errorformat=%E%f:%l:%c:\ %trror:\ %m,%Z%m
-set errorformat+=%W%f:%l:%c:\ %tarning:\ %m,%Z%m
-set errorformat+=%N%f:%l:%c:\ %tote:\ %m,%Z%m
+setlocal errorformat=%E%f:%l:%c:\ %trror:\ %m,%Z%m
+setlocal errorformat+=%W%f:%l:%c:\ %tarning:\ %m,%Z%m
+setlocal errorformat+=%N%f:%l:%c:\ %tote:\ %m,%Z%m
 
-set errorformat+=%E%f:%l:\ %trror:\ %m,%Z%m
-set errorformat+=%W%f:%l:\ %tarning:\ %m,%Z%m
-set errorformat+=%N%f:%l:\ %tote:\ %m,%Z%m
+setlocal errorformat+=%E%f:%l:\ %trror:\ %m,%Z%m
+setlocal errorformat+=%W%f:%l:\ %tarning:\ %m,%Z%m
+setlocal errorformat+=%N%f:%l:\ %tote:\ %m,%Z%m
+
+" Assertion error
+set errorformat=Assertion\ fail%td:\ function\ %o,\ %m\ file\ %f,\ line\ %l.
 
 " MSVC errorformat
-set errorformat+=%f(%l):\ %trror\ %s%n:\ %m
-set errorformat+=%f(%l):\ %tarning:\ %m
-set errorformat+=%f(%l):\ %tote:\ %m
+setlocal errorformat+=%f(%l):\ %trror\ %s%n:\ %m
+setlocal errorformat+=%f(%l):\ %tarning:\ %m
+setlocal errorformat+=%f(%l):\ %tote:\ %m
 
 if executable("clang-format")
     setlocal formatprg=clang-format
