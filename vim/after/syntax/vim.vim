@@ -1,4 +1,4 @@
-if exists("b:current_syntax")
+if exists("b:current_syntax_ext")
     finish
 endif
 
@@ -10,4 +10,4 @@ if &loadplugins
     call SyntaxRange#Include('lua << EOF', 'EOF', 'lua', 'NonText')
 endif
 
-let b:current_syntax = "vim"
+let b:current_syntax_ext = "vim"

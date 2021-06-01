@@ -1,12 +1,8 @@
-if exists("b:current_syntax")
+if exists("b:current_syntax_ext")
     finish
 endif
 
-if !exists("b:markdown_conceal_set")
-    call matchadd('Conceal', '^```[a-z]\+$', 10, -1, {'conceal':' '})
-    call matchadd('Conceal', '^```$', 10, -1, {'conceal':' '})
-endif
+call matchadd('Conceal', '^```[a-z]\+$', 10, -1, {'conceal':' '})
+call matchadd('Conceal', '^```$', 10, -1, {'conceal':' '})
 
-let b:markdown_conceal_set = v:true
-
-let b:current_syntax = "markdown"
+let b:current_syntax_ext = "markdown"

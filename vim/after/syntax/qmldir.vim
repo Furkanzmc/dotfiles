@@ -1,4 +1,4 @@
-if exists("b:current_syntax")
+if exists("b:current_syntax_ext")
     finish
 endif
 
@@ -16,4 +16,4 @@ highlight default link QmlDirComment Comment
 highlight default link QmlDirFileName Normal
 highlight default link QmlDirModuleName Tag
 
-let b:current_syntax = "qmldir"
+let b:current_syntax_ext = "qmldir"
