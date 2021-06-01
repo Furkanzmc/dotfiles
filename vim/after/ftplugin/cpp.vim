@@ -11,22 +11,12 @@ setlocal commentstring=//%s
 
 " Clang errorformat
 set errorformat=%E%f:%l:%c:\ %trror:\ %m,%Z%m
-set errorformat=%E%f:%l:%c:\ %trror:\ %m,%C%s,%Z%m
-
 set errorformat+=%W%f:%l:%c:\ %tarning:\ %m,%Z%m
-set errorformat+=%W%f:%l:%c:\ %tarning:\ %m,%c%s,%Z%m
-
 set errorformat+=%N%f:%l:%c:\ %tote:\ %m,%Z%m
-set errorformat+=%N%f:%l:%c:\ %tote:\ %m,%C%s,%Z%m
 
 set errorformat+=%E%f:%l:\ %trror:\ %m,%Z%m
-set errorformat+=%E%f:%l:\ %trror:\ %m,%C%s,%Z%m
-
 set errorformat+=%W%f:%l:\ %tarning:\ %m,%Z%m
-set errorformat+=%W%f:%l:\ %tarning:\ %m,%C%s,%Z%m
-
 set errorformat+=%N%f:%l:\ %tote:\ %m,%Z%m
-set errorformat+=%N%f:%l:\ %tote:\ %m,%C%s,%Z%m
 
 " MSVC errorformat
 set errorformat+=%f(%l):\ %trror\ %s%n:\ %m
