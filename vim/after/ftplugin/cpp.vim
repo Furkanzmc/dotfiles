@@ -9,17 +9,25 @@ setlocal suffixesadd=.cpp,.h,.hxx,.cxx
 setlocal includeexpr=cpp#includeexpr(v:fname)
 setlocal commentstring=//%s
 
+" Assertion
+let &l:errorformat = 'Assertion fail%td: (%m)\, function %s\, file %f\, line %l\.'
+
 " Clang errorformat
-setlocal errorformat=%E%f:%l:%c:\ %trror:\ %m,%Z%m
+setlocal errorformat+=%E%f:%l:%c:\ %trror:\ %m,%Z%m
 setlocal errorformat+=%W%f:%l:%c:\ %tarning:\ %m,%Z%m
 setlocal errorformat+=%N%f:%l:%c:\ %tote:\ %m,%Z%m
+
+setlocal errorformat+=%f:%l:%c:\ %trror:\ %m
+setlocal errorformat+=%f:%l:%c:\ %tarning:\ %m
+setlocal errorformat+=%f:%l:%c:\ %tote:\ %m
 
 setlocal errorformat+=%E%f:%l:\ %trror:\ %m,%Z%m
 setlocal errorformat+=%W%f:%l:\ %tarning:\ %m,%Z%m
 setlocal errorformat+=%N%f:%l:\ %tote:\ %m,%Z%m
 
-" Assertion error
-set errorformat=Assertion\ fail%td:\ function\ %o,\ %m\ file\ %f,\ line\ %l.
+setlocal errorformat+=%f:%l:\ %trror:\ %m
+setlocal errorformat+=%f:%l:\ %tarning:\ %m
+setlocal errorformat+=%f:%l:\ %tote:\ %m
 
 " MSVC errorformat
 setlocal errorformat+=%f(%l):\ %trror\ %s%n:\ %m
