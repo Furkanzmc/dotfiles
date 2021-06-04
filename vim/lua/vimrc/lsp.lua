@@ -297,7 +297,9 @@ function M.setup_lsp()
             on_attach = setup_without_formatting,
             cmd = {
                 "clangd", "--background-index", "--clang-tidy",
-                "--completion-style=detailed", "--recovery-ast"
+                "--completion-style=detailed", "--recovery-ast",
+                "--header-insertion=iwyu", "--header-insertion-decorators",
+                "-j=1"
             }
         }
     end
