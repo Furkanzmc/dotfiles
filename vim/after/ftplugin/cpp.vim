@@ -13,6 +13,8 @@ setlocal commentstring=//%s
 let &l:errorformat = 'Assertion fail%td: (%m)\, function %s\, file %f\, line %l\.'
 
 " Clang errorformat
+setlocal errorformat+=error:\ %f:%l:%c:\ %trror:\ %m
+
 setlocal errorformat+=%E%f:%l:%c:\ %trror:\ %m,%Z%m
 setlocal errorformat+=%W%f:%l:%c:\ %tarning:\ %m,%Z%m
 setlocal errorformat+=%N%f:%l:%c:\ %tote:\ %m,%Z%m
