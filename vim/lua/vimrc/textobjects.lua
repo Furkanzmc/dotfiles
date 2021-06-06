@@ -24,6 +24,18 @@ function M.number_text_object()
     end
 end
 
+
+function M.fence_text_object()
+    local fence_begin = '^```\\w\\+$'
+    local fence_end = '^```'
+
+    if fn.search(fence_end, 'ceW') ~= 0 then
+        cmd [[normal kv]]
+        fn.search(fence_begin, 'cbW', linenr)
+        cmd [[normal j]]
+    end
+end
+
 return M
 
 -- vim: foldmethod=marker
