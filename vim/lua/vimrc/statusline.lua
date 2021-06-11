@@ -75,20 +75,6 @@ function _G.is_fugitive_buffer(bufnr)
                string.match(fn.expand("%"), "^diffview") ~= nil
 end
 
-function _G.statusline_file(file_path)
-    if file_path == "" or file_path == nil then return "" end
-
-    if _G.is_fugitive_buffer(fn.bufnr()) then
-        return fn.fnamemodify(file_path, ':t')
-    end
-
-    local path = fn.fnamemodify(file_path, ":~:.")
-
-    if path == "" then path = fn.fnamemodify(file_path, ":~") end
-
-    return path
-end
-
 function _G.statusline(txt, padding)
     if txt == "" or txt == nil then return "" end
 
@@ -136,9 +122,11 @@ function M.init(winnr)
 
     -- File path {{{
 
-    st(
-        "%{luaeval('_G.statusline(_G.statusline_file(\"' . expand('%') . '\"), 1)')}",
-        active, 'StatusLineFilePath', 'StatusLineNC')
+    if _G.is_fugitive_buffer(bufnr) then
+        st(fn.fnamemodify(fn.bufname(bufnr), ':t'), active, 'StatusLineFilePath', 'StatusLineNC', 1)
+    else
+        st("%<%f", active, 'StatusLineFilePath', 'StatusLineNC', 1)
+    end
 
     -- }}}
 
