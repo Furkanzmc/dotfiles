@@ -1,7 +1,3 @@
-if exists("b:current_syntax_ext")
-    finish
-endif
-
 syntax match QmlDirComponentName '\([A-Z]\w\+\)' contains=NONE
 syntax match QmlDirComponentVersion '[0-9]\.[0-9]\+' contains=NONE
 syntax match QmlDirKeywords '\(^singleton\|^module\|internal\|plugin\|typeinfo\|classname\|depends\)' contains=NONE
@@ -15,5 +11,3 @@ highlight default link QmlDirKeywords Keyword
 highlight default link QmlDirComment Comment
 highlight default link QmlDirFileName Normal
 highlight default link QmlDirModuleName Tag
-
-let b:current_syntax_ext = "qmldir"

@@ -1,7 +1,5 @@
-if exists("b:current_syntax_ext")
-    finish
-endif
+syn match qmlInlineType "\<[A-Z][a-z][_A-Za-z0-9]*\s*\(\.\w\+\)\@=\>"
+syn match qmlSignalHandler "\<on\w\+:\@=\>"
 
-" syn match qmlObjectLiteralType "[A-Z][a-z][_A-Za-z0-9]*\s*\(\.\w\+\)\@="
-
-let b:current_syntax_ext = "qml"
+highlight link qmlInlineType qmlObjectLiteralType
+highlight link qmlSignalHandler Function
