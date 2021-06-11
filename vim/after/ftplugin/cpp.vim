@@ -64,7 +64,7 @@ abbreviate <silent> <buffer> clog@ std::clog << "\n";<Left><Left><Left><Left><C-
 abbreviate <silent> <buffer> cerr@ std::cerr << "\n";<Left><Left><Left><Left><C-R>=abbreviations#eat_char('\s')<CR>
 
 " Q_PROPERTY abbreviation.
-abbreviate <silent> <buffer> QP@ Q_PROPERTY(TYPE PH READ PH WRITE setPH NOTIFY PHChanged)<Esc>F(/PH<CR><C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> QP@ Q_PROPERTY(TYPE PH READ PH WRITE setPH NOTIFY PHChanged)<Esc>F(/\(TYPE\\|PH\)<CR><C-R>=abbreviations#eat_char('\s')<CR>
 
 " Abbreviation to create a getter and setter.
 " Example: int count sg@<Space>
