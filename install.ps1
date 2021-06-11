@@ -1,3 +1,8 @@
+if ($IsWindows) {
+    Install-Module Pscx -Scope CurrentUser -AllowClobber
+    Install-Module VSSetup -Scope CurrentUser
+}
+
 Write-Output '. "~/.dotfiles/pwsh/profile.ps1"' >> $profile
 if ($IsWindows) {
     Write-Output '$env:PSModulePath += $([System.IO.Path]::PathSeparator) + ~/.dotfiles/pwsh/modules/'
