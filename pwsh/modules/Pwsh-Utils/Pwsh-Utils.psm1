@@ -185,6 +185,10 @@ function Get-Weather() {
 }
 
 function _Set-Alacritty-Color($Color) {
+    if (-not (Test-Path ~/.dotfiles/terminals/alacritty.yml -ErrorAction SilentlyContinue)) {
+        return
+    }
+
     $content = Get-Content ~/.dotfiles/terminals/alacritty.yml
     if ($content -match "\*dark" -and $Color -eq "light") {
         $content = $content.Replace("*dark", "*light")
@@ -278,7 +282,7 @@ function Build-Neovim() {
 
     if (-not (Test-Path $SourcePath -ErrorAction SilentlyContinue)) {
         Write-Host -ForegroundColor Red "$SourcePath does not exist."
-        exit 1
+        return 1
     }
 
     Push-Location $SourcePath
@@ -317,7 +321,7 @@ function Build-Neovim() {
 
         if (-not $?) {
             Write-Host -ForegroundColor Red "Error while configuring the dependancies."
-            exit 1
+            return 1
         }
 
         Write-Host -ForegroundColor Blue "Building the third party dependancies."
@@ -325,7 +329,7 @@ function Build-Neovim() {
         jom -j12
         if (-not $?) {
             Write-Host -ForegroundColor Red "Error while building the dependancies."
-            exit 1
+            return 1
         }
         Pop-Location
 
@@ -337,7 +341,7 @@ function Build-Neovim() {
         cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
         if (-not $?) {
             Write-Host -ForegroundColor Red "Error while configuring the neovim."
-            exit 1
+            return 1
         }
 
         Write-Host -ForegroundColor Blue "Building neovim."
@@ -345,7 +349,7 @@ function Build-Neovim() {
         jom -j12
         if (-not $?) {
             Write-Host -ForegroundColor Red "Error while building neovim."
-            exit 1
+            return 1
         }
 
         if ($Install) {
