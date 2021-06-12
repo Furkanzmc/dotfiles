@@ -4,13 +4,12 @@ local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 
--- Functions {{{
+vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
+vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 
-local function map(mode, lhs, rhs, opts)
-    local options = {noremap = true}
-    if opts then options = vim.tbl_extend('force', options, opts) end
-    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
+local map = require"vimrc".map
+
+-- Functions {{{
 
 local function execute_macro_on_visual_range()
     cmd [[echo "@".getcmdline()]]
@@ -23,9 +22,6 @@ end
 
 cmd [[filetype plugin on]]
 cmd [[filetype indent on]]
-
-vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
-vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 
 vim.o.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
 vim.o.complete = ".,w,k,kspell,b"
@@ -524,18 +520,18 @@ end
 
 -- Custom Options {{{
 
-cmd [[command! -nargs=* -complete=customlist,options#complete Set :lua require'vimrc.options'.set(<q-args>, 0)]]
-cmd [[command! -nargs=* -complete=customlist,options#complete_buf_local Setlocal :lua require'vimrc.options'.set(<q-args>, vim.fn.bufnr())]]
+cmd [[command! -nargs=* -complete=customlist,options#complete Set :lua require'vimrc.options'.set_cmd(<q-args>, nil)]]
+cmd [[command! -nargs=* -complete=customlist,options#complete_buf_local Setlocal :lua require'vimrc.options'.set_cmd(<q-args>, vim.fn.bufnr())]]
 
 cmd [[augroup options_plugin]]
 cmd [[autocmd BufReadPost *.md,todo.txt :lua require"vimrc.options".set_modeline(vim.api.nvim_get_current_buf())]]
 cmd [[augroup END]]
 
 if fn.has("mac") == 1 then
-    cmd [[set shell=zsh]]
-    require"vimrc.options".set("shell=pwsh", 0)
+    vim.opt.shell = "zsh"
+    require"vimrc.options".set("shell", "pwsh")
 else
-    require"vimrc.options".set("shell=cmd", 0)
+    require"vimrc.options".set("shell", "cmd")
 end
 
 -- }}}

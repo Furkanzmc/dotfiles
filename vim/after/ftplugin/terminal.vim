@@ -27,11 +27,14 @@ endif
 
 let b:terminal_closing = v:false
 
-autocmd TermEnter <buffer> set scrolloff=0
-autocmd TermEnter,BufEnter,WinEnter <buffer> call setreg("t", trim(@*) . "")
-autocmd TermLeave <buffer> set scrolloff=3
-autocmd TermClose <buffer> let b:terminal_closing = v:true
-            \ | lua require"vimrc.terminal".index_terminals(vim.api.nvim_get_current_buf())
+augroup ftplugin_terminal
+    autocmd!
+    autocmd TermEnter <buffer> set scrolloff=0
+    autocmd TermEnter,BufEnter,WinEnter <buffer> call setreg("t", trim(@*) . "")
+    autocmd TermLeave <buffer> set scrolloff=3
+    autocmd TermClose <buffer> let b:terminal_closing = v:true
+                \ | lua require"vimrc.terminal".index_terminals(vim.api.nvim_get_current_buf())
+augroup END
 
 command -buffer TerminalNextError call search('\(^_\{10,}\ \w\+.*\ _\{10,}\|^=\{10,\}\)', 'W')
 command -buffer TerminalPreviousError call search('\(^_\{10,}\ \w\+.*\ _\{10,}\|^=\{10,\}\)', 'Wb')

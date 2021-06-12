@@ -81,9 +81,31 @@ local function get_option_info(name)
     end
 end
 
+local function echo_option(name)
+    local option_info = get_option_info(name)
+    if option_info.buffer_local == true then
+        log.info(option_info.source .. "-buflocal",
+                 name .. "=" .. tostring(M.get_option(name, bufnr)))
+    else
+        log.info(option_info.source,
+                 name .. "=" .. tostring(M.get_option(name, bufnr)))
+    end
+end
+
+local function get_buffer_option(name, bufnr)
+    local existing = s_current_options[name]
+    if existing == nil then return end
+    if bufnr == nil then return nil end
+
+    local buffers = existing.buffers
+    for _, v in ipairs(buffers) do if v.bufnr == bufnr then return v end end
+
+    return nil
+end
+
 local function echo_options(bufnr)
     local processed = {}
-    local message = "--"
+    local message = {"--"}
 
     for key, info in pairs(s_current_options) do
         local val = nil
@@ -91,7 +113,7 @@ local function echo_options(bufnr)
 
         if buffer_option ~= nil then
             val = buffer_option.value
-        elseif bufnr == 0 and get_option_info(key).global == true then
+        elseif bufnr == nil and get_option_info(key).global == true then
             val = info.value
         end
 
@@ -103,9 +125,9 @@ local function echo_options(bufnr)
                 val_str = tostring(val)
             end
 
-            message = message .. "\n" .. string.rep(" ", 11) .. key .. "=" ..
-                          val_str .. ", " .. "[" .. get_option_info(key).source ..
-                          "]"
+            table.insert(message,
+                         string.rep(" ", 2) .. key .. "=" .. val_str .. ", " ..
+                             "[" .. get_option_info(key).source .. "]")
             table.insert(processed, key)
         end
     end
@@ -113,9 +135,9 @@ local function echo_options(bufnr)
     for key, info in pairs(s_registered_options) do
         local can_echo = false
         if table.index_of(processed, key) == -1 then
-            if bufnr ~= 0 and info.buffer_local == true then
+            if bufnr ~= nil and info.buffer_local == true then
                 can_echo = true
-            elseif bufnr == 0 and info.global == true then
+            elseif bufnr == nil and info.global == true then
                 can_echo = true
             end
 
@@ -127,15 +149,14 @@ local function echo_options(bufnr)
                     val_str = tostring(info.default)
                 end
 
-                message =
-                    message .. "\n" .. string.rep(" ", 11) .. key .. "=" ..
-                        val_str .. ", " .. "[" .. get_option_info(key).source ..
-                        "]"
+                table.insert(message,
+                             string.rep(" ", 2) .. key .. "=" .. val_str .. ", " ..
+                                 "[" .. get_option_info(key).source .. "]")
             end
         end
     end
 
-    log.info("options", message)
+    log.info("options", table.concat(message, "\\n"))
 end
 
 local function execute_callbacks(option_name)
@@ -157,27 +178,78 @@ local function is_option_set(name)
     end
 end
 
-function get_buffer_option(name, bufnr)
-    local existing = s_current_options[name]
-    if existing == nil then return end
-    if bufnr == 0 then return nil end
+local function split_option_str(option_str)
+    local cmps = string.split(option_str, "=")
+    local name = cmps[1]
+    local value = nil
+    if #cmps == 2 then value = cmps[2] end
 
-    local buffers = existing.buffers
-    for _, v in ipairs(buffers) do if v.bufnr == bufnr then return v end end
+    return {name = name, value = value}
+end
 
-    return nil
+local function convert_value(value, option_info)
+    local converted_value = nil
+    if option_info.type_info == "bool" then
+        converted_value = typing.toboolean(value)
+    elseif option_info.type_info == "int" then
+        converted_value = tonumber(value)
+    elseif option_info.type_info == "string" then
+        converted_value = tostring(value)
+    end
+
+    if option_info.parser ~= nil then
+        converted_value = option_info.parser(converted_value)
+    end
+
+    if converted_value == nil then
+        log.error("options", "Cannot convert `" .. value .. "` to " ..
+                      option_info.type_info .. ".")
+    end
+
+    return converted_value
 end
 
 local function set_option(name, value, bufnr)
+    if name == "" then
+        echo_options(bufnr)
+        return
+    end
+
+    if value == nil then
+        echo_option(name)
+        return
+    end
+
+    if is_option_registered(name) == false then
+        log.error("options", "This option is not registered: " .. name)
+        return nil
+    end
+
     if is_option_registered(name) == false then
         log.error("options", "This option is not registered: " .. name)
         return false
     end
 
+    local option_info = get_option_info(name)
+    if option_info.buffer_local == true and bufnr == nil then
+        log.warning("options", "This is only a local option. Use `:Setlocal " ..
+                        name .. "` instead.")
+        return nil
+    end
+
+    if option_info.buffer_local ~= true and bufnr ~= nil then
+        log.warning("options", "This is only a global option. Use `:Set " ..
+                        name .. "` instead.")
+        return nil
+    end
+
+    local converted_value = convert_value(value, option_info)
+    if convert_value == nil then return end
+
     local existing = s_current_options[name]
     local buffer_option = get_buffer_option(name, bufnr)
     if existing == nil then
-        if bufnr ~= 0 then
+        if bufnr ~= nil then
             s_current_options[name] = {
                 value = nil,
                 buffers = {{bufnr = bufnr, value = value}}
@@ -188,16 +260,17 @@ local function set_option(name, value, bufnr)
 
         execute_callbacks(name)
         cmd [[doautocmd User VimrcOptionSet]]
-    elseif bufnr == 0 and existing.value ~= value then
+    elseif bufnr == nil and existing.value ~= value then
         existing.value = value
         execute_callbacks(name)
         cmd [[doautocmd User VimrcOptionSet]]
-    elseif bufnr > 0 and buffer_option ~= nil and buffer_option.value ~= value then
+    elseif bufnr ~= nil and buffer_option ~= nil and buffer_option.value ~=
+        value then
         buffer_option.value = value
 
         execute_callbacks(name)
         cmd [[doautocmd User VimrcOptionSet]]
-    elseif bufnr > 0 and buffer_option == nil then
+    elseif bufnr ~= nil and buffer_option == nil then
         table.insert(s_current_options[name].buffers,
                      {bufnr = bufnr, value = value})
 
@@ -207,8 +280,6 @@ local function set_option(name, value, bufnr)
 end
 
 function M.get_option(name, bufnr)
-    if bufnr == nil then bufnr = 0 end
-
     if is_option_registered(name) == false then
         log.error("options", "This option is not registered: " .. name)
         return nil
@@ -243,70 +314,19 @@ function M.register_option(opts)
     }
 end
 
-function M.set(option_str, bufnr)
-    if bufnr == nil then bufnr = 0 end
+function M.set_cmd(option_str, bufnr)
+    local opt = split_option_str(option_str)
+    set_option(opt.name, opt.value, bufnr)
+end
 
-    if option_str == "" then
-        echo_options(bufnr)
-        return
+function M.set(name, value) set_option(name, value) end
+
+function M.set_local(name, value, bufnr)
+    if bufnr == nil then
+        log.error("options", "bufnr is required for local options.")
     end
 
-    local cmps = string.split(option_str, "=")
-    local name = cmps[1]
-
-    if is_option_registered(name) == false then
-        log.error("options", "This option is not registered: " .. name)
-        return nil
-    end
-
-    local value = nil
-    if #cmps == 2 then value = cmps[2] end
-
-    local option_info = get_option_info(name)
-    if value == nil then
-        if option_info.buffer_local == true then
-            log.info(option_info.source .. "-buflocal",
-                     name .. "=" .. tostring(M.get_option(name, bufnr)))
-        else
-            log.info(option_info.source,
-                     name .. "=" .. tostring(M.get_option(name, bufnr)))
-        end
-
-        return
-    end
-
-    if option_info.buffer_local == true and bufnr == 0 then
-        log.warning("options", "This is only a local option. Use `:Setlocal " ..
-                        option_str .. "` instead.")
-        return nil
-    end
-
-    if option_info.buffer_local ~= true and bufnr ~= 0 then
-        log.warning("options", "This is only a global option. Use `:Set " ..
-                        option_str .. "` instead.")
-        return nil
-    end
-
-    local converted_value = nil
-    if option_info.type_info == "bool" then
-        converted_value = typing.toboolean(value)
-    elseif option_info.type_info == "int" then
-        converted_value = tonumber(value)
-    elseif option_info.type_info == "string" then
-        converted_value = tostring(value)
-    end
-
-    if converted_value == nil then
-        log.error("options", "Cannot convert `" .. value .. "` to " ..
-                      option_info.type_info .. ".")
-        return
-    end
-
-    if option_info.parser ~= nil then
-        converted_value = option_info.parser(converted_value)
-    end
-
-    set_option(name, converted_value, bufnr)
+    set_option(name, value, bufnr)
 end
 
 function M.list_options(arg_lead, buffer_local)
