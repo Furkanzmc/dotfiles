@@ -370,7 +370,7 @@ function M.set_modeline(bufnr)
     end
     local modeline = string.sub(last_line, start_index, #last_line)
     modeline = string.split(string.gsub(modeline, "Setlocal ", ""), " ")
-    for _, opt in ipairs(modeline) do cmd("Setlocal " .. opt) end
+    for _, opt in ipairs(modeline) do M.set_cmd(opt, bufnr) end
 end
 
 return M
