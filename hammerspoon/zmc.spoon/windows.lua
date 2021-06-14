@@ -4,58 +4,25 @@ hs.window.animationDuration = 0.2
 
 windowLayoutMode = hs.hotkey.modal.new({}, 'F16')
 
-local windowMappings = dofile(hs.spoons.resourcePath("windows-bindings.lua"))
-local modifiers = windowMappings.modifiers
-local showHelp = windowMappings.showHelp
-local trigger = windowMappings.trigger
-local mappings = windowMappings.mappings
+local s_window_mappings = dofile(hs.spoons.resourcePath("windows-bindings.lua"))
+local s_modifiers = s_window_mappings.modifiers
+local s_show_help = s_window_mappings.showHelp
+local s_trigger = s_window_mappings.trigger
+local s_mappings = s_window_mappings.mappings
 local eventtap = require("hs.eventtap")
 local keycodes = require("hs.keycodes")
-local _inLayoutMode = false
 
-local _markWindowModeEnabled = false
-local _windowToMark = nil
-local _windowRestoreModeEnabled = false
-local _markedWindows = {}
-
-function exitWindowLayoutMode()
-    _markWindowModeEnabled = false
-    _windowToMark = nil
-
-    _windowRestoreModeEnabled = false
+local function exit_window_layout_mode()
     windowLayoutMode:exit()
-    _inLayoutMode = false
 end
 
 eventtap.new({eventtap.event.types.keyDown}, function(event)
-    if (_inLayoutMode == false) then
-        return false
-    elseif (_inLayoutMode == nil) then
-        return false
-    end
-
-    local keyCode = event:getKeyCode()
-    if (keycodes.map["escape"] == keyCode) then
-        exitWindowLayoutMode()
-        return true
-    end
-
-    if (_markWindowModeEnabled == true) then
-        markWindow(_windowToMark, keyCode)
-        exitWindowLayoutMode()
-        return true
-    elseif (_windowRestoreModeEnabled == true) then
-        restoreWindow(hs.window.focusedWindow(), keyCode)
-        exitWindowLayoutMode()
-        return true
-    end
-
     return false
 end):start()
 
 -----------------------------------------
 
-function getWindows(win)
+local function get_windows(win)
     local wf = hs.window.filter
     wf = wf.default:setAppFilter(win:application():name(), {
         visible = true,
@@ -67,88 +34,57 @@ function getWindows(win)
     local windows = {}
 
     for _, v in pairs(wf:getWindows()) do
-        if (v:application() == win:application()) then
-            windows[#windows + 1] = v
+        if v:application() == win:application() and v:screen() == win:screen() then
+            table.insert(windows, v)
         end
     end
 
     return windows
 end
 
-function hs.window.tileGrid(win)
-    local windows = getWindows(win)
+function hs.window.tile_horizontal(win)
+    local windows = get_windows(win)
     local max = win:screen():frame()
 
     if (#windows > 1) then
-        hs.window.tiling.tileWindows(windows, hs.geometry(0, 0, max.w, max.h),
-                                     1, true)
-    end
-end
-
-function hs.window.tileFullScreen(win)
-    local windows = getWindows(win)
-    local max = win:screen():frame()
-
-    if (#windows > 1) then
-        hs.window.tiling.tileWindows(windows, hs.geometry(0, 0, max.w, max.h),
+        hs.window.tiling.tileWindows(windows, hs.geometry(max.x, max.y, max.w, max.h),
                                      0, true)
     end
 end
 
-function hs.window.tileLeftHalfScreen(win)
-    local windows = getWindows(win)
+function hs.window.tile_left_half(win)
+    local windows = get_windows(win)
     local max = win:screen():frame()
 
     if (#windows > 1) then
         hs.window.tiling.tileWindows(windows,
-                                     hs.geometry(0, 0, max.w / 2, max.h), 0,
+                                     hs.geometry(max.x, max.y, max.w / 2, max.h), 0,
                                      true)
     end
 end
 
-function hs.window.tileRightHalfScreen(win)
-    local windows = getWindows(win)
+function hs.window.tile_right_half(win)
+    local windows = get_windows(win)
     local max = win:screen():frame()
 
     if (#windows > 1) then
-        hs.window.tiling.tileWindows(windows, hs.geometry(max.w / 2, 0,
+        hs.window.tiling.tileWindows(windows, hs.geometry(max.w / 2, max.y,
                                                           max.w / 2, max.h), 0,
                                      true)
     end
 end
 
-function hs.window.tileCenter(win)
-    local windows = getWindows(win)
+function hs.window.tile_vertical(win)
     local max = win:screen():frame()
+    local windows = get_windows(win)
 
-    local maxWindowCount = 5.0
-    if (#windows < 5) then
-        maxWindowCount = 4
-    elseif (#windows > 5) then
-        maxWindowCount = #windows
-    end
-
-    local totalWidth = max.w * (#windows / maxWindowCount)
     if (#windows > 1) then
-        hs.window.tiling.tileWindows(windows, hs.geometry(
-                                         max.w / 2 - totalWidth / 2, 0,
-                                         totalWidth, max.h), 0, true)
+        hs.window.tiling.tileWindows(windows, hs.geometry(max.x, max.y, max.w, max.h),
+                                     100, true)
     end
 end
 
-function hs.window.setDefaultTerminalSize(win)
-    if (win:application():name() ~= 'iTerm2') then return end
-
-    local f = win:frame()
-    local max = win:screen():frame()
-
-    f.y = 0
-    f.w = 640
-    f.h = max.h
-    win:setFrame(f)
-end
-
-function hs.window.stretchHeight(win)
+function hs.window.stretch_height(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:frame()
@@ -156,67 +92,6 @@ function hs.window.stretchHeight(win)
     f.y = 0
     f.h = max.h
     win:setFrame(f)
-end
-
-function getWindowStateIndex(win)
-    local foundIndex = -1
-    for index, windowState in pairs(_ENV.windowPositions) do
-        if (windowState[1] == win:id()) then
-            foundIndex = index
-            break
-        end
-    end
-
-    return foundIndex
-end
-
-function hs.window.saveWindow(win)
-    local frame = win:frame()
-    if (_ENV.windowPositions == nil) then
-        _ENV.windowPositions = {{win:id(), frame.x, frame.y, frame.w, frame.h}}
-    else
-        local index = getWindowStateIndex(win)
-        if (index == -1) then index = #_ENV.windowPositions + 1 end
-
-        _ENV.windowPositions[index] = {
-            win:id(), frame.x, frame.y, frame.w, frame.h
-        }
-    end
-end
-
-function hs.window.enableMarkWindowMode(win)
-    _markWindowModeEnabled = true
-    _windowToMark = win
-end
-
-function markWindow(win, keyCode) _markedWindows[keyCode] = win end
-
-function jumpToWindow(keyCode)
-    local window = _markedWindows[keyCode]
-    if (window) then window:focus() end
-end
-
-function hs.window.enableRestoreWindowMode(win) _windowRestoreModeEnabled = true end
-
-function restoreWindow(win, keyCode)
-    if (keyCode ~= keycodes.map["r"]) then
-        win = _markedWindows[keyCode]
-        if (win ~= nil) then win:focus() end
-        return
-    end
-
-    if (_ENV.windowPositions == nil) then return end
-
-    local foundIndex = getWindowStateIndex(win)
-    if (foundIndex == -1) then return end
-
-    local windowState = _ENV.windowPositions[foundIndex]
-    local frame = win:frame()
-    frame.x = windowState[2]
-    frame.y = windowState[3]
-    frame.w = windowState[4]
-    frame.h = windowState[5]
-    win:setFrame(frame)
 end
 
 -- +-----------------+
@@ -236,7 +111,7 @@ function hs.window.left(win)
     win:setFrame(f)
 end
 
-function hs.window.leftSameSize(win)
+function hs.window.left_same_size(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:frame()
@@ -263,7 +138,7 @@ function hs.window.right(win)
     win:setFrame(f)
 end
 
-function hs.window.rightSameSize(win)
+function hs.window.right_same_size(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:frame()
@@ -312,7 +187,7 @@ end
 -- |  |  HERE  |  |
 -- |  |        |  |
 -- +---------------+
-function hs.window.centerWithFullHeight(win)
+function hs.window.center_full_height(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
@@ -329,7 +204,7 @@ end
 -- |    |HERE|    |
 -- |    |    |    |
 -- +---------------+
-function hs.window.centerWithNarrowSize(win)
+function hs.window.center_narrow(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
@@ -346,7 +221,7 @@ end
 -- | |  HERE        | |
 -- | |              | |
 -- +-------------------+
-function hs.window.expandCenter(win)
+function hs.window.center_wide(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
@@ -385,7 +260,7 @@ end
 -- +--------+        |
 -- |                 |
 -- +-----------------+
-function hs.window.upLeft(win)
+function hs.window.up_left(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
@@ -401,7 +276,7 @@ end
 -- +--------+        |
 -- |  HERE  |        |
 -- +-----------------+
-function hs.window.downLeft(win)
+function hs.window.down_left(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
@@ -418,7 +293,7 @@ end
 -- |        +--------|
 -- |        |  HERE  |
 -- +-----------------+
-function hs.window.downRight(win)
+function hs.window.down_right(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
@@ -436,7 +311,7 @@ end
 -- |        +--------|
 -- |                 |
 -- +-----------------+
-function hs.window.upRight(win)
+function hs.window.up_right(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
@@ -457,11 +332,11 @@ function windowLayoutMode.bindWithAutomaticExit(mode, modifiers, key, fn,
     mode:bind(modifiers, key, function()
         fn()
 
-        if (autoClose) then exitWindowLayoutMode() end
+        if (autoClose) then exit_window_layout_mode() end
     end)
 end
 
-function getModifiersStr(modifiers)
+local function getModifiersStr(modifiers)
     local modMap = {shift = '⇧', ctrl = '⌃', alt = '⌥', cmd = '⌘'}
     local retVal = ''
 
@@ -470,15 +345,15 @@ function getModifiersStr(modifiers)
     return retVal
 end
 
-local msgStr = getModifiersStr(modifiers)
+local msgStr = getModifiersStr(s_modifiers)
 msgStr = 'Window Layout Mode (' .. msgStr ..
-             (string.len(msgStr) > 0 and '+' or '') .. trigger .. ')'
+             (string.len(msgStr) > 0 and '+' or '') .. s_trigger .. ')'
 
-for i, mapping in ipairs(mappings) do
+for i, mapping in ipairs(s_mappings) do
     local modifiers, trigger, winFunction, autoClose = table.unpack(mapping)
     local hotKeyStr = getModifiersStr(modifiers)
 
-    if showHelp == true then
+    if s_show_help == true then
         if string.len(hotKeyStr) > 0 then
             msgStr = msgStr ..
                          (string.format('\n%10s+%s => %s', hotKeyStr, trigger,
@@ -500,12 +375,10 @@ local message = dofile(hs.spoons.resourcePath("status-message.lua"))
 windowLayoutMode.statusMessage = message.new(msgStr)
 
 -- Use modifiers+trigger to toggle WindowLayout Mode
-hs.hotkey.bind(modifiers, trigger, function()
-    _inLayoutMode = true
+hs.hotkey.bind(s_modifiers, s_trigger, function()
     windowLayoutMode:enter()
 end)
 
-windowLayoutMode:bind(modifiers, trigger, function()
-    _inLayoutMode = false
-    exitWindowLayoutMode()
+windowLayoutMode:bind(s_modifiers, s_trigger, function()
+    exit_window_layout_mode()
 end)
