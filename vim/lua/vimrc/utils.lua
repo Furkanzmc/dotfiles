@@ -108,6 +108,11 @@ function string.split(str, sep)
         ret[n] = ret[n] or w -- only set once (so the blank after a string is ignored)
         if w == "" then n = n + 1 end -- step forwards on a blank but not a string
     end
+
+    if type(ret) ~= "table" then
+        ret = {ret}
+    end
+
     return ret
 end
 

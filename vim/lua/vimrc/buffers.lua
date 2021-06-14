@@ -135,6 +135,7 @@ function M.init()
     options.register_callback("markdownfenced", function()
         local langs = options.get_option("markdownfenced",
                                          vim.api.nvim_get_current_buf())
+
         if g.markdown_fenced_languages == nil then
             g.markdown_fenced_languages = {}
         end

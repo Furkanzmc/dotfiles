@@ -81,17 +81,6 @@ local function get_option_info(name)
     end
 end
 
-local function echo_option(name)
-    local option_info = get_option_info(name)
-    if option_info.buffer_local == true then
-        log.info(option_info.source .. "-buflocal",
-                 name .. "=" .. tostring(M.get_option(name, bufnr)))
-    else
-        log.info(option_info.source,
-                 name .. "=" .. tostring(M.get_option(name, bufnr)))
-    end
-end
-
 local function get_buffer_option(name, bufnr)
     local existing = s_current_options[name]
     if existing == nil then return end
@@ -101,6 +90,19 @@ local function get_buffer_option(name, bufnr)
     for _, v in ipairs(buffers) do if v.bufnr == bufnr then return v end end
 
     return nil
+end
+
+local function echo_option(name, bufnr)
+    local option_info = get_option_info(name)
+    local value = M.get_option(name, bufnr)
+    if type(value) == "table" then value = table.concat(value, ",") end
+
+    if option_info.buffer_local == true then
+        log.info(option_info.source .. "-buflocal",
+                 name .. "=" .. tostring(value))
+    else
+        log.info(option_info.source, name .. "=" .. tostring(value))
+    end
 end
 
 local function echo_options(bufnr)
@@ -120,13 +122,13 @@ local function echo_options(bufnr)
         if val ~= nil then
             local val_str = ""
             if type(val) == "table" then
-                val_str = vim.inspect(val)
+                val_str = table.concat(val, ",")
             else
                 val_str = tostring(val)
             end
 
             table.insert(message,
-                         string.rep(" ", 2) .. key .. "=" .. val_str .. ", " ..
+                         string.rep(" ", 2) .. key .. "=" .. val_str .. " " ..
                              "[" .. get_option_info(key).source .. "]")
             table.insert(processed, key)
         end
@@ -144,13 +146,13 @@ local function echo_options(bufnr)
             if can_echo then
                 local val_str = ""
                 if type(info.default) == "table" then
-                    val_str = vim.inspect(info.default)
+                    val_str = table.concat(info.default, ",")
                 else
                     val_str = tostring(info.default)
                 end
 
                 table.insert(message,
-                             string.rep(" ", 2) .. key .. "=" .. val_str .. ", " ..
+                             string.rep(" ", 2) .. key .. "=" .. val_str .. " " ..
                                  "[" .. get_option_info(key).source .. "]")
             end
         end
@@ -216,7 +218,7 @@ local function set_option(name, value, bufnr)
     end
 
     if value == nil then
-        echo_option(name)
+        echo_option(name, bufnr)
         return
     end
 
@@ -244,7 +246,7 @@ local function set_option(name, value, bufnr)
     end
 
     local converted_value = convert_value(value, option_info)
-    if convert_value == nil then return end
+    if converted_value == nil then return end
 
     local existing = s_current_options[name]
     local buffer_option = get_buffer_option(name, bufnr)
@@ -252,27 +254,27 @@ local function set_option(name, value, bufnr)
         if bufnr ~= nil then
             s_current_options[name] = {
                 value = nil,
-                buffers = {{bufnr = bufnr, value = value}}
+                buffers = {{bufnr = bufnr, value = converted_value}}
             }
         else
-            s_current_options[name] = {value = value, buffers = {}}
+            s_current_options[name] = {value = converted_value, buffers = {}}
         end
 
         execute_callbacks(name)
         cmd [[doautocmd User VimrcOptionSet]]
-    elseif bufnr == nil and existing.value ~= value then
-        existing.value = value
+    elseif bufnr == nil and existing.value ~= converted_value then
+        existing.value = converted_value
         execute_callbacks(name)
         cmd [[doautocmd User VimrcOptionSet]]
     elseif bufnr ~= nil and buffer_option ~= nil and buffer_option.value ~=
-        value then
-        buffer_option.value = value
+        converted_value then
+        buffer_option.value = converted_value
 
         execute_callbacks(name)
         cmd [[doautocmd User VimrcOptionSet]]
     elseif bufnr ~= nil and buffer_option == nil then
         table.insert(s_current_options[name].buffers,
-                     {bufnr = bufnr, value = value})
+                     {bufnr = bufnr, value = converted_value})
 
         execute_callbacks(name)
         cmd [[doautocmd User VimrcOptionSet]]
