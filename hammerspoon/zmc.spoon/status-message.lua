@@ -11,7 +11,8 @@ statusmessage.new = function(messageText)
 
         local styledTextAttributes = {font = {name = 'Monaco', size = 24}}
 
-        local styledText = styledtext.new('⊞ ' .. messageText, styledTextAttributes)
+        local styledText = styledtext.new('⊞ ' .. messageText,
+                                          styledTextAttributes)
 
         local styledTextSize = drawing.getTextDrawingSize(styledText)
         local textRect = {
@@ -22,13 +23,12 @@ statusmessage.new = function(messageText)
         }
         local text = drawing.text(textRect, styledText):setAlpha(0.7)
 
-        local background = drawing.rectangle(
-            {
-                x = frame.w - styledTextSize.w - 45,
-                y = frame.h - styledTextSize.h - 3,
-                w = styledTextSize.w + 15,
-                h = styledTextSize.h + 6
-            })
+        local background = drawing.rectangle({
+            x = frame.w - styledTextSize.w - 45,
+            y = frame.h - styledTextSize.h - 3,
+            w = styledTextSize.w + 15,
+            h = styledTextSize.h + 6
+        })
         background:setRoundedRectRadii(10, 10)
 
         return background, text

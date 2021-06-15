@@ -12,13 +12,9 @@ local s_mappings = s_window_mappings.mappings
 local eventtap = require("hs.eventtap")
 local keycodes = require("hs.keycodes")
 
-local function exit_window_layout_mode()
-    windowLayoutMode:exit()
-end
+local function exit_window_layout_mode() windowLayoutMode:exit() end
 
-eventtap.new({eventtap.event.types.keyDown}, function(event)
-    return false
-end):start()
+eventtap.new({eventtap.event.types.keyDown}, function(event) return false end):start()
 
 -----------------------------------------
 
@@ -47,8 +43,9 @@ function hs.window.tile_horizontal(win)
     local max = win:screen():frame()
 
     if (#windows > 1) then
-        hs.window.tiling.tileWindows(windows, hs.geometry(max.x, max.y, max.w, max.h),
-                                     0, true)
+        hs.window.tiling.tileWindows(windows,
+                                     hs.geometry(max.x, max.y, max.w, max.h), 0,
+                                     true)
     end
 end
 
@@ -57,8 +54,8 @@ function hs.window.tile_left_half(win)
     local max = win:screen():frame()
 
     if (#windows > 1) then
-        hs.window.tiling.tileWindows(windows,
-                                     hs.geometry(max.x, max.y, max.w / 2, max.h), 0,
+        hs.window.tiling.tileWindows(windows, hs.geometry(max.x, max.y,
+                                                          max.w / 2, max.h), 0,
                                      true)
     end
 end
@@ -79,7 +76,8 @@ function hs.window.tile_vertical(win)
     local windows = get_windows(win)
 
     if (#windows > 1) then
-        hs.window.tiling.tileWindows(windows, hs.geometry(max.x, max.y, max.w, max.h),
+        hs.window.tiling.tileWindows(windows,
+                                     hs.geometry(max.x, max.y, max.w, max.h),
                                      100, true)
     end
 end
@@ -375,10 +373,7 @@ local message = dofile(hs.spoons.resourcePath("status-message.lua"))
 windowLayoutMode.statusMessage = message.new(msgStr)
 
 -- Use modifiers+trigger to toggle WindowLayout Mode
-hs.hotkey.bind(s_modifiers, s_trigger, function()
-    windowLayoutMode:enter()
-end)
+hs.hotkey.bind(s_modifiers, s_trigger, function() windowLayoutMode:enter() end)
 
-windowLayoutMode:bind(s_modifiers, s_trigger, function()
-    exit_window_layout_mode()
-end)
+windowLayoutMode:bind(s_modifiers, s_trigger,
+                      function() exit_window_layout_mode() end)
