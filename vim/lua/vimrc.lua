@@ -69,9 +69,9 @@ function M.setup_treesitter()
                 init_selection = "gis",
                 node_incremental = "gni",
                 node_decremental = "gnd",
-                scope_incremental = "gsi",
-            },
-        },
+                scope_incremental = "gsi"
+            }
+        }
     }
 
     cmd [[augroup plugin_nvim_treesitter_init]]
@@ -158,7 +158,15 @@ end
 function M.map(mode, lhs, rhs, opts)
     local options = {noremap = true}
     if opts then options = vim.tbl_extend('force', options, opts) end
-    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+    if opts.buffer ~= nil then
+        assert(type(opts.buffer) == "number")
+
+        local bufnr = opts.buffer
+        options.buffer = nil
+        vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, options)
+    else
+        vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+    end
 end
 
 return M

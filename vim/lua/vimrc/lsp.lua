@@ -3,6 +3,7 @@ local api = vim.api
 local lsp = vim.lsp
 local fn = vim.fn
 local utils = require "vimrc.utils"
+local map = require"vimrc".map
 local M = {}
 
 -- Local Functions {{{
@@ -108,8 +109,9 @@ local function set_handlers(client, bufnr)
                                                           "_lsp_virtual_text_enabled") ==
                                      1
 
-    client.handlers["textDocument/publishDiagnostics"] =
-        lsp.with(on_publish_diagnostics, {
+    client.handlers["textDocument/publishDiagnostics"] = lsp.with(
+                                                             on_publish_diagnostics,
+                                                             {
             signs = signs_enabled,
             virtual_text = virtual_text_enabled,
             underline = false,
@@ -118,7 +120,7 @@ local function set_handlers(client, bufnr)
 end
 
 local function set_up_keymap(client, bufnr)
-    local opts = {noremap = true, silent = true}
+    local opts = {noremap = true, silent = true, buffer = bufnr}
     local is_configured = api.nvim_buf_get_var(bufnr,
                                                "is_vimrc_" .. client.name ..
                                                    "_lsp_shortcuts_set")
@@ -136,62 +138,47 @@ local function set_up_keymap(client, bufnr)
     if is_configured then return end
 
     if resolved_capabilities.rename == true then
-        api.nvim_buf_set_keymap(bufnr, "n", "gr",
-                                "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
+        map("n", "gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
     end
 
     if resolved_capabilities.signature_help == true and
         vim.fn.mapcheck("gs", "n") == 0 then
-        api.nvim_buf_set_keymap(bufnr, "n", "gs",
-                                "<Cmd>lua vim.lsp.buf.signature_help()<CR>",
-                                opts)
+        map("n", "gs", "<Cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
     end
 
     if resolved_capabilities.goto_definition ~= false then
-        api.nvim_buf_set_keymap(bufnr, "n", "gd",
-                                "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        map("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
     end
 
     if resolved_capabilities.declaration == true then
-        api.nvim_buf_set_keymap(bufnr, "n", "gD",
-                                "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+        map("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
     end
 
     if resolved_capabilities.implementation == true then
-        api.nvim_buf_set_keymap(bufnr, "n", "gi",
-                                "<cmd>lua vim.lsp.buf.implementation()<CR>",
-                                opts)
+        map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
     end
 
     if resolved_capabilities.find_references ~= false then
-        api.nvim_buf_set_keymap(bufnr, "n", "g*",
-                                "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+        map("n", "g*", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
     end
 
-    api.nvim_buf_set_keymap(bufnr, "n", "ge",
-                            "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>",
-                            opts)
+    map("n", "ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>",
+        opts)
 
     if resolved_capabilities.document_symbol ~= false then
-        api.nvim_buf_set_keymap(bufnr, "n", "g0",
-                                "<cmd>lua vim.lsp.buf.document_symbol()<CR>",
-                                opts)
+        map("n", "g0", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
     end
 
     if resolved_capabilities.workspace_symbol ~= true then
-        api.nvim_buf_set_keymap(bufnr, "n", "gw",
-                                "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>",
-                                opts)
+        map("n", "gw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
     end
 
     if resolved_capabilities.code_action ~= false then
-        api.nvim_buf_set_keymap(bufnr, "n", "ga",
-                                "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+        map("n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
     end
 
     if resolved_capabilities.document_formatting == true then
-        api.nvim_buf_set_keymap(bufnr, "n", "gq",
-                                "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+        map("n", "gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
     end
 
     if resolved_capabilities.hover ~= false then
@@ -307,11 +294,7 @@ function M.setup_lsp()
     if fn.executable("ccls") == 1 then
         lspconfig.ccls.setup {
             on_attach = setup_without_formatting,
-            settings = {
-                index = {
-                    threads = 1
-                }
-            }
+            settings = {index = {threads = 1}}
         }
     end
 
@@ -368,13 +351,16 @@ function M.setup_lsp()
                             hoverStdin = false
                         }
                     },
-                    lua = {{formatCommand = "lua-format -i", formatStdin = true}},
+                    lua = {
+                        {formatCommand = "lua-format -i", formatStdin = true}
+                    },
                     yaml = {
                         {
                             lintCommand = "yamllint -f parsable -",
                             lintStdin = true,
                             lintFormats = {
-                                "%f:%l:%c: [%tarning] %m", "%f:%l:%c: [%trror] %m"
+                                "%f:%l:%c: [%tarning] %m",
+                                "%f:%l:%c: [%trror] %m"
                             },
                             lintSource = "yamllint"
                         }
@@ -397,8 +383,8 @@ function M.setup_lsp()
                             lintStdin = false,
                             lintSource = "clang-check",
                             lintFormats = {
-                                "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m",
-                                "%f:%l:%c: %m"
+                                "%f:%l:%c: %trror: %m",
+                                "%f:%l:%c: %tarning: %m", "%f:%l:%c: %m"
                             }
                         }
                     },
@@ -431,7 +417,7 @@ function M.setup_lsp()
                             formatStdin = true
                         }
                     },
-                    rust = {{formatCommand = "rustfmt", formatStdin = true}},
+                    rust = {{formatCommand = "rustfmt", formatStdin = true}}
                 }
             }
         }
