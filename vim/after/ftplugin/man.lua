@@ -3,4 +3,4 @@ vim.wo.number = false
 vim.wo.relativenumber = false
 
 vim.wo.statusline = ""
-vim.wo.laststatus = 0
+vim.o.laststatus = 0
