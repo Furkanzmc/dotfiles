@@ -91,9 +91,7 @@ end
 -- Completion Functions {{{
 
 local function complete_fzf(lines, base)
-    if fn.executable("fzf") == 0 then
-        return {}
-    end
+    if fn.executable("fzf") == 0 then return {} end
 
     local input = {}
     for _, line in ipairs(lines) do

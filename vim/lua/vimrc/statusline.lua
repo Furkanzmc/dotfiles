@@ -114,16 +114,15 @@ function M.init(winnr)
 
     st(
         '%{&filetype == "help" ? " [Help] " : (&filetype == "qf" ? " [QuickFix] " : (&previewwindow ? " [Preview] " : ""))}',
-        active,
-        'StatusLineSpecialWindow',
-        'StatusLineTermNC')
+        active, 'StatusLineSpecialWindow', 'StatusLineTermNC')
 
     -- }}}
 
     -- File path {{{
 
     if _G.is_fugitive_buffer(bufnr) then
-        st(fn.fnamemodify(fn.bufname(bufnr), ':t'), active, 'StatusLineFilePath', 'StatusLineNC', 1)
+        st(fn.fnamemodify(fn.bufname(bufnr), ':t'), active,
+           'StatusLineFilePath', 'StatusLineNC', 1)
     else
         st("%<%f", active, 'StatusLineFilePath', 'StatusLineNC', 1)
     end

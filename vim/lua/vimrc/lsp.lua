@@ -109,9 +109,8 @@ local function set_handlers(client, bufnr)
                                                           "_lsp_virtual_text_enabled") ==
                                      1
 
-    client.handlers["textDocument/publishDiagnostics"] = lsp.with(
-                                                             on_publish_diagnostics,
-                                                             {
+    client.handlers["textDocument/publishDiagnostics"] =
+        lsp.with(on_publish_diagnostics, {
             signs = signs_enabled,
             virtual_text = virtual_text_enabled,
             underline = false,

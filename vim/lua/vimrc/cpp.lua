@@ -21,10 +21,9 @@ function M.swap_source_header()
         end
     end
 
-    local status, path_backup = pcall(api.nvim_buf_get_option, fn.bufnr(), "path")
-    if status == false then
-        path_backup = ""
-    end
+    local status, path_backup = pcall(api.nvim_buf_get_option, fn.bufnr(),
+                                      "path")
+    if status == false then path_backup = "" end
 
     bo.path = fn.expand("%:h")
 

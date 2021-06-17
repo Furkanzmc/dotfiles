@@ -109,9 +109,7 @@ function string.split(str, sep)
         if w == "" then n = n + 1 end -- step forwards on a blank but not a string
     end
 
-    if type(ret) ~= "table" then
-        ret = {ret}
-    end
+    if type(ret) ~= "table" then ret = {ret} end
 
     return ret
 end
