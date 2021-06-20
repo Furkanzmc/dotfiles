@@ -1,4 +1,4 @@
-if vim.b.did_markdown_ext ~= true and vim.o.loadplugins == 1 then
+if vim.b.did_markdown_ext ~= true and vim.o.loadplugins then
     vim.cmd [[packadd vim-markdown-folding]]
     vim.cmd [[packadd SyntaxRange]]
 end
