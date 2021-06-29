@@ -36,6 +36,10 @@ setlocal errorformat+=%f(%l):\ %trror\ %s%n:\ %m
 setlocal errorformat+=%f(%l):\ %tarning:\ %m
 setlocal errorformat+=%f(%l):\ %tote:\ %m
 
+" Test Error
+setlocal errorformat+=%E%s:\ %f:%l,%CTEST\ %tRROR\ %o:\ assertion\ failed\:,\ %Z%m
+setlocal errorformat+=%o:\ passed\ line\ %l:\ %m
+
 if executable("clang-format")
     setlocal formatprg=clang-format
 endif
