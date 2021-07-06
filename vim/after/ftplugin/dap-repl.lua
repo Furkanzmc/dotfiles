@@ -1,5 +1,5 @@
 local map = require"vimrc".map
-vim.wo.cursorline = true
+vim.opt_local.cursorline = true
 
 map("n", "]dp", ":call search('^dap>', 'W')<CR>",
     {silent = true, buffer = vim.api.nvim_get_current_buf()})

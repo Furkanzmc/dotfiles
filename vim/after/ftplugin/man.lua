@@ -1,6 +1,6 @@
-vim.wo.cursorline = true
-vim.wo.number = false
-vim.wo.relativenumber = false
+vim.opt_local.cursorline = true
+vim.opt_local.number = false
+vim.opt_local.relativenumber = false
 
-vim.wo.statusline = ""
+vim.opt_local.statusline = ""
 vim.o.laststatus = 0
