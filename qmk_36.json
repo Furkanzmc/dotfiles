@@ -115,11 +115,11 @@
       "KC_PEQL",
       "KC_RSFT",
       "KC_NO",
-      "KC_ESC",
+      "LALT_T(KC_ESC)",
       "KC_LGUI",
       "KC_LCTL",
-      "KC_RSFT",
-      "KC_LALT",
+      "LSFT_T(KC_BSPC)",
+      "LALT_T(KC_SPC)",
       "TO(2)"
     ],
     [
