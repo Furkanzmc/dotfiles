@@ -319,6 +319,7 @@ cmd [[cnoreabbrev rg Rg]]
 
 cmd [[cnoreabbrev frun FRun]]
 cmd [[cnoreabbrev fh Fhdo]]
+cmd [[cnoreabbrev find Find]]
 
 cmd [[cnoreabbrev time Time]]
 cmd [[cnoreabbrev fgit FGit]]
@@ -635,6 +636,14 @@ cmd [[augroup plugin_fold]]
 cmd [[autocmd!]]
 cmd [[autocmd BufReadPost,BufNew,BufEnter * if &foldtext != "fold#fold_text()" | setlocal foldtext=fold#fold_text() | endif]]
 cmd [[augroup END]]
+
+-- }}}
+
+-- Custom Find {{{
+
+if fn.executable("fd") then
+    cmd [[ command! -bang -complete=customlist,find#complete -nargs=* -range Find :lua require'vimrc.find'.open_files(<q-args>, <q-bang> == '!')]]
+end
 
 -- }}}
 

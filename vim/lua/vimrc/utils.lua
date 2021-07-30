@@ -65,6 +65,22 @@ function table.filter(t, pred)
     return out
 end
 
+function table.map(t, pred)
+    local out = {}
+
+    for k, v in pairs(t) do table.insert(out, pred(v, k, t)) end
+
+    return out
+end
+
+function table.for_each(t, func)
+    local out = {}
+
+    for k, v in pairs(t) do func(v, k) end
+
+    return out
+end
+
 function M.range(a, b, step)
     if not b then
         b = a
@@ -112,6 +128,10 @@ function string.split(str, sep)
     if type(ret) ~= "table" then ret = {ret} end
 
     return ret
+end
+
+function string.starts_with(str, start)
+   return string.sub(str, 1, str.len(start)) == start
 end
 
 return M
