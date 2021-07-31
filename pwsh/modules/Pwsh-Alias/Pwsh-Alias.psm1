@@ -27,6 +27,10 @@ if (Get-Command "Source-Env" -ErrorAction SilentlyContinue) {
     Set-Alias -Value Source-Env -Name :
 }
 
+if (Get-Command "fcp" -ErrorAction SilentlyContinue) {
+    Set-Alias cp fcp
+}
+
 function Pwsh-Exit() {
     exit
 }
