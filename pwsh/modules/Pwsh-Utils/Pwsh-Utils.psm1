@@ -166,20 +166,6 @@ function Get-Current-Branch() {
     return &git rev-parse --abbrev-ref HEAD
 }
 
-function Replace-In-Dir($from, $to) {
-    if (Get-Command "rg" -ErrorAction SilentlyContinue) {
-        if ($IsMacOS) {
-            rg -l -F "$from" | xargs sed -i -e "s/$from/$to/g"
-        }
-        else {
-            Write-Host 'replace_in_dir is not supported on this platform.'
-        }
-    }
-    else {
-        Write-Host "rg is not found."
-    }
-}
-
 function Get-Weather() {
     (Invoke-WebRequest http://v2.wttr.in/).Content
 }
