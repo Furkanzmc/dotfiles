@@ -4,11 +4,11 @@ if vim.b.did_rust_ext ~= true and vim.o.loadplugins then
 end
 
 vim.wo.signcolumn = "yes"
-vim.wo.suffixesadd = ".rs"
+vim.bo.suffixesadd = ".rs"
 
-if vin.fn.executable("rustfmt") == 1 then vim.wo.formatprg = "rustfmt" end
+if vim.fn.executable("rustfmt") == 1 then vim.bo.formatprg = "rustfmt" end
 
-if vim.fn.executable("rustup") == 1 then vim.wo.keywordprg = "rustup\\ doc" end
+if vim.fn.executable("rustup") == 1 then vim.bo.keywordprg = "rustup\\ doc" end
 
 vim.b.vimrc_rust_analyzer_lsp_signs_enabled = 1
 vim.b.vimrc_rust_analyzer_lsp_location_list_enabled = 1
