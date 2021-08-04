@@ -568,7 +568,7 @@ cmd [[command -complete=customlist,custom_sort#sort_command_completion -range -n
 
 -- QuickFix {{{
 
-map("n", "<F10>", ":call quickfix#toggle()<CR>", {silent = true})
+map("n", "<leader>qf", ":call quickfix#toggle()<CR>", {silent = true})
 cmd [[command! ClearQuickFix :call setqflist([])]]
 
 -- }}}
