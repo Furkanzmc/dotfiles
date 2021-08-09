@@ -366,6 +366,12 @@ if vim.o.loadplugins == true then cmd [[packadd vim-polyglot]] end
 
 cmd [[command! InitPaq :lua require'vimrc'.init_paq()]]
 
+-- vim-dirvish {{{
+
+g.dirvish_mode = ':sort ,^.*[\\/],'
+
+-- }}}
+
 -- TagBar {{{
 
 g.tagbar_show_linenumbers = 1
