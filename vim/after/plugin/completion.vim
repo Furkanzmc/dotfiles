@@ -1,3 +1,7 @@
+if get(g:, "g:vimrc_completion_plugin_loaded", v:false)
+    finish
+endif
+
 function! s:is_previous_character_space() abort
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
@@ -25,3 +29,5 @@ inoremap <silent><expr> <TAB>
 inoremap <silent><expr> <S-TAB>
             \ pumvisible() ? "\<C-p>" :
             \ <SID>is_previous_character_space() ? "\<S-TAB>" : <SID>trigger_completion()
+
+let g:vimrc_completion_plugin_loaded = v:true
