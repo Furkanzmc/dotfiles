@@ -90,23 +90,6 @@ end
 
 -- Completion Functions {{{
 
-local function complete_fzf(lines, base)
-    if fn.executable("fzf") == 0 then return {} end
-
-    local input = {}
-    for _, line in ipairs(lines) do
-        table.extend(input, vim.fn.split(line, "[^a-zA-Z0-9\\-_]"))
-    end
-
-    local completions = {}
-    local output = vim.fn.systemlist("fzf --filter=" .. base, input)
-    for _, value in ipairs(output) do
-        table.insert(completions, {word = value, menu = "fzf"})
-    end
-
-    return completions
-end
-
 local function complete_mnemonic(lines, base)
     local words = {}
 
@@ -180,7 +163,6 @@ local function complete_custom(findstart, base)
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
     table.extend(completions, complete_mnemonic(lines, base))
-    table.extend(completions, complete_fzf(lines, base))
 
     return completions
 end
