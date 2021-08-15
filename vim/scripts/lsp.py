@@ -3,6 +3,7 @@ from typing import List
 from argparse import ArgumentParser, Namespace
 from os.path import expanduser
 from distutils.spawn import find_executable
+from sys import stdin, stdout
 
 
 def parse_args() -> Namespace:
@@ -23,13 +24,25 @@ def parse_args() -> Namespace:
         "--language",
         type=str,
         default=None,
-        help="Outputs word definition.",
+        help="Specify which language is used for completion.",
     )
 
     parser.add_argument(
         "--hover",
         type=str,
         help="Runs all the hover functions one by one until one returns output",
+    )
+
+    parser.add_argument(
+        "--complete",
+        action="store_true",
+        help="Runs the completion commands.",
+    )
+
+    parser.add_argument(
+        "--position",
+        type=str,
+        help="l:c position of the cursor.",
     )
 
     return parser.parse_args()
@@ -121,6 +134,45 @@ def hover(token: str, language: str = None):
         return
 
 
+def complete(position: str, language: str = None):
+    linenr: int = 0
+    if position:
+        linenr = int(position.split(":")[0])
+
+    contents = []
+    try:
+        for line in iter(stdin.readline, ""):
+            contents.append(line)
+    except KeyboardInterrupt:
+        stdout.flush()
+        exit(0)
+
+    contents.pop(linenr)
+    output = run(
+        [
+            "rg",
+            "\\w+",
+            "--no-filename",
+            "--no-column",
+            "--no-line-number",
+            "--only-matching",
+        ],
+        capture_output=True,
+        input="\n".join(contents).encode("utf-8"),
+    ).stdout
+
+    output = run(
+        [
+            "sort",
+            "-u",
+        ],
+        capture_output=True,
+        input=output,
+    ).stdout.decode("utf-8")
+
+    print(output)
+
+
 def main() -> None:
     args = parse_args()
     if args.describe_code:
@@ -129,6 +181,8 @@ def main() -> None:
         define_word(args.define)
     elif args.hover:
         hover(args.hover, args.language)
+    elif args.complete:
+        complete(args.position, args.language)
 
 
 if __name__ == "__main__":

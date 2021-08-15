@@ -109,8 +109,9 @@ local function set_handlers(client, bufnr)
                                                           "_lsp_virtual_text_enabled") ==
                                      1
 
-    client.handlers["textDocument/publishDiagnostics"] =
-        lsp.with(on_publish_diagnostics, {
+    client.handlers["textDocument/publishDiagnostics"] = lsp.with(
+                                                             on_publish_diagnostics,
+                                                             {
             signs = signs_enabled,
             virtual_text = virtual_text_enabled,
             underline = false,
@@ -333,7 +334,11 @@ function M.setup_lsp()
     if fn.executable("efm-langserver") == 1 then
         lspconfig.efm.setup {
             on_attach = setup,
-            init_options = {documentFormatting = true},
+            init_options = {
+                documentFormatting = true,
+                completion = true,
+                hover = true
+            },
             settings = {
                 rootMarkers = {".git/"},
                 logLevel = 2,
@@ -343,10 +348,10 @@ function M.setup_lsp()
                 languages = {
                     ["="] = {
                         {
-                            completionCommand = 'cat ${INPUT} | rg "\\w+" --no-filename --no-column --no-line-number --only-matching | sort -u',
-                            completionStdin = false,
+                            completionCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --complete --position ${POSITION}",
+                            completionStdin = true,
                             lintSource = "efm-completion",
-                            hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp_hover.py --hover ${INPUT}",
+                            hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --hover ${INPUT}",
                             hoverStdin = false
                         }
                     },
@@ -404,7 +409,7 @@ function M.setup_lsp()
                             lintFormats = {"%f:%l %m"},
                             lintSource = "bandit"
                         }, {
-                            hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp_hover.py --language python --hover ${INPUT}",
+                            hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --language python --hover ${INPUT}",
                             hoverStdin = false
                         }, {
 
