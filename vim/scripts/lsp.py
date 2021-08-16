@@ -1,9 +1,11 @@
 from subprocess import run
-from typing import List
+from typing import List, Optional
 from argparse import ArgumentParser, Namespace
 from os.path import expanduser
 from distutils.spawn import find_executable
 from sys import stdin, stdout
+from re import compile as compile_regex
+import asyncio
 
 
 def parse_args() -> Namespace:
@@ -134,12 +136,49 @@ def hover(token: str, language: str = None):
         return
 
 
-def complete(position: str, language: str = None):
-    linenr: int = 0
-    if position:
-        linenr = int(position.split(":")[0])
+def complete(contents: List[str], position: str, language: Optional[str] = None):
+    if not position:
+        raise ValueError("position is required.")
 
-    contents = []
+    pos: List[int] = [int(item) for item in position.split(":")]
+    linenr: int = pos[0]
+    base = get_base(contents.pop(linenr), pos[1])
+    output: bytes = tokenize_regex_async(contents)
+    output = run(
+        ["fzf", "-i", "--filter", base],
+        capture_output=True,
+        input=output,
+    ).stdout
+
+    if not output:
+        return
+
+    completions: str = run(
+        [
+            "uniq",
+        ],
+        capture_output=True,
+        input=output,
+    ).stdout.decode("utf-8")
+
+    if completions:
+        print(completions)
+
+
+def main() -> None:
+    args = parse_args()
+    if args.describe_code:
+        describe_pylint_code(args.describe_code)
+    elif args.define:
+        define_word(args.define)
+    elif args.hover:
+        hover(args.hover, args.language)
+    elif args.complete:
+        complete(get_contents_from_stdin(), args.position, args.language)
+
+
+def get_contents_from_stdin() -> List[str]:
+    contents: List[str] = []
     try:
         for line in iter(stdin.readline, ""):
             contents.append(line)
@@ -147,7 +186,61 @@ def complete(position: str, language: str = None):
         stdout.flush()
         exit(0)
 
-    contents.pop(linenr)
+    return contents
+
+
+def get_base(line: str, start_pos: int) -> str:
+    index: int = start_pos
+    base: str = ""
+    while not base:
+        if line[index] in ("", ".", ">", " ") or index == 0:
+            base = line[index + 1 * (index != "") :]
+            break
+        index = index - 1
+
+    return base.strip()
+
+
+def tokenize_regex(contents: List[str]) -> bytes:
+    pattern = compile_regex("\\w+")
+    tokens: List[str] = pattern.findall("\n".join(contents))
+
+    return "\n".join(tokens).encode("utf-8")
+
+
+def tokenize_regex_async(contents: List[str]) -> bytes:
+    pattern = compile_regex("\\w+")
+    tokens: List[str] = []
+
+    async def tokenize(lines: List[str]) -> List[str]:
+        return pattern.findall("\n".join(lines))
+
+    loop = asyncio.get_event_loop()
+    tasks: List[asyncio.Task] = []
+
+    size = len(contents)
+    count = 12
+    step_size = int(len(contents) / count)
+    taken_count = 0
+    index = 0
+    while index < count:
+        taken_count = min(size, taken_count + (step_size * index))
+        tasks.append(
+            loop.create_task(tokenize(contents[taken_count : taken_count + step_size]))
+        )
+        index = index + 1
+
+    assert taken_count == size, "{} != {}".format(taken_count, size)
+    done, _ = loop.run_until_complete(asyncio.wait(tasks))
+    for future in done:
+        tokens.extend(future.result())
+
+    loop.close()
+
+    return "\n".join(tokens).encode("utf-8")
+
+
+def tokenize_rg(contents: List[str]) -> bytes:
     output = run(
         [
             "rg",
@@ -161,28 +254,7 @@ def complete(position: str, language: str = None):
         input="\n".join(contents).encode("utf-8"),
     ).stdout
 
-    output = run(
-        [
-            "sort",
-            "-u",
-        ],
-        capture_output=True,
-        input=output,
-    ).stdout.decode("utf-8")
-
-    print(output)
-
-
-def main() -> None:
-    args = parse_args()
-    if args.describe_code:
-        describe_pylint_code(args.describe_code)
-    elif args.define:
-        define_word(args.define)
-    elif args.hover:
-        hover(args.hover, args.language)
-    elif args.complete:
-        complete(args.position, args.language)
+    return output
 
 
 if __name__ == "__main__":
