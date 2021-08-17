@@ -25,7 +25,7 @@ function M.init_paq()
     paq 'justinmk/vim-dirvish'
     paq 'Furkanzmc/firvish.nvim'
     paq 'neovim/nvim-lspconfig'
-    paq 'tmsvg/pear-tree'
+    paq 'gosukiwi/vim-smartpairs'
 
     -- Optional {{{
 
