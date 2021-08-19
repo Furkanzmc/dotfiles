@@ -320,6 +320,7 @@ cmd [[cnoreabbrev rg Rg]]
 cmd [[cnoreabbrev frun FRun]]
 cmd [[cnoreabbrev fh Fhdo]]
 cmd [[cnoreabbrev find Find]]
+cmd [[cnoreabbrev sfind SFind]]
 
 cmd [[cnoreabbrev time Time]]
 cmd [[cnoreabbrev fgit FGit]]
@@ -381,12 +382,6 @@ if vim.o.loadplugins == true then cmd [[packadd vim-polyglot]] end
 -- }}}
 
 cmd [[command! InitPaq :lua require'vimrc'.init_paq()]]
-
--- vim-dirvish {{{
-
-g.dirvish_mode = ':sort ,^.*[\\/],'
-
--- }}}
 
 -- TagBar {{{
 
@@ -584,7 +579,7 @@ cmd [[command! -nargs=1 Search :call help#search_docs(<f-args>)]]
 
 -- Sort {{{
 
-cmd [[command -complete=customlist,custom_sort#sort_command_completion -range -nargs=1 Sort :call custom_sort#sort(<f-args>, <line1>, <line2>)]]
+cmd [[command -complete=customlist,custom_sort#sort_command_completion -range -nargs=1 -bar Sort :call custom_sort#sort(<f-args>, <line1>, <line2>)]]
 
 -- }}}
 
@@ -664,7 +659,8 @@ cmd [[augroup END]]
 -- Custom Find {{{
 
 if fn.executable("fd") then
-    cmd [[ command! -bang -complete=customlist,find#complete -nargs=* -range Find :lua require'vimrc.find'.open_files(<q-args>, <q-bang> == '!')]]
+    cmd [[ command! -complete=customlist,find#complete -nargs=* -range Find :lua require'vimrc.find'.open_files(<q-args>, false)]]
+    cmd [[ command! -complete=customlist,find#complete -nargs=* -range SFind :lua require'vimrc.find'.open_files(<q-args>, true)]]
 end
 
 -- }}}

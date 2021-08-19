@@ -23,10 +23,18 @@ endfunc
 " }}}
 
 function custom_sort#sort_command_completion(A,L,P)
-    return ["-modified", "-length", "-uniq"]
+    return ["-modified", "-length", "-uniq", "-folder-first"]
 endfunction
 
 function custom_sort#sort(mode, start_line, end_line)
+    if a:mode == "-folder-first" && a:start_line == a:end_line
+        execute "sort ,^.*[\/],"
+        return
+    elseif a:mode == "-folder-first"
+        execute "'<,'>sort ,^.*[\/],"
+        return
+    end
+
     if a:start_line == a:end_line
         let l:lines = getline(0, line('$'))
         let l:start_index = 1

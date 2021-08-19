@@ -1,3 +1,7 @@
+if get(b:, "vimrc_did_terminal", v:false)
+    finish
+endif
+
 setlocal scrollback=-1
 setlocal nowrap
 set scrolloff=0
@@ -20,10 +24,6 @@ nmap <buffer> <silent> ]e :TerminalNextError<CR>
 nmap <buffer> <silent> [p :call search("^>>>", "Wb")<CR>
 " Jump to the next Python prompt
 nmap <buffer> <silent> ]p :call search("^>>>", "W")<CR>
-
-if get(b:, "vimrc_did_terminal", v:false)
-    finish
-endif
 
 let b:terminal_closing = v:false
 

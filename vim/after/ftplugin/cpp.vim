@@ -1,3 +1,7 @@
+if get(b:, "vimrc_did_cpp", v:false)
+    finish
+endif
+
 if !get(s:, "vimrc_cpp_plugins_loaded", v:false) && &loadplugins
     packadd tagbar
     let s:vimrc_cpp_plugins_loaded = v:true
@@ -92,12 +96,8 @@ abbreviate <silent> <buffer> is@ <BS><Esc>F:ftl"nyt(f)b"pyiwA<BS><Enter>{<Enter>
 
 " }}}
 
-if get(b:, "did_cpp", v:false)
-    finish
-endif
-
 function cpp#includeexpr(fname)
     return includeexpr#find(a:fname, [])
 endfunction
 
-let b:did_cpp = v:true
+let b:vimrc_did_cpp = v:true

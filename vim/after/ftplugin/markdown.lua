@@ -1,6 +1,9 @@
-if vim.b.did_markdown_ext ~= true and vim.o.loadplugins then
+if vim.b.vimrc_did_markdown == true then return end
+
+if vim.o.loadplugins and vim.g.vimrc_markdown_loaded_plugins == nil then
     vim.cmd [[packadd vim-markdown-folding]]
     vim.cmd [[packadd SyntaxRange]]
+    vim.g.vimrc_markdown_loaded_plugins = true
 end
 
 vim.opt_local.spell = true
@@ -10,8 +13,6 @@ vim.opt_local.conceallevel = 2
 vim.opt_local.textwidth = 99
 vim.opt_local.cursorline = true
 
-if vim.b.did_markdown_ext ~= true then
-    vim.cmd [[command -buffer -range RunQML :call qml#run()]]
-end
+vim.cmd [[command -buffer -range RunQML :call qml#run()]]
 
-vim.b.did_markdown_ext = true
+vim.b.vimrc_did_markdown = true

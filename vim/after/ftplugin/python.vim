@@ -1,3 +1,7 @@
+if get(b:, "vimrc_did_python", v:false)
+    finish
+end
+
 if !get(s:, "vimrc_python_plugins_loaded", v:false) && &loadplugins
     packadd tagbar
     let s:vimrc_python_plugins_loaded = v:true
@@ -57,3 +61,5 @@ function python#includeexpr(fname)
     let l:search_paths = [".venv/lib/*/site-packages"]
     return includeexpr#find(substitute(a:fname, "\\.", "\/", "g"), l:search_paths)
 endfunction
+
+let b:vimrc_did_python = v:true

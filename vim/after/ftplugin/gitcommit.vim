@@ -1,3 +1,7 @@
+if get(b:, "vimrc_did_gitcommit", v:false)
+    finish
+endif
+
 setlocal spell
 setlocal colorcolumn=
 setlocal nonumber
@@ -30,3 +34,5 @@ if (exists("g:vimrc_active_jira_ticket") || exists("b:vimrc_active_jira_ticket")
 endif
 
 " }}}
+
+let b:vimrc_did_gitcommit = v:true

@@ -16,7 +16,6 @@ vimrc_spacehi_enabled_filetypes
 vimrc_spacehi_tab_color
 VIMRC_PWSH_ENABLED
 vimrc_jira_base_url
-vimrc_dirvish_virtual_text_enabled
 vimrc_dirvish_virtual_text_prefix
 VIMRC_DISABLE_LSP
 vimrc_dap_lldb_vscode_path
