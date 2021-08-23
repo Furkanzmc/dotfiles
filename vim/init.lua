@@ -9,15 +9,6 @@ vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 
 local map = require"futils".map
 
--- Functions {{{
-
-local function execute_macro_on_visual_range()
-    cmd [[echo "@".getcmdline()]]
-    cmd [[execute ":'<,'>normal @" . nr2char(getchar())]]
-end
-
--- }}}
-
 -- General {{{
 
 cmd [[filetype plugin on]]
