@@ -24,6 +24,7 @@ function M.init_paq()
     paq 'furkanzmc/cosmic_latte'
     paq 'justinmk/vim-dirvish'
     paq 'Furkanzmc/firvish.nvim'
+    paq 'Furkanzmc/ayar.nvim'
     paq 'neovim/nvim-lspconfig'
     paq 'gosukiwi/vim-smartpairs'
 
