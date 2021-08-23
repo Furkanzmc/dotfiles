@@ -4,7 +4,7 @@ local g = vim.g
 local b = vim.b
 local cmd = vim.cmd
 local utils = require "vimrc.utils"
-local options = require "vimrc.options"
+local options = require "options"
 local M = {}
 
 function M.enable_highlight()

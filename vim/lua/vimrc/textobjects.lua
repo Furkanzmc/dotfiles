@@ -42,7 +42,7 @@ function M.fence_text_object(opt)
 end
 
 function M.init()
-    local map = require"vimrc".map
+    local map = require"futils".map
 
     -- URL text object.
     map("x", "iu", ":<C-u>lua require'vimrc.textobjects'.url_text_object()<CR>",

@@ -3,7 +3,7 @@ local api = vim.api
 local lsp = vim.lsp
 local fn = vim.fn
 local utils = require "vimrc.utils"
-local map = require"vimrc".map
+local map = require"futils".map
 local M = {}
 
 -- Local Functions {{{

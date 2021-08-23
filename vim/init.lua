@@ -7,7 +7,7 @@ local g = vim.g
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 
-local map = require"vimrc".map
+local map = require"futils".map
 
 -- Functions {{{
 
@@ -532,27 +532,82 @@ end
 
 -- }}}
 
--- }}}
+-- Options {{{
 
--- Local Plugins {{{
+local options = require "options"
 
--- Custom Options {{{
-
-cmd [[command! -nargs=* -complete=customlist,options#complete Set :lua require'vimrc.options'.set_cmd(<q-args>, nil)]]
-cmd [[command! -nargs=* -complete=customlist,options#complete_buf_local Setlocal :lua require'vimrc.options'.set_cmd(<q-args>, vim.fn.bufnr())]]
-
-cmd [[augroup options_plugin]]
-cmd [[autocmd BufReadPost *.md,todo.txt :lua require"vimrc.options".set_modeline(vim.api.nvim_get_current_buf())]]
-cmd [[augroup END]]
+options.register_option({
+    name = "clstrailingwhitespace",
+    default = true,
+    type_info = "bool",
+    source = "buffers",
+    buffer_local = true
+})
+options.register_option({
+    name = "clstrailingspacelimit",
+    default = 0,
+    type_info = "int",
+    source = "buffers",
+    buffer_local = true,
+    description = "If the number of trailing white spaces below this number, they will be cleared automatically. Otherwise you will be prompted for each one."
+})
+options.register_option({
+    name = "trailingwhitespacehighlight",
+    default = true,
+    type_info = "bool",
+    source = "buffers",
+    buffer_local = true
+})
+options.register_option({
+    name = "indentsize",
+    default = 4,
+    type_info = "int",
+    source = "buffers",
+    buffer_local = true
+})
+options.register_option({
+    name = "shell",
+    default = "pwsh",
+    type_info = "string",
+    source = "options",
+    global = true
+})
+options.register_option({
+    name = "scratchpad",
+    default = false,
+    type_info = "bool",
+    source = "options",
+    buffer_local = true
+})
+options.register_option({
+    name = "markdownfenced",
+    default = {},
+    type_info = "string",
+    source = "buffers",
+    buffer_local = true,
+    parser = function(value) return string.split(value, ",") end
+})
+options.register_option({
+    name = "todofenced",
+    default = {},
+    type_info = "string",
+    source = "todo",
+    buffer_local = true,
+    parser = function(value) return string.split(value, ",") end
+})
 
 if fn.has("mac") == 1 then
     vim.opt.shell = "zsh"
-    require"vimrc.options".set("shell", "pwsh")
+    require"options".set("shell", "pwsh")
 else
-    require"vimrc.options".set("shell", "cmd")
+    require"options".set("shell", "cmd")
 end
 
 -- }}}
+
+-- }}}
+
+-- Local Plugins {{{
 
 -- todo {{{
 
@@ -630,7 +685,7 @@ cmd [[augroup END]]
 
 cmd [[augroup vimrc_buffer_events]]
 cmd [[autocmd!]]
-cmd [[autocmd User VimrcOptionSet lua local isize=require'vimrc.options'.get_option('indentsize', vim.fn.bufnr()); vim.cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s", isize, isize, isize))]]
+cmd [[autocmd User VimrcOptionSet lua local isize=require'options'.get_option('indentsize', vim.fn.bufnr()); vim.cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s", isize, isize, isize))]]
 cmd [[augroup END]]
 
 -- }}}

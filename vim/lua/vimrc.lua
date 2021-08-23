@@ -25,6 +25,8 @@ function M.init_paq()
     paq 'justinmk/vim-dirvish'
     paq 'Furkanzmc/firvish.nvim'
     paq 'Furkanzmc/ayar.nvim'
+    paq 'Furkanzmc/futils.nvim'
+    paq 'Furkanzmc/options.nvim'
     paq 'neovim/nvim-lspconfig'
     paq 'gosukiwi/vim-smartpairs'
 
@@ -153,20 +155,6 @@ function M.on_source_post()
         require'diffview'.setup {file_panel = {use_icons = false}}
     elseif string.match(file_path, "colorizer.vim") ~= nil then
         init_nvim_colorizer()
-    end
-end
-
-function M.map(mode, lhs, rhs, opts)
-    local options = {noremap = true}
-    if opts then options = vim.tbl_extend('force', options, opts) end
-    if opts.buffer ~= nil then
-        assert(type(opts.buffer) == "number")
-
-        local bufnr = opts.buffer
-        options.buffer = nil
-        vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, options)
-    else
-        vim.api.nvim_set_keymap(mode, lhs, rhs, options)
     end
 end
 

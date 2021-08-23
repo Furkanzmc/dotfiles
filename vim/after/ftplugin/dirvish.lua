@@ -1,6 +1,6 @@
 if vim.b.vimrc_did_dirvish == true then return end
 
-local map = require"vimrc".map
+local map = require"futils".map
 local bufnr = vim.api.nvim_get_current_buf()
 
 if vim.g.vimrc_dirvish_virtual_text_prefix == nil then
