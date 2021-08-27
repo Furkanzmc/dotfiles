@@ -89,11 +89,14 @@ def describe_pylint_code(code: str) -> bool:
 
 
 def define_word(word: str) -> bool:
-    output = (
-        run(["curl", 'dict://dict.org/d:"{}"'.format(word)], capture_output=True)
+    output: List[str] = [
+        line.rstrip("\r")
+        for line in run(
+            ["curl", 'dict://dict.org/d:"{}"'.format(word)], capture_output=True
+        )
         .stdout.decode("utf-8")
         .split("\n")
-    )
+    ]
 
     first_index = -1
     for index, line in enumerate(output):
