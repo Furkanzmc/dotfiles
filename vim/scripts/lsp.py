@@ -158,7 +158,8 @@ def complete(contents: List[str], position: str, language: Optional[str] = None)
 
     completions: str = run(
         [
-            "uniq",
+            "sort",
+            "-u"
         ],
         capture_output=True,
         input=output,
