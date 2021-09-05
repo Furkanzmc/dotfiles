@@ -1,4 +1,4 @@
-if get(b:, "vimrc_did_python", v:false)
+if get(b:, "did_ftp", v:false)
     finish
 end
 
@@ -61,5 +61,3 @@ function python#includeexpr(fname)
     let l:search_paths = [".venv/lib/*/site-packages"]
     return includeexpr#find(substitute(a:fname, "\\.", "\/", "g"), l:search_paths)
 endfunction
-
-let b:vimrc_did_python = v:true

@@ -1,5 +1,3 @@
-if vim.b.vimrc_did_toml == true then return end
+if vim.b.did_ftp == true then return end
 
 vim.bo.commentstring = "#\\ %s"
-
-vim.b.vimrc_did_toml = true

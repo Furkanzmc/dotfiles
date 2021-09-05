@@ -1,4 +1,3 @@
-if vim.b.vimrc_did_c == true then return end
+if vim.b.did_ftp == true then return end
 
 vim.cmd [[:runtime! ftplugin/cpp.vim]]
-vim.b.vimrc_did_c = true

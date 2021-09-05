@@ -1,4 +1,4 @@
-if vim.b.vimrc_did_dirvish == true then return end
+if vim.b.did_ftp == true then return end
 
 local map = require"futils".map
 local bufnr = vim.api.nvim_get_current_buf()
@@ -27,4 +27,3 @@ map("v", "F", ':noautocmd Sort -folder-first | setlocal conceallevel=2<CR>',
     {silent = true, buffer = bufnr})
 
 require"vimrc.dirvish".init()
-vim.b.vimrc_did_dirvish = true

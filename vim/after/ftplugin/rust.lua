@@ -1,4 +1,4 @@
-if vim.b.vimrc_did_rust == true then return end
+if vim.b.did_ftp == true then return end
 
 if vim.g.vimrc_rust_loaded_plugins == nil and vim.o.loadplugins then
     vim.cmd [[packadd tagbar]]
@@ -17,5 +17,3 @@ vim.b.vimrc_rust_analyzer_lsp_signs_enabled = 1
 vim.b.vimrc_rust_analyzer_lsp_location_list_enabled = 1
 vim.b.vimrc_efm_lsp_signs_enabled = 1
 vim.b.vimrc_efm_lsp_location_list_enabled = 1
-
-vim.b.vimrc_did_rust = true

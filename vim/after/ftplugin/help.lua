@@ -1,5 +1,3 @@
-if vim.b.vimrc_did_help == true then return end
+if vim.b.did_ftp == true then return end
 
 vim.wo.signcolumn = "no"
-
-vim.b.vimrc_did_help = true

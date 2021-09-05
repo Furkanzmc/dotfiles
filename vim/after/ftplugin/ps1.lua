@@ -1,5 +1,3 @@
-if vim.b.vimrc_did_ps1 == true then return end
+if vim.b.did_ftp == true then return end
 
 vim.wo.foldmethod = "indent"
-
-vim.b.vimrc_did_ps1 = true

@@ -1,4 +1,4 @@
-if get(b:, "vimrc_did_terminal", v:false)
+if get(b:, "did_ftp", v:false)
     finish
 endif
 
@@ -38,5 +38,3 @@ augroup END
 
 command -buffer TerminalNextError call search('\(^_\{10,}\ \w\+.*\ _\{10,}\|^=\{10,\}\)', 'W')
 command -buffer TerminalPreviousError call search('\(^_\{10,}\ \w\+.*\ _\{10,}\|^=\{10,\}\)', 'Wb')
-
-let b:vimrc_did_terminal = v:true

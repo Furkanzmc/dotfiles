@@ -1,4 +1,4 @@
-if get(b:, "vimrc_did_cpp", v:false)
+if get(b:, "did_ftp", v:false)
     finish
 endif
 
@@ -9,7 +9,7 @@ endif
 
 setlocal foldmethod=indent
 setlocal signcolumn=yes
-setlocal suffixesadd=.cpp,.h,.hxx,.cxx,.hpp
+setlocal suffixesadd=.cpp,.h,.hxx,.cxx,.hpp,_p.h,_p_p.h
 setlocal includeexpr=cpp#includeexpr(v:fname)
 setlocal commentstring=//%s
 
@@ -99,5 +99,3 @@ abbreviate <silent> <buffer> is@ <BS><Esc>F:ftl"nyt(f)b"pyiwA<BS><Enter>{<Enter>
 function cpp#includeexpr(fname)
     return includeexpr#find(a:fname, [])
 endfunction
-
-let b:vimrc_did_cpp = v:true

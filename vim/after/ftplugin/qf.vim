@@ -1,4 +1,4 @@
-if get(b:, "vimrc_did_qf", v:false)
+if get(b:, "did_ftp", v:false)
     finish
 endif
 
@@ -12,5 +12,3 @@ execute "Setlocal trailingwhitespacehighlight=false"
 vmap <buffer> <silent> D :<C-U>call quickfix#remove_lines(line("'<") - 1, line("'>") - 1)<CR>
 nmap <buffer> <silent> D :call quickfix#remove_lines(line(".") - 1, line(".") - 1)<CR>
 nmap <buffer> <silent> CC :ClearQuickFix<CR>
-
-let b:vimrc_did_qf = v:true

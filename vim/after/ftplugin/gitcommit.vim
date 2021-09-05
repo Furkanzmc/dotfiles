@@ -1,4 +1,4 @@
-if get(b:, "vimrc_did_gitcommit", v:false)
+if get(b:, "did_ftp", v:false)
     finish
 endif
 
@@ -34,5 +34,3 @@ if (exists("g:vimrc_active_jira_ticket") || exists("b:vimrc_active_jira_ticket")
 endif
 
 " }}}
-
-let b:vimrc_did_gitcommit = v:true

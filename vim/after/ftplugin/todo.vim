@@ -1,4 +1,4 @@
-if get(b:, "vimrc_did_todo", v:false)
+if get(b:, "did_ftp", v:false)
     finish
 endif
 
@@ -32,5 +32,3 @@ augroup todo_buf_fenced
     autocmd BufEnter <buffer> :lua require"vimrc.todo".enable_highlight()
     autocmd BufReadPre <buffer> :if exists("b:todo_fenced_languages_applied") | unlet b:todo_fenced_languages_applied | endif
 augroup END
-
-let b:vimrc_did_todo = v:true

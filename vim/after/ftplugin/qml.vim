@@ -1,4 +1,4 @@
-if get(b:, "vimrc_did_qml", v:false)
+if get(b:, "did_ftp", v:false)
     finish
 endif
 
@@ -34,5 +34,3 @@ abbreviate <silent> <buffer> iqq@ import QtQuick 2.<C-R>=abbreviations#eat_char(
 abbreviate <silent> <buffer> iqql@ import QtQuick.Layouts 1.<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> iqqw@ import QtQuick.Window 2.<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> clog@ console.log("[<C-r>=expand("%:t") . "::" . line(".")<CR>::]")<Esc>F:a<C-R>=abbreviations#eat_char('\s')<CR>
-
-let b:vimrc_did_qml = v:true
