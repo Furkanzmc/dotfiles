@@ -86,9 +86,22 @@ function M.setup_cmake(opts)
     functions.build_project = function(output_qf)
         require"firvish.job_control".start_job(
             {
-                cmd = {"make", "-j2"},
+                cmd = {"make", "-j12"},
                 filetype = "log",
                 title = "Build",
+                listed = true,
+                output_qf = output_qf,
+                is_background_job = true,
+                cwd = opts.build_dir
+            })
+    end
+
+    functions.run_tests = function(output_qf)
+        require"firvish.job_control".start_job(
+            {
+                cmd = {"make", "check"},
+                filetype = "log",
+                title = "Tests",
                 listed = true,
                 output_qf = output_qf,
                 is_background_job = true,
@@ -133,6 +146,7 @@ function M.setup_cmake(opts)
     cmd [[command! -bang CMake :lua _G.cmake_functions.run_cmake("<bang>" ~= "!")]]
     cmd [[command! -bang Run :lua _G.cmake_functions.run_project("<bang>" ~= "!")]]
     cmd [[command! -bang Build :lua _G.cmake_functions.build_project("<bang>" ~= "!")]]
+    cmd [[command! -bang RunTests :lua _G.cmake_functions.run_tests("<bang>" ~= "!")]]
     cmd(
         "command! UpdateTags :execute 'FRun! pwsh -NoLogo -NoProfile -NonInteractive -WorkingDirectory " ..
             opts.project_path .. " -Command Generate-Tags c++'")
