@@ -23,9 +23,10 @@ function M.swap_source_header()
 
     local status, path_backup = pcall(api.nvim_buf_get_option, fn.bufnr(),
                                       "path")
+
     if status == false then path_backup = "" end
 
-    bo.path = fn.expand("%:h")
+    vim.opt_local.path:append(fn.expand("%:h"))
 
     local found = false
     for _, suffix in ipairs(suffixes) do
