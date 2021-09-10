@@ -4,7 +4,7 @@ endif
 
 setlocal suffixesadd=.qml
 setlocal foldmethod=indent
-setlocal signcolumn=yes
+setlocal signcolumn=number
 setlocal textwidth=100
 setlocal colorcolumn=81,101
 
