@@ -266,6 +266,8 @@ map("x", "@",
     ':<C-u>echo "@".getcmdline() | execute ":\'<,\'>normal @" . nr2char(getchar())<CR>',
     {silent = true})
 
+map("x", ".", ':normal .<CR>', {silent = true})
+
 map("n", "L", "$", {silent = true})
 map("v", "L", "$", {silent = true})
 
