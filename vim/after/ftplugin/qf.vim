@@ -5,6 +5,7 @@ endif
 setlocal nonumber
 setlocal norelativenumber
 setlocal colorcolumn=
+setlocal breakindentopt=shift:1
 
 setlocal cursorline
 execute "Setlocal trailingwhitespacehighlight=false"

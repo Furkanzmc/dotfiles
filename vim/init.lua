@@ -42,7 +42,7 @@ vim.o.history = 500
 -- Show an arrow with a space for line breaks.
 vim.o.showbreak = "↳ "
 vim.o.breakindent = true
-vim.o.breakindentopt = "shift:4"
+vim.o.breakindentopt = "shift:2"
 
 vim.o.inccommand = "split"
 vim.o.clipboard = "unnamed"
