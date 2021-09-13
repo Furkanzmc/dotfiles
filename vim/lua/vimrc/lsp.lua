@@ -251,6 +251,12 @@ function M.setup_lsp()
         setup_buffer_vars(client, bufnr)
         set_up_keymap(client, bufnr)
         set_handlers(client, bufnr)
+        require"lsp_signature".on_attach({
+            bind = true,
+            handler_opts = {border = "none"},
+            toggle_key = "<C-g><C-s>",
+            extra_trigger_chars = {"{", "}"}
+        }, bufnr)
     end
 
     local setup_without_formatting = function(client)

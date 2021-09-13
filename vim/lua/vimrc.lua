@@ -28,6 +28,7 @@ function M.init_paq()
     paq 'Furkanzmc/futils.nvim'
     paq 'Furkanzmc/options.nvim'
     paq 'neovim/nvim-lspconfig'
+    paq 'ray-x/lsp_signature.nvim'
     paq 'gosukiwi/vim-smartpairs'
 
     -- Optional {{{
