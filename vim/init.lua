@@ -636,7 +636,7 @@ cmd [[command -complete=customlist,custom_sort#sort_command_completion -range -n
 -- QuickFix {{{
 
 map("n", "<C-q>z", ":cclose<CR>", {silent = true})
-map("n", "<C-q>o", ":copen<CR>", {silent = true})
+map("n", "<C-q>o", ":copen | if exists('g:vimrc_quickfix_size_cache') && has_key(g:vimrc_quickfix_size_cache, tabpagenr()) | execute 'resize ' . g:vimrc_quickfix_size_cache[tabpagenr()] | endif<CR>", {silent = true})
 
 -- }}}
 
