@@ -73,8 +73,12 @@ function M.show_status(line1, line2)
         local padding = longest_line_length - #line + 1
         table.extend(status_lines, get_info(fn.fnamemodify(line, ":."), padding))
         if #status_lines > 1 then
-            api.nvim_buf_set_virtual_text(bufnr, b.vimrc_dirvish_namespace,
-                                          linenr, status_lines, {})
+            api.nvim_buf_set_extmark(bufnr, b.vimrc_dirvish_namespace, linenr,
+                                     0, {
+                end_line = linenr,
+                virt_text = status_lines,
+                virt_text_pos = "eol"
+            })
         end
 
         linenr = linenr + 1
