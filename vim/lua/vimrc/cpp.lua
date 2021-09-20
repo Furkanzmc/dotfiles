@@ -111,7 +111,7 @@ function M.setup_cmake(opts)
     end
 
     functions.run_cmake = function(output_qf, cmake_options)
-        local cmd = {"cmake", opts.project_path}
+        local cmd = {"cmake", "-DCMAKE_BUILD_TYPE=Debug", opts.project_path}
         if cmake_options ~= nil then table.extend(cmd, cmake_options) end
 
         require"firvish.job_control".start_job(
