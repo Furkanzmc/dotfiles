@@ -30,6 +30,7 @@ function M.init_paq()
     paq 'neovim/nvim-lspconfig'
     paq 'ray-x/lsp_signature.nvim'
     paq 'gosukiwi/vim-smartpairs'
+    paq 'andymass/vim-matchup'
 
     -- Optional {{{
 
@@ -75,6 +76,9 @@ function M.setup_treesitter()
                 node_decremental = "gnd",
                 scope_incremental = "gsi"
             }
+        },
+        matchup = {
+            enable = true
         }
     }
 

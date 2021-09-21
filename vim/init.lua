@@ -4,6 +4,27 @@ local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 
+-- Disable some built-in plugins
+g.loaded_2html_plugin = 1
+g.loaded_getscript = 1
+g.loaded_getscriptPlugin = 1
+g.loaded_gzip = 1
+g.loaded_logiPat = 1
+g.loaded_netrw = 1
+g.loaded_netrwFileHandlers = 1
+g.loaded_netrwPlugin = 1
+g.loaded_netrwSettings = 1
+g.loaded_rrhelper = 1
+g.loaded_tar = 1
+g.loaded_tarPlugin = 1
+g.loaded_tutor_mode_plugin = 1
+g.loaded_vimball = 1
+g.loaded_vimballPlugin = 1
+g.loaded_zip = 1
+g.loaded_zipPlugin = 1
+g.loaded_matchit = 1
+g.loaded_matchparen = 1
+
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 
@@ -337,25 +358,6 @@ if vim.o.loadplugins == true then
     cmd [[augroup END]]
 end
 
--- Disable some built-in plugins
-g.loaded_2html_plugin = 1
-g.loaded_getscript = 1
-g.loaded_getscriptPlugin = 1
-g.loaded_gzip = 1
-g.loaded_logiPat = 1
-g.loaded_netrw = 1
-g.loaded_netrwFileHandlers = 1
-g.loaded_netrwPlugin = 1
-g.loaded_netrwSettings = 1
-g.loaded_rrhelper = 1
-g.loaded_tar = 1
-g.loaded_tarPlugin = 1
-g.loaded_tutor_mode_plugin = 1
-g.loaded_vimball = 1
-g.loaded_vimballPlugin = 1
-g.loaded_zip = 1
-g.loaded_zipPlugin = 1
-
 -- vim-polyglot {{{
 
 -- Disable markdown support for polyglot because it messes up with syntax
@@ -524,6 +526,22 @@ cmd [[command! DapFrames :lua require'dap.ui.widgets'.sidebar(require'dap.ui.wid
 if vim.o.loadplugins == true then
     require'nvim_comment'.setup({comment_empty = false})
 end
+
+-- }}}
+
+-- vim-matchup {{{
+
+cmd [[augroup vimrc_matchparen_group]]
+cmd [[autocmd!]]
+cmd [[autocmd ColorScheme * highlight clear MatchParen | highlight MatchParen cterm=bold gui=bold]]
+cmd [[autocmd VimEnter * highlight clear MatchParen | highlight MatchParen cterm=bold gui=bold]]
+cmd [[autocmd Syntax * highlight clear MatchParen | highlight MatchParen cterm=bold gui=bold]]
+cmd [[augroup END]]
+
+g.matchup_matchparen_offscreen = {}
+g.matchup_matchparen_deferred = 1
+g.matchup_matchparen_deferred_show_delay = 100
+g.matchup_matchparen_deferred_hide_delay = 500
 
 -- }}}
 
