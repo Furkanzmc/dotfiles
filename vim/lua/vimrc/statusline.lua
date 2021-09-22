@@ -113,7 +113,7 @@ function M.init(winnr)
     -- Help, Quickfix, and Preview signs {{{
 
     st(
-        '%{&filetype == "help" ? " [Help] " : (&filetype == "qf" ? " [QuickFix] " : (&previewwindow ? " [Preview] " : ""))}',
+        '%{&filetype == "help" ? " [Help] " : (&previewwindow ? " [Preview] " : "")}',
         active, 'StatusLineSpecialWindow', 'StatusLineTermNC')
 
     -- }}}
@@ -184,7 +184,7 @@ function M.init(winnr)
 
     -- LSP Diagnostic {{{
 
-    if is_lsp_running then
+    if is_lsp_running and active then
         table.insert(status, lsp_dianostics(active, bufnr))
     end
 
@@ -192,8 +192,8 @@ function M.init(winnr)
 
     -- HTTP Request Status {{{
 
-    if fn.exists(":SendHttpRequest") > 0 and g.nvim_http_request_in_progress ==
-        true then
+    if active and fn.exists(":SendHttpRequest") > 0 and
+        g.nvim_http_request_in_progress == true then
         st("[Http]", active, 'StatusLineLspStatus', 'StatusLineNC', 1)
     end
 
