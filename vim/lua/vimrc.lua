@@ -42,12 +42,8 @@ function M.init_paq()
     paq {'mfussenegger/nvim-dap', opt = true}
     paq {'rust-lang/rust.vim', opt = true}
     paq {'nvim-treesitter/nvim-treesitter', opt = true}
-    paq {
-        'furkanzmc/nvim-http',
-        opt = true,
-        hook = fn['remote#host#UpdateRemotePlugins']
-    }
-
+    paq {'NTBBloodbath/rest.nvim', opt = true}
+    paq {'nvim-lua/plenary.nvim', opt = true}
     paq {'Furkanzmc/nvim-qt', opt = true}
     paq {'sindrets/diffview.nvim', opt = true}
     paq {'norcalli/nvim-colorizer.lua', opt = true}
@@ -63,6 +59,17 @@ function M.setup_treesitter()
 
     cmd [[packadd nvim-treesitter]]
 
+    local parser_configs =
+        require("nvim-treesitter.parsers").get_parser_configs()
+
+    parser_configs.http = {
+        install_info = {
+            url = "https://github.com/NTBBloodbath/tree-sitter-http",
+            files = {"src/parser.c"},
+            branch = "main"
+        }
+    }
+
     local config = require 'nvim-treesitter.configs'
     config.setup {
         ensure_installed = g.polyglot_disabled,
@@ -77,14 +84,27 @@ function M.setup_treesitter()
                 scope_incremental = "gsi"
             }
         },
-        matchup = {
-            enable = true
-        }
+        matchup = {enable = true}
     }
 
     cmd [[augroup plugin_nvim_treesitter_init]]
     cmd [[au!]]
     cmd [[augroup END]]
+end
+
+function M.setup_rest_nvim()
+    require("rest-nvim").setup({
+        result_split_horizontal = false,
+        skip_ssl_verification = false,
+        highlight = {enabled = true, timeout = 150},
+        jump_to_request = false
+    })
+
+    local map = require"futils".map
+    map("n", "<leader>tt", "<Plug>RestNvim",
+        {silent = true, buffer = vim.api.nvim_get_current_buf()})
+    map("n", "<leader>tp", "<Plug>RestNvimPreview",
+        {silent = true, buffer = vim.api.nvim_get_current_buf()})
 end
 
 function M.create_custom_nvim_server()

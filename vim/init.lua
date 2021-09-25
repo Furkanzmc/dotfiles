@@ -369,7 +369,7 @@ g.polyglot_disabled = {
     "julia", "kotlin", "latex", "ledger", "lua", "nix", "ocaml",
     "ocaml_interface", "ocamllex", "php", "python", "ql", "r", "regex", "rst",
     "ruby", "rust", "sparql", "supercollider", "svelte", "teal", "toml", "tsx",
-    "turtle", "typescript", "verilog", "vue", "yaml", "zig"
+    "turtle", "typescript", "verilog", "vue", "yaml", "zig", "http"
 }
 
 if vim.o.loadplugins == true then cmd [[packadd vim-polyglot]] end
@@ -743,7 +743,7 @@ end
 
 cmd [[augroup vimrc_init]]
 cmd [[autocmd!]]
-cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:nvim_http_preserve_responses") && &loadplugins | packadd nvim-http | endif]]
+cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:vimrc_rest_nvim_loaded") && &loadplugins | packadd plenary.nvim | packadd rest.nvim | call luaeval('require"vimrc".setup_rest_nvim()') | let g:vimrc_rest_nvim_loaded = v:true | endif]]
 cmd [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
 cmd [[autocmd VimEnter * lua require'vimrc'.create_custom_nvim_server()]]
 if vim.o.loadplugins == true then
