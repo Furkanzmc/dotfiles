@@ -96,7 +96,7 @@ function M.clear_status(all)
 end
 
 function M.init()
-    cmd [[augroup dirvish_virtual_text]]
+    cmd [[augroup vimrc_dirvish_virtual_text]]
     cmd [[au! * <buffer>]]
     cmd [[autocmd CursorHold,BufEnter <buffer> lua require"vimrc.dirvish".show_status(vim.fn.line("."), vim.fn.line("."))]]
     cmd [[autocmd CursorMoved <buffer> lua require"vimrc.dirvish".clear_status(false)]]

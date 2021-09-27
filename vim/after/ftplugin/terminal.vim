@@ -27,7 +27,7 @@ nmap <buffer> <silent> ]p :call search("^>>>", "W")<CR>
 
 let b:terminal_closing = v:false
 
-augroup ftplugin_terminal
+augroup vimrc_ftplugin_terminal
     autocmd!
     autocmd TermEnter <buffer> set scrolloff=0
     autocmd TermEnter,BufEnter,WinEnter <buffer> call setreg("t", trim(@*) . "")

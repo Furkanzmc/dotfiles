@@ -33,7 +33,7 @@ function M.init()
         M.enable_highlight()
     end)
 
-    cmd [[augroup plugin_todo_init]]
+    cmd [[augroup vimrc_plugin_todo_init]]
     cmd [[au!]]
     cmd [[augroup END]]
 end

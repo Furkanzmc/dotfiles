@@ -126,7 +126,7 @@ function M.init()
             M.setup_white_space_highlight(bufnr)
         else
             fn.clearmatches()
-            cmd("augroup trailing_white_space_highlight_buffer_" .. bufnr)
+            cmd("augroup vimrc_trailing_white_space_highlight_buffer_" .. bufnr)
             cmd [[autocmd! * <buffer>]]
             cmd [[augroup END]]
         end
@@ -155,7 +155,7 @@ function M.setup_white_space_highlight(bufnr)
 
     cmd [[highlight link TrailingWhiteSpace Error]]
 
-    cmd("augroup trailing_white_space_highlight_buffer_" .. bufnr)
+    cmd("augroup vimrc_trailing_white_space_highlight_buffer_" .. bufnr)
     cmd [[autocmd! * <buffer>]]
     cmd [[autocmd BufReadPost <buffer> match TrailingWhiteSpace /\s\+$/]]
     cmd [[autocmd InsertEnter <buffer> match TrailingWhiteSpace /\s\+\%#\@<!$/]]

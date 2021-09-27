@@ -87,7 +87,7 @@ function M.setup_treesitter()
         matchup = {enable = true}
     }
 
-    cmd [[augroup plugin_nvim_treesitter_init]]
+    cmd [[augroup vimrc_plugin_nvim_treesitter_init]]
     cmd [[au!]]
     cmd [[augroup END]]
 end

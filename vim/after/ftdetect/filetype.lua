@@ -1,4 +1,4 @@
-vim.cmd [[augroup dotfiles_filetypes]]
+vim.cmd [[augroup vimrc_filetypes]]
 vim.cmd [[au!]]
 vim.cmd [[autocmd BufNewFile,BufRead hfl.txt setlocal filetype=hfl]]
 vim.cmd [[autocmd BufNewFile,BufRead qmldir setlocal filetype=qmldir]]
