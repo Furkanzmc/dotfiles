@@ -225,6 +225,11 @@ endtry
 
 -- Moving around, tabs, windows and buffers {{{
 
+map("n", "<Up>", "<NOP>", {noremap = true})
+map("n", "<Left>", "<NOP>", {noremap = true})
+map("n", "<Right>", "<NOP>", {noremap = true})
+map("n", "<Left>", "<NOP>", {noremap = true})
+
 -- Disable highlight when <leader><cr> is pressed
 map("n", "<leader><CR>", ":nohlsearch<CR>", {silent = true})
 
@@ -497,7 +502,7 @@ map("n", "<leader>dd", ":lua require'dap'.down()<CR>",
 
 map("n", "<leader>db", ":lua require'dap'.toggle_breakpoint()<CR>",
     {silent = true, noremap = true})
-map("n", "<leader>dB",
+map("n", "<leader>dbc",
     ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
     {silent = true, noremap = true})
 map("n", "<leader>dlp",
