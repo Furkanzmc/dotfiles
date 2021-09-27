@@ -57,8 +57,6 @@ end
 function M.setup_cmake(opts)
     if vim.o.loadplugins == false then return end
 
-    cmd [[packadd nvim-dap]]
-
     require"vimrc.dap".init()
 
     opts.env = opts.env or {}

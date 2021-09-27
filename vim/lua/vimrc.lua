@@ -40,6 +40,7 @@ function M.init_paq()
     paq {'majutsushi/tagbar', opt = true}
     paq {'masukomi/vim-markdown-folding', opt = true}
     paq {'mfussenegger/nvim-dap', opt = true}
+    paq {'rcarriga/nvim-dap-ui', opt = true}
     paq {'rust-lang/rust.vim', opt = true}
     paq {'nvim-treesitter/nvim-treesitter', opt = true}
     paq {'NTBBloodbath/rest.nvim', opt = true}
