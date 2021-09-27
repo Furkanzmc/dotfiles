@@ -8,14 +8,14 @@ setlocal signcolumn=number
 setlocal textwidth=100
 setlocal colorcolumn=81,101
 
-setlocal errorformat+=file://%f:%l:\ %s%trror:\ %m
+setlocal errorformat=file://%f:%l:\ %s%trror:\ %m
 setlocal errorformat+=file://%f:%l:%c:\ %m
+setlocal errorformat+=qml:\ [%f::%l::%o]\ %m
+setlocal errorformat+=file://%f:%l\ %m
 setlocal errorformat+=%f:%l:%c:\ %t%*[^:]:%m
 setlocal errorformat+=%f:%l:\ %t%*[^:]:%m
 setlocal errorformat+=%m\ (file://%f:%l)
 setlocal errorformat+=%m\ file\ %f\,\ line\ %l
-setlocal errorformat+=file://%f:%l\ %m
-setlocal errorformat+=qml:\ [%f::%l::%o]\ %m
 
 let b:vimrc_efm_lsp_signs_enabled = 1
 let b:vimrc_efm_lsp_location_list_enabled = 1
