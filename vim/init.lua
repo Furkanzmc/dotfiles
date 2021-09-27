@@ -352,7 +352,7 @@ cmd [[cnoreabbrev sh! Shdo!]]
 -- Pre-configuration {{{
 
 if vim.o.loadplugins == true then
-    cmd [[augroup vimrc_sourcee_post]]
+    cmd [[augroup vimrc_source_post]]
     cmd [[au!]]
     cmd [[autocmd SourcePost * lua require"vimrc".on_source_post()]]
     cmd [[augroup END]]
@@ -388,10 +388,12 @@ g.tagbar_show_linenumbers = 1
 
 -- nvim-lsp {{{
 
-cmd [[augroup nvim_lsp_config]]
-cmd [[autocmd!]]
-cmd [[autocmd VimEnter * lua require'vimrc.lsp'.setup_lsp()]]
-cmd [[augroup END]]
+if vim.o.loadplugins == true then
+    cmd [[augroup vimrc_nvim_lsp_config]]
+    cmd [[autocmd!]]
+    cmd [[autocmd VimEnter * lua require'vimrc.lsp'.setup_lsp()]]
+    cmd [[augroup END]]
+end
 
 -- These are here so I remember to configure it when Neovim LSP supports it. {{{
 
@@ -440,28 +442,21 @@ cmd [[augroup END]]
 
 -- }}}
 
--- Preview {{{
-
-map("n", "sli", ":call quickfix#show_item_in_preview(v:true, line('.'))<CR>",
-    {silent = true, noremap = true})
-map("n", "sci", ":call quickfix#show_item_in_preview(v:false, line('.'))<CR>",
-    {silent = true, noremap = true})
-
--- }}}
-
 -- nvim-treesitter {{{
 
-cmd [[augroup plugin_nvim_treesitter]]
-cmd [[au!]]
-cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
-        " setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()")
-cmd [[augroup END]]
+if vim.o.loadplugins == true then
+    cmd [[augroup vimrc_plugin_nvim_treesitter]]
+    cmd [[au!]]
+    cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
+            " setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()")
+    cmd [[augroup END]]
 
-cmd [[augroup plugin_nvim_treesitter_init]]
-cmd [[au!]]
-cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
-        " lua require'vimrc'.setup_treesitter()")
-cmd [[augroup END]]
+    cmd [[augroup vimrc_plugin_nvim_treesitter_init]]
+    cmd [[au!]]
+    cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") ..
+            " lua require'vimrc'.setup_treesitter()")
+    cmd [[augroup END]]
+end
 
 -- }}}
 
@@ -624,7 +619,7 @@ end
 
 -- todo {{{
 
-cmd [[augroup plugin_todo_init]]
+cmd [[augroup vimrc_plugin_todo_init]]
 cmd [[au!]]
 cmd [[autocmd FileType todo :lua require"vimrc.todo".init()]]
 cmd [[augroup END]]
@@ -692,12 +687,12 @@ cmd [[command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-
 cmd [[command! Bdhidden :call buffers#delete_hidden()]]
 cmd [[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]]
 
-cmd [[augroup plugin_buffers]]
+cmd [[augroup vimrc_plugin_buffers]]
 cmd [[au!]]
 cmd [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html,*.lua :lua require"vimrc.buffers".clean_trailing_spaces()]]
 cmd [[augroup END]]
 
-cmd [[augroup trailing_white_space_highlight]]
+cmd [[augroup vimrc_trailing_white_space_highlight]]
 cmd [[autocmd!]]
 cmd [[autocmd BufReadPost * lua require"vimrc.buffers".setup_white_space_highlight(vim.fn.bufnr())]]
 cmd [[augroup END]]
@@ -713,7 +708,7 @@ cmd [[augroup END]]
 
 cmd [[command! -nargs=? -complete=shellcmd Terminal :call term#open(<f-args>)]]
 
-cmd [[augroup term_plugin]]
+cmd [[augroup vimrc_term_plugin]]
 cmd [[autocmd!]]
 cmd [[autocmd TermOpen * startinsert]]
 cmd [[autocmd TermOpen * lua require"vimrc.terminal".index_terminals()]]
@@ -723,7 +718,7 @@ cmd [[augroup END]]
 
 -- Fold {{{
 
-cmd [[augroup plugin_fold]]
+cmd [[augroup vimrc_plugin_fold]]
 cmd [[autocmd!]]
 cmd [[autocmd BufReadPost,BufNew,BufEnter * if &foldtext != "fold#fold_text()" | setlocal foldtext=fold#fold_text() | endif]]
 cmd [[augroup END]]
