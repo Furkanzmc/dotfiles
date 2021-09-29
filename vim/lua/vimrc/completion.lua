@@ -1,6 +1,8 @@
 local M = {}
 local vim = vim
 local fn = vim.fn
+local api = vim.api
+local cmd = vim.cmd
 local utils = require 'vimrc.utils'
 
 -- Variables {{{
@@ -22,8 +24,8 @@ local s_completion_sources = {
     {keys = "<c-x><c-v>", filetypes = {"vim"}}, {keys = "<c-x><c-f>"}, {
         keys = "<c-x><c-k>",
         prediciate = function()
-            return pcall(vim.api.nvim_buf_get_option, '.', "dictionary") or
-                       pcall(vim.api.nvim_get_option, '.', "dictionary")
+            return pcall(api.nvim_buf_get_option, '.', "dictionary") or
+                       pcall(api.nvim_get_option, '.', "dictionary")
         end
     }, {keys = "<c-x><c-s>", prediciate = function() return vim.wo.spell end},
     {keys = "<c-x><c-l>"}
@@ -48,13 +50,13 @@ end
 local function timer_handler()
     if s_completion_index == -1 then return end
 
-    if vim.api.nvim_get_mode().mode == "n" then
+    if api.nvim_get_mode().mode == "n" then
         s_completion_index = -1
         return
     end
 
     local bufnr = vim.fn.bufnr()
-    local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+    local filetype = api.nvim_buf_get_option(bufnr, "filetype")
     local completion_sources = get_completion_sources(bufnr)
 
     if vim.fn.pumvisible() == 0 then
@@ -69,13 +71,11 @@ local function timer_handler()
                 return
             end
 
-            local mode_keys = vim.api.nvim_replace_termcodes(source.keys, true,
-                                                             false, true)
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-g><c-g>",
-                                                                 true, false,
-                                                                 true), 'n',
-                                  true)
-            vim.api.nvim_feedkeys(mode_keys, 'n', true)
+            local mode_keys = api.nvim_replace_termcodes(source.keys, true,
+                                                         false, true)
+            api.nvim_feedkeys(api.nvim_replace_termcodes("<c-g><c-g>", true,
+                                                         false, true), 'n', true)
+            api.nvim_feedkeys(mode_keys, 'n', true)
             s_is_completion_dispatched = true
             s_completion_index = s_completion_index + 1
         end
@@ -153,14 +153,14 @@ end
 
 local function complete_custom(findstart, base)
     if base == "" then
-        local pos = vim.api.nvim_win_get_cursor(0)
-        local line = vim.api.nvim_get_current_line()
+        local pos = api.nvim_win_get_cursor(0)
+        local line = api.nvim_get_current_line()
         local line_to_cursor = line:sub(1, pos[2])
         return vim.fn.match(line_to_cursor, '\\k*$')
     end
 
     local completions = {}
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local lines = api.nvim_buf_get_lines(0, 0, -1, false)
 
     table.extend(completions, complete_mnemonic(lines, base))
 
@@ -169,6 +169,10 @@ end
 
 -- }}}
 
+_G.trigger_custom_completion = function(find_start, base)
+    return complete_custom(find_start, base)
+end
+
 -- }}}
 
 -- Public API {{{
@@ -176,7 +180,7 @@ end
 -- Event Handlers {{{
 
 function M.on_complete_done_pre()
-    if vim.api.nvim_get_mode().mode == "n" then
+    if api.nvim_get_mode().mode == "n" then
         s_completion_index = -1
         return
     end
@@ -185,9 +189,8 @@ function M.on_complete_done_pre()
 
     local info = vim.fn.complete_info()
     if #info.items > 0 then
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-y>", true,
-                                                             false, true), "n",
-                              true)
+        api.nvim_feedkeys(
+            api.nvim_replace_termcodes("<c-y>", true, false, true), "n", true)
         s_completion_index = -1
         return
     end
@@ -195,8 +198,8 @@ function M.on_complete_done_pre()
     if s_completion_timer ~= nil then return end
 
     s_completion_timer = vim.loop.new_timer()
-    s_completion_timer:start(vim.api.nvim_buf_get_var(bufnr,
-                                                      "vimrc_completion_timeout"),
+    s_completion_timer:start(api.nvim_buf_get_var(bufnr,
+                                                  "vimrc_completion_timeout"),
                              0, vim.schedule_wrap(timer_handler))
 end
 
@@ -208,13 +211,12 @@ function M.on_complete_done(bufnr)
     end
 
     local completion_sources = get_completion_sources(bufnr)
-    local cursorPosition = vim.api.nvim_win_get_cursor(0)
+    local cursorPosition = api.nvim_win_get_cursor(0)
     if cursorPosition[1] == s_last_cursor_position[1] and cursorPosition[2] ==
         s_last_cursor_position[2] and s_completion_index == #completion_sources +
         1 then
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-y>", true,
-                                                             false, true), "n",
-                              true)
+        api.nvim_feedkeys(
+            api.nvim_replace_termcodes("<c-y>", true, false, true), "n", true)
         s_completion_index = -1
     end
 end
@@ -224,58 +226,53 @@ end
 function M.trigger_completion()
     s_completion_index = 1
 
-    s_last_cursor_position = vim.api.nvim_win_get_cursor(0)
+    s_last_cursor_position = api.nvim_win_get_cursor(0)
     timer_handler()
     s_completion_timer = vim.loop.new_timer()
     -- Run this first because otherwise the completion is not triggered when
     -- it is done the first time.
-    s_completion_timer:start(10, 0, vim.schedule_wrap(
-                                 function()
-            s_completion_timer:stop()
-            s_completion_timer:close()
-            s_completion_timer = nil
+    s_completion_timer:start(10, 0, vim.schedule_wrap(function()
+        s_completion_timer:stop()
+        s_completion_timer:close()
+        s_completion_timer = nil
 
-            M.on_complete_done_pre()
-        end))
+        M.on_complete_done_pre()
+    end))
 end
 
 function M.setup_completion(bufnr)
     if vim.fn.exists("b:vimrc_is_completion_configured") == 0 then
-        vim.api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", false)
-    elseif vim.api.nvim_buf_get_var(bufnr, "vimrc_is_completion_configured") ==
-        1 then
+        api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", false)
+    elseif api.nvim_buf_get_var(bufnr, "vimrc_is_completion_configured") == 1 then
         return
     end
 
     if vim.fn.exists("b:vimrc_completion_timeout") == 0 then
-        vim.api.nvim_buf_set_var(bufnr, "vimrc_completion_timeout", 250)
+        api.nvim_buf_set_var(bufnr, "vimrc_completion_timeout", 250)
     end
 
     vim.bo[bufnr].completefunc = "v:lua.trigger_custom_completion"
 
-    vim.api.nvim_command("augroup vimrc_completion_buf_" .. bufnr)
-    vim.api.nvim_command("au!")
-    vim.api.nvim_command("autocmd CompleteDonePre <buffer=" .. bufnr ..
-                             "> lua require'vimrc.completion'.on_complete_done_pre()")
-    vim.api.nvim_command("autocmd CompleteDone <buffer=" .. bufnr ..
-                             "> lua require'vimrc.completion'.on_complete_done(" ..
-                             bufnr .. ")")
-    vim.api.nvim_command("augroup END")
+    cmd("augroup vimrc_completion_buf_" .. bufnr)
+    cmd [[au!]]
+    cmd("autocmd CompleteDonePre <buffer=" .. bufnr .. ">" ..
+            " lua require'vimrc.completion'.on_complete_done_pre()")
 
-    vim.api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", true)
+    cmd("autocmd CompleteDone <buffer=" .. bufnr .. ">" ..
+            " lua require'vimrc.completion'.on_complete_done(" .. bufnr .. ")")
+    cmd [[augroup END]]
+
+    api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", true)
 end
 
 function M.add_source(source, bufnr)
-    assert(source.keys ~= nil)
+    assert(source.keys ~= nil, "keys are required.")
+
     table.insert(s_completion_sources, source)
 
     if s_buffer_completion_sources_cache[bufnr] ~= nil then
         s_buffer_completion_sources_cache[bufnr] = nil
     end
-end
-
-_G.trigger_custom_completion = function(find_start, base)
-    return complete_custom(find_start, base)
 end
 
 -- }}}
