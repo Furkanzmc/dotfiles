@@ -400,16 +400,6 @@ if vim.o.loadplugins == true then
     cmd [[augroup END]]
 end
 
--- These are here so I remember to configure it when Neovim LSP supports it. {{{
-
-g.vimrc_lsp_virtual_text_prefix_error = '✖'
-g.vimrc_lsp_virtual_text_prefix_warning = '‼'
-g.vimrc_lsp_virtual_text_prefix_information = 'ℹ'
-g.vimrc_lsp_virtual_text_prefix_hint = '⦿'
-g.vimrc_lsp_virtual_text_include_error_message = 0
-
--- }}}
-
 fn.sign_define("LspDiagnosticsSignError", {
     text = "✖",
     texthl = "LspDiagnosticsDefaultError",
