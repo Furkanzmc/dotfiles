@@ -46,7 +46,6 @@ function M.init_paq()
     paq {'NTBBloodbath/rest.nvim', opt = true}
     paq {'nvim-lua/plenary.nvim', opt = true}
     paq {'Furkanzmc/nvim-qt', opt = true}
-    paq {'sindrets/diffview.nvim', opt = true}
     paq {'norcalli/nvim-colorizer.lua', opt = true}
     paq {'lifepillar/vim-colortemplate', opt = true}
 

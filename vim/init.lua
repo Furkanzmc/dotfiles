@@ -383,7 +383,7 @@ if vim.o.loadplugins == true then cmd [[packadd vim-polyglot]] end
 
 -- }}}
 
-cmd [[command! InitPaq :lua require'vimrc'.init_paq()]]
+cmd [[command! PaqInit :lua require'vimrc'.init_paq()]]
 
 -- TagBar {{{
 
