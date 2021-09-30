@@ -23,8 +23,8 @@ local M = {}
 --     - Limit severity of diagnostics found. E.g. "Warning" means { "Error", "Warning" } will be valid.
 local function update_loc_list(opts)
     opts = opts or {}
-    assert(opts.client_id ~= nil)
-    assert(opts.bufnr ~= nil)
+    assert(opts.client_id ~= nil, "client_id is required.")
+    assert(opts.bufnr ~= nil, "bufnr is required.")
 
     local open_loclist = vim.F.if_nil(opts.open_loclist, true)
 
@@ -79,13 +79,13 @@ end
 
 -- }}}
 
-local function on_publish_diagnostics(u1, u2, params, client_id, u3, config)
-    local bufnr = vim.uri_to_bufnr(params.uri)
+local function on_publish_diagnostics(u1, result, ctx, config)
+    local bufnr = vim.uri_to_bufnr(result.uri)
     if not api.nvim_buf_is_loaded(bufnr) then return end
 
-    lsp.diagnostic.on_publish_diagnostics(u1, u2, params, client_id, u3, config)
+    lsp.diagnostic.on_publish_diagnostics(u1, result, ctx, config)
 
-    local client = lsp.get_client_by_id(client_id)
+    local client = lsp.get_client_by_id(ctx.client_id)
     local loclist_enabled = api.nvim_buf_get_var(bufnr,
                                                  "vimrc_" .. client.name ..
                                                      "_lsp_location_list_enabled") ==
@@ -95,7 +95,7 @@ local function on_publish_diagnostics(u1, u2, params, client_id, u3, config)
         update_loc_list({
             bufnr = bufnr,
             open_loclist = false,
-            client_id = client_id
+            client_id = ctx.client_id
         })
     end
 end
