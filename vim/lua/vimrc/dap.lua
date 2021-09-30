@@ -31,7 +31,7 @@ local function setup_keymaps()
     map("n", "<leader>dbc",
         ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
         {silent = true, noremap = true})
-    map("n", "<leader>dlp",
+    map("n", "<leader>dbl",
         ":lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>",
         {silent = true, noremap = true})
 
