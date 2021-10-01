@@ -275,83 +275,105 @@ function Build-Neovim() {
 
     Write-Host -ForegroundColor Blue "Using $SourcePath as source directory."
 
-    if ($IsWindows) {
-        if (Test-Path build -ErrorAction SilentlyContinue) {
-            Write-Host -ForegroundColor Blue "Deleting the contents of the build directory."
-            Push-Location build
-            fd . -t f | rm -Force
-            Pop-Location
-        }
-        else {
-            mkdir build
-        }
-
-        if (Test-Path .deps -ErrorAction SilentlyContinue) {
-            Write-Host -ForegroundColor Blue "Deleting the contents of the .deps directory."
-            Push-Location .deps
-            fd . -t f | rm -Force
-            Pop-Location
-        }
-        else {
-            mkdir .deps
-        }
-
-        Import-VisualStudioVars
-
-        Write-Host -ForegroundColor Green "Changing directory to .deps"
-
-        Push-Location .deps
-        Write-Host -ForegroundColor Blue "Configuring the third party dependancies."
-
-        cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\third-party\
-
-        if (-not $?) {
-            Write-Host -ForegroundColor Red "Error while configuring the dependancies."
-            return 1
-        }
-
-        Write-Host -ForegroundColor Blue "Building the third party dependancies."
-
-        jom -j12
-        if (-not $?) {
-            Write-Host -ForegroundColor Red "Error while building the dependancies."
-            return 1
-        }
-        Pop-Location
-
-        Write-Host -ForegroundColor Green "Changing directory to build"
-
+    if (Test-Path build -ErrorAction SilentlyContinue) {
+        Write-Host -ForegroundColor Blue "Deleting the contents of the build directory."
         Push-Location build
-        Write-Host -ForegroundColor Blue "Configuring neovim."
-
-        cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
-        if (-not $?) {
-            Write-Host -ForegroundColor Red "Error while configuring the neovim."
-            return 1
-        }
-
-        Write-Host -ForegroundColor Blue "Building neovim."
-
-        jom -j12
-        if (-not $?) {
-            Write-Host -ForegroundColor Red "Error while building neovim."
-            return 1
-        }
-
-        if ($Install) {
-            Write-Host -ForegroundColor Blue "Installing neovim."
-            jom install
-        }
+        fd . -t f | rm -Force
         Pop-Location
-
-        Write-Host -ForegroundColor Green "Build succeeded."
     }
     else {
-        make CMAKE_BUILD_TYPE=Release -j12
-        if ($? -and $Install) {
-            make CMAKE_INSTALL_PREFIX=$InstallPath install
-        }
+        mkdir build
     }
+
+    if (Test-Path .deps -ErrorAction SilentlyContinue) {
+        Write-Host -ForegroundColor Blue "Deleting the contents of the .deps directory."
+        Push-Location .deps
+        fd . -t f | rm -Force
+        Pop-Location
+    }
+    else {
+        mkdir .deps
+    }
+
+    if ($IsWindows) {
+        Import-VisualStudioVars
+    }
+
+    Write-Host -ForegroundColor Green "Changing directory to .deps"
+
+    Push-Location .deps
+    Write-Host -ForegroundColor Blue "Configuring the third party dependancies."
+
+    if ($IsWindows) {
+        cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\third-party\
+    }
+    else {
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\third-party\
+    }
+
+    if (-not $?) {
+        Write-Host -ForegroundColor Red "Error while configuring the dependancies."
+        return 1
+    }
+
+    Write-Host -ForegroundColor Blue "Building the third party dependancies."
+
+    if ($IsWindows) {
+        jom -j12
+    }
+    else {
+        ninja -j12
+    }
+
+    if (-not $?) {
+        Write-Host -ForegroundColor Red "Error while building the dependancies."
+        return 1
+    }
+    Pop-Location
+
+    Write-Host -ForegroundColor Green "Changing directory to build"
+
+    Push-Location build
+    Write-Host -ForegroundColor Blue "Configuring neovim."
+
+    if ($IsWindows) {
+        cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
+    }
+    else {
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
+    }
+
+    if (-not $?) {
+        Write-Host -ForegroundColor Red "Error while configuring the neovim."
+        return 1
+    }
+
+    Write-Host -ForegroundColor Blue "Building neovim."
+
+    if ($IsWindows) {
+        jom -j12
+    }
+    else {
+        ninja -j12
+    }
+
+    if (-not $?) {
+        Write-Host -ForegroundColor Red "Error while building neovim."
+        return 1
+    }
+
+    if ($Install -and $IsWindows) {
+        Write-Host -ForegroundColor Blue "Installing neovim."
+        jom install
+    }
+    elseif ($Install -and $IsMacOS) {
+        Write-Host -ForegroundColor Blue "Installing neovim."
+        ninja install
+    }
+
+    Pop-Location
+
+    Write-Host -ForegroundColor Green "Build succeeded."
 
     Pop-Location
 }
