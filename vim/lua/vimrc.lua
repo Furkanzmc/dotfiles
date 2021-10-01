@@ -176,9 +176,7 @@ end
 
 function M.on_source_post()
     local file_path = fn.expand("<afile>")
-    if string.match(file_path, "diffvim.vim") ~= nil then
-        require'diffview'.setup {file_panel = {use_icons = false}}
-    elseif string.match(file_path, "colorizer.vim") ~= nil then
+    if string.match(file_path, "colorizer.vim") ~= nil then
         init_nvim_colorizer()
     end
 end
