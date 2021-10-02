@@ -562,6 +562,10 @@ else
     require"options".set("shell", "cmd")
 end
 
+cmd [[augroup vimrc_options_plugin]]
+cmd [[autocmd BufReadPost *.md,todo.txt :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]]
+cmd [[augroup END]]
+
 -- }}}
 
 -- }}}
@@ -646,11 +650,6 @@ cmd [[augroup END]]
 cmd [[augroup vimrc_trailing_white_space_highlight]]
 cmd [[autocmd!]]
 cmd [[autocmd BufReadPost * lua require"vimrc.buffers".setup_white_space_highlight(vim.fn.bufnr())]]
-cmd [[augroup END]]
-
-cmd [[augroup vimrc_buffer_events]]
-cmd [[autocmd!]]
-cmd [[autocmd User VimrcOptionSet lua local isize=require'options'.get_option('indentsize', vim.fn.bufnr()); vim.cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s", isize, isize, isize))]]
 cmd [[augroup END]]
 
 -- }}}

@@ -12,7 +12,7 @@ local M = {}
 local s_scratch_buffer_count = 1
 
 local function mark_scratch(bufnr)
-    if options.get_option("scratchpad", bufnr) == true then
+    if options.get_option_value("scratchpad", bufnr) == true then
         bo[bufnr].buftype = "nofile"
         bo[bufnr].bufhidden = "hide"
         bo[bufnr].swapfile = false
@@ -48,13 +48,14 @@ function M.close()
 end
 
 function M.clean_trailing_spaces()
-    if options.get_option("clstrailingwhitespace", fn.bufnr()) == false then
+    if options.get_option_value("clstrailingwhitespace", fn.bufnr()) == false then
         return
     end
 
     local save_cursor = fn.getpos(".")
     local old_query = fn.getreg('/')
-    local threshold = options.get_option("clstrailingspacelimit", fn.bufnr())
+    local threshold = options.get_option_value("clstrailingspacelimit",
+                                               fn.bufnr())
     if threshold > 0 then
         cmd [[redir => g:trailing_space_count]]
         cmd [[silent %s/\s\+$//egn]]
@@ -122,7 +123,7 @@ function M.init()
     end)
     options.register_callback("trailingwhitespacehighlight", function()
         local bufnr = vim.api.nvim_get_current_buf()
-        if options.get_option("trailingwhitespacehighlight") then
+        if options.get_option_value("trailingwhitespacehighlight") then
             M.setup_white_space_highlight(bufnr)
         else
             fn.clearmatches()
@@ -133,8 +134,8 @@ function M.init()
     end)
 
     options.register_callback("markdownfenced", function()
-        local langs = options.get_option("markdownfenced",
-                                         vim.api.nvim_get_current_buf())
+        local langs = options.get_option_value("markdownfenced",
+                                               vim.api.nvim_get_current_buf())
 
         if g.markdown_fenced_languages == nil then
             g.markdown_fenced_languages = {}
@@ -144,12 +145,19 @@ function M.init()
                                           table.extend(
                                               g.markdown_fenced_languages, langs))
     end)
+
+    options.register_callback("indentsize", function()
+        local isize = options.get_option_value('indentsize',
+                                               vim.api.nvim_get_current_buf())
+        cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s",
+                          isize, isize, isize))
+    end)
 end
 
 function M.setup_white_space_highlight(bufnr)
     if b.vimrc_trailing_white_space_highlight_enabled then return end
 
-    if options.get_option("trailingwhitespacehighlight", bufnr) == false then
+    if options.get_option_value("trailingwhitespacehighlight", bufnr) == false then
         return
     end
 

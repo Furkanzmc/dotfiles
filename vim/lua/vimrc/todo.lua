@@ -21,8 +21,8 @@ end
 function M.init()
     cmd [[packadd SyntaxInclude]]
     options.register_callback("todofenced", function()
-        local langs = options.get_option("todofenced",
-                                         vim.api.nvim_get_current_buf())
+        local langs = options.get_option_value("todofenced",
+                                               vim.api.nvim_get_current_buf())
         if g.todo_fenced_languages == nil then
             g.todo_fenced_languages = {}
         end
