@@ -12,7 +12,7 @@ function! term#open(...) abort
     if a:0 == 1
         let l:program = a:1
     else
-        let l:program = options#get("shell")
+        let l:program = luaeval("require'options'.get_option_value('shell')")
     endif
 
     enew

@@ -48,14 +48,15 @@ function M.close()
 end
 
 function M.clean_trailing_spaces()
-    if options.get_option_value("clstrailingwhitespace", fn.bufnr()) == false then
+    if options.get_option_value("clstrailingwhitespace",
+                                vim.api.nvim_get_current_buf()) == false then
         return
     end
 
     local save_cursor = fn.getpos(".")
     local old_query = fn.getreg('/')
     local threshold = options.get_option_value("clstrailingspacelimit",
-                                               fn.bufnr())
+                                               vim.api.nvim_get_current_buf())
     if threshold > 0 then
         cmd [[redir => g:trailing_space_count]]
         cmd [[silent %s/\s\+$//egn]]
@@ -123,7 +124,7 @@ function M.init()
     end)
     options.register_callback("trailingwhitespacehighlight", function()
         local bufnr = vim.api.nvim_get_current_buf()
-        if options.get_option_value("trailingwhitespacehighlight") then
+        if options.get_option_value("trailingwhitespacehighlight", bufnr) then
             M.setup_white_space_highlight(bufnr)
         else
             fn.clearmatches()
