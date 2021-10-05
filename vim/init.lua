@@ -340,8 +340,6 @@ cmd [[cnoreabbrev rg Rg]]
 
 cmd [[cnoreabbrev frun FRun]]
 cmd [[cnoreabbrev fh Fhdo]]
-cmd [[cnoreabbrev find Find]]
-cmd [[cnoreabbrev sfind SFind]]
 
 cmd [[cnoreabbrev time Time]]
 cmd [[cnoreabbrev fgit FGit]]
