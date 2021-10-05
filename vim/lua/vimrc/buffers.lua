@@ -142,9 +142,9 @@ function M.init()
             g.markdown_fenced_languages = {}
         end
 
-        g.markdown_fenced_languages = table.uniq(
-                                          table.extend(
-                                              g.markdown_fenced_languages, langs))
+        g.markdown_fenced_languages = table.uniq(table.extend(
+                                                     g.markdown_fenced_languages,
+                                                     langs))
     end)
 
     options.register_callback("indentsize", function()

@@ -27,9 +27,8 @@ function M.init()
             g.todo_fenced_languages = {}
         end
 
-        g.todo_fenced_languages = table.uniq(
-                                      table.extend(g.todo_fenced_languages,
-                                                   langs))
+        g.todo_fenced_languages = table.uniq(table.extend(
+                                                 g.todo_fenced_languages, langs))
         M.enable_highlight()
     end)
 

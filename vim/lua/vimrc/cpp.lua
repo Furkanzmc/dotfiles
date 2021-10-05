@@ -83,61 +83,57 @@ function M.setup_cmake(opts)
 
     local functions = {}
     functions.build_project = function(output_qf)
-        require"firvish.job_control".start_job(
-            {
-                cmd = {"make", "-j12"},
-                filetype = "log",
-                title = "Build",
-                listed = true,
-                output_qf = output_qf,
-                is_background_job = true,
-                cwd = opts.build_dir
-            })
+        require"firvish.job_control".start_job({
+            cmd = {"make", "-j12"},
+            filetype = "log",
+            title = "Build",
+            listed = true,
+            output_qf = output_qf,
+            is_background_job = true,
+            cwd = opts.build_dir
+        })
     end
 
     functions.run_tests = function(output_qf)
-        require"firvish.job_control".start_job(
-            {
-                cmd = {"make", "check"},
-                filetype = "log",
-                title = "Tests",
-                listed = true,
-                output_qf = output_qf,
-                is_background_job = true,
-                cwd = opts.build_dir
-            })
+        require"firvish.job_control".start_job({
+            cmd = {"make", "check"},
+            filetype = "log",
+            title = "Tests",
+            listed = true,
+            output_qf = output_qf,
+            is_background_job = true,
+            cwd = opts.build_dir
+        })
     end
 
     functions.run_cmake = function(output_qf, cmake_options)
         local cmd = {"cmake", "-DCMAKE_BUILD_TYPE=Debug", opts.project_path}
         if cmake_options ~= nil then table.extend(cmd, cmake_options) end
 
-        require"firvish.job_control".start_job(
-            {
-                cmd = cmd,
-                filetype = "log",
-                title = "CMake",
-                listed = true,
-                output_qf = output_qf,
-                is_background_job = true,
-                cwd = opts.build_dir
-            })
+        require"firvish.job_control".start_job({
+            cmd = cmd,
+            filetype = "log",
+            title = "CMake",
+            listed = true,
+            output_qf = output_qf,
+            is_background_job = true,
+            cwd = opts.build_dir
+        })
     end
 
     functions.run_project = function(output_qf, args)
         local cmd = {opts.program}
         if args ~= nil then table.extend(cmd, args) end
 
-        require"firvish.job_control".start_job(
-            {
-                cmd = cmd,
-                filetype = "log",
-                title = "Run",
-                listed = true,
-                output_qf = output_qf,
-                is_background_job = true,
-                cwd = opts.cwd
-            })
+        require"firvish.job_control".start_job({
+            cmd = cmd,
+            filetype = "log",
+            title = "Run",
+            listed = true,
+            output_qf = output_qf,
+            is_background_job = true,
+            cwd = opts.cwd
+        })
     end
 
     _G.cmake_functions = functions
