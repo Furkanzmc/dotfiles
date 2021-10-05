@@ -542,14 +542,14 @@ options.register_option({
     default = {},
     type_info = "table",
     source = "buffers",
-    buffer_local = true,
+    buffer_local = true
 })
 options.register_option({
     name = "todofenced",
     default = {},
     type_info = "table",
     source = "todo",
-    buffer_local = true,
+    buffer_local = true
 })
 
 if fn.has("mac") == 1 then
