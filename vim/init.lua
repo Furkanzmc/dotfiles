@@ -156,6 +156,7 @@ vim.wo.relativenumber = true
 
 -- Turn on the Wild menu
 vim.o.wildmenu = true
+cmd [[set wildchar=<C-n>]]
 
 -- Ignore compiled files
 vim.o.wildignore = "*.o,*~,*.pyc,*.qmlc,*jsc"
