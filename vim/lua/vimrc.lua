@@ -31,6 +31,7 @@ function M.init_paq()
     paq 'ray-x/lsp_signature.nvim'
     paq 'gosukiwi/vim-smartpairs'
     paq 'andymass/vim-matchup'
+    paq 'nathom/filetype.nvim'
 
     -- Optional {{{
 

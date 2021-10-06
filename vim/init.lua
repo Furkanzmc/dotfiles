@@ -4,6 +4,10 @@ local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 
+g.did_load_filetypes = 1
+cmd [[runtime! ftdetect/*.vim]]
+cmd [[runtime! ftdetect/*.lua]]
+
 -- Disable some built-in plugins
 g.loaded_2html_plugin = 1
 g.loaded_getscript = 1
