@@ -4,9 +4,7 @@ local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 
-g.did_load_filetypes = 1
-cmd [[runtime! ftdetect/*.vim]]
-cmd [[runtime! ftdetect/*.lua]]
+if vim.o.loadplugins == true then g.did_load_filetypes = 1 end
 
 -- Disable some built-in plugins
 g.loaded_2html_plugin = 1
@@ -694,6 +692,7 @@ cmd [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, 
 cmd [[autocmd VimEnter * lua require'vimrc'.create_custom_nvim_server()]]
 if vim.o.loadplugins == true then
     cmd [[autocmd VimEnter * colorscheme cosmic_latte ]]
+    cmd [[autocmd VimEnter * runtime! ftdetect/*.vim ftdetect/*.lua after/ftdetect/*.vim after/ftdetect/*.lua]]
 end
 -- Return to last edit position when opening files (You want this!)
 cmd [[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]
