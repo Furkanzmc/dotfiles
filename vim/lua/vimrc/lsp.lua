@@ -4,6 +4,7 @@ local lsp = vim.lsp
 local fn = vim.fn
 local utils = require "vimrc.utils"
 local map = require"futils".map
+local log = require"futils".log
 local M = {}
 
 -- Local Functions {{{
@@ -109,9 +110,8 @@ local function set_handlers(client, bufnr)
                                                           "_lsp_virtual_text_enabled") ==
                                      1
 
-    client.handlers["textDocument/publishDiagnostics"] = lsp.with(
-                                                             on_publish_diagnostics,
-                                                             {
+    client.handlers["textDocument/publishDiagnostics"] =
+        lsp.with(on_publish_diagnostics, {
             signs = signs_enabled,
             virtual_text = virtual_text_enabled,
             underline = false,
@@ -228,6 +228,94 @@ local function setup_buffer_vars(client, bufnr)
     end
 end
 
+local function get_efm_languages()
+    return {
+        ["="] = {
+            {
+                completionCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --complete --position ${POSITION}",
+                completionStdin = true,
+                lintSource = "efm-completion",
+                hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --hover ${INPUT}",
+                hoverStdin = false
+            }
+        },
+        lua = {{formatCommand = "lua-format -i", formatStdin = true}},
+        yaml = {
+            {
+                lintCommand = "yamllint -f parsable -",
+                lintStdin = true,
+                lintFormats = {
+                    "%f:%l:%c: [%tarning] %m", "%f:%l:%c: [%trror] %m"
+                },
+                lintSource = "yamllint"
+            }
+        },
+        json = {
+            {
+                formatCommand = "jq --tab . | expand -t4",
+                formatStdin = true,
+                lintCommand = "jq . ",
+                lintStdin = true,
+                lintFormats = {"parse error: %m %l, column %c"},
+                lintSource = "jq"
+            }
+        },
+        cpp = {
+            {
+                formatCommand = "clang-format",
+                formatStdin = true
+                -- lintCommand = "clang-tidy",
+                -- lintStdin = false,
+                -- lintSource = "clang-tidy",
+                -- lintFormats = {
+                --     "%f:%l:%c: %trror: %m",
+                --     "%f:%l:%c: %tarning: %m", "%f:%l:%c: %m"
+                -- }
+            }
+        },
+        qml = {
+            {
+                formatCommand = "qmlformat ${INPUT}",
+                formatStdin = false,
+                lintCommand = "qmllint --check-unqualified ${INPUT}",
+                lintStdin = false,
+                lintFormats = {"%trror: %m", "%f:%l : %m"},
+                lintSource = "qmllint"
+            }
+        },
+        python = {
+            {
+                lintCommand = 'bandit --skips B101 --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"',
+                lintStdin = false,
+                lintFormats = {"%f:%l %m"},
+                lintSource = "bandit"
+            }, {
+                hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --language python --hover ${INPUT}",
+                hoverStdin = false
+            }, {
+
+                lintCommand = 'pylint --msg-template="{msg_id}:{path}:{line:3d}:{column} [pylint:{msg_id}] {msg} ({symbol})"',
+                lintStdin = false,
+                lintSource = "pylint",
+                lintFormats = {"%t%n:%f:%l:%c %m"},
+                formatCommand = "black --quiet -",
+                formatStdin = true
+            }
+        },
+        rust = {{formatCommand = "rustfmt", formatStdin = true}},
+        cmake = {
+            {
+                formatCommand = "cmake-format --line-width 100 ${INPUT}",
+                formatStdin = false,
+                lintCommand = 'cmake-lint --line-width 100 ${INPUT}',
+                lintStdin = false,
+                lintSource = "cmake-lint",
+                lintFormats = {"%f:%l: [%t%n] %m", "%f:%l,%c: [%t%n] %m"}
+            }
+        }
+    }
+end
+
 -- }}}
 
 -- Public Functions {{{
@@ -251,12 +339,13 @@ function M.setup_lsp()
         setup_buffer_vars(client, bufnr)
         set_up_keymap(client, bufnr)
         set_handlers(client, bufnr)
-        require"lsp_signature".on_attach({
-            bind = true,
-            handler_opts = {border = "none"},
-            toggle_key = "<C-g><C-s>",
-            extra_trigger_chars = {"{", "}"}
-        }, bufnr)
+        require"lsp_signature".on_attach(
+            {
+                bind = true,
+                handler_opts = {border = "none"},
+                toggle_key = "<C-g><C-s>",
+                extra_trigger_chars = {"{", "}"}
+            }, bufnr)
     end
 
     local setup_without_formatting = function(client)
@@ -351,86 +440,11 @@ function M.setup_lsp()
                 commands = {
                     {command = "open", arguments = {"${INPUT}"}, title = "ASd"}
                 },
-                languages = {
-                    ["="] = {
-                        {
-                            completionCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --complete --position ${POSITION}",
-                            completionStdin = true,
-                            lintSource = "efm-completion",
-                            hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --hover ${INPUT}",
-                            hoverStdin = false
-                        }
-                    },
-                    lua = {
-                        {formatCommand = "lua-format -i", formatStdin = true}
-                    },
-                    yaml = {
-                        {
-                            lintCommand = "yamllint -f parsable -",
-                            lintStdin = true,
-                            lintFormats = {
-                                "%f:%l:%c: [%tarning] %m",
-                                "%f:%l:%c: [%trror] %m"
-                            },
-                            lintSource = "yamllint"
-                        }
-                    },
-                    json = {
-                        {
-                            formatCommand = "jq --tab . | expand -t4",
-                            formatStdin = true,
-                            lintCommand = "jq . ",
-                            lintStdin = true,
-                            lintFormats = {"parse error: %m %l, column %c"},
-                            lintSource = "jq"
-                        }
-                    },
-                    cpp = {
-                        {
-                            formatCommand = "clang-format",
-                            formatStdin = true,
-                            lintCommand = "clang-check",
-                            lintStdin = false,
-                            lintSource = "clang-check",
-                            lintFormats = {
-                                "%f:%l:%c: %trror: %m",
-                                "%f:%l:%c: %tarning: %m", "%f:%l:%c: %m"
-                            }
-                        }
-                    },
-                    qml = {
-                        {
-                            formatCommand = "qmlformat ${INPUT}",
-                            formatStdin = false,
-                            lintCommand = "qmllint --check-unqualified ${INPUT}",
-                            lintStdin = false,
-                            lintFormats = {"%trror: %m", "%f:%l : %m"},
-                            lintSource = "qmllint"
-                        }
-                    },
-                    python = {
-                        {
-                            lintCommand = 'bandit --skips B101 --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"',
-                            lintStdin = false,
-                            lintFormats = {"%f:%l %m"},
-                            lintSource = "bandit"
-                        }, {
-                            hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --language python --hover ${INPUT}",
-                            hoverStdin = false
-                        }, {
-
-                            lintCommand = 'pylint --msg-template="{msg_id}:{path}:{line:3d}:{column} [pylint:{msg_id}] {msg} ({symbol})"',
-                            lintStdin = false,
-                            lintSource = "pylint",
-                            lintFormats = {"%t%n:%f:%l:%c %m"},
-                            formatCommand = "black --quiet -",
-                            formatStdin = true
-                        }
-                    },
-                    rust = {{formatCommand = "rustfmt", formatStdin = true}}
-                }
+                languages = get_efm_languages()
             }
         }
+    else
+        log.error("vimrc-lsp", "efm-langserver is not installed.")
     end
 end
 
