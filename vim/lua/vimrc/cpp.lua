@@ -84,7 +84,7 @@ function M.setup_cmake(opts)
     local functions = {}
     functions.build_project = function(output_qf)
         require"firvish.job_control".start_job({
-            cmd = {"make", "-j12"},
+            cmd = {"cmake", "--build", ".", "--parallel"},
             filetype = "log",
             title = "Build",
             listed = true,
@@ -96,7 +96,7 @@ function M.setup_cmake(opts)
 
     functions.run_tests = function(output_qf)
         require"firvish.job_control".start_job({
-            cmd = {"make", "check"},
+            cmd = {"ctest", "--output-on-failure"},
             filetype = "log",
             title = "Tests",
             listed = true,
