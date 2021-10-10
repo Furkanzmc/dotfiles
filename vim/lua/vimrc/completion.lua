@@ -4,9 +4,19 @@ local fn = vim.fn
 local api = vim.api
 local cmd = vim.cmd
 local utils = require 'vimrc.utils'
+local options = require "options"
+
+options.register_option({
+    name = "completion_timeout",
+    default = 200,
+    type_info = "number",
+    source = "completion",
+    buffer_local = true
+})
 
 -- Variables {{{
 
+local s_completion_timout = -1
 local s_last_cursor_position = nil
 local s_completion_timer = nil
 local s_completion_sources = {
@@ -198,9 +208,10 @@ function M.on_complete_done_pre()
     if s_completion_timer ~= nil then return end
 
     s_completion_timer = vim.loop.new_timer()
-    s_completion_timer:start(api.nvim_buf_get_var(bufnr,
-                                                  "vimrc_completion_timeout"),
-                             0, vim.schedule_wrap(timer_handler))
+    local timeout = options.get_option_value("completion_timeout",
+                                             api.nvim_get_current_buf())
+
+    s_completion_timer:start(timeout, 0, vim.schedule_wrap(timer_handler))
 end
 
 function M.on_complete_done(bufnr)
@@ -231,13 +242,14 @@ function M.trigger_completion()
     s_completion_timer = vim.loop.new_timer()
     -- Run this first because otherwise the completion is not triggered when
     -- it is done the first time.
-    s_completion_timer:start(10, 0, vim.schedule_wrap(function()
-        s_completion_timer:stop()
-        s_completion_timer:close()
-        s_completion_timer = nil
+    s_completion_timer:start(10, 0, vim.schedule_wrap(
+                                 function()
+            s_completion_timer:stop()
+            s_completion_timer:close()
+            s_completion_timer = nil
 
-        M.on_complete_done_pre()
-    end))
+            M.on_complete_done_pre()
+        end))
 end
 
 function M.setup_completion(bufnr)
@@ -245,10 +257,6 @@ function M.setup_completion(bufnr)
         api.nvim_buf_set_var(bufnr, "vimrc_is_completion_configured", false)
     elseif api.nvim_buf_get_var(bufnr, "vimrc_is_completion_configured") == 1 then
         return
-    end
-
-    if vim.fn.exists("b:vimrc_completion_timeout") == 0 then
-        api.nvim_buf_set_var(bufnr, "vimrc_completion_timeout", 250)
     end
 
     vim.bo[bufnr].completefunc = "v:lua.trigger_custom_completion"
