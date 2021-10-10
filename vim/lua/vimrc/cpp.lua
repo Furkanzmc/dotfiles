@@ -90,13 +90,13 @@ function M.setup_cmake(opts)
     local functions = {}
     functions.build_project = function(output_qf)
         require"firvish.job_control".start_job({
-            cmd = {"cmake", "--build", ".", "--parallel"},
+            cmd = {"cmake", "--build", opts.build_dir, "--parallel"},
             filetype = "log",
             title = "Build",
             listed = true,
             output_qf = output_qf,
             is_background_job = true,
-            cwd = opts.build_dir
+            cwd = opts.project_path
         })
     end
 

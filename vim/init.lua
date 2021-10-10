@@ -348,8 +348,6 @@ cmd [[cnoreabbrev time Time]]
 cmd [[cnoreabbrev fgit FGit]]
 
 cmd [[cnoreabbrev bc Bclose]]
-cmd [[cnoreabbrev sh Shdo]]
-cmd [[cnoreabbrev sh! Shdo!]]
 
 -- }}}
 
