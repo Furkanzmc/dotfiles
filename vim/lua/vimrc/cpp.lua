@@ -53,7 +53,6 @@ end
 --       cwd="~/random/MuseScore/build.debug/src/main/mscore.app/Contents/MacOS/",
 --       project_path="~/random/MuseScore/",
 --       build_dir="~/random/MuseScore/build.debug/",
---       test_folder="~/random/MuseScore/build.debug/test/Debug",
 --       test_cwd="~/random/MuseScore/build.debug/test"
 --       generator="Ninja"
 --   })
@@ -71,7 +70,6 @@ function M.setup_cmake(opts)
     assert(opts.project_path, "project_path is required.")
     assert(opts.build_dir, "build_dir is required.")
 
-    opts.test_folder = opts.test_folder or ""
     opts.test_cwd = opts.test_cwd or ""
 
     require"dap".configurations.cpp = {
@@ -102,7 +100,7 @@ function M.setup_cmake(opts)
 
     functions.run_tests = function(output_qf)
         require"firvish.job_control".start_job({
-            cmd = {"ctest", "--output-on-failure", "-C", opts.test_folder},
+            cmd = {"ctest", "--output-on-failure"},
             filetype = "log",
             title = "Tests",
             listed = true,
