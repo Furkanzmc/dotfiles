@@ -53,7 +53,8 @@ end
 --       cwd="~/random/MuseScore/build.debug/src/main/mscore.app/Contents/MacOS/",
 --       project_path="~/random/MuseScore/",
 --       build_dir="~/random/MuseScore/build.debug/",
---       test_folder="~/random/MuseScore/build.debug/test"
+--       test_folder="~/random/MuseScore/build.debug/test/Debug",
+--       test_cwd="~/random/MuseScore/build.debug/test"
 --   })
 function M.setup_cmake(opts)
     if vim.o.loadplugins == false then return end
@@ -70,6 +71,7 @@ function M.setup_cmake(opts)
     assert(opts.build_dir, "build_dir is required.")
 
     opts.test_folder = opts.test_folder or ""
+    opts.test_cwd = opts.test_cwd or ""
 
     require"dap".configurations.cpp = {
         {
@@ -105,7 +107,7 @@ function M.setup_cmake(opts)
             listed = true,
             output_qf = output_qf,
             is_background_job = true,
-            cwd = opts.build_dir
+            cwd = opts.test_cwd
         })
     end
 
