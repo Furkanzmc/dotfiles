@@ -52,7 +52,8 @@ end
 --       program="~/random/MuseScore/build.debug/src/main/mscore.app/Contents/MacOS/mscore",
 --       cwd="~/random/MuseScore/build.debug/src/main/mscore.app/Contents/MacOS/",
 --       project_path="~/random/MuseScore/",
---       build_dir="~/random/MuseScore/build.debug/"
+--       build_dir="~/random/MuseScore/build.debug/",
+--       test_folder="~/random/MuseScore/build.debug/test"
 --   })
 function M.setup_cmake(opts)
     if vim.o.loadplugins == false then return end
@@ -67,6 +68,8 @@ function M.setup_cmake(opts)
     assert(opts.cwd, "cwd is required.")
     assert(opts.project_path, "project_path is required.")
     assert(opts.build_dir, "build_dir is required.")
+
+    opts.test_folder = opts.test_folder or ""
 
     require"dap".configurations.cpp = {
         {
@@ -96,7 +99,7 @@ function M.setup_cmake(opts)
 
     functions.run_tests = function(output_qf)
         require"firvish.job_control".start_job({
-            cmd = {"ctest", "--output-on-failure"},
+            cmd = {"ctest", "--output-on-failure", "-C", opts.test_folder},
             filetype = "log",
             title = "Tests",
             listed = true,
