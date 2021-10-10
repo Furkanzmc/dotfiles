@@ -55,6 +55,7 @@ end
 --       build_dir="~/random/MuseScore/build.debug/",
 --       test_folder="~/random/MuseScore/build.debug/test/Debug",
 --       test_cwd="~/random/MuseScore/build.debug/test"
+--       generator="Ninja"
 --   })
 function M.setup_cmake(opts)
     if vim.o.loadplugins == false then return end
@@ -111,8 +112,14 @@ function M.setup_cmake(opts)
         })
     end
 
+    local configure_opts = {"cmake", "-DCMAKE_BUILD_TYPE=Debug", opts.project_path}
+    if opts.generator ~= nil then
+        table.insert(configure_opts, "-G")
+        table.insert(configure_opts, opts.generator)
+    end
+
     functions.run_cmake = function(output_qf, cmake_options)
-        local cmd = {"cmake", "-DCMAKE_BUILD_TYPE=Debug", opts.project_path}
+        local cmd = configure_opts
         if cmake_options ~= nil then table.extend(cmd, cmake_options) end
 
         require"firvish.job_control".start_job({
