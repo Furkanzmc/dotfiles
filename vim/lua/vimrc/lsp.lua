@@ -262,7 +262,7 @@ local function get_efm_languages()
         },
         cpp = {
             {
-                formatCommand = "clang-format",
+                formatCommand = "clang-format --style file",
                 formatStdin = true
                 -- lintCommand = "clang-tidy",
                 -- lintStdin = false,
