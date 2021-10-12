@@ -458,6 +458,24 @@ end
 
 g.firvish_shell = "pwsh"
 
+if fn.has("mac") == 1 then
+    require"firvish.notifications".notify =
+        function(msg, log_level, opts)
+            opts.title = opts.title or "Neovim"
+            local firvish = require "firvish.job_control"
+            firvish.start_job({
+                cmd = {
+                    "pwsh", "-C", "Post-Notification", "-Title",
+                    '"' .. opts.title .. '"', "-Message", '"' .. msg .. '"'
+                },
+                filetype = "firvish-job",
+                title = "Notification",
+                is_background_job = true,
+                listed = false
+            })
+        end
+end
+
 -- }}}
 
 -- vim-markdown-folding {{{

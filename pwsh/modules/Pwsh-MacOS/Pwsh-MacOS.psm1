@@ -33,12 +33,12 @@ function Disable-Dylib-Verbose() {
 function Post-Notification() {
     Param(
             [Parameter(Position=0, Mandatory=$true)]
-        [String]
-        $Title,
-        [Parameter(Position=1, Mandatory=$false)]
-        [String]
-        $Message
-    )
+            [String]
+            $Title,
+            [Parameter(Position=1, Mandatory=$false)]
+            [String]
+            $Message
+         )
 
     osascript -e "display notification \`"$Message\`" with title \`"$Title\`""
 }
