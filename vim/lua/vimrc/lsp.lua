@@ -11,6 +11,24 @@ local M = {}
 
 -- Utils {{{
 
+local function is_enabled(bufnr, client, option)
+    local ok, value = pcall(api.nvim_buf_get_var, bufnr,
+                            "vimrc_" .. client.name .. "_lsp_" .. option)
+    if ok then return value == 1 end
+
+    return false
+end
+
+local function set_enabled(bufnr, client, option, enabled)
+    return api.nvim_buf_set_var(bufnr,
+                                "vimrc_" .. client.name .. "_lsp_" .. option,
+                                enabled)
+end
+
+local function option_exists(bufnr, client, option)
+    return vim.fn.exists("b:vimrc_" .. client.name .. "_lsp_" .. option) == 1
+end
+
 -- Taken from vim/lsp/doagnostic.lua from v0.5.0-832-g35325ddac
 -- Sets the location list
 -- @param opts table|nil Configuration table. Keys:
@@ -84,15 +102,12 @@ local function on_publish_diagnostics(u1, result, ctx, config)
     local bufnr = vim.uri_to_bufnr(result.uri)
     if not api.nvim_buf_is_loaded(bufnr) then return end
 
+    local client = lsp.get_client_by_id(ctx.client_id)
+    if not is_enabled(bufnr, client, "configured") then return end
+
     lsp.diagnostic.on_publish_diagnostics(u1, result, ctx, config)
 
-    local client = lsp.get_client_by_id(ctx.client_id)
-    local loclist_enabled = api.nvim_buf_get_var(bufnr,
-                                                 "vimrc_" .. client.name ..
-                                                     "_lsp_location_list_enabled") ==
-                                1
-
-    if loclist_enabled == true then
+    if is_enabled(bufnr, "location_list_enabled") == true then
         update_loc_list({
             bufnr = bufnr,
             open_loclist = false,
@@ -102,18 +117,11 @@ local function on_publish_diagnostics(u1, result, ctx, config)
 end
 
 local function set_handlers(client, bufnr)
-    local signs_enabled = api.nvim_buf_get_var(bufnr, "vimrc_" .. client.name ..
-                                                   "_lsp_signs_enabled") == 1
-
-    local virtual_text_enabled = api.nvim_buf_get_var(bufnr, "vimrc_" ..
-                                                          client.name ..
-                                                          "_lsp_virtual_text_enabled") ==
-                                     1
-
-    client.handlers["textDocument/publishDiagnostics"] =
-        lsp.with(on_publish_diagnostics, {
-            signs = signs_enabled,
-            virtual_text = virtual_text_enabled,
+    client.handlers["textDocument/publishDiagnostics"] = lsp.with(
+                                                             on_publish_diagnostics,
+                                                             {
+            signs = is_enabled(bufnr, client, "signs_enabled"),
+            virtual_text = is_enabled(bufnr, client, "virtual_text_enabled"),
             underline = false,
             update_in_insert = false
         })
@@ -121,9 +129,6 @@ end
 
 local function set_up_keymap(client, bufnr)
     local opts = {noremap = true, silent = true, buffer = bufnr}
-    local is_configured = api.nvim_buf_get_var(bufnr,
-                                               "is_vimrc_" .. client.name ..
-                                                   "_lsp_shortcuts_set")
     local filetype = api.nvim_buf_get_option(bufnr, "filetype")
     local resolved_capabilities = client.resolved_capabilities
 
@@ -135,7 +140,7 @@ local function set_up_keymap(client, bufnr)
         api.nvim_buf_set_option(bufnr, "keywordprg", ":LspHover")
     end
 
-    if is_configured then return end
+    if is_enabled(bufnr, client, "shortcuts_set") then return end
 
     if resolved_capabilities.rename == true then
         map("n", "gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
@@ -186,45 +191,32 @@ local function set_up_keymap(client, bufnr)
             "command! -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
     end
 
-    api.nvim_buf_set_var(bufnr,
-                         "is_vimrc_" .. client.name .. "_lsp_shortcuts_set",
-                         true)
+    set_enabled(bufnr, client, "shortcuts_set", true)
 end
 
 local function setup_buffer_vars(client, bufnr)
-    if vim.fn.exists("b:is_vimrc_" .. client.name .. "_lsp_auto_stop") == 0 then
-        api.nvim_buf_set_var(bufnr,
-                             "is_vimrc_" .. client.name .. "_lsp_auto_stop",
-                             false)
+    if option_exists(bufnr, client, "auto_stop") then
+        set_enabled(bufnr, client, "auto_stop", false)
     end
 
-    if vim.fn.exists("b:is_vimrc_" .. client.name .. "_lsp_shortcuts_set") == 0 then
-        api.nvim_buf_set_var(bufnr, "is_vimrc_" .. client.name ..
-                                 "_lsp_shortcuts_set", false)
+    if option_exists(bufnr, client, "shortcuts_set") then
+        set_enabled(bufnr, client, "shortcuts_set", false)
     end
 
-    if vim.fn.exists("b:is_vimrc_" .. client.name .. "_lsp_events_set") == 0 then
-        api.nvim_buf_set_var(bufnr,
-                             "is_vimrc_" .. client.name .. "_lsp_events_set",
-                             false)
+    if option_exists(bufnr, client, "events_set") then
+        set_enabled(bufnr, client, "events_set", false)
     end
 
-    if vim.fn.exists("b:vimrc_" .. client.name .. "_lsp_location_list_enabled") ==
-        0 then
-        api.nvim_buf_set_var(bufnr, "vimrc_" .. client.name ..
-                                 "_lsp_location_list_enabled", true)
+    if option_exists(bufnr, client, "location_list_enabled") == 0 then
+        set_enabled(bufnr, client, "location_list_enabled", true)
     end
 
-    if vim.fn.exists("b:vimrc_" .. client.name .. "_lsp_signs_enabled") == 0 then
-        api.nvim_buf_set_var(bufnr,
-                             "vimrc_" .. client.name .. "_lsp_signs_enabled",
-                             true)
+    if option_exists(bufnr, client, "signs_enabled") then
+        set_enabled(bufnr, client, "signs_enabled", true)
     end
 
-    if vim.fn.exists("b:vimrc_" .. client.name .. "_lsp_virtual_text_enabled") ==
-        0 then
-        api.nvim_buf_set_var(bufnr, "vimrc_" .. client.name ..
-                                 "_lsp_virtual_text_enabled", true)
+    if option_exists(bufnr, client, "virtual_text_enabled") == 0 then
+        set_enabled(bufnr, client, "virtual_text_enabled", true)
     end
 end
 
@@ -339,13 +331,14 @@ function M.setup_lsp()
         setup_buffer_vars(client, bufnr)
         set_up_keymap(client, bufnr)
         set_handlers(client, bufnr)
-        require"lsp_signature".on_attach(
-            {
-                bind = true,
-                handler_opts = {border = "none"},
-                toggle_key = "<C-g><C-s>",
-                extra_trigger_chars = {"{", "}"}
-            }, bufnr)
+        require"lsp_signature".on_attach({
+            bind = true,
+            handler_opts = {border = "none"},
+            toggle_key = "<C-g><C-s>",
+            extra_trigger_chars = {"{", "}"}
+        }, bufnr)
+
+        set_enabled(bufnr, client, "configured", true)
     end
 
     local setup_without_formatting = function(client)
