@@ -457,6 +457,7 @@ end
 -- firvish.nvim {{{
 
 g.firvish_shell = "pwsh"
+g.firvish_use_default_mappings = true
 
 if fn.has("mac") == 1 then
     require"firvish.notifications".notify =

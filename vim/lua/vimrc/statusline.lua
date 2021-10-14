@@ -29,6 +29,7 @@ local function statusline_mode(abbvr)
     if abbvr == 'r?' then return 'Confirm' end
     if abbvr == '!' then return 'Shell' end
     if abbvr == 't' then return 'Terminal' end
+    if abbvr == 'nt' then return 'N. Terminal' end
 end
 
 local function color(str, active, active_color, inactive_color, padding)
