@@ -39,6 +39,7 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 }
 
 Import-Module PSReadLine
+
 $PSReadLineOptions = @{
     EditMode = "Vi"
     HistoryNoDuplicates = $true
@@ -56,12 +57,6 @@ $PSReadLineOptions = @{
     }
 }
 
-function Update-Dotfiles() {
-    Push-Location ~/.dotfiles/
-    git pull
-    Pop-Location
-}
-
 Set-PSReadLineOption @PSReadLineOptions
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded all external modules in $($Stopwatch.Elapsed.TotalSeconds) seconds."
@@ -74,6 +69,10 @@ function Prompt() {
     Write-Prompt
     return " "
 }
+
+Set-PSReadLineKeyHandler -Chord "Ctrl+n" -Function TabCompleteNext
+Set-PSReadLineKeyHandler -Chord "Ctrl+p" -Function TabCompletePrevious
+Set-PSReadLineKeyHandler -Chord "Ctrl+w" -Function BackwardDeleteWord
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded PowerShell config in $($MainStopwatch.Elapsed.TotalSeconds) seconds."
