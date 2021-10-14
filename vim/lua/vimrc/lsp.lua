@@ -4,7 +4,7 @@ local lsp = vim.lsp
 local fn = vim.fn
 local utils = require "vimrc.utils"
 local map = require"futils".map
-local log = require"futils".log
+local log = require"futils.log"
 local M = {}
 
 -- Local Functions {{{
