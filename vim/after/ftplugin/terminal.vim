@@ -25,6 +25,9 @@ nmap <buffer> <silent> [p :call search("^>>>", "Wb")<CR>
 " Jump to the next Python prompt
 nmap <buffer> <silent> ]p :call search("^>>>", "W")<CR>
 
+tmap <buffer> <silent> <C-n> <Tab>
+tmap <buffer> <silent> <C-p> <S-Tab>
+
 let b:terminal_closing = v:false
 
 augroup vimrc_ftplugin_terminal

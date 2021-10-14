@@ -24,12 +24,17 @@ function M.tablabel(tabnr)
     local label = {}
     local buflist = fn.tabpagebuflist(tabnr)
     local winnr = fn.tabpagewinnr(tabnr)
-    local bufname = get_bufname(buflist[winnr])
     local modified_count = buffers.get_modified_buf_count(tabnr)
 
     table.insert(label, tabnr)
     table.insert(label, ". ")
-    table.insert(label, bufname)
+    local ok, custom_name = pcall(api.nvim_tabpage_get_var, tabnr,
+                                  "vimrc_tabline_name")
+    if ok then
+        table.insert(label, custom_name)
+    else
+        table.insert(label, get_bufname(buflist[winnr]))
+    end
     if modified_count > 0 then
         table.insert(label, " [+" .. modified_count .. "]")
     end

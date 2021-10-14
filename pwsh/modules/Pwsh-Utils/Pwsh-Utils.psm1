@@ -278,7 +278,12 @@ function Build-Neovim() {
     if (Test-Path build -ErrorAction SilentlyContinue) {
         Write-Host -ForegroundColor Blue "Deleting the contents of the build directory."
         Push-Location build
-        fd . -t f | rm -Force
+        if ($IsWindows) {
+            fd . -t f | rm -Force
+        }
+        else {
+            fd . -t f | rm -rf
+        }
         Pop-Location
     }
     else {
@@ -288,7 +293,12 @@ function Build-Neovim() {
     if (Test-Path .deps -ErrorAction SilentlyContinue) {
         Write-Host -ForegroundColor Blue "Deleting the contents of the .deps directory."
         Push-Location .deps
-        fd . -t f | rm -Force
+        if ($IsWindows) {
+            fd . -t f | rm -Force
+        }
+        else {
+            fd . -t f | rm -rf
+        }
         Pop-Location
     }
     else {
