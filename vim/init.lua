@@ -3,6 +3,8 @@ local api = vim.api
 local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
+local opt = vim.opt
+local lopt = vim.opt_local
 
 if vim.o.loadplugins == true then g.did_load_filetypes = 1 end
 
@@ -29,6 +31,7 @@ g.loaded_matchparen = 1
 
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
+vim.opt.packpath:append(fn.expand("~/.dotfiles/vim/"))
 
 local map = require"futils".map
 
@@ -37,110 +40,110 @@ local map = require"futils".map
 cmd [[filetype plugin on]]
 cmd [[filetype indent on]]
 
-vim.o.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
-vim.o.complete = ".,w,k,kspell,b"
-vim.o.completeopt = "menuone,noselect"
+opt.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
+opt.complete = ".,w,k,kspell,b"
+opt.completeopt = "menuone,noselect"
 
-vim.o.termguicolors = true
-vim.o.foldenable = false
-vim.wo.colorcolumn = "81"
+opt.termguicolors = true
+opt.foldenable = false
+opt.colorcolumn = "81"
 
-vim.o.showmode = false
-vim.o.shortmess = vim.o.shortmess .. "c"
-vim.o.splitbelow = true
+opt.showmode = false
+opt.shortmess:append("c")
+opt.splitbelow = true
 
-vim.o.splitright = true
-vim.wo.signcolumn = "no"
-vim.o.pumheight = 12
+opt.splitright = true
+opt.signcolumn = "no"
+opt.pumheight = 12
 
-vim.o.exrc = true
-vim.o.shiftround = true
+opt.exrc = true
+opt.shiftround = true
 
 -- Reduces the number of lines that are above the curser when I do zt.
-vim.o.scrolloff = 3
+opt.scrolloff = 3
 
 -- Sets how many lines of history VIM has to remember
-vim.o.history = 500
+opt.history = 500
 
 -- Show an arrow with a space for line breaks.
-vim.o.showbreak = "↳ "
-vim.o.breakindent = true
-vim.o.breakindentopt = "shift:2"
+opt.showbreak = "↳ "
+opt.breakindent = true
+opt.breakindentopt = "shift:2"
 
-vim.o.inccommand = "split"
-vim.o.clipboard = "unnamed"
+opt.inccommand = "split"
+opt.clipboard = "unnamed"
 
 -- Set to auto read when a file is changed from the outside
-vim.o.autoread = true
+opt.autoread = true
 
 g.mapleader = " "
 g.maplocalleader = " "
 
 -- Use ripgrep over grep, if possible
 if fn.executable("rg") then
-    vim.o.grepprg = "rg --vimgrep $*"
-    vim.o.grepformat = "%f:%l:%c:%m"
+    opt.grepprg = "rg --vimgrep $*"
+    opt.grepformat = "%f:%l:%c:%m"
 end
 
 -- Means that you can undo even when you close a buffer/VIM
-vim.o.undodir = fn.expand("~/.dotfiles/vim/temp_dirs/undodir")
-vim.o.undofile = true
+opt.undodir = fn.expand("~/.dotfiles/vim/temp_dirs/undodir")
+opt.undofile = true
 
 -- Turn backup off, since most stuff is in SVN, git et.c anyway...
-vim.o.swapfile = false
+opt.swapfile = false
 
 -- Use spaces instead of tabs
-vim.o.expandtab = true
+opt.expandtab = true
 
 -- Be smart when using tabs ;)
-vim.o.smarttab = true
+opt.smarttab = true
 
 -- 1 tab == 4 spaces
-vim.o.shiftwidth = 4
-vim.o.tabstop = 4
+opt.shiftwidth = 4
+opt.tabstop = 4
 
-vim.o.linebreak = true
-vim.o.textwidth = 500
+opt.linebreak = true
+opt.textwidth = 500
 
-vim.o.autoindent = true
-vim.o.smartindent = true
+opt.autoindent = true
+opt.smartindent = true
 
-vim.o.foldtext = "fold#fold_text()"
+opt.foldtext = "fold#fold_text()"
 
 if fn.executable("pwsh") == 1 and fn.exists("$VIMRC_PWSH_ENABLED") == 1 then
-    vim.o.shell = "pwsh"
-    vim.o.shellquote = ""
-    vim.o.shellpipe = "| Out-File -Encoding UTF8"
-    vim.o.shellxquote = ""
-    vim.o.shellcmdflag =
+    opt.shell = "pwsh"
+    opt.shellquote = ""
+    opt.shellpipe = "| Out-File -Encoding UTF8"
+    opt.shellxquote = ""
+    opt.shellcmdflag =
         "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command"
-    vim.o.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
+    opt.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
 end
 
 -- Specify the behavior when switching between buffers
 -- Use the current tab for openning files from quickfix.
 -- Otherwise it gets really annoying and each file is opened
 -- in a different tab.
-vim.o.switchbuf = "useopen,usetab"
-vim.o.stal = 2
+opt.switchbuf = "useopen,usetab"
+opt.stal = 2
 
 -- }}}
 
 -- User Interface {{{
 
 -- Always show the status line
-vim.o.laststatus = 2
+opt.laststatus = 2
 
-vim.o.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
-vim.o.title = true
-vim.o.titlelen = 80
-vim.o.titlestring = table.concat({
+opt.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
+opt.title = true
+opt.titlelen = 80
+opt.titlestring = table.concat({
     "%<", '%{exists(\"$VIRTUAL_ENV\") ? ".venv" : ""}',
     '%{exists(\"$VIRTUAL_ENV\") && exists(\"$ENV_NAME\") ? "://" : ""}',
     '%{exists(\"$ENV_NAME\") ? expand(\"$ENV_NAME\") : ""}', '%=',
     '%{strftime(\"%b\\ %d\\ %A,\\ %H:%M\")}'
 })
-vim.o.statusline =
+opt.statusline =
     '%!luaeval("require\'vimrc.statusline\'.init(" . g:statusline_winid . ")")'
 
 if vim.env.VIMRC_BACKGROUND == "dark" then
@@ -149,72 +152,71 @@ else
     vim.opt.background = "light"
 end
 
-vim.o.diffopt =
-    "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
+opt.diffopt = "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
 
-vim.o.langmenu = "en"
-vim.wo.number = true
-vim.wo.relativenumber = true
+opt.langmenu = "en"
+vim.opt.number = false
+vim.opt.numberwidth = 2
+vim.opt.relativenumber = true
 
 -- Turn on the Wild menu
-vim.o.wildmenu = true
+opt.wildmenu = true
 cmd [[set wildchar=<C-n>]]
 
 -- Ignore compiled files
-vim.o.wildignore = "*.o,*~,*.pyc,*.qmlc,*jsc"
+opt.wildignore:append("*.o")
+opt.wildignore:append("*~")
+opt.wildignore:append("*.pyc")
+opt.wildignore:append("*.qmlc")
+opt.wildignore:append("*jsc")
 
-if fn.has("win32") == 1 then
-    vim.o.wildignore = vim.o.wildignore .. ",.git*,.hg*,.svn*"
-else
-    vim.o.wildignore = vim.o.wildignore ..
-                           ",*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store"
-end
+if fn.has("mac") == 1 then opt.wildignore:append("*/.DS_Store") end
 
-vim.o.wildignorecase = true
+opt.wildignorecase = true
 
-vim.o.cursorline = false
+opt.cursorline = false
 
 -- Always show current position
-vim.o.ruler = true
+opt.ruler = true
 
 -- Height of the command bar
-vim.o.cmdheight = 1
+opt.cmdheight = 1
 
 -- A buffer becomes hidden when it is abandoned
-vim.o.hidden = true
+opt.hidden = true
 
 -- Configure backspace so it acts as it should act
-vim.o.backspace = "eol,start,indent"
-vim.o.whichwrap = vim.o.whichwrap .. ",<,>,h,l"
+opt.backspace = "eol,start,indent"
+opt.whichwrap:append(",<,>,h,l")
 
 -- Ignore case when searching
-vim.o.ignorecase = true
+opt.ignorecase = true
 
 -- When searching try to be smart about cases
-vim.o.smartcase = true
+opt.smartcase = true
 
 -- Highlight search results
-vim.o.hlsearch = true
+opt.hlsearch = true
 
 -- Makes search act like search in modern browsers
-vim.o.incsearch = true
+opt.incsearch = true
 
 -- Don't redraw while executing macros (good performance config)
-vim.o.lazyredraw = true
+opt.lazyredraw = true
 
 -- For regular expressions turn magic on
-vim.o.magic = true
+opt.magic = true
 
 -- Show matching brackets when text indicator is over them
-vim.o.showmatch = true
+opt.showmatch = true
 
 -- How many tenths of a second to blink when matching brackets
-vim.o.matchtime = 3
+opt.matchtime = 3
 
 -- No annoying sound on errors
-vim.o.errorbells = false
-vim.o.visualbell = false
-vim.o.tm = 300
+opt.errorbells = false
+opt.visualbell = false
+opt.tm = 300
 
 cmd [[
 try
@@ -707,6 +709,7 @@ cmd [[autocmd!]]
 cmd [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:vimrc_rest_nvim_loaded") && &loadplugins | packadd plenary.nvim | packadd rest.nvim | call luaeval('require"vimrc".setup_rest_nvim()') | let g:vimrc_rest_nvim_loaded = v:true | endif]]
 cmd [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
 cmd [[autocmd VimEnter * lua require'vimrc'.create_custom_nvim_server()]]
+
 if vim.o.loadplugins == true then
     cmd [[autocmd VimEnter * colorscheme cosmic_latte ]]
     cmd [[autocmd VimEnter * runtime! ftdetect/*.vim ftdetect/*.lua after/ftdetect/*.vim after/ftdetect/*.lua]]
