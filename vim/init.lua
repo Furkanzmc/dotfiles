@@ -384,8 +384,6 @@ if vim.o.loadplugins == true then cmd [[packadd vim-polyglot]] end
 
 -- }}}
 
-cmd [[command! PaqInit :lua require'vimrc'.init_paq()]]
-
 -- TagBar {{{
 
 g.tagbar_show_linenumbers = 1

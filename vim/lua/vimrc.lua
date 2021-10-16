@@ -11,48 +11,6 @@ local function init_nvim_colorizer(bufnr)
     cmd [[command! EnableNvimColorizer :lua require"vimrc".enable_nvim_colorizer(vim.api.nvim_get_current_buf())]]
 end
 
-function M.init_paq()
-    if vim.o.loadplugins == false then return end
-
-    cmd [[packadd paq-nvim]]
-
-    local paq = require'paq-nvim'.paq
-
-    paq 'terrortylor/nvim-comment'
-    paq 'tpope/vim-fugitive'
-    paq 'machakann/vim-sandwich'
-    paq 'furkanzmc/cosmic_latte'
-    paq 'justinmk/vim-dirvish'
-    paq 'Furkanzmc/firvish.nvim'
-    paq 'Furkanzmc/ayar.nvim'
-    paq 'Furkanzmc/futils.nvim'
-    paq 'Furkanzmc/options.nvim'
-    paq 'neovim/nvim-lspconfig'
-    paq 'ray-x/lsp_signature.nvim'
-    paq 'gosukiwi/vim-smartpairs'
-    paq 'andymass/vim-matchup'
-    paq 'nathom/filetype.nvim'
-
-    -- Optional {{{
-
-    paq {'sheerun/vim-polyglot', opt = true}
-    paq {'savq/paq-nvim', opt = true}
-    paq {'vim-scripts/SyntaxRange', opt = true}
-    paq {'majutsushi/tagbar', opt = true}
-    paq {'masukomi/vim-markdown-folding', opt = true}
-    paq {'mfussenegger/nvim-dap', opt = true}
-    paq {'rcarriga/nvim-dap-ui', opt = true}
-    paq {'rust-lang/rust.vim', opt = true}
-    paq {'nvim-treesitter/nvim-treesitter', opt = true}
-    paq {'NTBBloodbath/rest.nvim', opt = true}
-    paq {'nvim-lua/plenary.nvim', opt = true}
-    paq {'Furkanzmc/nvim-qt', opt = true}
-    paq {'norcalli/nvim-colorizer.lua', opt = true}
-    paq {'lifepillar/vim-colortemplate', opt = true}
-
-    -- }}}
-end
-
 function M.setup_treesitter()
     if vim.o.loadplugins == false then return end
 

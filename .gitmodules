@@ -1,0 +1,90 @@
+[submodule "vim/pack/packages/start/ayar.nvim"]
+	path = vim/pack/packages/start/ayar.nvim
+	url = https://github.com/Furkanzmc/ayar.nvim.git
+[submodule "vim/pack/packages/start/cosmic_latte"]
+	path = vim/pack/packages/start/cosmic_latte
+	url = https://github.com/furkanzmc/cosmic_latte.git
+[submodule "vim/pack/packages/start/filetype.nvim"]
+	path = vim/pack/packages/start/filetype.nvim
+	url = https://github.com/nathom/filetype.nvim.git
+[submodule "vim/pack/packages/start/firvish.nvim"]
+	path = vim/pack/packages/start/firvish.nvim
+	url = https://github.com/Furkanzmc/firvish.nvim.git
+[submodule "vim/pack/packages/start/futils.nvim"]
+	path = vim/pack/packages/start/futils.nvim
+	url = https://github.com/Furkanzmc/futils.nvim.git
+[submodule "vim/pack/packages/start/lsp_signature.nvim"]
+	path = vim/pack/packages/start/lsp_signature.nvim
+	url = https://github.com/ray-x/lsp_signature.nvim.git
+[submodule "vim/pack/packages/start/nvim-comment"]
+	path = vim/pack/packages/start/nvim-comment
+	url = https://github.com/terrortylor/nvim-comment.git
+[submodule "vim/pack/packages/start/nvim-lspconfig"]
+	path = vim/pack/packages/start/nvim-lspconfig
+	url = https://github.com/neovim/nvim-lspconfig.git
+[submodule "vim/pack/packages/start/options.nvim"]
+	path = vim/pack/packages/start/options.nvim
+	url = https://github.com/Furkanzmc/options.nvim.git
+[submodule "vim/pack/packages/start/vim-dirvish"]
+	path = vim/pack/packages/start/vim-dirvish
+	url = https://github.com/justinmk/vim-dirvish.git
+[submodule "vim/pack/packages/start/vim-fugitive"]
+	path = vim/pack/packages/start/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive.git
+[submodule "vim/pack/packages/start/vim-matchup"]
+	path = vim/pack/packages/start/vim-matchup
+	url = https://github.com/andymass/vim-matchup.git
+[submodule "vim/pack/packages/start/vim-sandwich"]
+	path = vim/pack/packages/start/vim-sandwich
+	url = https://github.com/machakann/vim-sandwich.git
+[submodule "vim/pack/packages/start/vim-smartpairs"]
+	path = vim/pack/packages/start/vim-smartpairs
+	url = https://github.com/gosukiwi/vim-smartpairs.git
+
+# Optional Plugins {{{
+
+[submodule "vim/pack/packages/opt/nvim-colorizer.lua"]
+	path = vim/pack/packages/opt/nvim-colorizer.lua
+	url = https://github.com/norcalli/nvim-colorizer.lua.git
+[submodule "vim/pack/packages/opt/nvim-dap"]
+	path = vim/pack/packages/opt/nvim-dap
+	url = https://github.com/mfussenegger/nvim-dap.git
+[submodule "vim/pack/packages/opt/nvim-dap-ui"]
+	path = vim/pack/packages/opt/nvim-dap-ui
+	url = https://github.com/rcarriga/nvim-dap-ui.git
+[submodule "vim/pack/packages/opt/nvim-qt"]
+	path = vim/pack/packages/opt/nvim-qt
+	url = https://github.com/Furkanzmc/nvim-qt.git
+[submodule "vim/pack/packages/opt/nvim-treesitter"]
+	path = vim/pack/packages/opt/nvim-treesitter
+	url = https://github.com/nvim-treesitter/nvim-treesitter.git
+[submodule "vim/pack/packages/opt/paq-nvim"]
+	path = vim/pack/packages/opt/paq-nvim
+	url = https://github.com/savq/paq-nvim.git
+[submodule "vim/pack/packages/opt/plenary.nvim"]
+	path = vim/pack/packages/opt/plenary.nvim
+	url = https://github.com/nvim-lua/plenary.nvim.git
+[submodule "vim/pack/packages/opt/rest.nvim"]
+	path = vim/pack/packages/opt/rest.nvim
+	url = https://github.com/NTBBloodbath/rest.nvim.git
+[submodule "vim/pack/packages/opt/rust.vim"]
+	path = vim/pack/packages/opt/rust.vim
+	url = https://github.com/rust-lang/rust.vim.git
+[submodule "vim/pack/packages/opt/SyntaxRange"]
+	path = vim/pack/packages/opt/SyntaxRange
+	url = https://github.com/vim-scripts/SyntaxRange.git
+[submodule "vim/pack/packages/opt/tagbar"]
+	path = vim/pack/packages/opt/tagbar
+	url = https://github.com/majutsushi/tagbar.git
+[submodule "vim/pack/packages/opt/vim-colortemplate"]
+	path = vim/pack/packages/opt/vim-colortemplate
+	url = https://github.com/lifepillar/vim-colortemplate.git
+[submodule "vim/pack/packages/opt/vim-markdown-folding"]
+	path = vim/pack/packages/opt/vim-markdown-folding
+	url = https://github.com/masukomi/vim-markdown-folding.git
+[submodule "vim/pack/packages/opt/vim-polyglot"]
+	path = vim/pack/packages/opt/vim-polyglot
+	url = https://github.com/sheerun/vim-polyglot.git
+
+# }}}
+# vim: foldmethod=marker

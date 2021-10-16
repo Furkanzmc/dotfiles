@@ -67,20 +67,6 @@ if (Test-Path env:NVIM_LISTEN_ADDRESS -ErrorAction SilentlyContinue) {
     Set-Alias -Name nvc -Value Nvim-Run-Command
 }
 
-function Codi() {
-    Param(
-        [Parameter(Mandatory=$false)]
-        [ValidateSet("python", "javascript")]
-        [String]$FileType=""
-     )
-
-    nvim -c `
-    "packadd codi.vim `
-    let g:startify_disable_at_vimenter = 1 |`
-    setlocal cursorline |`
-    Codi $FileType"
- }
-
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Vim in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
