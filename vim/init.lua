@@ -155,7 +155,7 @@ end
 opt.diffopt = "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
 
 opt.langmenu = "en"
-vim.opt.number = false
+vim.opt.number = true
 vim.opt.numberwidth = 2
 vim.opt.relativenumber = true
 
