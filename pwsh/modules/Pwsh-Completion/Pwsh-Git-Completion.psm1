@@ -3922,6 +3922,9 @@ $commandMap = @{
         "-o",
         "-h"
     )
+    "show-updates"=@(
+      "--submodules"
+  )
 }
 # TODO
 # [ ] Handle the cases for sub-commands (e.g git stash push)
