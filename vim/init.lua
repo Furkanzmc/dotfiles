@@ -322,7 +322,7 @@ map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", {silent = true, noremap = true})
 map("n", "gx", "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>",
     {silent = true, noremap = true})
 
-cmd [[ command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')]]
+cmd [[command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')]]
 
 cmd [[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]]
 cmd [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]

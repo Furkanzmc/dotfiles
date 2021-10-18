@@ -102,8 +102,8 @@ end
 function M.run_git(args, is_background_job)
     local firvish = require "firvish.job_control"
 
-    local cmd = {"git"}
-    table.extend(cmd, fn.split(args, " "))
+    local cmd = fn.split(args, " ");
+    table.insert(cmd, 1, "git")
     firvish.start_job({
         cmd = cmd,
         filetype = "job-output",
