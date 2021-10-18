@@ -58,9 +58,6 @@
 [submodule "vim/pack/packages/opt/nvim-treesitter"]
 	path = vim/pack/packages/opt/nvim-treesitter
 	url = https://github.com/nvim-treesitter/nvim-treesitter.git
-[submodule "vim/pack/packages/opt/paq-nvim"]
-	path = vim/pack/packages/opt/paq-nvim
-	url = https://github.com/savq/paq-nvim.git
 [submodule "vim/pack/packages/opt/plenary.nvim"]
 	path = vim/pack/packages/opt/plenary.nvim
 	url = https://github.com/nvim-lua/plenary.nvim.git
