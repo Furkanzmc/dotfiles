@@ -14,7 +14,7 @@ end
 function M.setup_treesitter()
     if vim.o.loadplugins == false then return end
 
-    assert(fn.exists(":TSInstall") == 0)
+    assert(fn.exists(":TSInstall") == 0, "TreeSitter is already configured.")
 
     cmd [[packadd nvim-treesitter]]
 
