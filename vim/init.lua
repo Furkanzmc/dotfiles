@@ -399,32 +399,6 @@ if vim.o.loadplugins == true then
     cmd [[augroup END]]
 end
 
-fn.sign_define("DiagnosticSignError", {
-    text = "✖",
-    texthl = "LspDiagnosticsDefaultError",
-    linehl = "",
-    numhl = ""
-})
-fn.sign_define("DiagnosticSignWarn", {
-    text = "‼",
-    texthl = "LspDiagnosticsDefaultWarning",
-    linehl = "",
-    numhl = ""
-})
-
-fn.sign_define("DiagnosticSignInfo", {
-    text = "ℹ",
-    texthl = "LspDiagnosticsDefaultInformation",
-    linehl = "",
-    numhl = ""
-})
-fn.sign_define("DiagnosticSignHint", {
-    text = "⦿",
-    texthl = "LspDiagnosticsDefaultHint",
-    linehl = "",
-    numhl = ""
-})
-
 -- }}}
 
 -- Completion {{{
