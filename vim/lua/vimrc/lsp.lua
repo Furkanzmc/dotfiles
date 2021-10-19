@@ -4,29 +4,33 @@ local lsp = vim.lsp
 local fn = vim.fn
 local utils = require "vimrc.utils"
 local map = require"futils".map
-local log = require"futils.log"
+local log = require "futils.log"
 local M = {}
 
 -- Local Functions {{{
 
 -- Utils {{{
 
+local function get_option_var(client, option)
+    return "vimrc_" .. client.name .. "_lsp_" .. option
+end
+
 local function is_enabled(bufnr, client, option)
     local ok, value = pcall(api.nvim_buf_get_var, bufnr,
-                            "vimrc_" .. client.name .. "_lsp_" .. option)
-    if ok then return value == 1 end
+                            get_option_var(client, option))
+    if ok then return value == 1 or value == true end
 
     return false
 end
 
 local function set_enabled(bufnr, client, option, enabled)
-    return api.nvim_buf_set_var(bufnr,
-                                "vimrc_" .. client.name .. "_lsp_" .. option,
-                                enabled)
+    return api.nvim_buf_set_var(bufnr, get_option_var(client, option), enabled)
 end
 
 local function option_exists(bufnr, client, option)
-    return vim.fn.exists("b:vimrc_" .. client.name .. "_lsp_" .. option) == 1
+    local ok, value = pcall(api.nvim_buf_get_var, bufnr,
+                            get_option_var(client, option))
+    return ok
 end
 
 -- Taken from vim/lsp/doagnostic.lua from v0.5.0-832-g35325ddac
@@ -107,7 +111,7 @@ local function on_publish_diagnostics(u1, result, ctx, config)
 
     lsp.diagnostic.on_publish_diagnostics(u1, result, ctx, config)
 
-    if is_enabled(bufnr, "location_list_enabled") == true then
+    if is_enabled(bufnr, client, "location_list_enabled") == true then
         update_loc_list({
             bufnr = bufnr,
             open_loclist = false,
@@ -215,7 +219,7 @@ local function setup_buffer_vars(client, bufnr)
         set_enabled(bufnr, client, "signs_enabled", true)
     end
 
-    if option_exists(bufnr, client, "virtual_text_enabled") == 0 then
+    if option_exists(bufnr, client, "virtual_text_enabled") then
         set_enabled(bufnr, client, "virtual_text_enabled", true)
     end
 end
@@ -330,6 +334,8 @@ function M.setup_lsp()
 
         setup_buffer_vars(client, bufnr)
         set_up_keymap(client, bufnr)
+
+        set_enabled(bufnr, client, "configured", true)
         set_handlers(client, bufnr)
         require"lsp_signature".on_attach({
             bind = true,
@@ -337,8 +343,6 @@ function M.setup_lsp()
             toggle_key = "<C-g><C-s>",
             extra_trigger_chars = {"{", "}"}
         }, bufnr)
-
-        set_enabled(bufnr, client, "configured", true)
     end
 
     local setup_without_formatting = function(client)
