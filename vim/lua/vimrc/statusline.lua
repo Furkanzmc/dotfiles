@@ -43,28 +43,41 @@ local function color(str, active, active_color, inactive_color, padding)
 end
 
 local function lsp_dianostics(active, bufnr)
-    local errors = 0
-    local warnings = 0
-
-    local lsp_errors = vim.lsp.diagnostic.get_count(bufnr, [[Error]])
-    local lsp_warnings = vim.lsp.diagnostic.get_count(bufnr, [[Warning]])
-
-    if lsp_errors ~= nil then errors = lsp_errors end
-
-    if lsp_warnings ~= nil then warnings = lsp_warnings end
+    local lsp_errors = #vim.diagnostic.get(bufnr, {
+        severity = vim.diagnostic.severity.ERROR
+    })
+    local lsp_warnings = #vim.diagnostic.get(bufnr, {
+        severity = vim.diagnostic.severity.WARN
+    })
+    local lsp_hints = #vim.diagnostic.get(bufnr, {
+        severity = vim.diagnostic.severity.HINT
+    })
+    local lsp_info = #vim.diagnostic.get(bufnr, {
+        severity = vim.diagnostic.severity.INFO
+    })
 
     local status = {}
-    if errors > 0 then
-        table.insert(status, color("E:" .. errors, active, 'StatusLineError',
-                                   'StatusLineNC', 1))
+    if lsp_errors > 0 then
+        table.insert(status, color("✖ " .. lsp_errors, active,
+                                   'StatusLineError', 'StatusLineNC', 1))
     end
 
-    if warnings > 0 then
-        table.insert(status, color("W:" .. warnings, active,
+    if lsp_warnings > 0 then
+        table.insert(status, color("‼ " .. lsp_warnings, active,
                                    'StatusLineWarning', 'StatusLineNC', 1))
     end
 
-    return table.concat(status)
+    if lsp_hints > 0 then
+        table.insert(status, color("⦿ " .. lsp_hints, active,
+                                   'StatusLineHint', 'StatusLineNC', 1))
+    end
+
+    if lsp_info > 0 then
+        table.insert(status, color("ℹ " .. lsp_info, active, 'StatusLineInfo',
+                                   'StatusLineNC', 1))
+    end
+
+    return table.concat(status, "|")
 end
 
 -- }}}

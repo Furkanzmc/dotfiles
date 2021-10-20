@@ -312,6 +312,13 @@ local function get_efm_languages()
     }
 end
 
+local function setup_signs()
+    vim.cmd [[sign define DiagnosticSignError text=✖ texthl=DiagnosticError linehl= numhl=]]
+    vim.cmd [[sign define DiagnosticSignWarn text=‼ texthl=DiagnosticWarn linehl= numhl=]]
+    vim.cmd [[sign define DiagnosticSignInfo text=ℹ texthl=DiagnosticInfo linehl= numhl=]]
+    vim.cmd [[sign define DiagnosticSignHint text=⦿ texthl=DiagnosticHint linehl= numhl=]]
+end
+
 -- }}}
 
 -- Public Functions {{{
@@ -443,6 +450,8 @@ function M.setup_lsp()
     else
         log.error("vimrc-lsp", "efm-langserver is not installed.")
     end
+
+    setup_signs()
 end
 
 -- }}}
