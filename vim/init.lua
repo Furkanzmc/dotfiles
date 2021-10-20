@@ -235,6 +235,9 @@ map("n", "<Left>", "<NOP>", {noremap = true})
 map("n", "<Right>", "<NOP>", {noremap = true})
 map("n", "<Left>", "<NOP>", {noremap = true})
 
+map("c", "<C-u>", "<Up>", {noremap = true})
+map("c", "<C-d>", "<Down>", {noremap = true})
+
 -- Disable highlight when <leader><cr> is pressed
 map("n", "<leader><CR>", ":nohlsearch<CR>", {silent = true})
 
