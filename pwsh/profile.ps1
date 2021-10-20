@@ -74,6 +74,7 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+n" -Function TabCompleteNext
 Set-PSReadLineKeyHandler -Chord "Ctrl+p" -Function TabCompletePrevious
 Set-PSReadLineKeyHandler -Chord "Ctrl+w" -Function BackwardDeleteWord
 Set-PSReadLineKeyHandler -Chord "Ctrl+j" -Function AcceptLine
+Set-PSReadLineKeyHandler -Chord "Ctrl+h" -Function BackwardDeleteChar
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded PowerShell config in $($MainStopwatch.Elapsed.TotalSeconds) seconds."
