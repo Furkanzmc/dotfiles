@@ -1,4 +1,4 @@
-#!/usr/local/bin/pwsh
+#!pwsh
 
 if ("$args" -eq "--submodules") {
     git submodule foreach 'git fetch --prune && git logpretty $(git rev-parse --abbrev-ref HEAD)..origin/$(git rev-parse --abbrev-ref HEAD) && echo "-----"'
