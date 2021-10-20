@@ -1,7 +1,8 @@
 " `fname` is the modified file name with forward slashes.
 " `additional_paths` is where we look for files.
 function includeexpr#find(fname, additional_paths)
-    let l:path_parts = split(a:fname, "/")
+    let l:fname = substitute(a:fname, "\\.", "\/", "g")
+    let l:path_parts = split(l:fname, "/")
 
     let l:search_paths = []
     call extend(l:search_paths, a:additional_paths)
@@ -15,8 +16,12 @@ function includeexpr#find(fname, additional_paths)
         call extend(l:files, split(l:gpath, "\n"))
     endfor
 
+    if len(l:files) == 1 && isdirectory(l:files[0])
+        return substitute(l:files[0], "\\", "/", "g")
+    endif
+
     if empty(l:files)
-        let l:taglist = taglist(a:fname)
+        let l:taglist = taglist(l:fname)
         if !empty(l:taglist)
             let l:tagfiles = tagfiles()
             for item in l:taglist
@@ -47,5 +52,5 @@ function includeexpr#find(fname, additional_paths)
         return l:files[0]
     endif
 
-    return a:fname
+    return l:fname
 endfunction

@@ -7,6 +7,7 @@ setlocal foldmethod=indent
 setlocal signcolumn=number
 setlocal textwidth=100
 setlocal colorcolumn=81,101
+setlocal includeexpr=includeexpr#find(v:fname\,[])
 
 setlocal errorformat=file://%f:%l:\ %s%trror:\ %m
 setlocal errorformat+=file://%f:%l:%c:\ %m
