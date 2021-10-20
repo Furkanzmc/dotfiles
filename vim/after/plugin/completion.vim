@@ -21,12 +21,12 @@ function s:trigger_completion()
     return "\<c-r>=completion#completion_wrapper()\<CR>"
 endfunction
 
-inoremap <silent><expr> <TAB>
+imap <silent><expr> <C-n>
             \ pumvisible() ? "\<C-n>" :
             \ <SID>is_previous_character_abbvr_char() ? "\<C-]>" :
             \ <SID>is_previous_character_space() ? "\<TAB>" : <SID>trigger_completion()
 
-inoremap <silent><expr> <S-TAB>
+imap <silent><expr> <C-p>
             \ pumvisible() ? "\<C-p>" :
             \ <SID>is_previous_character_space() ? "\<S-TAB>" : <SID>trigger_completion()
 
