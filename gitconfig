@@ -9,8 +9,8 @@
   tasks = !rg 'TODO|FIXME' ./
   discard = checkout --
   code-changes = !git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10
-  show-updates = !~/.dotfiles/scripts/git-show-updates
-  update-packages = !git submodule foreach 'git fetch --prune && git checkout $(git rev-parse --abbrev-ref HEAD) && echo "$(date)" >> updates.git && git show-updates | tee updates.git && git pull && echo "-----"'
+  show-updates = !git submodule foreach 'git fetch --prune && git logpretty HEAD..origin/HEAD && echo "-----"'
+  update-packages = !git submodule foreach 'git fetch --prune && git logpretty HEAD..origin/HEAD > updates.git && git logpretty HEAD..origin/HEAD' && git submodule update --remote
 
 [core]
   excludesFile=~/.gitignore_global
