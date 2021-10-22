@@ -127,7 +127,8 @@ local function set_handlers(client, bufnr)
             signs = is_enabled(bufnr, client, "signs_enabled"),
             virtual_text = is_enabled(bufnr, client, "virtual_text_enabled"),
             underline = false,
-            update_in_insert = false
+            update_in_insert = false,
+            severity_sort = true
         })
 end
 
