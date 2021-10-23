@@ -8,7 +8,7 @@ local options = require "options"
 
 options.register_option({
     name = "completion_timeout",
-    default = 200,
+    default = 150,
     type_info = "number",
     source = "completion",
     buffer_local = true

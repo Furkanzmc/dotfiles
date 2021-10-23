@@ -359,6 +359,7 @@ function M.setup_lsp()
     end
 
     local lspconfig = require 'lspconfig'
+    lsp.set_log_level("error")
 
     if fn.executable("pyright") == 1 then
         lspconfig.pyright.setup {
