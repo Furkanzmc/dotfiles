@@ -7,7 +7,7 @@ local bo = vim.bo
 local utils = require "vimrc.utils"
 local M = {}
 
-local function init_nvim_colorizer(bufnr)
+local function init_nvim_colorizer()
     cmd [[command! EnableNvimColorizer :lua require"vimrc".enable_nvim_colorizer(vim.api.nvim_get_current_buf())]]
 end
 

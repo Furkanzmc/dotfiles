@@ -388,6 +388,38 @@ function Build-Neovim() {
     Pop-Location
 }
 
+function Install-Lua-Lang-Server() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [String]$TargetPath
+     )
+
+    git clone https://github.com/sumneko/lua-language-server $TargetPath
+
+    $repoDir = Join-Path -Path $TargetPath -ChildPath lua-language-server
+
+    Push-Location $repoDir
+
+    git submodule update --init --recursive
+
+    if ($IsWindows) {
+        Push-Location 3rd\luamake
+        compile\install.bat
+        Pop-Location
+
+        3rd\luamake\luamake.exe rebuild
+    }
+    else {
+        Push-Location 3rd/luamake
+        compile/install.sh
+        Pop-Location
+
+        ./3rd/luamake/luamake rebuild
+    }
+
+    Pop-Location
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()

@@ -121,9 +121,8 @@ local function on_publish_diagnostics(u1, result, ctx, config)
 end
 
 local function set_handlers(client, bufnr)
-    client.handlers["textDocument/publishDiagnostics"] = lsp.with(
-                                                             on_publish_diagnostics,
-                                                             {
+    client.handlers["textDocument/publishDiagnostics"] =
+        lsp.with(on_publish_diagnostics, {
             signs = is_enabled(bufnr, client, "signs_enabled"),
             virtual_text = is_enabled(bufnr, client, "virtual_text_enabled"),
             underline = false,
@@ -345,12 +344,13 @@ function M.setup_lsp()
 
         set_enabled(bufnr, client, "configured", true)
         set_handlers(client, bufnr)
-        require"lsp_signature".on_attach({
-            bind = true,
-            handler_opts = {border = "none"},
-            toggle_key = "<C-g><C-s>",
-            extra_trigger_chars = {"{", "}"}
-        }, bufnr)
+        require"lsp_signature".on_attach(
+            {
+                bind = true,
+                handler_opts = {border = "none"},
+                toggle_key = "<C-g><C-s>",
+                extra_trigger_chars = {"{", "}"}
+            }, bufnr)
     end
 
     local setup_without_formatting = function(client)
@@ -388,6 +388,27 @@ function M.setup_lsp()
                 "--completion-style=detailed", "--recovery-ast",
                 "--header-insertion=iwyu", "--header-insertion-decorators",
                 "-j=1"
+            }
+        }
+    end
+
+    local sumneko_bin_path = vim.fn.expand("$SUMNEKO_BIN_PATH")
+    if sumneko_bin_path ~= "" then
+        local sumneko_binary = sumneko_bin_path .. "/lua-language-server"
+        local runtime_path = vim.split(package.path, ';')
+        table.insert(runtime_path, "lua/?.lua")
+        table.insert(runtime_path, "lua/?/init.lua")
+
+        lspconfig.sumneko_lua.setup {
+            cmd = {sumneko_binary, "-E", sumneko_bin_path .. "/main.lua"},
+            on_attach = setup_without_formatting,
+            settings = {
+                Lua = {
+                    runtime = {path = runtime_path},
+                    diagnostics = {globals = {'vim'}},
+                    workspace = {library = api.nvim_get_runtime_file("", true)},
+                    telemetry = {enable = false}
+                }
             }
         }
     end
