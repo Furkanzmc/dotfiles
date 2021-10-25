@@ -151,10 +151,10 @@ if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
         )
 
         if ($Langauge -eq "c++") {
-            ctags -R --c++-kinds=+p --exclude=build --fields=+iaS --extra=+q .
+            ctags -R --fields=+l --languages=c++ .
         }
         elseif ($Langauge -eq "python") {
-            ctags -R --python-kinds=-i --exclude=build --fields=+iaS --extra=+q .
+            ctags -R --fields=+l --languages=python --python-kinds=-iv .
         }
         else {
             Write-Error "$Language is not supported."
