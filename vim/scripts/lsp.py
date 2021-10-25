@@ -1,5 +1,5 @@
 from subprocess import run
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from argparse import ArgumentParser, Namespace
 from os.path import expanduser
 from distutils.spawn import find_executable
@@ -174,7 +174,9 @@ def complete(contents: List[str], position: str, language: Optional[str] = None)
 
     pos: List[int] = [int(item) for item in position.split(":")]
     linenr: int = pos[0]
-    base = get_base(contents[linenr], pos[1])
+    base, start_pos, end_pos = get_base(contents[linenr], pos[1])
+    contents[linenr] = contents[linenr][start_pos:end_pos]
+
     with FunctionTiming("complete:tokenize"):
         output: bytes = tokenize_regex_async(contents)
 
@@ -220,16 +222,17 @@ def get_contents_from_stdin() -> List[str]:
     return contents
 
 
-def get_base(line: str, start_pos: int) -> str:
+def get_base(line: str, start_pos: int) -> Tuple[str, int, int]:
     index: int = start_pos
     base: str = ""
     while not base:
         if line[index] in ("", ".", ">", " ") or index == 0:
             base = line[index + 1 * (index != "") :]
             break
+
         index = index - 1
 
-    return base.strip()
+    return (base.strip(), start_pos, index)
 
 
 def tokenize_regex(contents: List[str]) -> bytes:
