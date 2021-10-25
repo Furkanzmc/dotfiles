@@ -30,12 +30,8 @@ local s_completion_sources = {
         prediciate = function()
             return vim.bo.completefunc ~= "" or vim.o.completefunc ~= ""
         end
-    }, {keys = "<c-x><c-n>"}, {keys = "<c-n>"}, {
-        keys = "<c-x><c-]>",
-        prediciate = function()
-            return #fn.tagfiles() > 0
-        end
-    },
+    }, {keys = "<c-x><c-n>"}, {keys = "<c-n>"},
+    {keys = "<c-x><c-]>", prediciate = function() return #fn.tagfiles() > 0 end},
     {keys = "<c-x><c-v>", filetypes = {"vim"}}, {keys = "<c-x><c-f>"}, {
         keys = "<c-x><c-k>",
         prediciate = function()

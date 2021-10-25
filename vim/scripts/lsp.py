@@ -6,6 +6,35 @@ from distutils.spawn import find_executable
 from sys import stdin, stdout
 from re import compile as compile_regex
 import asyncio
+import logging
+from datetime import datetime
+from os import getenv
+from math import ceil
+
+logging.basicConfig(
+    filename=expanduser("~/.dotfiles/vim/temp_dirs/tmp_files/lsp.log"),
+    encoding="utf-8",
+    level=logging.getLevelName(getenv("VIMRC_LSP_LOG_LEVEL", "ERROR")),
+)
+
+
+class FunctionTiming(object):
+    def __init__(self, method):
+        self.start_time = datetime.now()
+        self.method = method
+
+    def __enter__(self):
+        return self.start_time
+
+    def __exit__(self, type, value, traceback):
+        end_time = datetime.now()
+        delta = end_time - self.start_time
+
+        logging.debug(
+            "Finished %s: %s ms",
+            self.method,
+            delta.total_seconds() * 1000,
+        )
 
 
 def parse_args() -> Namespace:
@@ -145,25 +174,22 @@ def complete(contents: List[str], position: str, language: Optional[str] = None)
 
     pos: List[int] = [int(item) for item in position.split(":")]
     linenr: int = pos[0]
-    base = get_base(contents.pop(linenr), pos[1])
-    output: bytes = tokenize_regex_async(contents)
-    output = run(
-        ["fzf", "-i", "--filter", base],
-        capture_output=True,
-        input=output,
-    ).stdout
+    base = get_base(contents[linenr], pos[1])
+    with FunctionTiming("complete:tokenize"):
+        output: bytes = tokenize_regex_async(contents)
+
+    with FunctionTiming("complete:fzf"):
+        output = run(
+            ["fzf", "-i", "--filter", base],
+            capture_output=True,
+            input=output,
+        ).stdout
 
     if not output:
         return
 
-    completions: str = run(
-        [
-            "sort",
-            "-u"
-        ],
-        capture_output=True,
-        input=output,
-    ).stdout.decode("utf-8")
+    with FunctionTiming("complete:sort"):
+        completions: str = "\n".join(sorted(set(output.decode("utf-8").split("\n"))))
 
     if completions:
         print(completions)
@@ -178,7 +204,8 @@ def main() -> None:
     elif args.hover:
         hover(args.hover, args.language)
     elif args.complete:
-        complete(get_contents_from_stdin(), args.position, args.language)
+        with FunctionTiming("complete()"):
+            complete(get_contents_from_stdin(), args.position, args.language)
 
 
 def get_contents_from_stdin() -> List[str]:
@@ -224,14 +251,13 @@ def tokenize_regex_async(contents: List[str]) -> bytes:
 
     size = len(contents)
     count = 12
-    step_size = int(len(contents) / count)
+    step_size = int(ceil(len(contents) / count))
     taken_count = 0
     index = 0
     while index < count:
         taken_count = min(size, taken_count + (step_size * index))
-        tasks.append(
-            loop.create_task(tokenize(contents[taken_count : taken_count + step_size]))
-        )
+        lines = contents[taken_count : taken_count + step_size]
+        tasks.append(loop.create_task(tokenize(lines)))
         index = index + 1
 
     assert taken_count == size, "{} != {}".format(taken_count, size)
