@@ -10,6 +10,7 @@ import logging
 from datetime import datetime
 from os import getenv
 from math import ceil
+from neovim import attach as nvim_attach
 
 logging.basicConfig(
     filename=expanduser("~/.dotfiles/vim/temp_dirs/tmp_files/lsp.log"),
@@ -168,6 +169,19 @@ def hover(token: str, language: str = None):
         return
 
 
+def complete_tags(word: str) -> List[str]:
+    with FunctionTiming("complete_tags::attach"):
+        nvim = nvim_attach("socket", path=getenv("NVIM_LISTEN_ADDRESS"))
+
+    with FunctionTiming("complete_tags::taglist"):
+        tags = nvim.funcs.taglist(word)
+
+    with FunctionTiming("complete_tags::transform"):
+        completion_list: List[str] = [tag.get("name") for tag in tags]
+
+    return completion_list
+
+
 def complete(contents: List[str], position: str, language: Optional[str] = None):
     if not position:
         raise ValueError("position is required.")
@@ -187,14 +201,23 @@ def complete(contents: List[str], position: str, language: Optional[str] = None)
             input=output,
         ).stdout
 
-    if not output:
+    with FunctionTiming("complete_tags()"):
+        tags = complete_tags(base)
+
+    if not output and not tags:
         return
 
+    if output:
+        completions: List[str] = output.decode("utf-8").split("\n")
+    else:
+        completions: List[str] = []
+
+    completions.extend(tags)
     with FunctionTiming("complete:sort"):
-        completions: str = "\n".join(sorted(set(output.decode("utf-8").split("\n"))))
+        completions: List[str] = sorted(set(completions))
 
     if completions:
-        print(completions)
+        print("\n".join(completions))
 
 
 def main() -> None:
