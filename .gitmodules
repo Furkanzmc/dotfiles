@@ -40,6 +40,9 @@
 [submodule "vim/pack/packages/start/vim-smartpairs"]
 	path = vim/pack/packages/start/vim-smartpairs
 	url = https://github.com/gosukiwi/vim-smartpairs.git
+[submodule "vim/pack/packages/start/plenary.nvim"]
+	path = vim/pack/packages/start/plenary.nvim
+	url = https://github.com/nvim-lua/plenary.nvim.git
 
 # Optional Plugins {{{
 
@@ -58,9 +61,6 @@
 [submodule "vim/pack/packages/opt/nvim-treesitter"]
 	path = vim/pack/packages/opt/nvim-treesitter
 	url = https://github.com/nvim-treesitter/nvim-treesitter.git
-[submodule "vim/pack/packages/opt/plenary.nvim"]
-	path = vim/pack/packages/opt/plenary.nvim
-	url = https://github.com/nvim-lua/plenary.nvim.git
 [submodule "vim/pack/packages/opt/rest.nvim"]
 	path = vim/pack/packages/opt/rest.nvim
 	url = https://github.com/NTBBloodbath/rest.nvim.git
@@ -85,3 +85,6 @@
 
 # }}}
 # vim: foldmethod=marker
+[submodule "vim/pack/packages/start/null-ls.nvim"]
+	path = vim/pack/packages/start/null-ls.nvim
+	url = https://github.com/jose-elias-alvarez/null-ls.nvim.git

@@ -15,5 +15,5 @@ if vim.fn.executable("rustup") == 1 then vim.bo.keywordprg = "rustup\\ doc" end
 
 vim.b.vimrc_rust_analyzer_lsp_signs_enabled = 1
 vim.b.vimrc_rust_analyzer_lsp_location_list_enabled = 1
-vim.b.vimrc_efm_lsp_signs_enabled = 1
-vim.b.vimrc_efm_lsp_location_list_enabled = 1
+vim.b.vimrc_null_ls_lsp_signs_enabled = 1
+vim.b.vimrc_null_ls_lsp_location_list_enabled = 1

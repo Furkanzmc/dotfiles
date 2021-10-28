@@ -56,8 +56,8 @@ let b:vimrc_clangd_lsp_signs_enabled = 1
 let b:vimrc_clangd_lsp_location_list_enabled = 1
 let b:vimrc_ccls_lsp_signs_enabled = 1
 let b:vimrc_ccls_lsp_location_list_enabled = 1
-let b:vimrc_efm_lsp_signs_enabled = 1
-let b:vimrc_efm_lsp_location_list_enabled = 1
+let b:vimrc_null_ls_lsp_signs_enabled = 1
+let b:vimrc_null_ls_lsp_location_list_enabled = 1
 
 nnoremap <silent> <buffer> <leader>ch :lua require"vimrc.cpp".swap_source_header()<CR>
 

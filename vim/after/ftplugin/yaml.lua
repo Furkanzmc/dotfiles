@@ -6,5 +6,5 @@ vim.opt_local.cursorcolumn = true
 vim.opt_local.colorcolumn = ""
 vim.opt_local.signcolumn = "yes"
 
-vim.b.vimrc_efm_lsp_signs_enabled = 1
-vim.b.vimrc_efm_lsp_location_list_enabled = 1
+vim.b.vimrc_null_ls_lsp_signs_enabled = 1
+vim.b.vimrc_null_ls_lsp_location_list_enabled = 1

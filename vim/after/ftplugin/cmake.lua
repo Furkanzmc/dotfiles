@@ -8,5 +8,5 @@ opt_local.cursorline = true
 opt_local.colorcolumn = "101"
 opt_local.signcolumn = "number"
 
-b.vimrc_efm_lsp_signs_enabled = 1
-b.vimrc_efm_lsp_location_list_enabled = 1
+b.vimrc_null_ls_lsp_signs_enabled = 1
+b.vimrc_null_ls_lsp_location_list_enabled = 1

@@ -5,6 +5,7 @@ local fn = vim.fn
 local utils = require "vimrc.utils"
 local map = require"futils".map
 local log = require "futils.log"
+local null_ls_sources = require "vimrc.null_ls_sources"
 local M = {}
 
 -- Local Functions {{{
@@ -12,7 +13,8 @@ local M = {}
 -- Utils {{{
 
 local function get_option_var(client, option)
-    return "vimrc_" .. client.name .. "_lsp_" .. option
+    local name = string.gsub(client.name, "-", "_")
+    return "vimrc_" .. name .. "_lsp_" .. option
 end
 
 local function is_enabled(bufnr, client, option)
@@ -224,94 +226,6 @@ local function setup_buffer_vars(client, bufnr)
     end
 end
 
-local function get_efm_languages()
-    return {
-        ["="] = {
-            {
-                completionCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --complete --position ${POSITION}",
-                completionStdin = true,
-                lintSource = "efm-completion",
-                hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --hover ${INPUT}",
-                hoverStdin = false
-            }
-        },
-        lua = {{formatCommand = "lua-format -i", formatStdin = true}},
-        yaml = {
-            {
-                lintCommand = "yamllint -f parsable -",
-                lintStdin = true,
-                lintFormats = {
-                    "%f:%l:%c: [%tarning] %m", "%f:%l:%c: [%trror] %m"
-                },
-                lintSource = "yamllint"
-            }
-        },
-        json = {
-            {
-                formatCommand = "jq --tab . | expand -t4",
-                formatStdin = true,
-                lintCommand = "jq . ",
-                lintStdin = true,
-                lintFormats = {"parse error: %m %l, column %c"},
-                lintSource = "jq"
-            }
-        },
-        cpp = {
-            {
-                formatCommand = "clang-format --style file",
-                formatStdin = true
-                -- lintCommand = "clang-tidy",
-                -- lintStdin = false,
-                -- lintSource = "clang-tidy",
-                -- lintFormats = {
-                --     "%f:%l:%c: %trror: %m",
-                --     "%f:%l:%c: %tarning: %m", "%f:%l:%c: %m"
-                -- }
-            }
-        },
-        qml = {
-            {
-                formatCommand = "qmlformat ${INPUT}",
-                formatStdin = false,
-                lintCommand = "qmllint --check-unqualified ${INPUT}",
-                lintStdin = false,
-                lintFormats = {"%trror: %m", "%f:%l : %m"},
-                lintSource = "qmllint"
-            }
-        },
-        python = {
-            {
-                lintCommand = 'bandit --skips B101 --format custom --msg-template "{relpath}:{line} [bandit:{test_id}]:{severity} {msg}"',
-                lintStdin = false,
-                lintFormats = {"%f:%l %m"},
-                lintSource = "bandit"
-            }, {
-                hoverCommand = "python3 ~/.dotfiles/vim/scripts/lsp.py --language python --hover ${INPUT}",
-                hoverStdin = false
-            }, {
-
-                lintCommand = 'pylint --msg-template="{msg_id}:{path}:{line:3d}:{column} [pylint:{msg_id}] {msg} ({symbol})"',
-                lintStdin = false,
-                lintSource = "pylint",
-                lintFormats = {"%t%n:%f:%l:%c %m"},
-                formatCommand = "black --quiet -",
-                formatStdin = true
-            }
-        },
-        rust = {{formatCommand = "rustfmt", formatStdin = true}},
-        cmake = {
-            {
-                formatCommand = "cmake-format --line-width 100 ${INPUT}",
-                formatStdin = false,
-                lintCommand = 'cmake-lint --line-width 100 ${INPUT}',
-                lintStdin = false,
-                lintSource = "cmake-lint",
-                lintFormats = {"%f:%l: [%t%n] %m", "%f:%l,%c: [%t%n] %m"}
-            }
-        }
-    }
-end
-
 local function setup_signs()
     vim.cmd [[sign define DiagnosticSignError text=✖ texthl=DiagnosticError linehl= numhl=]]
     vim.cmd [[sign define DiagnosticSignWarn text=‼ texthl=DiagnosticWarn linehl= numhl=]]
@@ -453,26 +367,32 @@ function M.setup_lsp()
             "  %#%l:%c - %# %trror: %m", "    %Eerror %m", "    %C%\\s%+%m"
         }
     }
-    if fn.executable("efm-langserver") == 1 then
-        lspconfig.efm.setup {
-            on_attach = setup,
-            init_options = {
-                documentFormatting = true,
-                completion = true,
-                hover = true
-            },
-            settings = {
-                rootMarkers = {".git/"},
-                logLevel = 2,
-                commands = {
-                    {command = "open", arguments = {"${INPUT}"}, title = "ASd"}
-                },
-                languages = get_efm_languages()
-            }
+
+    local null_ls = require "null-ls"
+    null_ls.config({
+        sources = {
+            -- Builtin sources {{{
+            null_ls.builtins.formatting.stylua,
+            null_ls.builtins.formatting.cmake_format,
+            null_ls.builtins.formatting.black,
+            null_ls.builtins.formatting.rustfmt,
+            null_ls.builtins.formatting.clang_format,
+            null_ls.builtins.hover.dictionary,
+            null_ls.builtins.diagnostics.pylint.with(
+                {
+                    condition = function(_)
+                        return fn.expand("$VIMRC_PYLINT_DISABLE") == ""
+                    end
+                }), null_ls.builtins.diagnostics.yamllint, -- }}}
+            -- Custom sources {{{
+            null_ls_sources.hover.pylint_error, null_ls_sources.diagnostics.jq,
+            null_ls_sources.formatting.jq, null_ls_sources.formatting.qmlformat,
+            null_ls_sources.diagnostics.qmllint,
+            null_ls_sources.diagnostics.cmake_lint
+            -- }}}
         }
-    else
-        log.error("vimrc-lsp", "efm-langserver is not installed.")
-    end
+    })
+    lspconfig["null-ls"].setup({on_attach = setup})
 
     setup_signs()
 end
