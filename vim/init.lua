@@ -135,6 +135,8 @@ opt.stal = 2
 -- Always show the status line
 opt.laststatus = 2
 
+opt.pumblend = 10
+
 opt.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
 opt.title = true
 opt.titlelen = 80
