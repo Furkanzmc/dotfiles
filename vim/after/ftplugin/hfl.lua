@@ -1,9 +1,10 @@
-if vim.b.did_ftp == true then return end
+if vim.b.did_ftp == true then
+	return
+end
 
-local abbreviate = require "vimrc.abbreviate"
+local abbreviate = require("vimrc.abbreviate")
 
-abbreviate("today@", "<C-R>=strftime('%Y-%m-%d')<CR>",
-           {buffer = true, silent = true})
+abbreviate("today@", "<C-R>=strftime('%Y-%m-%d')<CR>", { buffer = true, silent = true })
 
 vim.opt.showbreak = "           "
 vim.opt_local.colorcolumn = ""

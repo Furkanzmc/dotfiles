@@ -1,11 +1,11 @@
-vim.cmd [[augroup vimrc_filetypes]]
-vim.cmd [[au!]]
-vim.cmd [[autocmd BufNewFile,BufRead hfl.txt setlocal filetype=hfl]]
-vim.cmd [[autocmd BufNewFile,BufRead qmldir setlocal filetype=qmldir]]
-vim.cmd [[autocmd BufNewFile,BufRead *.qmltypes setlocal filetype=qmldir]]
-vim.cmd [[autocmd BufNewFile,BufRead term://* setlocal filetype=terminal]]
-vim.cmd [[autocmd TermOpen * setlocal filetype=terminal]]
-vim.cmd [[autocmd BufNewFile,BufRead todo.txt setlocal filetype=todo]]
-vim.cmd [[autocmd BufNewFile,BufRead *.todo setlocal filetype=todo]]
-vim.cmd [[autocmd BufNewFile,BufRead *.http setlocal filetype=http]]
-vim.cmd [[augroup END]]
+vim.cmd([[augroup vimrc_filetypes]])
+vim.cmd([[au!]])
+vim.cmd([[autocmd BufNewFile,BufRead hfl.txt setlocal filetype=hfl]])
+vim.cmd([[autocmd BufNewFile,BufRead qmldir setlocal filetype=qmldir]])
+vim.cmd([[autocmd BufNewFile,BufRead *.qmltypes setlocal filetype=qmldir]])
+vim.cmd([[autocmd BufNewFile,BufRead term://* setlocal filetype=terminal]])
+vim.cmd([[autocmd TermOpen * setlocal filetype=terminal]])
+vim.cmd([[autocmd BufNewFile,BufRead todo.txt setlocal filetype=todo]])
+vim.cmd([[autocmd BufNewFile,BufRead *.todo setlocal filetype=todo]])
+vim.cmd([[autocmd BufNewFile,BufRead *.http setlocal filetype=http]])
+vim.cmd([[augroup END]])

@@ -1,4 +1,6 @@
-if vim.b.did_ftp == true then return end
+if vim.b.did_ftp == true then
+	return
+end
 
 vim.bo.suffixesadd = ".lua"
 vim.wo.foldmethod = "expr"
