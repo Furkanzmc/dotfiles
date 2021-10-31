@@ -1,5 +1,5 @@
-[submodule "vim/pack/packages/start/ayar.nvim"]
-	path = vim/pack/packages/start/ayar.nvim
+[submodule "vim/pack/packages/opt/ayar.nvim"]
+	path = vim/pack/packages/opt/ayar.nvim
 	url = https://github.com/Furkanzmc/ayar.nvim.git
 [submodule "vim/pack/packages/start/cosmic_latte"]
 	path = vim/pack/packages/start/cosmic_latte
