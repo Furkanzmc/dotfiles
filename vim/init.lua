@@ -7,7 +7,7 @@ local opt = vim.opt
 local lopt = vim.opt_local
 
 if vim.o.loadplugins == true then
-	g.did_load_filetypes = 1
+    g.did_load_filetypes = 1
 end
 
 -- Disable some built-in plugins
@@ -83,8 +83,8 @@ g.maplocalleader = " "
 
 -- Use ripgrep over grep, if possible
 if fn.executable("rg") then
-	opt.grepprg = "rg --vimgrep $*"
-	opt.grepformat = "%f:%l:%c:%m"
+    opt.grepprg = "rg --vimgrep $*"
+    opt.grepformat = "%f:%l:%c:%m"
 end
 
 -- Means that you can undo even when you close a buffer/VIM
@@ -113,12 +113,12 @@ opt.smartindent = true
 opt.foldtext = "fold#fold_text()"
 
 if fn.executable("pwsh") == 1 and fn.exists("$VIMRC_PWSH_ENABLED") == 1 then
-	opt.shell = "pwsh"
-	opt.shellquote = ""
-	opt.shellpipe = "| Out-File -Encoding UTF8"
-	opt.shellxquote = ""
-	opt.shellcmdflag = "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command"
-	opt.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
+    opt.shell = "pwsh"
+    opt.shellquote = ""
+    opt.shellpipe = "| Out-File -Encoding UTF8"
+    opt.shellxquote = ""
+    opt.shellcmdflag = "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command"
+    opt.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
 end
 
 -- Specify the behavior when switching between buffers
@@ -141,19 +141,19 @@ opt.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
 opt.title = true
 opt.titlelen = 80
 opt.titlestring = table.concat({
-	"%<",
-	'%{exists("$VIRTUAL_ENV") ? ".venv" : ""}',
-	'%{exists("$VIRTUAL_ENV") && exists("$ENV_NAME") ? "://" : ""}',
-	'%{exists("$ENV_NAME") ? expand("$ENV_NAME") : ""}',
-	"%=",
-	'%{strftime("%b\\ %d\\ %A,\\ %H:%M")}',
+    "%<",
+    '%{exists("$VIRTUAL_ENV") ? ".venv" : ""}',
+    '%{exists("$VIRTUAL_ENV") && exists("$ENV_NAME") ? "://" : ""}',
+    '%{exists("$ENV_NAME") ? expand("$ENV_NAME") : ""}',
+    "%=",
+    '%{strftime("%b\\ %d\\ %A,\\ %H:%M")}',
 })
 opt.statusline = '%!luaeval("require\'vimrc.statusline\'.init(" . g:statusline_winid . ")")'
 
 if vim.env.VIMRC_BACKGROUND == "dark" then
-	vim.opt.background = "dark"
+    vim.opt.background = "dark"
 else
-	vim.opt.background = "light"
+    vim.opt.background = "light"
 end
 
 opt.diffopt = "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
@@ -175,7 +175,7 @@ opt.wildignore:append("*.qmlc")
 opt.wildignore:append("*jsc")
 
 if fn.has("mac") == 1 then
-	opt.wildignore:append("*/.DS_Store")
+    opt.wildignore:append("*/.DS_Store")
 end
 
 opt.wildignorecase = true
@@ -248,10 +248,16 @@ map("c", "<C-d>", "<Down>", { noremap = true })
 map("n", "<leader><CR>", ":nohlsearch<CR>", { silent = true })
 
 -- Jump to the previous git conflict start
-map("n", "[cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'Wb')<CR>", { silent = true, noremap = true })
+map("n", "[cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'Wb')<CR>", {
+    silent = true,
+    noremap = true,
+})
 
 -- Jump to the previous git conflict end
-map("n", "[ce", ":call search('^>\\{4,\\} \\w\\+.*$', 'Wb')<CR>", { silent = true, noremap = true })
+map("n", "[ce", ":call search('^>\\{4,\\} \\w\\+.*$', 'Wb')<CR>", {
+    silent = true,
+    noremap = true,
+})
 
 -- Jump to the next git conflict start
 map("n", "]cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'W')<CR>", { silent = true, noremap = true })
@@ -283,15 +289,20 @@ map("n", "[b", ':execute ":" . v:count . "bprevious"<CR>', { silent = true, nore
 
 -- Switch to a terminal buffer using [count]gs.
 map(
-	"n",
-	"gs",
-	'<cmd>execute "lua require\\"vimrc.terminal\\".switch_to_terminal(" . v:count . ")"<CR>',
-	{ silent = true, noremap = true }
+    "n",
+    "gs",
+    '<cmd>execute "lua require\\"vimrc.terminal\\".switch_to_terminal(" . v:count . ")"<CR>',
+    { silent = true, noremap = true }
 )
 
 -- Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 -- Allows running macros only on selected files.
-map("x", "@", ':<C-u>echo "@".getcmdline() | execute ":\'<,\'>normal @" . nr2char(getchar())<CR>', { silent = true })
+map(
+    "x",
+    "@",
+    ':<C-u>echo "@".getcmdline() | execute ":\'<,\'>normal @" . nr2char(getchar())<CR>',
+    { silent = true }
+)
 
 map("x", ".", ":normal .<CR>", { silent = true })
 
@@ -315,14 +326,21 @@ map("t", "<C-w><C-j>", "<C-\\><C-n><C-w>j", { silent = true, noremap = true })
 map("t", "<C-w><C-k>", "<C-\\><C-n><C-w>k", { silent = true, noremap = true })
 map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", { silent = true, noremap = true })
 
-map("n", "gx", "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>", { silent = true, noremap = true })
+map(
+    "n",
+    "gx",
+    "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>",
+    { silent = true, noremap = true }
+)
 
 cmd(
-	[[command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')]]
+    [[command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')]]
 )
 
 cmd([[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]])
-cmd([[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]])
+cmd(
+    [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
+)
 cmd([[command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)]])
 cmd([[command! -nargs=? JiraOpenTicketJson :call jira#open_ticket_in_json(<f-args>)]])
 
@@ -355,10 +373,10 @@ cmd([[cnoreabbrev bc Bclose]])
 -- Pre-configuration {{{
 
 if vim.o.loadplugins == true then
-	cmd([[augroup vimrc_source_post]])
-	cmd([[au!]])
-	cmd([[autocmd SourcePost * lua require"vimrc".on_source_post()]])
-	cmd([[augroup END]])
+    cmd([[augroup vimrc_source_post]])
+    cmd([[au!]])
+    cmd([[autocmd SourcePost * lua require"vimrc".on_source_post()]])
+    cmd([[augroup END]])
 end
 
 -- vim-polyglot {{{
@@ -366,64 +384,64 @@ end
 -- Disable markdown support for polyglot because it messes up with syntax
 -- highlighting.
 g.polyglot_disabled = {
-	"bash",
-	"beancount",
-	"bibtex",
-	"c",
-	"c_sharp",
-	"clojure",
-	"comment",
-	"cpp",
-	"css",
-	"dart",
-	"devicetree",
-	"dockerfile",
-	"erlang",
-	"fennel",
-	"fish",
-	"go",
-	"gomod",
-	"graphql",
-	"html",
-	"java",
-	"javascript",
-	"jsdoc",
-	"json",
-	"JSON",
-	"julia",
-	"kotlin",
-	"latex",
-	"ledger",
-	"lua",
-	"nix",
-	"ocaml",
-	"ocaml_interface",
-	"ocamllex",
-	"php",
-	"python",
-	"ql",
-	"r",
-	"regex",
-	"rst",
-	"ruby",
-	"rust",
-	"sparql",
-	"supercollider",
-	"svelte",
-	"teal",
-	"toml",
-	"tsx",
-	"turtle",
-	"typescript",
-	"verilog",
-	"vue",
-	"yaml",
-	"zig",
-	"http",
+    "bash",
+    "beancount",
+    "bibtex",
+    "c",
+    "c_sharp",
+    "clojure",
+    "comment",
+    "cpp",
+    "css",
+    "dart",
+    "devicetree",
+    "dockerfile",
+    "erlang",
+    "fennel",
+    "fish",
+    "go",
+    "gomod",
+    "graphql",
+    "html",
+    "java",
+    "javascript",
+    "jsdoc",
+    "json",
+    "JSON",
+    "julia",
+    "kotlin",
+    "latex",
+    "ledger",
+    "lua",
+    "nix",
+    "ocaml",
+    "ocaml_interface",
+    "ocamllex",
+    "php",
+    "python",
+    "ql",
+    "r",
+    "regex",
+    "rst",
+    "ruby",
+    "rust",
+    "sparql",
+    "supercollider",
+    "svelte",
+    "teal",
+    "toml",
+    "tsx",
+    "turtle",
+    "typescript",
+    "verilog",
+    "vue",
+    "yaml",
+    "zig",
+    "http",
 }
 
 if vim.o.loadplugins == true then
-	cmd([[packadd vim-polyglot]])
+    cmd([[packadd vim-polyglot]])
 end
 
 -- }}}
@@ -439,39 +457,50 @@ g.tagbar_show_linenumbers = 1
 -- nvim-lsp {{{
 
 if vim.o.loadplugins == true then
-	cmd([[augroup vimrc_nvim_lsp_config]])
-	cmd([[autocmd!]])
-	cmd([[autocmd VimEnter * lua require'vimrc.lsp'.setup_lsp()]])
-	cmd([[augroup END]])
+    cmd([[augroup vimrc_nvim_lsp_config]])
+    cmd([[autocmd!]])
+    cmd([[autocmd VimEnter * lua require'vimrc.lsp'.setup_lsp()]])
+    cmd([[augroup END]])
 end
 
 -- }}}
 
 -- Completion {{{
 
-cmd([[augroup vimrc_completion]])
-cmd([[autocmd!]])
-cmd([[autocmd BufEnter * lua require'vimrc.completion'.setup_completion(vim.api.nvim_get_current_buf())]])
-cmd([[augroup END]])
+if vim.o.loadplugins == true then
+    require("sekme").setup({
+        completion_key = "<C-n>",
+        completion_rkey = "<C-p>",
+        custom_sources = {
+            {
+                complete = require("vimrc.completions.mnemonics").complete_mnemonic,
+            },
+        },
+    })
+end
 
 -- }}}
 
 -- nvim-treesitter {{{
 
 if vim.o.loadplugins == true then
-	cmd([[augroup vimrc_plugin_nvim_treesitter]])
-	cmd([[au!]])
-	cmd(
-		"au FileType "
-			.. table.concat(g.polyglot_disabled, ",")
-			.. " setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()"
-	)
-	cmd([[augroup END]])
+    cmd([[augroup vimrc_plugin_nvim_treesitter]])
+    cmd([[au!]])
+    cmd(
+        "au FileType "
+            .. table.concat(g.polyglot_disabled, ",")
+            .. " setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()"
+    )
+    cmd([[augroup END]])
 
-	cmd([[augroup vimrc_plugin_nvim_treesitter_init]])
-	cmd([[au!]])
-	cmd("au FileType " .. table.concat(g.polyglot_disabled, ",") .. " lua require'vimrc'.setup_treesitter()")
-	cmd([[augroup END]])
+    cmd([[augroup vimrc_plugin_nvim_treesitter_init]])
+    cmd([[au!]])
+    cmd(
+        "au FileType "
+            .. table.concat(g.polyglot_disabled, ",")
+            .. " lua require'vimrc'.setup_treesitter()"
+    )
+    cmd([[augroup END]])
 end
 
 -- }}}
@@ -482,25 +511,25 @@ g.firvish_shell = "pwsh"
 g.firvish_use_default_mappings = true
 
 if fn.has("mac") == 1 then
-	require("firvish.notifications").notify = function(msg, log_level, opts)
-		opts.title = opts.title or "Neovim"
-		local firvish = require("firvish.job_control")
-		firvish.start_job({
-			cmd = {
-				"pwsh",
-				"-C",
-				"Post-Notification",
-				"-Title",
-				'"' .. opts.title .. '"',
-				"-Message",
-				'"' .. msg .. '"',
-			},
-			filetype = "firvish-job",
-			title = "Notification",
-			is_background_job = true,
-			listed = false,
-		})
-	end
+    require("firvish.notifications").notify = function(msg, log_level, opts)
+        opts.title = opts.title or "Neovim"
+        local firvish = require("firvish.job_control")
+        firvish.start_job({
+            cmd = {
+                "pwsh",
+                "-C",
+                "Post-Notification",
+                "-Title",
+                '"' .. opts.title .. '"',
+                "-Message",
+                '"' .. msg .. '"',
+            },
+            filetype = "firvish-job",
+            title = "Notification",
+            is_background_job = true,
+            listed = false,
+        })
+    end
 end
 
 -- }}}
@@ -514,7 +543,7 @@ g.markdown_fold_style = "nested"
 -- nvim-comment {{{
 
 if vim.o.loadplugins == true then
-	require("nvim_comment").setup({ comment_empty = false })
+    require("nvim_comment").setup({ comment_empty = false })
 end
 
 -- }}}
@@ -540,72 +569,74 @@ g.matchup_matchparen_deferred_hide_delay = 500
 local options = require("options")
 
 options.register_option({
-	name = "clstrailingwhitespace",
-	default = true,
-	type_info = "boolean",
-	source = "buffers",
-	buffer_local = true,
+    name = "clstrailingwhitespace",
+    default = true,
+    type_info = "boolean",
+    source = "buffers",
+    buffer_local = true,
 })
 options.register_option({
-	name = "clstrailingspacelimit",
-	default = 0,
-	type_info = "number",
-	source = "buffers",
-	buffer_local = true,
-	description = "If the number of trailing white spaces below this number, they will be cleared automatically. Otherwise you will be prompted for each one.",
+    name = "clstrailingspacelimit",
+    default = 0,
+    type_info = "number",
+    source = "buffers",
+    buffer_local = true,
+    description = "If the number of trailing white spaces below this number, they will be cleared automatically. Otherwise you will be prompted for each one.",
 })
 options.register_option({
-	name = "trailingwhitespacehighlight",
-	default = true,
-	type_info = "boolean",
-	source = "buffers",
-	buffer_local = true,
+    name = "trailingwhitespacehighlight",
+    default = true,
+    type_info = "boolean",
+    source = "buffers",
+    buffer_local = true,
 })
 options.register_option({
-	name = "indentsize",
-	default = 4,
-	type_info = "number",
-	source = "buffers",
-	buffer_local = true,
+    name = "indentsize",
+    default = 4,
+    type_info = "number",
+    source = "buffers",
+    buffer_local = true,
 })
 options.register_option({
-	name = "shell",
-	default = "pwsh",
-	type_info = "string",
-	source = "options",
-	global = true,
+    name = "shell",
+    default = "pwsh",
+    type_info = "string",
+    source = "options",
+    global = true,
 })
 options.register_option({
-	name = "scratchpad",
-	default = false,
-	type_info = "boolean",
-	source = "options",
-	buffer_local = true,
+    name = "scratchpad",
+    default = false,
+    type_info = "boolean",
+    source = "options",
+    buffer_local = true,
 })
 options.register_option({
-	name = "markdownfenced",
-	default = {},
-	type_info = "table",
-	source = "buffers",
-	buffer_local = true,
+    name = "markdownfenced",
+    default = {},
+    type_info = "table",
+    source = "buffers",
+    buffer_local = true,
 })
 options.register_option({
-	name = "todofenced",
-	default = {},
-	type_info = "table",
-	source = "todo",
-	buffer_local = true,
+    name = "todofenced",
+    default = {},
+    type_info = "table",
+    source = "todo",
+    buffer_local = true,
 })
 
 if fn.has("mac") == 1 then
-	vim.opt.shell = "zsh"
-	require("options").set("shell", "pwsh")
+    vim.opt.shell = "zsh"
+    require("options").set("shell", "pwsh")
 else
-	require("options").set("shell", "cmd")
+    require("options").set("shell", "cmd")
 end
 
 cmd([[augroup vimrc_options_plugin]])
-cmd([[autocmd BufReadPost *.md,todo.txt :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]])
+cmd(
+    [[autocmd BufReadPost *.md,todo.txt :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]]
+)
 cmd([[augroup END]])
 
 -- }}}
@@ -640,7 +671,7 @@ cmd([[command! -nargs=1 Search :call help#search_docs(<f-args>)]])
 -- Sort {{{
 
 cmd(
-	[[command -complete=customlist,custom_sort#sort_command_completion -range -nargs=1 -bar Sort :call custom_sort#sort(<f-args>, <line1>, <line2>)]]
+    [[command -complete=customlist,custom_sort#sort_command_completion -range -nargs=1 -bar Sort :call custom_sort#sort(<f-args>, <line1>, <line2>)]]
 )
 
 -- }}}
@@ -649,16 +680,16 @@ cmd(
 
 map("n", "<C-q>z", ":cclose<CR>", { silent = true })
 map(
-	"n",
-	"<C-q>o",
-	":copen | if exists('g:vimrc_quickfix_size_cache') && has_key(g:vimrc_quickfix_size_cache, tabpagenr()) | execute 'resize ' . g:vimrc_quickfix_size_cache[tabpagenr()] | endif<CR>",
-	{ silent = true }
+    "n",
+    "<C-q>o",
+    ":copen | if exists('g:vimrc_quickfix_size_cache') && has_key(g:vimrc_quickfix_size_cache, tabpagenr()) | execute 'resize ' . g:vimrc_quickfix_size_cache[tabpagenr()] | endif<CR>",
+    { silent = true }
 )
 map(
-	"n",
-	"<C-q>lo",
-	":lopen | if exists('g:vimrc_quickfix_size_cache') && has_key(g:vimrc_quickfix_size_cache, tabpagenr()) | execute 'resize ' . g:vimrc_quickfix_size_cache[tabpagenr()] | endif<CR>",
-	{ silent = true }
+    "n",
+    "<C-q>lo",
+    ":lopen | if exists('g:vimrc_quickfix_size_cache') && has_key(g:vimrc_quickfix_size_cache, tabpagenr()) | execute 'resize ' . g:vimrc_quickfix_size_cache[tabpagenr()] | endif<CR>",
+    { silent = true }
 )
 map("n", "<C-q>lz", ":lclose<CR>", { silent = true })
 
@@ -674,16 +705,31 @@ require("vimrc.textobjects").init()
 
 require("vimrc.buffers").init()
 
-map("v", "<leader>s", ":call buffers#visual_selection('search', '')<CR>", { silent = true, noremap = true })
-map("v", "<leader>r", ":call buffers#visual_selection('replace', '')<CR>", { silent = true, noremap = true })
+map(
+    "v",
+    "<leader>s",
+    ":call buffers#visual_selection('search', '')<CR>",
+    { silent = true, noremap = true }
+)
+map(
+    "v",
+    "<leader>r",
+    ":call buffers#visual_selection('replace', '')<CR>",
+    { silent = true, noremap = true }
+)
 
 map(
-	"n",
-	"<leader>cc",
-	":lua require'vimrc.buffers'.toggle_colorcolumn(vim.api.nvim_win_get_cursor(0)[2] + 1)<CR>",
-	{ silent = true, noremap = true }
+    "n",
+    "<leader>cc",
+    ":lua require'vimrc.buffers'.toggle_colorcolumn(vim.api.nvim_win_get_cursor(0)[2] + 1)<CR>",
+    { silent = true, noremap = true }
 )
-map("n", "<leader>cd", ":lua require'vimrc.buffers'.toggle_colorcolumn(-1)<CR>", { silent = true, noremap = true })
+map(
+    "n",
+    "<leader>cd",
+    ":lua require'vimrc.buffers'.toggle_colorcolumn(-1)<CR>",
+    { silent = true, noremap = true }
+)
 
 cmd([[command! CleanTrailingWhiteSpace :lua require"vimrc.buffers".clean_trailing_spaces()]])
 
@@ -695,13 +741,15 @@ cmd([[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]])
 cmd([[augroup vimrc_plugin_buffers]])
 cmd([[au!]])
 cmd(
-	[[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html,*.lua :lua require"vimrc.buffers".clean_trailing_spaces()]]
+    [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html,*.lua :lua require"vimrc.buffers".clean_trailing_spaces()]]
 )
 cmd([[augroup END]])
 
 cmd([[augroup vimrc_trailing_white_space_highlight]])
 cmd([[autocmd!]])
-cmd([[autocmd BufReadPost * lua require"vimrc.buffers".setup_white_space_highlight(vim.fn.bufnr())]])
+cmd(
+    [[autocmd BufReadPost * lua require"vimrc.buffers".setup_white_space_highlight(vim.fn.bufnr())]]
+)
 cmd([[augroup END]])
 
 -- }}}
@@ -723,7 +771,7 @@ cmd([[augroup END]])
 cmd([[augroup vimrc_plugin_fold]])
 cmd([[autocmd!]])
 cmd(
-	[[autocmd BufReadPost,BufNew,BufEnter * if &foldtext != "fold#fold_text()" | setlocal foldtext=fold#fold_text() | endif]]
+    [[autocmd BufReadPost,BufNew,BufEnter * if &foldtext != "fold#fold_text()" | setlocal foldtext=fold#fold_text() | endif]]
 )
 cmd([[augroup END]])
 
@@ -732,12 +780,12 @@ cmd([[augroup END]])
 -- Custom Find {{{
 
 if fn.executable("fd") then
-	cmd(
-		[[ command! -complete=customlist,find#complete -nargs=* -range Find :lua require'vimrc.find'.open_files(<q-args>, false)]]
-	)
-	cmd(
-		[[ command! -complete=customlist,find#complete -nargs=* -range SFind :lua require'vimrc.find'.open_files(<q-args>, true)]]
-	)
+    cmd(
+        [[ command! -complete=customlist,find#complete -nargs=* -range Find :lua require'vimrc.find'.open_files(<q-args>, false)]]
+    )
+    cmd(
+        [[ command! -complete=customlist,find#complete -nargs=* -range SFind :lua require'vimrc.find'.open_files(<q-args>, true)]]
+    )
 end
 
 -- }}}
@@ -747,23 +795,29 @@ end
 cmd([[augroup vimrc_init]])
 cmd([[autocmd!]])
 cmd(
-	[[autocmd BufReadPre,FileReadPre *.http :if !exists("g:vimrc_rest_nvim_loaded") && &loadplugins | packadd rest.nvim | call luaeval('require"vimrc".setup_rest_nvim()') | let g:vimrc_rest_nvim_loaded = v:true | endif]]
+    [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:vimrc_rest_nvim_loaded") && &loadplugins | packadd rest.nvim | call luaeval('require"vimrc".setup_rest_nvim()') | let g:vimrc_rest_nvim_loaded = v:true | endif]]
 )
-cmd([[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]])
+cmd(
+    [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
+)
 cmd([[autocmd VimEnter * lua require'vimrc'.create_custom_nvim_server()]])
 
 if vim.o.loadplugins == true then
-	cmd([[autocmd VimEnter * colorscheme cosmic_latte ]])
-	cmd([[autocmd VimEnter * runtime! ftdetect/*.vim ftdetect/*.lua after/ftdetect/*.vim after/ftdetect/*.lua]])
+    cmd([[autocmd VimEnter * colorscheme cosmic_latte ]])
+    cmd(
+        [[autocmd VimEnter * runtime! ftdetect/*.vim ftdetect/*.lua after/ftdetect/*.vim after/ftdetect/*.lua]]
+    )
 end
 -- Return to last edit position when opening files (You want this!)
-cmd([[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]])
+cmd(
+    [[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]
+)
 cmd([[autocmd BufReadPost * lua require'vimrc'.load_dictionary()]])
 
 cmd([[augroup END]])
 
 if fn.filereadable(fn.expand("~/.vimrc")) == 1 then
-	cmd("source ~/.vimrc")
+    cmd("source ~/.vimrc")
 end
 
 -- vim: foldmethod=marker

@@ -2,7 +2,6 @@ local vim = vim
 local fn = vim.fn
 local helpers = require("null-ls.helpers")
 local methods = require("null-ls.methods")
-local completion = require("vimrc.completion")
 local buffers_source = require("vimrc.completions.buffers").new()
 local M = {}
 
@@ -164,22 +163,6 @@ M.completion = {
             name="buffers",
             fn = function(params, done)
                 buffers_source:complete(params, done)
-            end,
-            async = true,
-            use_cache = true,
-        },
-    }),
-    mnemonics = helpers.make_builtin({
-        method = COMPLETION,
-        filetypes = {},
-        name = "mnemonics",
-        generator = {
-            fn = function(params, done)
-                local mnemonics = completion.complete_mnemonic(
-                    params.content,
-                    params.word_to_complete
-                )
-                done(mnemonics)
             end,
             async = true,
             use_cache = true,

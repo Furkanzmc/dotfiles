@@ -420,7 +420,6 @@ function M.setup_lsp()
             null_ls_sources.formatting.qmlformat,
             null_ls_sources.diagnostics.qmllint,
             null_ls_sources.diagnostics.cmake_lint,
-            null_ls_sources.completion.mnemonics,
             null_ls_sources.completion.buffers,
             -- }}}
         },

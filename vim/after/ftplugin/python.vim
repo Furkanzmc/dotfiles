@@ -37,12 +37,6 @@ let b:vimrc_null_ls_lsp_location_list_enabled = 1
 let b:vimrc_pyright_lsp_signs_enabled = 1
 let b:vimrc_pyright_lsp_location_list_enabled = 1
 
-lua << EOF
-require"vimrc.completion".add_source({
-    keys = "<c-x><c-]>"
-})
-EOF
-
 " Abbreviations {{{
 
 abbreviate <silent> <buffer> im@ import <C-R>=abbreviations#eat_char('\s')<CR>
