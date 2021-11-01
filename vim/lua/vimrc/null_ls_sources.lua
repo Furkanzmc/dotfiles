@@ -160,14 +160,14 @@ M.completion = {
         filetypes = {},
         name = "buffers",
         generator = {
-            name="buffers",
+            name = "buffers",
             fn = function(params, done)
                 buffers_source:complete(params, done)
             end,
             async = true,
             use_cache = true,
         },
-    })
+    }),
 }
 
 return M
