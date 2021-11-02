@@ -405,6 +405,7 @@ function M.setup_lsp()
             null_ls.builtins.formatting.black,
             null_ls.builtins.formatting.rustfmt,
             null_ls.builtins.formatting.clang_format,
+            null_ls.builtins.formatting.qmlformat,
             null_ls.builtins.hover.dictionary,
             null_ls.builtins.diagnostics.pylint.with({
                 condition = function(_)
@@ -412,6 +413,7 @@ function M.setup_lsp()
                 end,
             }),
             null_ls.builtins.diagnostics.yamllint,
+            null_ls.builtins.diagnostics.qmllint,
             -- }}}
             -- Custom sources {{{
             null_ls_sources.hover.pylint_error,
