@@ -35,11 +35,7 @@ def get_nvim_processes() -> List[Process]:
     for process in process_iter():
         try:
             process_name = process.name()
-        except (
-            NoSuchProcess,
-            AccessDenied,
-            ZombieProcess,
-        ):
+        except:
             pass
         else:
             if process_name == "nvim.exe" or process_name == "nvim":
