@@ -306,7 +306,7 @@ function Build-Neovim() {
     }
 
     if ($IsWindows) {
-        Import-VisualStudioVars
+        Import-VisualStudioVars -Architecture x64
     }
 
     Write-Host -ForegroundColor Green "Changing directory to .deps"
