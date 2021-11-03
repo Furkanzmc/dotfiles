@@ -572,7 +572,7 @@ g.markdown_fold_style = "nested"
 -- nvim-comment {{{
 
 if vim.o.loadplugins == true then
-    require("nvim_comment").setup({ comment_empty = false })
+    require("Comment").setup({ ignore = "^$" })
 end
 
 -- }}}
