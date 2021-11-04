@@ -414,6 +414,7 @@ function M.setup_lsp()
             }),
             null_ls.builtins.diagnostics.yamllint,
             null_ls.builtins.diagnostics.qmllint,
+            null_ls.builtins.completion.spell,
             -- }}}
             -- Custom sources {{{
             null_ls_sources.hover.pylint_error,
