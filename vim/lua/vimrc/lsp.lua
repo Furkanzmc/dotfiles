@@ -397,7 +397,7 @@ function M.setup_lsp()
 
     local null_ls = require("null-ls")
     null_ls.config({
-        debug = true,
+        debug = vim.fn.expand("$VIMRC_NULL_LS_DEBUG") ~= "",
         sources = {
             -- Builtin sources {{{
             null_ls.builtins.formatting.stylua,
