@@ -48,7 +48,10 @@ M.diagnostics = {
             to_stdin = true,
             format = "raw",
             from_stderr = true,
-            on_output = helpers.diagnostics.from_errorformat([[parse error: %m %l, column %c]], "jq"),
+            on_output = helpers.diagnostics.from_errorformat(
+                [[parse error: %m %l, column %c]],
+                "jq"
+            ),
         },
         factory = helpers.generator_factory,
     }),
