@@ -119,6 +119,10 @@ if fn.executable("pwsh") == 1 and fn.exists("$VIMRC_PWSH_ENABLED") == 1 then
     opt.shellxquote = ""
     opt.shellcmdflag = "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command"
     opt.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
+elseif fn.has("mac") == 1 then
+    vim.opt.shell = "zsh"
+else
+    vim.opt.shell = "cmd"
 end
 
 -- Specify the behavior when switching between buffers
@@ -655,12 +659,7 @@ options.register_option({
     buffer_local = true,
 })
 
-if fn.has("mac") == 1 then
-    vim.opt.shell = "zsh"
-    require("options").set("shell", "pwsh")
-else
-    require("options").set("shell", "cmd")
-end
+options.set("shell", vim.opt.shell:get())
 
 cmd([[augroup vimrc_options_plugin]])
 cmd(
