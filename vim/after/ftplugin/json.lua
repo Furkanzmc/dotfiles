@@ -1,5 +1,5 @@
 if vim.b.did_ftp == true then
-	return
+    return
 end
 
 vim.opt_local.foldmethod = "indent"
@@ -8,7 +8,7 @@ vim.opt_local.signcolumn = "yes"
 vim.bo.suffixesadd = ".json"
 
 if vim.fn.executable("jq") == 1 then
-	vim.bo.formatprg = "jq"
+    vim.bo.formatprg = "jq"
 end
 
 vim.b.vimrc_null_ls_lsp_signs_enabled = 1

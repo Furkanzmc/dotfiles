@@ -470,7 +470,7 @@ g.polyglot_disabled = {
     "yaml",
     "yang",
     "zig",
-    "http"
+    "http",
 }
 
 if vim.o.loadplugins == true then

@@ -1,5 +1,5 @@
 if vim.b.did_ftp == true then
-	return
+    return
 end
 
 local map = require("futils").map

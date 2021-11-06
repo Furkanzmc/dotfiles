@@ -1,11 +1,11 @@
 if vim.b.did_ftp == true then
-	return
+    return
 end
 
 if vim.o.loadplugins and vim.g.vimrc_markdown_loaded_plugins == nil then
-	vim.cmd([[packadd vim-markdown-folding]])
-	vim.cmd([[packadd SyntaxRange]])
-	vim.g.vimrc_markdown_loaded_plugins = true
+    vim.cmd([[packadd vim-markdown-folding]])
+    vim.cmd([[packadd SyntaxRange]])
+    vim.g.vimrc_markdown_loaded_plugins = true
 end
 
 vim.opt_local.spell = true
@@ -16,5 +16,5 @@ vim.opt_local.textwidth = 99
 vim.opt_local.cursorline = true
 
 if vim.fn.exists(":RunQML") ~= 2 then
-	vim.cmd([[command -buffer -range RunQML :call qml#run()]])
+    vim.cmd([[command -buffer -range RunQML :call qml#run()]])
 end

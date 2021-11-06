@@ -418,8 +418,8 @@ function M.setup_lsp()
                 generator_opts = {
                     runtime_condition = function(_)
                         return vim.opt_local.spell:get()
-                    end
-                }
+                    end,
+                },
             }),
             null_ls.builtins.completion.tags,
             -- }}}
