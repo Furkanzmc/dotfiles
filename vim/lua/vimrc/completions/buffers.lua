@@ -1,3 +1,5 @@
+-- Code is from cmp-buffer: https://github.com/hrsh7th/cmp-buffer
+
 local s_defaults = {
     keyword_pattern = [[\%(-\?\d\+\%(\.\d\+\)\?\|\h\w*\%([\-]\w*\)*\)]],
     get_bufnrs = function()
