@@ -5,6 +5,8 @@ endif
 setlocal spell
 setlocal colorcolumn=
 setlocal nonumber
+setlocal nocursorline
+setlocal nocursorcolumn
 
 setlocal norelativenumber
 

@@ -12,6 +12,8 @@ setlocal signcolumn=number
 setlocal suffixesadd=.cpp,.h,.hxx,.cxx,.hpp,_p.h,_p_p.h
 setlocal includeexpr=cpp#includeexpr(v:fname)
 setlocal commentstring=//%s
+setlocal nocursorline
+setlocal nocursorcolumn
 
 " Assertion
 let &l:errorformat = 'Assertion fail%td: (%m)\, function %s\, file %f\, line %l\.'

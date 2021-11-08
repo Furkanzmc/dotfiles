@@ -11,6 +11,7 @@ setlocal norelativenumber
 setlocal cursorline
 
 setlocal signcolumn=no
+setlocal nocursorcolumn
 
 " Jump to the previous shell prompt
 nmap <buffer> <silent> [t :call search('^\(!!\ =>\\|=>\)', 'Wb')<CR>

@@ -5,6 +5,9 @@ end
 local map = require("futils").map
 local bufnr = vim.api.nvim_get_current_buf()
 
+vim.opt_local.cursorline = true
+vim.opt_local.cursorcolumn = false
+
 if vim.g.vimrc_dirvish_virtual_text_prefix == nil then
     vim.g.vimrc_dirvish_virtual_text_prefix = "> "
 end

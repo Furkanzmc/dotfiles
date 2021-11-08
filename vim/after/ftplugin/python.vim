@@ -27,6 +27,9 @@ setlocal indentexpr=
 setlocal includeexpr=python#includeexpr(v:fname)
 setlocal suffixesadd=.py
 
+setlocal nocursorline
+setlocal nocursorcolumn
+
 if executable("black")
     setlocal formatprg=black\ --quiet\ -
 endif

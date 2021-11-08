@@ -9,6 +9,7 @@ endif
 
 setlocal colorcolumn=
 setlocal cursorline
+setlocal nocursorcolumn
 setlocal foldmethod=expr
 setlocal textwidth=1000
 
