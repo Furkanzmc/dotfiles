@@ -430,11 +430,21 @@ function M.setup_lsp()
             null_ls_sources.formatting.qmlformat,
             null_ls_sources.diagnostics.qmllint,
             null_ls_sources.diagnostics.cmake_lint,
-            null_ls_sources.completion.buffers,
             -- }}}
         },
     })
     lspconfig["null-ls"].setup({ on_attach = setup })
+    vim.cmd(
+        [[packadd cmp-buffer | lua require('cmp').register_source('buffer', require('cmp_buffer').new())]]
+    )
+    vim.cmd(
+        [[packadd cmp-path | lua require('cmp').register_source('path', require('cmp_path').new())]]
+    )
+    if vim.fn.expand("$VIMRC_LSP_TREESITTER_ENABLED") == 1 then
+        vim.cmd(
+        [[packadd cmp-treesitter | lua require('cmp').register_source('treesitter', require('cmp_treesitter').new())]]
+        )
+    end
 
     setup_signs()
 end

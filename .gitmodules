@@ -86,3 +86,12 @@
 [submodule "vim/pack/packages/opt/vim-polyglot"]
 	path = vim/pack/packages/opt/vim-polyglot
 	url = https://github.com/sheerun/vim-polyglot.git
+[submodule "vim/pack/packages/opt/cmp-path"]
+	path = vim/pack/packages/opt/cmp-path
+	url = https://github.com/hrsh7th/cmp-path.git
+[submodule "vim/pack/packages/opt/cmp-buffer"]
+	path = vim/pack/packages/opt/cmp-buffer
+	url = https://github.com/hrsh7th/cmp-buffer.git
+[submodule "vim/pack/packages/opt/cmp-treesitter"]
+	path = vim/pack/packages/opt/cmp-treesitter
+	url = https://github.com/ray-x/cmp-treesitter.git

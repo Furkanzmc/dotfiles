@@ -2,13 +2,11 @@ local vim = vim
 local fn = vim.fn
 local helpers = require("null-ls.helpers")
 local methods = require("null-ls.methods")
-local buffers_source = require("vimrc.completions.buffers").new()
 local M = {}
 
 local HOVER = methods.internal.HOVER
 local DIAGNOSTICS = methods.internal.DIAGNOSTICS
 local FORMATTING = methods.internal.FORMATTING
-local COMPLETION = methods.internal.COMPLETION
 
 local function define_pylint_code(cword)
     local lines = {}
@@ -92,22 +90,6 @@ M.hover = {
             fn = function(_, done)
                 local cword = vim.fn.expand("<cword>")
                 done(define_pylint_code(cword))
-            end,
-            async = true,
-            use_cache = true,
-        },
-    }),
-}
-
-M.completion = {
-    buffers = helpers.make_builtin({
-        method = COMPLETION,
-        filetypes = {},
-        name = "buffers",
-        generator = {
-            name = "buffers",
-            fn = function(params, done)
-                buffers_source:complete(params, done)
             end,
             async = true,
             use_cache = true,
