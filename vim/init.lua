@@ -595,6 +595,8 @@ g.matchup_matchparen_deferred = 1
 g.matchup_matchparen_deferred_show_delay = 100
 g.matchup_matchparen_deferred_hide_delay = 500
 
+map("n", "<leader>mi", ":MatchupWhereAmI<CR>", { silent = true })
+
 -- }}}
 
 -- Options {{{
