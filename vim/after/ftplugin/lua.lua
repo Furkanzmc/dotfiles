@@ -11,4 +11,3 @@ vim.opt_local.cursorline = false
 vim.opt_local.cursorcolumn = false
 
 vim.b.vimrc_sumneko_lua_lsp_signs_enabled = 1
-vim.b.vimrc_sumneko_lua_lsp_location_list_enabled = 1

@@ -481,6 +481,21 @@ end
 
 -- }}}
 
+-- trouble.nvim {{{
+
+if vim.o.loadplugins == true then
+    require("trouble").setup({
+        icons = false,
+        auto_preview = false,
+        use_lsp_diagnostic_signs = true,
+        auto_jump = {},
+    })
+
+    map("n", "<leader>t", ":TroubleToggle<CR>", { silent = true })
+end
+
+-- }}}
+
 -- TagBar {{{
 
 g.tagbar_show_linenumbers = 1

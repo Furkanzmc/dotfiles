@@ -21,7 +21,6 @@ setlocal errorformat+=%m\ (file://%f:%l)
 setlocal errorformat+=%m\ file\ %f\,\ line\ %l
 
 let b:vimrc_null_ls_lsp_signs_enabled = 1
-let b:vimrc_null_ls_lsp_location_list_enabled = 1
 
 command -buffer -range RunQML :call qml#run(<line1>, <line2>)
 

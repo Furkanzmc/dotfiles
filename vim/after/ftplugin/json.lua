@@ -14,4 +14,3 @@ end
 
 vim.b.vimrc_null_ls_lsp_signs_enabled = 1
 vim.b.vimrc_null_ls_lsp_virtual_text_enabled = 1
-vim.b.vimrc_null_ls_lsp_location_list_enabled = 1

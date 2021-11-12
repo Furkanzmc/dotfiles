@@ -13,4 +13,3 @@ opt_local.cursorline = false
 opt_local.cursorcolumn = false
 
 b.vimrc_null_ls_lsp_signs_enabled = 1
-b.vimrc_null_ls_lsp_location_list_enabled = 1
