@@ -25,6 +25,15 @@ local function is_enabled(bufnr, client, option)
     return true
 end
 
+local function is_configured(bufnr, client, option)
+    local ok, value = pcall(api.nvim_buf_get_var, bufnr, get_option_var(client, option))
+    if ok then
+        return value == 1 or value == true
+    end
+
+    return false
+end
+
 local function set_enabled(bufnr, client, option, enabled)
     return api.nvim_buf_set_var(bufnr, get_option_var(client, option), enabled)
 end
@@ -120,7 +129,7 @@ local function on_publish_diagnostics(u1, result, ctx, config)
     end
 
     local client = lsp.get_client_by_id(ctx.client_id)
-    if not is_enabled(bufnr, client, "configured") then
+    if not is_configured(bufnr, client, "configured") then
         return
     end
 
@@ -147,7 +156,6 @@ end
 
 local function set_up_keymap(client, bufnr)
     local opts = { noremap = true, silent = true, buffer = bufnr }
-    local filetype = api.nvim_buf_get_option(bufnr, "filetype")
     local resolved_capabilities = client.resolved_capabilities
 
     if resolved_capabilities.completion == true then
@@ -158,7 +166,7 @@ local function set_up_keymap(client, bufnr)
         api.nvim_buf_set_option(bufnr, "keywordprg", ":LspHover")
     end
 
-    if is_enabled(bufnr, client, "shortcuts_set") then
+    if is_configured(bufnr, client, "shortcuts_set") then
         return
     end
 
@@ -247,10 +255,6 @@ end
 -- }}}
 
 -- Public Functions {{{
-
-function M.print_buffer_clients(bufnr)
-    print(vim.inspect(lsp.buf_get_clients(bufnr)))
-end
 
 function M.is_lsp_running(bufnr)
     return next(lsp.buf_get_clients(bufnr)) ~= nil
