@@ -22,7 +22,7 @@ local function is_enabled(bufnr, client, option)
         return value == 1 or value == true
     end
 
-    return false
+    return true
 end
 
 local function set_enabled(bufnr, client, option, enabled)
