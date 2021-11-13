@@ -10,9 +10,6 @@
 [submodule "vim/pack/packages/start/firvish.nvim"]
 	path = vim/pack/packages/start/firvish.nvim
 	url = https://github.com/Furkanzmc/firvish.nvim.git
-[submodule "vim/pack/packages/start/futils.nvim"]
-	path = vim/pack/packages/start/futils.nvim
-	url = https://github.com/Furkanzmc/futils.nvim.git
 [submodule "vim/pack/packages/start/lsp_signature.nvim"]
 	path = vim/pack/packages/start/lsp_signature.nvim
 	url = https://github.com/ray-x/lsp_signature.nvim.git

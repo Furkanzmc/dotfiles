@@ -2,7 +2,7 @@ if vim.b.did_ftp == true then
     return
 end
 
-local map = require("futils").map
+local map = require("vimrc").map
 local bufnr = vim.api.nvim_get_current_buf()
 
 vim.opt_local.cursorline = true

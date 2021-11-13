@@ -3,8 +3,7 @@ local api = vim.api
 local lsp = vim.lsp
 local fn = vim.fn
 local utils = require("vimrc.utils")
-local map = require("futils").map
-local log = require("futils.log")
+local map = require("vimrc").map
 local null_ls_sources = require("vimrc.null_ls_sources")
 local M = {}
 

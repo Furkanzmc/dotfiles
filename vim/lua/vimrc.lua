@@ -62,7 +62,7 @@ function M.setup_rest_nvim()
         jump_to_request = false,
     })
 
-    local map = require("futils").map
+    local map = require("vimrc").map
     map(
         "n",
         "<leader>tt",
@@ -152,6 +152,22 @@ function M.on_source_post()
     local file_path = fn.expand("<afile>")
     if string.match(file_path, "colorizer.vim") ~= nil then
         init_nvim_colorizer()
+    end
+end
+
+function M.map(mode, lhs, rhs, opts)
+    local options = { noremap = true }
+    if opts then
+        options = vim.tbl_extend("force", options, opts)
+    end
+    if opts.buffer ~= nil then
+        assert(type(opts.buffer) == "number")
+
+        local bufnr = opts.buffer
+        options.buffer = nil
+        vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, options)
+    else
+        vim.api.nvim_set_keymap(mode, lhs, rhs, options)
     end
 end
 

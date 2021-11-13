@@ -1,7 +1,7 @@
 local vim = vim
 local cmd = vim.cmd
 local fn = vim.fn
-local map = require("futils").map
+local map = require("vimrc").map
 local M = {}
 
 local function setup_keymaps()

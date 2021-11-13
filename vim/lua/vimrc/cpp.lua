@@ -6,7 +6,7 @@ local g = vim.g
 local b = vim.b
 local bo = vim.bo
 local utils = require("vimrc.utils")
-local log = require("futils.log")
+local log = require("vimrc.log")
 local M = {}
 
 function M.swap_source_header()

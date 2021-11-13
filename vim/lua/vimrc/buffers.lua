@@ -6,7 +6,7 @@ local b = vim.b
 local bo = vim.bo
 local wo = vim.wo
 local options = require("options")
-local typing = require("futils.typing")
+local typing = require("vimrc.typing")
 local M = {}
 
 local s_scratch_buffer_count = 1

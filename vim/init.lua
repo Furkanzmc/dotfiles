@@ -1,10 +1,8 @@
 local vim = vim
-local api = vim.api
 local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 local opt = vim.opt
-local lopt = vim.opt_local
 
 if vim.o.loadplugins == true then
     g.did_load_filetypes = 1
@@ -35,7 +33,7 @@ vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 vim.opt.packpath:append(fn.expand("~/.dotfiles/vim/"))
 
-local map = require("futils").map
+local map = require("vimrc").map
 
 -- General {{{
 
@@ -559,7 +557,7 @@ g.firvish_shell = "pwsh"
 g.firvish_use_default_mappings = true
 
 if fn.has("mac") == 1 then
-    require("firvish.notifications").notify = function(msg, log_level, opts)
+    require("firvish.notifications").notify = function(msg, _, opts)
         opts.title = opts.title or "Neovim"
         local firvish = require("firvish.job_control")
         firvish.start_job({

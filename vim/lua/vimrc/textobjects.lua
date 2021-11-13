@@ -44,7 +44,7 @@ function M.fence_text_object(opt)
 end
 
 function M.init()
-    local map = require("futils").map
+    local map = require("vimrc").map
 
     -- URL text object.
     map(
