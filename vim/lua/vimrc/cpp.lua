@@ -56,6 +56,7 @@ end
 --       build_dir="~/random/MuseScore/build.debug/",
 --       test_cwd="~/random/MuseScore/build.debug/test"
 --       generator="Ninja"
+--       cmake_args={}
 --   })
 function M.setup_cmake(opts)
     if vim.o.loadplugins == false then
@@ -65,6 +66,7 @@ function M.setup_cmake(opts)
     require("vimrc.dap").init()
 
     opts.env = opts.env or {}
+    opts.cmake_args = opts.cmake_args or {}
 
     assert(opts.env, "env is required.")
     assert(opts.name, "name is required.")
@@ -113,7 +115,9 @@ function M.setup_cmake(opts)
         })
     end
 
-    local configure_opts = { "cmake", "-DCMAKE_BUILD_TYPE=Debug", opts.project_path }
+    local configure_opts = { "cmake", "-DCMAKE_BUILD_TYPE=Debug" }
+    table.extend(configure_opts, opts.cmake_args)
+    table.insert(configure_opts, opts.project_path)
     if opts.generator ~= nil then
         table.insert(configure_opts, "-G")
         table.insert(configure_opts, opts.generator)
