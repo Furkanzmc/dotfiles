@@ -220,27 +220,27 @@ local function set_up_keymap(client, bufnr)
 end
 
 local function setup_buffer_vars(client, bufnr)
-    if option_exists(bufnr, client, "auto_stop") then
+    if not option_exists(bufnr, client, "auto_stop") then
         set_enabled(bufnr, client, "auto_stop", false)
     end
 
-    if option_exists(bufnr, client, "shortcuts_set") then
+    if not option_exists(bufnr, client, "shortcuts_set") then
         set_enabled(bufnr, client, "shortcuts_set", false)
     end
 
-    if option_exists(bufnr, client, "events_set") then
+    if not option_exists(bufnr, client, "events_set") then
         set_enabled(bufnr, client, "events_set", false)
     end
 
-    if option_exists(bufnr, client, "location_list_enabled") == 0 then
+    if not option_exists(bufnr, client, "location_list_enabled") == 0 then
         set_enabled(bufnr, client, "location_list_enabled", true)
     end
 
-    if option_exists(bufnr, client, "signs_enabled") then
+    if not option_exists(bufnr, client, "signs_enabled") then
         set_enabled(bufnr, client, "signs_enabled", true)
     end
 
-    if option_exists(bufnr, client, "virtual_text_enabled") then
+    if not option_exists(bufnr, client, "virtual_text_enabled") then
         set_enabled(bufnr, client, "virtual_text_enabled", true)
     end
 end

@@ -54,9 +54,10 @@ if executable("cppman")
     setlocal keywordprg=cppman
 endif
 
-let b:vimrc_clangd_lsp_signs_enabled = 1
-let b:vimrc_ccls_lsp_signs_enabled = 1
-let b:vimrc_null_ls_lsp_signs_enabled = 1
+let b:vimrc_clangd_lsp_signs_enabled = v:true
+let b:vimrc_clangd_lsp_virtual_text_enabled = v:false
+let b:vimrc_null_ls_lsp_signs_enabled = v:true
+let b:vimrc_null_ls_lsp_virtual_text_enabled = v:false
 
 nnoremap <silent> <buffer> <leader>ch :lua require"vimrc.cpp".swap_source_header()<CR>
 
