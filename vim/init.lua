@@ -519,7 +519,7 @@ if vim.o.loadplugins == true then
         completion_rkey = "<C-p>",
         custom_sources = {
             {
-                complete = require("vimrc.completions.mnemonics").complete_mnemonic,
+                complete = require("vimrc.completions.mnemonics").complete,
             },
         },
     })

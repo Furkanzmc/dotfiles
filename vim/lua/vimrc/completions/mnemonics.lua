@@ -46,7 +46,7 @@ local function get_mnemonics(token, sep, base)
     return items
 end
 
-function M.complete_mnemonic(lines, base)
+function M.complete(lines, base)
     local words = {}
 
     for _, line in ipairs(lines) do
