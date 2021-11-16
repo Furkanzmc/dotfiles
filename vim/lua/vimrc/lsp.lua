@@ -171,41 +171,41 @@ local function set_up_keymap(client, bufnr)
     end
 
     if resolved_capabilities.rename == true then
-        map("n", "gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
+        map("n", "<leader>gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
     end
 
-    if resolved_capabilities.signature_help == true and vim.fn.mapcheck("gs", "n") == 0 then
-        map("n", "gs", "<Cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
+    if resolved_capabilities.signature_help == true then
+        map("n", "<leader>gs", "<Cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
     end
 
     if resolved_capabilities.goto_definition ~= false then
-        map("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        map("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
     end
 
     if resolved_capabilities.declaration == true then
-        map("n", "gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
+        map("n", "<leader>gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
     end
 
     if resolved_capabilities.implementation == true then
-        map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+        map("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
     end
 
     if resolved_capabilities.find_references ~= false then
-        map("n", "g*", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+        map("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
     end
 
-    map("n", "ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
+    map("n", "<leader>ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
 
     if resolved_capabilities.document_symbol ~= false then
-        map("n", "g0", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
+        map("n", "<leader>gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
     end
 
     if resolved_capabilities.workspace_symbol ~= true then
-        map("n", "gw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
+        map("n", "<leader>gw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
     end
 
     if resolved_capabilities.code_action ~= false then
-        map("n", "ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+        map("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
     end
 
     if resolved_capabilities.document_formatting == true then
