@@ -252,6 +252,88 @@ local function setup_signs()
     vim.cmd([[sign define DiagnosticSignHint text=⦿ texthl=DiagnosticHint linehl= numhl=]])
 end
 
+local function setup_null_ls_cmp_patch()
+    -- FIXME:
+    -- [ ] Some sources rely on their own custom keyword patterns. For example, this prevents cmp-calc
+    --     from working properly. Or cmp-path cannot complete hidden directories becauase of it.
+    -- [ ] cmp-emoji source doesn't work.
+    package.loaded["cmp"] = {
+        register_source = function(name, source)
+            local get_bufnrs = function()
+                local bufs = {}
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                    bufs[vim.api.nvim_win_get_buf(win)] = true
+                end
+                return vim.tbl_keys(bufs)
+            end
+
+            require("null-ls.init").register(require("null-ls.helpers").make_builtin({
+                method = require("null-ls.methods").internal.COMPLETION,
+                filetypes = {},
+                name = name,
+                generator = {
+                    name = name,
+                    fn = function(params, done)
+                        local regex = vim.regex("\\k*$")
+                        local line = params.content[params.row]
+                        local pos = api.nvim_win_get_cursor(0)
+                        params.line_to_cursor = line:sub(1, pos[2])
+                        params.offset = regex:match_str(params.line_to_cursor) + 1
+                        params.option = params.option
+                            or {
+                                get_bufnrs = get_bufnrs,
+                            }
+                        params.context = params.context
+                            or {
+                                cursor_before_line = params.line_to_cursor,
+                                bufnr = params.bufnr,
+                            }
+                        source:complete(params, function(result)
+                            if result == nil then
+                                done({ { items = {}, isIncomplete = true } })
+                            elseif result.items == nil then
+                                done({ { items = result, isIncomplete = #result == 0 } })
+                            else
+                                done({ result })
+                            end
+                        end)
+                    end,
+                    async = true,
+                },
+            }))
+        end,
+        lsp = {
+            CompletionItemKind = {
+                Text = vim.lsp.protocol.CompletionItemKind["Text"],
+                Method = vim.lsp.protocol.CompletionItemKind["Method"],
+                Function = vim.lsp.protocol.CompletionItemKind["Function"],
+                Constructor = vim.lsp.protocol.CompletionItemKind["Constructor"],
+                Field = vim.lsp.protocol.CompletionItemKind["Field"],
+                Variable = vim.lsp.protocol.CompletionItemKind["Variable"],
+                Class = vim.lsp.protocol.CompletionItemKind["Class"],
+                Interface = vim.lsp.protocol.CompletionItemKind["Interface"],
+                Module = vim.lsp.protocol.CompletionItemKind["Module"],
+                Property = vim.lsp.protocol.CompletionItemKind["Property"],
+                Unit = vim.lsp.protocol.CompletionItemKind["Unit"],
+                Value = vim.lsp.protocol.CompletionItemKind["Value"],
+                Enum = vim.lsp.protocol.CompletionItemKind["Enum"],
+                Keyword = vim.lsp.protocol.CompletionItemKind["Keyword"],
+                Snippet = vim.lsp.protocol.CompletionItemKind["Snippet"],
+                Color = vim.lsp.protocol.CompletionItemKind["Color"],
+                File = vim.lsp.protocol.CompletionItemKind["File"],
+                Reference = vim.lsp.protocol.CompletionItemKind["Reference"],
+                Folder = vim.lsp.protocol.CompletionItemKind["Folder"],
+                EnumMember = vim.lsp.protocol.CompletionItemKind["EnumMember"],
+                Constant = vim.lsp.protocol.CompletionItemKind["Constant"],
+                Struct = vim.lsp.protocol.CompletionItemKind["Struct"],
+                Event = vim.lsp.protocol.CompletionItemKind["Event"],
+                Operator = vim.lsp.protocol.CompletionItemKind["Operator"],
+                TypeParameter = vim.lsp.protocol.CompletionItemKind["TypeParameter"],
+            },
+        },
+    }
+end
+
 -- }}}
 
 -- Public Functions {{{
@@ -397,6 +479,11 @@ function M.setup_lsp()
             "    %C%\\s%+%m",
         },
     }
+
+    local cmp_exists, _ = pcall(require, "cmp")
+    if not cmp_exists then
+        setup_null_ls_cmp_patch()
+    end
 
     local null_ls = require("null-ls")
     null_ls.config({

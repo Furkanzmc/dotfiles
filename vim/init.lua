@@ -612,7 +612,7 @@ map("n", "<leader>mi", ":MatchupWhereAmI<CR>", { silent = true })
 
 -- }}}
 
--- Options {{{
+-- options.nvim {{{
 
 local options = require("options")
 
