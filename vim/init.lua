@@ -28,6 +28,7 @@ g.loaded_zip = 1
 g.loaded_zipPlugin = 1
 g.loaded_matchit = 1
 g.loaded_matchparen = 1
+g.qf_disable_statusline = 1
 
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
