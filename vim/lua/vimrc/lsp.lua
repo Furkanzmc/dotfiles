@@ -532,7 +532,7 @@ function M.setup_lsp()
     )
     if vim.fn.expand("$VIMRC_LSP_TREESITTER_ENABLED") == 1 then
         vim.cmd(
-        [[packadd cmp-treesitter | lua require('cmp').register_source('treesitter', require('cmp_treesitter').new())]]
+            [[packadd cmp-treesitter | lua require('cmp').register_source('treesitter', require('cmp_treesitter').new())]]
         )
     end
 
