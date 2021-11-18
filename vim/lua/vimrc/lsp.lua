@@ -342,10 +342,6 @@ function M.is_lsp_running(bufnr)
     return next(lsp.buf_get_clients(bufnr)) ~= nil
 end
 
-function M.stop_buffer_clients(client_id, bufnr)
-    lsp.stop_client(client_id)
-end
-
 function M.setup_lsp()
     if vim.fn.exists("$VIMRC_DISABLE_LSP") == 1 then
         return
