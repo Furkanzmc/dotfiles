@@ -625,6 +625,13 @@ options.register_option({
     buffer_local = true,
 })
 options.register_option({
+    name = "lsp_tagfunc_enabled",
+    default = true,
+    type_info = "boolean",
+    source = "vimrc",
+    global = true,
+})
+options.register_option({
     name = "clstrailingspacelimit",
     default = 0,
     type_info = "number",

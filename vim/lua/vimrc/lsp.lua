@@ -158,6 +158,8 @@ local function set_up_keymap(client, bufnr)
     local opts = { noremap = true, silent = true, buffer = bufnr }
     local resolved_capabilities = client.resolved_capabilities
 
+    local options = require("options")
+
     if resolved_capabilities.completion == true then
         api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
     end
@@ -180,7 +182,9 @@ local function set_up_keymap(client, bufnr)
 
     if resolved_capabilities.goto_definition ~= false then
         map("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
-        api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+        if options.get_option_value("lsp_tagfunc_enabled") then
+            api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+        end
     end
 
     if resolved_capabilities.declaration == true then
