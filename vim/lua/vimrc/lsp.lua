@@ -180,6 +180,7 @@ local function set_up_keymap(client, bufnr)
 
     if resolved_capabilities.goto_definition ~= false then
         map("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
     end
 
     if resolved_capabilities.declaration == true then
@@ -484,6 +485,7 @@ function M.setup_lsp()
     local null_ls = require("null-ls")
     null_ls.config({
         debug = vim.fn.expand("$VIMRC_NULL_LS_DEBUG") == "1",
+        update_on_insert = false,
         sources = {
             -- Builtin sources {{{
             null_ls.builtins.formatting.stylua,
