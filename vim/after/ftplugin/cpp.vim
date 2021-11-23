@@ -54,6 +54,10 @@ if executable("cppman")
     setlocal keywordprg=cppman
 endif
 
+if &l:omnifunc == "ccomplete#Complete"
+    setlocal omnifunc=
+endif
+
 let b:vimrc_clangd_lsp_signs_enabled = v:true
 let b:vimrc_clangd_lsp_virtual_text_enabled = v:false
 let b:vimrc_null_ls_lsp_signs_enabled = v:true
