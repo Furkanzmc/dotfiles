@@ -293,7 +293,7 @@ map("n", "[b", ':execute ":" . v:count . "bprevious"<CR>', { silent = true, nore
 -- Switch to a terminal buffer using [count]gs.
 map(
     "n",
-    "gs",
+    "<leader>gt",
     '<cmd>execute "lua require\\"vimrc.terminal\\".switch_to_terminal(" . v:count . ")"<CR>',
     { silent = true, noremap = true }
 )

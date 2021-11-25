@@ -34,6 +34,7 @@ let b:terminal_closing = v:false
 augroup vimrc_ftplugin_terminal
     autocmd!
     autocmd TermEnter <buffer> set scrolloff=0
+                \ | lua require"vimrc.terminal".index_terminals(vim.api.nvim_get_current_buf())
     autocmd TermEnter,BufEnter,WinEnter <buffer> call setreg("t", trim(@*) . "")
     autocmd TermLeave <buffer> set scrolloff=3
     autocmd TermClose <buffer> let b:terminal_closing = v:true
