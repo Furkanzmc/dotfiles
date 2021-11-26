@@ -43,28 +43,6 @@ function! buffers#wipe_matching(pattern, bang)
     echohl Normal
 endfunction
 
-" Delete all hidden buffers
-" From https://github.com/zenbro/dotfiles/blob/master/.nvimrc
-function! buffers#delete_hidden()
-    let tpbl = []
-    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
-    let l:matchList = filter(
-                \ range(1, bufnr('$')),
-                \ 'bufexists(v:val) && index(tpbl, v:val)==-1')
-    let l:count = len(l:matchList)
-    for buf in l:matchList
-        silent execute 'bwipeout' buf
-    endfor
-
-    echohl IncSearch
-    if l:count > 0
-        echo '[vimrc] Closed ' . l:count . ' hidden buffers.'
-    else
-        echo '[vimrc] No hidden buffer present.'
-    endif
-    echohl Normal
-endfunction
-
 function! buffers#wipe_nonexisting_files()
     let l:matchList = filter(s:get_buflist(),
                 \ '!file_readable(bufname(v:val)) && !has_key(getbufinfo(v:val)[0].variables, "terminal_job_id") && getbufvar(v:val, "&buftype") != "nofile" && getbufvar(v:val, "&filetype") != "qf"')

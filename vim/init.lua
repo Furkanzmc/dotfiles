@@ -786,7 +786,6 @@ cmd([[command! CleanTrailingWhiteSpace :lua require"vimrc.buffers".clean_trailin
 
 cmd([[command! Bclose :lua require"vimrc.buffers".close()]])
 cmd([[command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-bang>)]])
-cmd([[command! Bdhidden :call buffers#delete_hidden()]])
 cmd([[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]])
 
 cmd([[augroup vimrc_plugin_buffers]])
