@@ -587,10 +587,13 @@ g.markdown_fold_style = "nested"
 
 -- }}}
 
--- nvim-comment {{{
+-- comment.nvim {{{
 
 if vim.o.loadplugins == true then
     require("Comment").setup({ ignore = "^$" })
+
+    local ft = require('Comment.ft');
+    ft.qml = { "//%s", "/*%s*/" }
 end
 
 -- }}}
