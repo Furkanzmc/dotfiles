@@ -152,6 +152,14 @@ local function set_handlers(client, bufnr)
         update_in_insert = false,
         severity_sort = true,
     })
+
+    local on_references = vim.lsp.handlers["textDocument/references"]
+    vim.lsp.handlers["textDocument/references"] = vim.lsp.with(
+      on_references, {
+        -- Use location list instead of quickfix list
+        loclist = is_enabled(bufnr, client, "references_loclist"),
+      }
+    )
 end
 
 local function set_up_keymap(client, bufnr)
@@ -237,8 +245,8 @@ local function setup_buffer_vars(client, bufnr)
         set_enabled(bufnr, client, "events_set", false)
     end
 
-    if not option_exists(bufnr, client, "location_list_enabled") == 0 then
-        set_enabled(bufnr, client, "location_list_enabled", true)
+    if not option_exists(bufnr, client, "location_list_enabled") then
+        set_enabled(bufnr, client, "location_list_enabled", false)
     end
 
     if not option_exists(bufnr, client, "signs_enabled") then
@@ -247,6 +255,10 @@ local function setup_buffer_vars(client, bufnr)
 
     if not option_exists(bufnr, client, "virtual_text_enabled") then
         set_enabled(bufnr, client, "virtual_text_enabled", true)
+    end
+
+    if not option_exists(bufnr, client, "references_loclist") then
+        set_enabled(bufnr, client, "references_loclist", true)
     end
 end
 
