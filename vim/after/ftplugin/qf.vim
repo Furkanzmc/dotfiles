@@ -11,7 +11,7 @@ setlocal cursorline
 setlocal nocursorcolumn
 execute "Setlocal trailingwhitespacehighlight=false"
 
-vmap <buffer> <silent> D :<C-U>call quickfix#remove_lines(line("'<") - 1, line("'>") - 1)<CR>
+vmap <buffer> <silent> D :call quickfix#remove_lines(line("'<") - 1, line("'>") - 1)<CR>
 nmap <buffer> <silent> D :call quickfix#remove_lines(line(".") - 1, line(".") - 1)<CR>
 nmap <buffer> <silent> CC :call setqflist([])<CR>
 
