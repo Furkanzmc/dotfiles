@@ -131,6 +131,10 @@ end
 opt.switchbuf = "useopen,usetab"
 opt.stal = 2
 
+if fn.expand("$MANPAGER") ~= "$MANPAGER" then
+    cmd("let $MANPAGER=''")
+end
+
 -- }}}
 
 -- User Interface {{{
