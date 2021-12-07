@@ -503,14 +503,18 @@ function M.setup_lsp()
         debug = vim.fn.expand("$VIMRC_NULL_LS_DEBUG") == "1",
         update_on_insert = false,
         sources = {
-            -- Builtin sources {{{
+            -- Builtin formatting sources {{{
             null_ls.builtins.formatting.stylua,
             null_ls.builtins.formatting.cmake_format,
             null_ls.builtins.formatting.black,
             null_ls.builtins.formatting.rustfmt,
             null_ls.builtins.formatting.clang_format,
             null_ls.builtins.formatting.qmlformat,
+            -- }}}
+            -- Builtin hover sources {{{
             null_ls.builtins.hover.dictionary,
+            -- }}}
+            -- Builtin diagnostics sources {{{
             null_ls.builtins.diagnostics.pylint.with({
                 condition = function(_)
                     return fn.expand("$VIMRC_PYLINT_DISABLE") == ""
@@ -518,14 +522,6 @@ function M.setup_lsp()
             }),
             null_ls.builtins.diagnostics.yamllint,
             null_ls.builtins.diagnostics.qmllint,
-            null_ls.builtins.completion.spell.with({
-                generator_opts = {
-                    runtime_condition = function(_)
-                        return vim.opt_local.spell:get()
-                    end,
-                },
-            }),
-            null_ls.builtins.completion.tags,
             -- }}}
             -- Custom sources {{{
             null_ls_sources.hover.pylint_error,
@@ -534,6 +530,16 @@ function M.setup_lsp()
             null_ls_sources.formatting.qmlformat,
             null_ls_sources.diagnostics.qmllint,
             null_ls_sources.diagnostics.cmake_lint,
+            -- }}}
+            -- Builtin completion sources {{{
+            null_ls.builtins.completion.tags,
+            null_ls.builtins.completion.spell.with({
+                generator_opts = {
+                    runtime_condition = function(_)
+                        return vim.opt_local.spell:get()
+                    end,
+                },
+            }),
             -- }}}
         },
     })
