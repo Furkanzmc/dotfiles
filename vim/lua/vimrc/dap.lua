@@ -36,7 +36,8 @@ local function setup_keymaps()
         { silent = true, noremap = true }
     )
 
-    map("n", "<leader>dr", ":lua require('dapui').toggle()<CR>", { silent = true, noremap = true })
+    map("n", "<leader>dui", ":lua require'dapui'.toggle()<CR>", { silent = true, noremap = true })
+    map("n", "<leader>dr", ":lua lua require'dap'.run_to_cursor()<CR>", { silent = true, noremap = true })
     map(
         "n",
         "<leader>dl",
@@ -52,8 +53,8 @@ local function setup_keymaps()
 end
 
 local function setup_commands()
-    cmd([[command! DapUIOpen :lua require("dapui").open()]])
-    cmd([[command! DapUIClose :lua require("dapui").close()]])
+    cmd([[command! DapUIOpen :lua require'dapui'.open()]])
+    cmd([[command! DapUIClose :lua require'dapui'.close()]])
 end
 
 function M.init()
