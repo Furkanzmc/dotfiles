@@ -37,7 +37,7 @@ local function setup_keymaps()
     )
 
     map("n", "<leader>dui", ":lua require'dapui'.toggle()<CR>", { silent = true, noremap = true })
-    map("n", "<leader>dr", ":lua lua require'dap'.run_to_cursor()<CR>", { silent = true, noremap = true })
+    map("n", "<leader>dr", ":lua require'dap'.run_to_cursor()<CR>", { silent = true, noremap = true })
     map(
         "n",
         "<leader>dl",
