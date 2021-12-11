@@ -154,12 +154,10 @@ local function set_handlers(client, bufnr)
     })
 
     local on_references = vim.lsp.handlers["textDocument/references"]
-    vim.lsp.handlers["textDocument/references"] = vim.lsp.with(
-      on_references, {
+    vim.lsp.handlers["textDocument/references"] = vim.lsp.with(on_references, {
         -- Use location list instead of quickfix list
         loclist = is_enabled(bufnr, client, "references_loclist"),
-      }
-    )
+    })
 end
 
 local function set_up_keymap(client, bufnr)
@@ -527,8 +525,6 @@ function M.setup_lsp()
             null_ls_sources.hover.pylint_error,
             null_ls_sources.diagnostics.jq,
             null_ls_sources.formatting.jq,
-            null_ls_sources.formatting.qmlformat,
-            null_ls_sources.diagnostics.qmllint,
             null_ls_sources.diagnostics.cmake_lint,
             -- }}}
             -- Builtin completion sources {{{
