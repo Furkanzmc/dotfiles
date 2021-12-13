@@ -23,6 +23,8 @@ setlocal errorformat+=%m\ file\ %f\,\ line\ %l
 let b:vimrc_null_ls_lsp_signs_enabled = 1
 
 command -buffer -range RunQML :call qml#run(<line1>, <line2>)
+command -buffer QMLEnableTracing :let $QML_IMPORT_TRACE=1
+command -buffer QMLDisableTracing :let $QML_IMPORT_TRACE=""
 
 " Create signal handler.
 abbreviate <silent> <buffer> s@ :<Esc>hxbion<Esc>l~$a<Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
