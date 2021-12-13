@@ -351,3 +351,4 @@ debug:
 
 key_bindings:
   - { key: Q, mods: Control, chars: "\x11" }
+  - { key: W, mods: Control, chars: "\x17" }
