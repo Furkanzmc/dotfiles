@@ -497,9 +497,10 @@ function M.setup_lsp()
     end
 
     local null_ls = require("null-ls")
-    null_ls.config({
+    null_ls.setup({
         debug = vim.fn.expand("$VIMRC_NULL_LS_DEBUG") == "1",
         update_on_insert = false,
+        on_attach = setup,
         sources = {
             -- Builtin formatting sources {{{
             null_ls.builtins.formatting.stylua,
@@ -539,7 +540,6 @@ function M.setup_lsp()
             -- }}}
         },
     })
-    lspconfig["null-ls"].setup({ on_attach = setup })
     vim.cmd(
         [[packadd cmp-buffer | lua require('cmp').register_source('buffer', require('cmp_buffer').new())]]
     )
