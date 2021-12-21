@@ -5,6 +5,7 @@ local fn = vim.fn
 local utils = require("vimrc.utils")
 local map = require("vimrc").map
 local null_ls_sources = require("vimrc.null_ls_sources")
+local options = require("options")
 local M = {}
 
 -- Local Functions {{{
@@ -164,8 +165,6 @@ local function set_up_keymap(client, bufnr)
     local opts = { noremap = true, silent = true, buffer = bufnr }
     local resolved_capabilities = client.resolved_capabilities
 
-    local options = require("options")
-
     if resolved_capabilities.completion == true then
         api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
     end
@@ -220,7 +219,7 @@ local function set_up_keymap(client, bufnr)
     end
 
     if resolved_capabilities.document_formatting == true then
-        map("n", "gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+        api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
     end
 
     if resolved_capabilities.hover ~= false then

@@ -26,6 +26,22 @@ command -buffer -range RunQML :call qml#run(<line1>, <line2>)
 command -buffer QMLEnableTracing :let $QML_IMPORT_TRACE=1
 command -buffer QMLDisableTracing :let $QML_IMPORT_TRACE=""
 
+abbreviate <silent> <buffer> tp@ topPadding:
+abbreviate <silent> <buffer> rp@ rightPadding:
+abbreviate <silent> <buffer> lp@ leftPadding:
+abbreviate <silent> <buffer> bp@ bottomPadding:
+
+abbreviate <silent> <buffer> tm@ topMargin:
+abbreviate <silent> <buffer> rm@ rightMargin:
+abbreviate <silent> <buffer> lm@ leftMargin:
+abbreviate <silent> <buffer> bm@ bottomMargin:
+
+abbreviate <silent> <buffer> trp@ transparent
+
+abbreviate <silent> <buffer> pr@ property TYPE NAME:<Esc>/\(TYPE\\|NAME\)<Enter>ciw<C-R>=abbreviations#eat_char('\s')<CR>
+
+abbreviate <silent> <buffer> outline@ Rectangle {<CR>anchors.fill: parent<CR>color: "transparent"<CR>border {<CR>width: 1<CR>color: "red"<C-R>=abbreviations#eat_char('\s')<CR>
+
 " Create signal handler.
 abbreviate <silent> <buffer> s@ :<Esc>hxbion<Esc>l~$a<Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
 
@@ -40,3 +56,4 @@ abbreviate <silent> <buffer> clog@ console.log("[<C-r>=expand("%:t") . "::" . li
 abbreviate <silent> <buffer> cl@ console.log("")<Esc>F(la<C-R>=abbreviations#eat_char('\s')<CR>
 
 execute "Setlocal completion_timeout=50"
+execute "Setlocal tags_completion_enabled=false"
