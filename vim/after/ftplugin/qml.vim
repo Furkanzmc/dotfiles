@@ -37,7 +37,7 @@ abbreviate <silent> <buffer> lm@ leftMargin:
 abbreviate <silent> <buffer> bm@ bottomMargin:
 
 abbreviate <silent> <buffer> trp@ transparent
-abbreviate <silent> <buffer> oc@ onCompleted:
+abbreviate <silent> <buffer> oc@ Component.onCompleted: {<CR>
 
 abbreviate <silent> <buffer> pr@ property TYPE NAME:<Esc>/\(TYPE\\|NAME\)<Enter>ciw<C-R>=abbreviations#eat_char('\s')<CR>
 
