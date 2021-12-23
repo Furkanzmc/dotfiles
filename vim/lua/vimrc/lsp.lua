@@ -220,11 +220,11 @@ local function set_up_keymap(client, bufnr)
 
     if resolved_capabilities.document_formatting == true then
         api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-        map("n", "gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+        map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
     end
 
     if resolved_capabilities.document_range_formatting == true then
-        map("v", "gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+        map("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
 
     if resolved_capabilities.hover ~= false then
