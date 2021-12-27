@@ -5,11 +5,37 @@ local styledtext = require("hs.styledtext")
 local statusmessage = {}
 
 statusmessage.new = function(messageText)
-    local buildParts = function(messageText)
+    local buildParts = function(message)
         local frame = screen.primaryScreen():frame()
 
-        local styledTextAttributes = { font = { name = "Monaco", size = 14 } }
-        local styledText = styledtext.new("⊞ " .. messageText, styledTextAttributes)
+        local file_handle = io.open(
+            os.getenv("HOME") .. "/.dotfiles/pwsh/tmp_dirs/system_theme",
+            "r"
+        )
+        local theme = file_handle:read()
+        file_handle:close()
+
+        local text_color = nil
+        if theme == "dark" then
+            text_color = {
+                red = 0.670588,
+                green = 0.690196,
+                blue = 0.752941,
+                alpha = 1.0,
+            }
+        else
+            text_color = {
+                red = 0.282353,
+                green = 0.352941,
+                blue = 0.384314,
+                alpha = 1.0,
+            }
+        end
+
+        local styledText = styledtext.new(
+            "⊞ " .. message,
+            { font = { name = "Monaco", size = 14 }, color = text_color }
+        )
 
         local styledTextSize = drawing.getTextDrawingSize(styledText)
         local textRect = {
@@ -27,7 +53,16 @@ statusmessage.new = function(messageText)
             h = styledTextSize.h + 6,
         })
         background:setRoundedRectRadii(6, 6)
-        background:setFillColor({red = 1, green = 0.972549, blue = 0.905882, alpha = 0.9})
+        if theme == "dark" then
+            background:setFillColor({
+                red = 0.12549,
+                green = 0.164706,
+                blue = 0.192157,
+                alpha = 0.9,
+            })
+        else
+            background:setFillColor({ red = 1, green = 0.972549, blue = 0.905882, alpha = 0.9 })
+        end
 
         return background, text
     end
