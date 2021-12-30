@@ -3,6 +3,7 @@ local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 local opt = vim.opt
+local add_command = vim.api.nvim_add_user_command
 
 if vim.o.loadplugins == true then
     g.did_load_filetypes = 1
@@ -340,18 +341,27 @@ map(
     { silent = true, noremap = true }
 )
 
-cmd(
-    [[command! -bang -complete=customlist,fugitive#Complete -nargs=* -range FGit :lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')]]
+add_command(
+    "FGit",
+    ":lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')",
+    { complete = "customlist,fugitive#Complete", nargs = "*", range = true }
 )
 
-cmd([[command! -nargs=1 JiraStartTicket :let g:vimrc_active_jira_ticket=<f-args>]])
-cmd(
-    [[command! JiraCloseTicket :if exists("g:vimrc_active_jira_ticket") | unlet g:vimrc_active_jira_ticket | endif]]
-)
-cmd([[command! -nargs=? JiraOpenTicket :call jira#open_ticket(<f-args>)]])
-cmd([[command! -nargs=? JiraOpenTicketJson :call jira#open_ticket_in_json(<f-args>)]])
+add_command("JiraStartTicket", "let g:vimrc_active_jira_ticket=<f-args>", { nargs = 1 })
+add_command("JiraCloseTicket", function(_)
+    if g.vimrc_active_jira_ticket ~= nil then
+        g.vimrc_active_jira_ticket = nil
+    end
+end, {
+    nargs = 1,
+})
 
-cmd([[command! Time :echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE]])
+add_command("JiraOpenTicket", ":call jira#open_ticket(<f-args>)", { nargs = "?" })
+add_command("JiraOpenTicketJson", ":call jira#open_ticket_in_json(<f-args>)", { nargs = "?" })
+
+add_command("Time", function(_)
+    cmd([[echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE']])
+end, {})
 
 -- }}}
 
@@ -596,7 +606,7 @@ g.markdown_fold_style = "nested"
 if vim.o.loadplugins == true then
     require("Comment").setup({ ignore = "^$" })
 
-    local ft = require('Comment.ft');
+    local ft = require("Comment.ft")
     ft.qml = { "//%s", "/*%s*/" }
 end
 

@@ -23,7 +23,7 @@ endfunction
 
 function jira#open_ticket(...)
     if a:0 == 0
-        let l:ticket = s:get_ticket_number(a:000)
+        let l:ticket = s:get_ticket_number()
     else
         let l:ticket = a:1
     endif
