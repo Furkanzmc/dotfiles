@@ -66,6 +66,7 @@ function M.setup_cmake(opts)
     require("vimrc.dap").init()
 
     opts.env = opts.env or {}
+    opts.run_in_terminal = opts.run_in_terminal or false
     opts.cmake_args = opts.cmake_args or {}
 
     assert(opts.env, "env is required.")
@@ -87,6 +88,7 @@ function M.setup_cmake(opts)
             cwd = opts.cwd,
             debuggerRoot = opts.cwd,
             env = opts.env,
+            runInTerminal = opts.run_in_terminal,
         },
     }
 
