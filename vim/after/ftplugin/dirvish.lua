@@ -12,7 +12,7 @@ if vim.g.vimrc_dirvish_virtual_text_prefix == nil then
     vim.g.vimrc_dirvish_virtual_text_prefix = "> "
 end
 
-if vim.fn.executable("qlmanage") then
+if vim.fn.executable("qlmanage") == 1 then
     map(
         "n",
         "L",
