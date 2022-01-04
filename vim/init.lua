@@ -827,7 +827,7 @@ cmd([[command! -nargs=? -complete=shellcmd Terminal :call term#open(<f-args>)]])
 
 cmd([[augroup vimrc_term_plugin]])
 cmd([[autocmd!]])
-cmd([[autocmd TermOpen * startinsert]])
+cmd([[autocmd TermOpen * if getbufvar(bufnr(), "terminal_job_pid", v:false) | startinsert | endif]])
 cmd([[autocmd TermOpen * lua require"vimrc.terminal".index_terminals()]])
 cmd([[augroup END]])
 
