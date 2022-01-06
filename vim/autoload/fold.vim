@@ -15,14 +15,14 @@
 " let b:foldtext_strip_add_regex = '^=\+'
 
 function! fold#fold_text()
-    let l:fold_char = get(b:, 'foldchar', '━')
+    let l:fold_char = get(b:, 'foldchar', '>')
     let l:strip_comments = get(b:, 'foldtext_strip_comments', v:true)
     let l:strip_add_regex = get(b:, 'foldtext_strip_add_regex', '')
 
     let l:line = getline(v:foldstart)
     let l:foldlevel = repeat(l:fold_char, v:foldlevel)
     let l:fold_indent = repeat(
-                \ '━',
+                \ ' ',
                 \ max([indent(v:foldstart) - strdisplaywidth(l:foldlevel),
                 \     strdisplaywidth(l:fold_char)])
                 \ )
@@ -55,7 +55,7 @@ function! fold#fold_text()
         let l:foldless_padding = ' '
     endif
 
-    return printf("%s%s┫ %s%s[%d/%d%%]",
+    return printf("%s%s%s%s[%d/%d%%]",
                 \ l:foldlevel,
                 \ l:fold_indent,
                 \ l:fold_text,
