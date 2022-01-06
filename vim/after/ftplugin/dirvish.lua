@@ -15,7 +15,7 @@ end
 if vim.fn.executable("qlmanage") == 1 then
     map(
         "n",
-        "L",
+        "<leader>l",
         ':call jobstart(["qlmanage", "-p", getline(".")])<CR>',
         { silent = true, buffer = bufnr }
     )
@@ -50,5 +50,10 @@ map(
     ":noautocmd Sort -folder-first | setlocal conceallevel=2<CR>",
     { silent = true, buffer = bufnr }
 )
+
+map("n", "Y", ":normal! 0y$<CR>", {
+    silent = true,
+    buffer = bufnr,
+})
 
 require("vimrc.dirvish").init()
