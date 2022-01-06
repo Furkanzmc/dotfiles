@@ -51,9 +51,4 @@ map(
     { silent = true, buffer = bufnr }
 )
 
-map("n", "Y", ":normal! 0y$<CR>", {
-    silent = true,
-    buffer = bufnr,
-})
-
 require("vimrc.dirvish").init()
