@@ -15,53 +15,51 @@
 " let b:foldtext_strip_add_regex = '^=\+'
 
 function! fold#fold_text()
-    let foldchar = get(b:, 'foldchar', '>')
-    let strip_comments = get(b:, 'foldtext_strip_comments', v:false)
-    let strip_add_regex = get(b:, 'foldtext_strip_add_regex', '')
+    let l:fold_char = get(b:, 'foldchar', '━')
+    let l:strip_comments = get(b:, 'foldtext_strip_comments', v:true)
+    let l:strip_add_regex = get(b:, 'foldtext_strip_add_regex', '')
 
-    let line = getline(v:foldstart)
-    let indent = indent(v:foldstart)
-
-    let foldlevel = repeat(foldchar, v:foldlevel)
-    let foldindent = repeat(
-                \ ' ',
-                \ max([indent - strdisplaywidth(foldlevel),
-                \     strdisplaywidth(foldchar)])
+    let l:line = getline(v:foldstart)
+    let l:foldlevel = repeat(l:fold_char, v:foldlevel)
+    let l:fold_indent = repeat(
+                \ '━',
+                \ max([indent(v:foldstart) - strdisplaywidth(l:foldlevel),
+                \     strdisplaywidth(l:fold_char)])
                 \ )
-    let foldlines = (v:foldend - v:foldstart + 1)
+    let l:line_count = line("$")
+    let l:fold_lines = float2nr(((v:foldend - v:foldstart + 1) / (l:line_count * 1.0)) * 100)
 
     " Always strip away fold markers
-    let strip_regex = '\%(\s*{{{\d*\s*\)'
-    if strip_comments
-        let strip_regex .= '\|\%(^\s*'
+    let l:strip_regex = '\%(\s*{{{\d*\s*\)'
+    if l:strip_comments
+        let l:strip_regex .= '\|\%(^\s*'
                 \. substitute(&commentstring, '\s*%s\s*', '', '')
                 \. '*\s*\)'
     endif
 
-    let line = substitute(line, strip_regex, '', 'g')
-
+    let l:line = substitute(l:line, l:strip_regex, '', 'g')
     " Additional per buffer strip
-    if strip_add_regex != ""
-        let line = substitute(line, strip_add_regex, '', 'g')
+    if l:strip_add_regex != ""
+        let l:line = substitute(l:line, l:strip_add_regex, '', 'g')
     endif
 
-    let line = substitute(line, '^\s*\|\s*$', '', 'g')
-
-    let nontextlen = strdisplaywidth(foldlevel.foldindent.foldlines.' ()')
-    let foldtext = strcharpart(line, 0, winwidth(0) - nontextlen)
+    let l:line = substitute(l:line, '^\s*\|\s*$', '', 'g')
+    let l:non_text_len = strdisplaywidth(l:foldlevel.fold_indent.fold_lines.' ()')
+    let l:fold_text = strcharpart(l:line, 0, winwidth(0) - l:non_text_len)
 
     if get(b:, 'foldlines_padding', v:false)
-        let foldlines_padding = repeat(
+        let l:foldless_padding = repeat(
                     \ ' ',
-                    \ winwidth(0) - strdisplaywidth(foldtext) - nontextlen + 1)
+                    \ winwidth(0) - strdisplaywidth(l:fold_text) - l:non_text_len + 1)
     else
-        let foldlines_padding = ' '
+        let l:foldless_padding = ' '
     endif
 
-    return printf("%s%s%s%s[%d]",
-                \ foldlevel,
-                \ foldindent,
-                \ foldtext,
-                \ foldlines_padding,
-                \ foldlines)
+    return printf("%s%s┫ %s%s[%d/%d%%]",
+                \ l:foldlevel,
+                \ l:fold_indent,
+                \ l:fold_text,
+                \ l:foldless_padding,
+                \ l:line_count,
+                \ l:fold_lines)
 endfunction
