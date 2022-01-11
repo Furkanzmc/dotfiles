@@ -630,6 +630,18 @@ map("n", "<leader>mi", ":MatchupWhereAmI<CR>", { silent = true })
 
 -- }}}
 
+--- fieltype.nvim {{{
+
+require("filetype").setup({
+    overrides = {
+        extensions = {
+            mt = "tags",
+        },
+    }
+})
+
+-- }}}
+
 -- options.nvim {{{
 
 local options = require("options")
