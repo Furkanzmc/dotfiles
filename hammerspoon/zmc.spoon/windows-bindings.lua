@@ -13,7 +13,7 @@
 -- Control+s, and then press h.
 --------------------------------------------------------------------------------
 return {
-    modifiers = { "ctrl", "alt", "shift", "cmd" },
+    modifiers = { "alt" },
     showHelp = true,
     trigger = "w",
     mappings = {
