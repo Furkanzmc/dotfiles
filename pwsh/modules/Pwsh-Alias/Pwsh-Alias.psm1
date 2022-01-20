@@ -16,7 +16,7 @@ if (Get-Command "bat" -ErrorAction SilentlyContinue) {
 
 if (Get-Command "nvim" -ErrorAction SilentlyContinue) {
     Set-Alias vim nvim
-    $env:MANPAGER="nvim +Man!"
+    $env:MANPAGER="nvim -U NORC +Man!"
 }
 
 if (Get-Command "rmtrash" -ErrorAction SilentlyContinue) {
