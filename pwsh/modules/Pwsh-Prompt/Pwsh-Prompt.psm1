@@ -181,8 +181,16 @@ function Source-Local-Profile() {
 }
 
 function Write-Prompt() {
-    $lastCommandSucceeded = $?
-    $exitCode = $LastExitCode
+    Param(
+        [Parameter(Mandatory=$true)]
+        [Bool]
+        $LastCommandSucceeded,
+        [Parameter(Mandatory=$true)]
+        [Int]
+        $ExitCode
+    )
+
+    $exitCode = $ExitCode
     if (Test-Path env:VIRTUAL_ENV -ErrorAction SilentlyContinue) {
         Write-Host "(.venv" -ForegroundColor Yellow -NoNewLine
 
@@ -202,15 +210,11 @@ function Write-Prompt() {
     Write-Host $(Get-Date -Format "[HH:mm:ss]") `
         -ForegroundColor DarkYellow -NoNewLine
 
-    if ($lastCommandSucceeded -eq $false) {
-        $bufferSize = (Get-Host).UI.RawUI.BufferSize.Width
-        Write-Host " ! $exitCode" -NoNewLine -ForegroundColor Red
-    }
-
-    if ($lastCommandSucceeded) {
+    if ($LastCommandSucceeded) {
         Write-Host "`n$("=>" * ($NestedPromptLevel + 1))" -NoNewLine -ForegroundColor Green
     }
     else {
+        Write-Host " ! $exitCode" -NoNewLine -ForegroundColor Red
         Write-Host "`n$("=>" * ($NestedPromptLevel + 1))" -NoNewLine -ForegroundColor Red
     }
 

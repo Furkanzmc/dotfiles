@@ -65,8 +65,10 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 
 Import-Module Pwsh-Prompt -DisableNameChecking
 function Prompt() {
+    $prevCommandOK = $?
+    $exitCode = $LastExitCode
     Source-Local-Profile
-    Write-Prompt
+    Write-Prompt -LastCommandSucceeded $prevCommandOK -ExitCode $exitCode
     return " "
 }
 
