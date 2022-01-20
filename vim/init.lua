@@ -27,8 +27,6 @@ g.loaded_vimball = 1
 g.loaded_vimballPlugin = 1
 g.loaded_zip = 1
 g.loaded_zipPlugin = 1
-g.loaded_matchit = 1
-g.loaded_matchparen = 1
 g.qf_disable_statusline = 1
 
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
@@ -609,24 +607,6 @@ if vim.o.loadplugins == true then
     local ft = require("Comment.ft")
     ft.qml = { "//%s", "/*%s*/" }
 end
-
--- }}}
-
--- vim-matchup {{{
-
-cmd([[augroup vimrc_matchparen_group]])
-cmd([[autocmd!]])
-cmd([[autocmd ColorScheme * highlight clear MatchParen | highlight MatchParen cterm=bold gui=bold]])
-cmd([[autocmd VimEnter * highlight clear MatchParen | highlight MatchParen cterm=bold gui=bold]])
-cmd([[autocmd Syntax * highlight clear MatchParen | highlight MatchParen cterm=bold gui=bold]])
-cmd([[augroup END]])
-
-g.matchup_matchparen_offscreen = {}
-g.matchup_matchparen_deferred = 1
-g.matchup_matchparen_deferred_show_delay = 100
-g.matchup_matchparen_deferred_hide_delay = 500
-
-map("n", "<leader>mi", ":MatchupWhereAmI<CR>", { silent = true })
 
 -- }}}
 

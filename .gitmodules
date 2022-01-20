@@ -25,9 +25,6 @@
 [submodule "vim/pack/packages/start/vim-fugitive"]
 	path = vim/pack/packages/start/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
-[submodule "vim/pack/packages/start/vim-matchup"]
-	path = vim/pack/packages/start/vim-matchup
-	url = https://github.com/andymass/vim-matchup.git
 [submodule "vim/pack/packages/start/vim-sandwich"]
 	path = vim/pack/packages/start/vim-sandwich
 	url = https://github.com/machakann/vim-sandwich.git
