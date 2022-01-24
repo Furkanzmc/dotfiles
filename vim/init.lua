@@ -245,7 +245,7 @@ endtry
 map("n", "<Up>", "<NOP>", { noremap = true })
 map("n", "<Left>", "<NOP>", { noremap = true })
 map("n", "<Right>", "<NOP>", { noremap = true })
-map("n", "<Left>", "<NOP>", { noremap = true })
+map("n", "<Down>", "<NOP>", { noremap = true })
 
 map("c", "<C-u>", "<Up>", { noremap = true })
 map("c", "<C-d>", "<Down>", { noremap = true })
@@ -569,7 +569,7 @@ end
 g.firvish_shell = "pwsh"
 g.firvish_use_default_mappings = true
 
-if fn.has("mac") == 1 then
+if fn.has("mac") == 1 and vim.o.loadplugins then
     require("firvish.notifications").notify = function(msg, _, opts)
         opts.title = opts.title or "Neovim"
         local firvish = require("firvish.job_control")
@@ -612,92 +612,103 @@ end
 
 --- fieltype.nvim {{{
 
-require("filetype").setup({
-    overrides = {
-        extensions = {
-            mt = "tags",
+if vim.o.loadplugins == true then
+    require("filetype").setup({
+        overrides = {
+            extensions = {
+                mt = "tags",
+            },
         },
-    },
-})
+    })
+end
 
 -- }}}
 
 -- options.nvim {{{
 
-local options = require("options")
+if vim.o.loadplugins == true then
+    local options = require("options")
 
-options.register_option({
-    name = "clstrailingwhitespace",
-    default = true,
-    type_info = "boolean",
-    source = "buffers",
-    buffer_local = true,
-})
-options.register_option({
-    name = "lsp_tagfunc_enabled",
-    default = true,
-    type_info = "boolean",
-    source = "vimrc",
-    global = true,
-})
-options.register_option({
-    name = "clstrailingspacelimit",
-    default = 0,
-    type_info = "number",
-    source = "buffers",
-    buffer_local = true,
-    description = "If the number of trailing white spaces below this number, they will be cleared automatically. Otherwise you will be prompted for each one.",
-})
-options.register_option({
-    name = "trailingwhitespacehighlight",
-    default = true,
-    type_info = "boolean",
-    source = "buffers",
-    buffer_local = true,
-})
-options.register_option({
-    name = "indentsize",
-    default = 4,
-    type_info = "number",
-    source = "buffers",
-    buffer_local = true,
-})
-options.register_option({
-    name = "shell",
-    default = "pwsh",
-    type_info = "string",
-    source = "options",
-    global = true,
-})
-options.register_option({
-    name = "scratchpad",
-    default = false,
-    type_info = "boolean",
-    source = "options",
-    buffer_local = true,
-})
-options.register_option({
-    name = "markdownfenced",
-    default = {},
-    type_info = "table",
-    source = "buffers",
-    buffer_local = true,
-})
-options.register_option({
-    name = "todofenced",
-    default = {},
-    type_info = "table",
-    source = "todo",
-    buffer_local = true,
-})
+    options.register_option({
+        name = "clstrailingwhitespace",
+        default = true,
+        type_info = "boolean",
+        source = "buffers",
+        buffer_local = true,
+    })
+    options.register_option({
+        name = "lsp_tagfunc_enabled",
+        default = true,
+        type_info = "boolean",
+        source = "vimrc",
+        global = true,
+    })
+    options.register_option({
+        name = "clstrailingspacelimit",
+        default = 0,
+        type_info = "number",
+        source = "buffers",
+        buffer_local = true,
+        description = "If the number of trailing white spaces below this number, they will be cleared automatically. Otherwise you will be prompted for each one.",
+    })
+    options.register_option({
+        name = "trailingwhitespacehighlight",
+        default = true,
+        type_info = "boolean",
+        source = "buffers",
+        buffer_local = true,
+    })
+    options.register_option({
+        name = "indentsize",
+        default = 4,
+        type_info = "number",
+        source = "buffers",
+        buffer_local = true,
+    })
+    options.register_option({
+        name = "shell",
+        default = "pwsh",
+        type_info = "string",
+        source = "options",
+        global = true,
+    })
+    options.register_option({
+        name = "scratchpad",
+        default = false,
+        type_info = "boolean",
+        source = "options",
+        buffer_local = true,
+    })
+    options.register_option({
+        name = "markdownfenced",
+        default = {},
+        type_info = "table",
+        source = "buffers",
+        buffer_local = true,
+    })
+    options.register_option({
+        name = "todofenced",
+        default = {},
+        type_info = "table",
+        source = "todo",
+        buffer_local = true,
+    })
+    options.register_option({
+        name = "minimal_buffer",
+        default = false,
+        type_info = "boolean",
+        source = "buffers",
+        buffer_local = true,
+    })
 
-options.set("shell", vim.opt.shell:get())
+    options.set("shell", vim.opt.shell:get())
 
-cmd([[augroup vimrc_options_plugin]])
-cmd(
-    [[autocmd BufReadPost *.md,todo.txt :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]]
-)
-cmd([[augroup END]])
+    cmd([[augroup vimrc_options_plugin]])
+    cmd(
+        [[autocmd BufReadPost *.md,todo.txt :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]]
+    )
+    cmd([[augroup END]])
+end
 
 -- }}}
 
@@ -707,24 +718,30 @@ cmd([[augroup END]])
 
 -- todo {{{
 
-cmd([[augroup vimrc_plugin_todo_init]])
-cmd([[au!]])
-cmd([[autocmd FileType todo :lua require"vimrc.todo".init()]])
-cmd([[augroup END]])
+if vim.o.loadplugins == true then
+    cmd([[augroup vimrc_plugin_todo_init]])
+    cmd([[au!]])
+    cmd([[autocmd FileType todo :lua require"vimrc.todo".init()]])
+    cmd([[augroup END]])
+end
 
 -- }}}
 
 -- dotenv {{{
 
-cmd([[command! -nargs=1 -complete=file SourceEnv :call dotenv#source(<f-args>)]])
-cmd([[command! -nargs=1 -complete=file DeactivateEnv :call dotenv#deactivate(<f-args>)]])
+if vim.o.loadplugins == true then
+    cmd([[command! -nargs=1 -complete=file SourceEnv :call dotenv#source(<f-args>)]])
+    cmd([[command! -nargs=1 -complete=file DeactivateEnv :call dotenv#deactivate(<f-args>)]])
+end
 
 -- }}}
 
 -- Help {{{
 
-map("n", "gh", ":call help#search_docs()<CR>", { silent = true })
-cmd([[command! -nargs=1 Search :call help#search_docs(<f-args>)]])
+if vim.o.loadplugins == true then
+    map("n", "gh", ":call help#search_docs()<CR>", { silent = true })
+    cmd([[command! -nargs=1 Search :call help#search_docs(<f-args>)]])
+end
 
 -- }}}
 
@@ -757,13 +774,17 @@ map("n", "<C-q>lz", ":lclose<CR>", { silent = true })
 
 -- Text Objects {{{
 
-require("vimrc.textobjects").init()
+if vim.o.loadplugins == true then
+    require("vimrc.textobjects").init()
+end
 
 -- }}}
 
 -- Buffers {{{
 
-require("vimrc.buffers").init()
+if vim.o.loadplugins == true then
+    require("vimrc.buffers").init()
+end
 
 map(
     "v",

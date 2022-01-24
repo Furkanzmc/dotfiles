@@ -5,11 +5,55 @@ local g = vim.g
 local b = vim.b
 local bo = vim.bo
 local wo = vim.wo
+local opt_local = vim.opt_local
 local options = require("options")
 local typing = require("vimrc.typing")
+local s_buffer_minimal_cache = {}
 local M = {}
 
 local s_scratch_buffer_count = 1
+
+local function set_minimal_mode(is_minimal, bufnr)
+    if is_minimal then
+        assert(s_buffer_minimal_cache[bufnr] == nil)
+        s_buffer_minimal_cache[bufnr] = {
+            relativenumber = opt_local.relativenumber,
+            number = opt_local.number,
+            showcmd = opt_local.showcmd,
+            showmode = opt_local.showmode,
+            ruler = opt_local.ruler,
+            colorcolumn = opt_local.colorcolumn,
+            cursorline = opt_local.cursorline,
+            laststatus = opt_local.laststatus,
+            signcolumn = opt_local.signcolumn,
+            tabline = opt_local.tabline,
+        }
+
+        opt_local.relativenumber = false
+        opt_local.number = false
+        opt_local.showcmd = false
+        opt_local.showmode = false
+        opt_local.ruler = false
+        opt_local.colorcolumn = ""
+        opt_local.cursorline = false
+        opt_local.laststatus = 0
+        opt_local.signcolumn = "no"
+        opt_local.tabline = "%#Normal#%T"
+    else
+        local cached_options = s_buffer_minimal_cache[bufnr]
+        assert(cached_options ~= nil, "Options cache is not found.")
+        opt_local.relativenumber = cached_options.relativenumber
+        opt_local.number = cached_options.number
+        opt_local.showcmd = cached_options.showcmd
+        opt_local.showmode = cached_options.showmode
+        opt_local.ruler = cached_options.ruler
+        opt_local.colorcolumn = cached_options.colorcolumn
+        opt_local.cursorline = cached_options.cursorline
+        opt_local.laststatus = cached_options.laststatus
+        opt_local.tabline = cached_options.tabline
+        s_buffer_minimal_cache[bufnr] = nil
+    end
+end
 
 local function mark_scratch(bufnr)
     if options.get_option_value("scratchpad", bufnr) == true then
@@ -154,6 +198,12 @@ function M.init()
     options.register_callback("indentsize", function()
         local isize = options.get_option_value("indentsize", vim.api.nvim_get_current_buf())
         cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s", isize, isize, isize))
+    end)
+
+    options.register_callback("minimal_buffer", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local is_minimal = options.get_option_value("minimal_buffer", bufnr)
+        set_minimal_mode(is_minimal, bufnr)
     end)
 end
 
