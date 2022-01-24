@@ -674,6 +674,8 @@
 	</dict>
 	<key>HapticFeedbackForEsc</key>
 	<false/>
+	<key>HideMenuBarInFullscreen</key>
+	<true/>
 	<key>HideScrollbar</key>
 	<true/>
 	<key>HideTab</key>
@@ -1342,7 +1344,7 @@
 			<key>Shortcut</key>
 			<string></string>
 			<key>Show Status Bar</key>
-			<false/>
+			<true/>
 			<key>Silence Bell</key>
 			<false/>
 			<key>Status Bar Layout</key>
@@ -1414,7 +1416,7 @@
 								<key>base: priority</key>
 								<real>5</real>
 								<key>format</key>
-								<string>M/dd h:mm</string>
+								<string>MMM/dd h:mm</string>
 								<key>localize</key>
 								<integer>1</integer>
 								<key>maxwidth</key>
@@ -1515,6 +1517,8 @@
 	<true/>
 	<key>SeparateStatusBarsPerPane</key>
 	<true/>
+	<key>ShowPaneTitles</key>
+	<false/>
 	<key>SmartPlacement</key>
 	<true/>
 	<key>SoundForEsc</key>
@@ -1528,7 +1532,9 @@
 	<key>SwitchPaneModifier</key>
 	<integer>1</integer>
 	<key>TabStyleWithAutomaticOption</key>
-	<integer>5</integer>
+	<integer>6</integer>
+	<key>TabViewType</key>
+	<integer>0</integer>
 	<key>TerminalVMargin</key>
 	<integer>1</integer>
 	<key>UseBorder</key>
