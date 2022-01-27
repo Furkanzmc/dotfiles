@@ -534,7 +534,14 @@ function M.setup_lsp()
             null_ls_sources.diagnostics.cmake_lint,
             -- }}}
             -- Builtin completion sources {{{
-            null_ls.builtins.completion.tags,
+            null_ls.builtins.completion.tags.with({
+                generator_opts = {
+                    runtime_condition = function(params)
+                        return options.get_option_value("tags_completion_enabled", params.bufnr)
+                            == true
+                    end,
+                },
+            }),
             null_ls.builtins.completion.spell.with({
                 generator_opts = {
                     runtime_condition = function(_)

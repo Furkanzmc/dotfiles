@@ -9,7 +9,9 @@ setlocal breakindentopt=shift:1
 
 setlocal cursorline
 setlocal nocursorcolumn
-execute "Setlocal trailingwhitespacehighlight=false"
+if &loadplugins
+    execute "Setlocal trailingwhitespacehighlight=false"
+endif
 
 vmap <buffer> <silent> D :call quickfix#remove_lines(line("'<") - 1, line("'>") - 1)<CR>
 nmap <buffer> <silent> D :call quickfix#remove_lines(line(".") - 1, line(".") - 1)<CR>

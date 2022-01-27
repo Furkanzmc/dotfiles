@@ -20,7 +20,13 @@ setlocal errorformat+=%f:%l:\ %t%*[^:]:%m
 setlocal errorformat+=%m\ (file://%f:%l)
 setlocal errorformat+=%m\ file\ %f\,\ line\ %l
 
+if &loadplugins
+    execute "Setlocal completion_timeout=50"
+    execute "Setlocal tags_completion_enabled=false"
+endif
+
 let b:vimrc_null_ls_lsp_signs_enabled = 1
+let b:vimrc_null_ls_lsp_virtual_text_enabled = 0
 
 command -buffer -range RunQML :call qml#run(<line1>, <line2>)
 command -buffer QMLEnableTracing :let $QML_IMPORT_TRACE=1
@@ -55,6 +61,3 @@ abbreviate <silent> <buffer> iqql@ import QtQuick.Layouts 1.<C-R>=abbreviations#
 abbreviate <silent> <buffer> iqqw@ import QtQuick.Window 2.<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> clog@ console.log("[<C-r>=expand("%:t") . "::" . line(".")<CR>::]")<Esc>F:a<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> cl@ console.log("")<Esc>F(la<C-R>=abbreviations#eat_char('\s')<CR>
-
-execute "Setlocal completion_timeout=50"
-execute "Setlocal tags_completion_enabled=false"

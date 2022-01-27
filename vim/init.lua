@@ -630,6 +630,13 @@ if vim.o.loadplugins == true then
     local options = require("options")
 
     options.register_option({
+        name = "tags_completion_enabled",
+        default = true,
+        type_info = "boolean",
+        source = "lsp",
+        buffer_local = true,
+    })
+    options.register_option({
         name = "clstrailingwhitespace",
         default = true,
         type_info = "boolean",
