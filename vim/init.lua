@@ -708,8 +708,6 @@ if vim.o.loadplugins == true then
         buffer_local = true,
     })
 
-    options.set("shell", vim.opt.shell:get())
-
     cmd([[augroup vimrc_options_plugin]])
     cmd(
         [[autocmd BufReadPost *.md,todo.txt :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]]
