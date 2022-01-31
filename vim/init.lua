@@ -610,20 +610,6 @@ end
 
 -- }}}
 
---- fieltype.nvim {{{
-
-if vim.o.loadplugins == true then
-    require("filetype").setup({
-        overrides = {
-            extensions = {
-                mt = "tags",
-            },
-        },
-    })
-end
-
--- }}}
-
 -- options.nvim {{{
 
 if vim.o.loadplugins == true then

@@ -11,8 +11,10 @@ endfunction
 function! term#open(...) abort
     if a:0 == 1
         let l:program = a:1
+    elseif &loadplugins
+        let l:program = luaeval("require('options').get_option_value('shell')")
     else
-        let l:program = luaeval("require'options'.get_option_value('shell')")
+        let l:program = &shell
     endif
 
     enew
