@@ -307,7 +307,7 @@ map(
     "x",
     "@",
     ':<C-u>echo "@".getcmdline() | execute ":\'<,\'>normal @" . nr2char(getchar())<CR>',
-    { silent = true }
+    { silent = true, noremap = true }
 )
 
 map("x", ".", ":normal .<CR>", { silent = true })

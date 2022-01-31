@@ -146,19 +146,13 @@ local function on_publish_diagnostics(u1, result, ctx, config)
 end
 
 local function set_handlers(client, bufnr)
-    client.handlers["textDocument/publishDiagnostics"] = lsp.with(on_publish_diagnostics, {
-        signs = is_enabled(bufnr, client, "signs_enabled"),
-        virtual_text = is_enabled(bufnr, client, "virtual_text_enabled"),
-        underline = false,
-        update_in_insert = false,
-        severity_sort = true,
-    })
-
-    local on_references = vim.lsp.handlers["textDocument/references"]
-    vim.lsp.handlers["textDocument/references"] = vim.lsp.with(on_references, {
-        -- Use location list instead of quickfix list
-        loclist = is_enabled(bufnr, client, "references_loclist"),
-    })
+    vim.lsp.handlers["textDocument/references"] = vim.lsp.with(
+        vim.lsp.handlers["textDocument/references"],
+        {
+            -- Use location list instead of quickfix list
+            loclist = true,
+        }
+    )
 end
 
 local function set_up_keymap(client, bufnr)
@@ -204,7 +198,7 @@ local function set_up_keymap(client, bufnr)
         map("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
     end
 
-    map("n", "<leader>ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
+    map("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
 
     if resolved_capabilities.document_symbol ~= false then
         map("n", "<leader>gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
@@ -257,10 +251,6 @@ local function setup_buffer_vars(client, bufnr)
 
     if not option_exists(bufnr, client, "virtual_text_enabled") then
         set_enabled(bufnr, client, "virtual_text_enabled", true)
-    end
-
-    if not option_exists(bufnr, client, "references_loclist") then
-        set_enabled(bufnr, client, "references_loclist", true)
     end
 end
 
@@ -369,6 +359,14 @@ function M.setup_lsp()
     if vim.fn.exists(":LspInfo") == 0 then
         return
     end
+
+    vim.diagnostic.config({
+        signs = true,
+        virtual_text = false,
+        underline = false,
+        update_in_insert = false,
+        severity_sort = true,
+    })
 
     local setup = function(client)
         local bufnr = api.nvim_get_current_buf()
