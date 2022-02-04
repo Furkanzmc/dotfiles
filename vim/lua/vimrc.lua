@@ -171,6 +171,33 @@ function M.on_source_post()
     end
 end
 
+function M.setup_polyglot()
+    cmd([[augroup vimrc_plugin_polyglot]])
+    cmd([[au!]])
+    cmd([[au FileType * lua require('vimrc').on_filetype()]])
+    cmd([[augroup END]])
+end
+
+function M.on_filetype()
+    local excluded_types = {
+        "terminal",
+        "hfl",
+        "todo",
+    }
+    local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+    if
+        table.index_of(excluded_types, filetype) ~= -1
+        or table.index_of(g.polyglot_disabled, filetype) ~= -1
+    then
+        return
+    end
+
+    cmd([[packadd vim-polyglot]])
+    cmd([[augroup vimrc_plugin_polyglot]])
+    cmd([[au!]])
+    cmd([[augroup END]])
+end
+
 return M
 
--- vim: foldmethod=marker filetype=lua
+-- vim: foldmethod=marker

@@ -332,35 +332,6 @@ map("t", "<C-w><C-j>", "<C-\\><C-n><C-w>j", { silent = true, noremap = true })
 map("t", "<C-w><C-k>", "<C-\\><C-n><C-w>k", { silent = true, noremap = true })
 map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", { silent = true, noremap = true })
 
-map(
-    "n",
-    "gx",
-    "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>",
-    { silent = true, noremap = true }
-)
-
-add_command(
-    "FGit",
-    ":lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')",
-    { complete = "customlist,fugitive#Complete", nargs = "*", range = true }
-)
-
-add_command("JiraStartTicket", "let g:vimrc_active_jira_ticket=<f-args>", { nargs = 1 })
-add_command("JiraCloseTicket", function(_)
-    if g.vimrc_active_jira_ticket ~= nil then
-        g.vimrc_active_jira_ticket = nil
-    end
-end, {
-    nargs = 1,
-})
-
-add_command("JiraOpenTicket", ":call jira#open_ticket(<f-args>)", { nargs = "?" })
-add_command("JiraOpenTicketJson", ":call jira#open_ticket_in_json(<f-args>)", { nargs = "?" })
-
-add_command("Time", function(_)
-    cmd([[echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE']])
-end, {})
-
 -- }}}
 
 -- Abbreviations {{{
@@ -394,6 +365,8 @@ if vim.o.loadplugins == true then
     cmd([[augroup END]])
 end
 
+-- }}}
+
 -- vim-polyglot {{{
 
 -- Disable markdown support for polyglot because it messes up with syntax
@@ -416,23 +389,29 @@ g.polyglot_disabled = {
     "devicetree",
     "dockerfile",
     "dot",
+    "eex",
     "elixir",
     "elm",
     "erlang",
     "fennel",
     "fish",
+    "foam",
     "fortran",
+    "fusion",
     "gdscript",
     "glimmer",
     "glsl",
     "go",
-    "godotResource",
+    "godot_resource",
     "gomod",
+    "gowork",
     "graphql",
+    "hack",
     "haskell",
     "hcl",
     "heex",
     "hjson",
+    "hocon",
     "html",
     "http",
     "java",
@@ -447,17 +426,26 @@ g.polyglot_disabled = {
     "ledger",
     "llvm",
     "lua",
+    "make",
+    "markdown",
+    "ninja",
     "nix",
+    "norg",
     "ocaml",
     "ocaml_interface",
     "ocamllex",
+    "pascal",
     "perl",
     "php",
+    "phpdoc",
     "pioasm",
+    "prisma",
+    "pug",
     "python",
     "ql",
     "query",
     "r",
+    "rasi",
     "regex",
     "rst",
     "ruby",
@@ -481,14 +469,12 @@ g.polyglot_disabled = {
     "yaml",
     "yang",
     "zig",
-    "http",
+    "sensible",
 }
 
 if vim.o.loadplugins == true then
-    cmd([[packadd vim-polyglot]])
+    cmd([[au VimEnter * lua require('vimrc').setup_polyglot()]])
 end
-
--- }}}
 
 -- }}}
 
@@ -707,6 +693,40 @@ end
 
 -- Local Plugins {{{
 
+-- Buffers, Jira, Time {{{
+
+map(
+    "n",
+    "gx",
+    "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>",
+    { silent = true, noremap = true }
+)
+
+add_command(
+    "FGit",
+    ":lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')",
+    { complete = "customlist,fugitive#Complete", nargs = "*", range = true }
+)
+
+add_command("JiraStartTicket", "let g:vimrc_active_jira_ticket=<f-args>", { nargs = 1 })
+add_command("JiraCloseTicket", function(_)
+    if g.vimrc_active_jira_ticket ~= nil then
+        g.vimrc_active_jira_ticket = nil
+    end
+end, {
+    nargs = 1,
+})
+
+add_command("JiraOpenTicket", ":call jira#open_ticket(<f-args>)", { nargs = "?" })
+add_command("JiraOpenTicketJson", ":call jira#open_ticket_in_json(<f-args>)", { nargs = "?" })
+
+add_command("Time", function(_)
+    cmd([[echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE']])
+end, {})
+
+-- }}}
+
+
 -- todo {{{
 
 if vim.o.loadplugins == true then
@@ -882,6 +902,7 @@ if vim.o.loadplugins == true then
         [[autocmd VimEnter * runtime! ftdetect/*.vim ftdetect/*.lua after/ftdetect/*.vim after/ftdetect/*.lua]]
     )
 end
+
 -- Return to last edit position when opening files (You want this!)
 cmd(
     [[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]
