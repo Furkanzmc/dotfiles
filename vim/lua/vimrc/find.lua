@@ -84,9 +84,11 @@ function M.complete(arg_lead, cmd_line, cursor_pos)
     table.extend(args, search_paths)
 
     local result = fn.systemlist(args)
-    return table.map(result, function(val, k, t)
+    result = table.map(result, function(val, k, t)
         return fn.fnamemodify(val, ":~:.")
     end)
+
+    return table.uniq(result)
 end
 
 return M
