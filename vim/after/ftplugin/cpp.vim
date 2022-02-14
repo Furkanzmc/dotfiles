@@ -96,7 +96,7 @@ abbreviate <silent> <buffer> ig@ <BS><Esc>F:lyt(A<BS><Enter>{<Enter>return m_<Es
 
 " Abbreviation to setter implementation.
 " Example: int MyClass::setCount(int value); ig@<Space>
-abbreviate <silent> <buffer> is@ <BS><Esc>F:ftl"nyt(f)b"pyiwA<BS><Enter>{<Enter>if (m_<Esc>"npF_l~"nyiwea==<Esc>"ppo{<Enter>return;<Esc>jo<Esc>"npa=value;<Enter>emit <Esc>"npaChanged();<Esc>Bdf_L
+abbreviate <silent> <buffer> is@ <BS><Esc>F:ftl"nyt(f)b"pyiwA<BS><Enter>{<Enter>if (m_<Esc>"npF_l~"nyiwea==<Esc>"ppo{<Enter>return;<Esc>jo<Esc>"npa=<Esc>"ppa;<Enter>emit <Esc>"npaChanged();<Esc>Bdf_L
 
 " }}}
 
