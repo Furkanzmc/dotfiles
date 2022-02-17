@@ -30,7 +30,7 @@ function M.map(mode, lhs, rhs, opts)
 end
 
 function M.setup_treesitter()
-    if vim.o.loadplugins == false then
+    if vim.o.loadplugins == false or fn.exists("$VIMRC_TREESITTER_DISABLED") == 1 then
         return
     end
 
@@ -187,7 +187,7 @@ function M.on_filetype()
     local filetype = vim.api.nvim_buf_get_option(0, "filetype")
     if
         table.index_of(excluded_types, filetype) ~= -1
-        or table.index_of(g.polyglot_disabled, filetype) ~= -1
+        or (g.polyglot_disabled ~= nil and table.index_of(g.polyglot_disabled, filetype) ~= -1)
     then
         return
     end
