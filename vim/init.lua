@@ -577,12 +577,6 @@ end
 
 -- }}}
 
--- vim-markdown-folding {{{
-
-g.markdown_fold_style = "nested"
-
--- }}}
-
 -- comment.nvim {{{
 
 if vim.o.loadplugins == true then

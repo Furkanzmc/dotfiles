@@ -3,8 +3,6 @@ if vim.b.did_ftp == true then
 end
 
 if vim.o.loadplugins and vim.g.vimrc_markdown_loaded_plugins == nil then
-    vim.cmd([[packadd vim-markdown-folding]])
-    vim.cmd([[packadd SyntaxRange]])
     vim.g.vimrc_markdown_loaded_plugins = true
 end
 

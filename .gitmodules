@@ -74,9 +74,6 @@
 [submodule "vim/pack/packages/opt/vim-colortemplate"]
 	path = vim/pack/packages/opt/vim-colortemplate
 	url = https://github.com/lifepillar/vim-colortemplate.git
-[submodule "vim/pack/packages/opt/vim-markdown-folding"]
-	path = vim/pack/packages/opt/vim-markdown-folding
-	url = https://github.com/masukomi/vim-markdown-folding.git
 [submodule "vim/pack/packages/opt/cmp-path"]
 	path = vim/pack/packages/opt/cmp-path
 	url = https://github.com/hrsh7th/cmp-path.git
