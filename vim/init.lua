@@ -470,7 +470,6 @@ if fn.exists("$VIMRC_TREESITTER_DISABLED") ~= 1 then
         "yaml",
         "yang",
         "zig",
-        "sensible",
     }
 end
 
