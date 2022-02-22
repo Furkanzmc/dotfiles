@@ -50,6 +50,7 @@ function M.setup_treesitter()
 
     local config = require("nvim-treesitter.configs")
     config.setup({
+        ensure_installed = g.vimrc_treesitter_filetypes,
         highlight = { enable = true },
         indent = { enabled = true },
         incremental_selection = {
