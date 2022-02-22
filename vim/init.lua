@@ -372,7 +372,7 @@ end
 -- Disable markdown support for polyglot because it messes up with syntax
 -- highlighting.
 if fn.exists("$VIMRC_TREESITTER_DISABLED") ~= 1 then
-    g.polyglot_disabled = {
+    g.vimrc_treesitter_filetypes = {
         "bash",
         "beancount",
         "bibtex",
@@ -474,10 +474,6 @@ if fn.exists("$VIMRC_TREESITTER_DISABLED") ~= 1 then
     }
 end
 
-if vim.o.loadplugins == true then
-    cmd([[au VimEnter * lua require('vimrc').setup_polyglot()]])
-end
-
 -- }}}
 
 -- trouble.nvim {{{
@@ -530,12 +526,12 @@ end
 
 -- nvim-treesitter {{{
 
-if vim.o.loadplugins == true and g.polyglot_disabled ~= nil then
+if vim.o.loadplugins == true and g.vimrc_treesitter_filetypes ~= nil then
     cmd([[augroup vimrc_plugin_nvim_treesitter]])
     cmd([[au!]])
     cmd(
         "au FileType "
-            .. table.concat(g.polyglot_disabled, ",")
+            .. table.concat(g.vimrc_treesitter_filetypes, ",")
             .. " setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()"
     )
     cmd([[augroup END]])
@@ -544,7 +540,7 @@ if vim.o.loadplugins == true and g.polyglot_disabled ~= nil then
     cmd([[au!]])
     cmd(
         "au FileType "
-            .. table.concat(g.polyglot_disabled, ",")
+            .. table.concat(g.vimrc_treesitter_filetypes, ",")
             .. " lua require'vimrc'.setup_treesitter()"
     )
     cmd([[augroup END]])
@@ -691,6 +687,14 @@ end
 
 -- }}}
 
+-- cosmic_latte {{{
+
+if vim.o.loadplugins == true then
+    cmd([[autocmd VimEnter * colorscheme cosmic_latte ]])
+end
+
+-- }}}
+
 -- }}}
 
 -- Local Plugins {{{
@@ -727,7 +731,6 @@ add_command("Time", function(_)
 end, {})
 
 -- }}}
-
 
 -- todo {{{
 
@@ -896,10 +899,10 @@ end
 cmd(
     [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
 )
+
 cmd([[autocmd VimEnter * lua require'vimrc'.create_custom_nvim_server()]])
 
 if vim.o.loadplugins == true then
-    cmd([[autocmd VimEnter * colorscheme cosmic_latte ]])
     cmd(
         [[autocmd VimEnter * runtime! ftdetect/*.vim ftdetect/*.lua after/ftdetect/*.vim after/ftdetect/*.lua]]
     )
