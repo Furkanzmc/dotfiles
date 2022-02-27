@@ -514,7 +514,6 @@ function M.setup_lsp()
             null_ls.builtins.formatting.qmlformat,
             -- }}}
             -- Builtin hover sources {{{
-            null_ls.builtins.hover.dictionary,
             -- }}}
             -- Builtin diagnostics sources {{{
             null_ls.builtins.diagnostics.pylint.with({
@@ -527,6 +526,7 @@ function M.setup_lsp()
             -- }}}
             -- Custom sources {{{
             null_ls_sources.hover.pylint_error,
+            null_ls_sources.hover.zettel_context,
             null_ls_sources.diagnostics.jq,
             null_ls_sources.formatting.jq,
             null_ls_sources.diagnostics.cmake_lint,

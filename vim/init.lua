@@ -517,6 +517,18 @@ if vim.o.loadplugins == true then
             {
                 complete = require("vimrc.completions.mnemonics").complete,
             },
+            {
+
+                complete = function(_, base)
+                    local rt = require("zettelkasten").completefunc(0, base)
+                    if rt == 0 then
+                        return {}
+                    end
+
+                    return rt
+                end,
+                filetypes = { "markdown" },
+            },
         },
     })
 end

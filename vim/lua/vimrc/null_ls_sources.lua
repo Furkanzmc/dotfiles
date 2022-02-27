@@ -95,6 +95,23 @@ M.hover = {
             use_cache = true,
         },
     }),
+    zettel_context = helpers.make_builtin({
+        name = "zettelkasten",
+        method = HOVER,
+        filetypes = { "markdown" },
+        generator = {
+            runtime_condition = function(_)
+                local zettelkasten_loaded, _ = require("zettelkasten")
+                return zettelkasten_loaded
+            end,
+            fn = function(_, done)
+                local cword = vim.fn.expand("<cword>")
+                done(require("zettelkasten").keyword_expr(cword))
+            end,
+            async = true,
+            use_cache = true,
+        },
+    }),
 }
 
 return M
