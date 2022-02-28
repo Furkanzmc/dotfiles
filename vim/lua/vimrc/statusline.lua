@@ -187,6 +187,13 @@ function M.init(winnr)
         "StatusLineTermNC"
     )
 
+    st(
+        '%{exists("w:quickfix_title") ? " " . w:quickfix_title : ""}',
+        active,
+        "StatusLineSpecialWindow",
+        "StatusLineTermNC"
+    )
+
     -- }}}
 
     -- File path {{{

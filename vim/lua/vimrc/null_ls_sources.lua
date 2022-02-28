@@ -106,7 +106,12 @@ M.hover = {
             end,
             fn = function(_, done)
                 local cword = vim.fn.expand("<cword>")
-                done(require("zettelkasten").keyword_expr(cword))
+                done(
+                    require("zettelkasten").keyword_expr(
+                        cword,
+                        { preview_note = true, return_lines = true }
+                    )
+                )
             end,
             async = true,
             use_cache = true,
