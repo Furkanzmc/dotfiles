@@ -47,7 +47,7 @@ abbreviate <silent> <buffer> oc@ Component.onCompleted: {<CR>
 
 abbreviate <silent> <buffer> pr@ property TYPE NAME:<Esc>/\(TYPE\\|NAME\)<Enter>ciw<C-R>=abbreviations#eat_char('\s')<CR>
 
-abbreviate <silent> <buffer> outline@ Rectangle {<CR>anchors.fill: parent<CR>color: "transparent"<CR>border {<CR>width: 1<CR>color: "red"<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> outline@ Rectangle {<CR>objectName: "outline"<CR>anchors.fill: parent<CR>color: "transparent"<CR>border {<CR>width: 1<CR>color: "red"<C-R>=abbreviations#eat_char('\s')<CR>
 
 " Create signal handler.
 abbreviate <silent> <buffer> s@ :<Esc>hxbion<Esc>l~$a<Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
