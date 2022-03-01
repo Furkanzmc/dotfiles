@@ -31,6 +31,10 @@ if (Get-Command "fcp" -ErrorAction SilentlyContinue) {
     Set-Alias cp fcp
 }
 
+function global:vit() {
+    nvim .git/index
+}
+
 function Pwsh-Exit() {
     exit
 }
