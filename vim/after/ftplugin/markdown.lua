@@ -13,6 +13,16 @@ vim.opt_local.conceallevel = 2
 vim.opt_local.textwidth = 99
 vim.opt_local.cursorline = true
 vim.opt_local.cursorcolumn = false
+vim.opt_local.formatexpr = ""
+
+if vim.fn.executable("qlmanage") == 1 then
+    require("vimrc").map(
+        "n",
+        "<leader>p",
+        ':call jobstart(["qlmanage", "-p", expand("<cfile>")], {"cwd": expand("%:h")})<CR>',
+        { silent = true, buffer = bufnr }
+    )
+end
 
 if vim.fn.exists(":RunQML") ~= 2 then
     vim.cmd([[command -buffer -range RunQML :call qml#run()]])
