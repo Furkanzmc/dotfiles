@@ -32,7 +32,7 @@ if (Get-Command "fcp" -ErrorAction SilentlyContinue) {
 }
 
 function global:vit() {
-    nvim .git/index
+    nvim "+Git | wincmd p | bdelete"
 }
 
 function Pwsh-Exit() {
