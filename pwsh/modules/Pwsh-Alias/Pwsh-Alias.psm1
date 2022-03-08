@@ -35,6 +35,10 @@ function global:vit() {
     nvim "+Git | wincmd p | bdelete"
 }
 
+function global:vnote() {
+    nvim "+set grepprg=grep\ -n"
+}
+
 function Pwsh-Exit() {
     exit
 }

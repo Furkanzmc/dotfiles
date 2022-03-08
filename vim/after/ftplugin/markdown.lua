@@ -24,6 +24,27 @@ if vim.fn.executable("qlmanage") == 1 then
     )
 end
 
+vim.api.nvim_buf_add_user_command(0, "MdWriteMermaid", function(opts)
+    local lines = vim.api.nvim_buf_get_lines(
+        vim.api.nvim_get_current_buf(),
+        opts.line1 - 1,
+        opts.line2,
+        true
+    )
+    local tmp_file = vim.fn.tempname()
+    local file_handle = io.open(tmp_file, "w")
+    file_handle:write(table.concat(lines, "\n"))
+    file_handle:close()
+    -- TODO: Maybe there's a way to pipe the data to the executable.
+    vim.fn.jobstart(
+        { "mmdc", "-i", tmp_file, "-o", opts.args },
+        { cwd = vim.fn.expand(vim.fn.expand("%:~:h")) }
+    )
+end, {
+    nargs = 1,
+    range = "%",
+})
+
 if vim.fn.exists(":RunQML") ~= 2 then
     vim.cmd([[command -buffer -range RunQML :call qml#run()]])
 end
