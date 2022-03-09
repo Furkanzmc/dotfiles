@@ -45,6 +45,19 @@ end, {
     range = "%",
 })
 
+vim.api.nvim_buf_add_user_command(0, "ZkInsertTOC", function(opts)
+    vim.api.nvim_buf_set_lines(
+        vim.api.nvim_get_current_buf(),
+        opts.line1,
+        opts.line2,
+        true,
+        require("zettelkasten").get_toc(opts.args)
+    )
+end, {
+    nargs = 1,
+    range = true,
+})
+
 if vim.fn.exists(":RunQML") ~= 2 then
     vim.cmd([[command -buffer -range RunQML :call qml#run()]])
 end
