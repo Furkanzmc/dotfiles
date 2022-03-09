@@ -36,7 +36,7 @@ function global:vit() {
 }
 
 function global:vnote() {
-    nvim "+set grepprg=grep\ -n"
+    nvim "+set grepprg=grep\ -n | ZkBrowse"
 }
 
 function Pwsh-Exit() {
