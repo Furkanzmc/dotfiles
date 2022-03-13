@@ -45,7 +45,7 @@ end, {
     range = "%",
 })
 
-vim.api.nvim_buf_add_user_command(0, "ZkInsertTOC", function(opts)
+vim.api.nvim_buf_add_user_command(0, "MdZkInsertTOC", function(opts)
     vim.api.nvim_buf_set_lines(
         vim.api.nvim_get_current_buf(),
         opts.line1,
@@ -55,6 +55,18 @@ vim.api.nvim_buf_add_user_command(0, "ZkInsertTOC", function(opts)
     )
 end, {
     nargs = 1,
+    range = true,
+})
+
+vim.api.nvim_buf_add_user_command(0, "MdZkNoteBrowserContent", function(opts)
+    local lines = require("zettelkasten").get_note_browser_content()
+    lines = vim.tbl_map(function(item)
+        local file_name = string.match(item, "^.*.md")
+        return "- " .. string.gsub(item, "^.*.md", "[" .. file_name .. "](" .. file_name .. ")")
+    end, lines)
+
+    vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), opts.line1, opts.line2, true, lines)
+end, {
     range = true,
 })
 
