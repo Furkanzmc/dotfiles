@@ -70,6 +70,17 @@ end, {
     range = true,
 })
 
+if vim.fn.executable("ctags") == 1 then
+    vim.api.nvim_buf_add_user_command(
+        0,
+        "MdZkUpdateTags",
+        "!ctags -R --langdef=markdowntags --languages=markdowntags --langmap=markdowntags:.md --kinddef-markdowntags=t,tag,tags --mline-regex-markdowntags='/(^|[[:space:]])\\#(\\w\\S*)/\\2/t/{mgroup=1}' .",
+        {
+            range = false,
+        }
+    )
+end
+
 if vim.fn.exists(":RunQML") ~= 2 then
     vim.cmd([[command -buffer -range RunQML :call qml#run()]])
 end
