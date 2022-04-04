@@ -15,6 +15,11 @@ vim.opt_local.cursorline = true
 vim.opt_local.cursorcolumn = false
 vim.opt_local.formatexpr = ""
 
+if vim.fn.has("win32") == 1 then
+    vim.opt_local.isfname:remove("[")
+    vim.opt_local.isfname:remove("]")
+end
+
 if vim.fn.executable("qlmanage") == 1 then
     require("vimrc").map(
         "n",
