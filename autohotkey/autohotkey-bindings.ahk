@@ -34,12 +34,6 @@ ToggleWindowsDefaultAppMode() {
     }
 }
 
-LAlt & h::Left
-LAlt & l::Right
-LAlt & j::Down
-LAlt & k::Up
-LCtrl & j::Enter
-
 GetWorkArea()
 {
     SysGet, WorkArea, MonitorWorkArea
