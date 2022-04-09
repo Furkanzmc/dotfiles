@@ -80,9 +80,6 @@
 [submodule "vim/pack/packages/opt/cmp-treesitter"]
 	path = vim/pack/packages/opt/cmp-treesitter
 	url = https://github.com/ray-x/cmp-treesitter.git
-[submodule "vim/pack/packages/start/trouble.nvim"]
-	path = vim/pack/packages/start/trouble.nvim
-	url = https://github.com/folke/trouble.nvim.git
 [submodule "vim/pack/packages/opt/svg.vim"]
 	path = vim/pack/packages/start/svg.vim
 	url = https://github.com/vim-scripts/svg.vim.git

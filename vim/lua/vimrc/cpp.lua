@@ -10,7 +10,8 @@ local log = require("vimrc.log")
 local M = {}
 
 function M.swap_source_header()
-    local suffixes = string.split(bo.suffixesadd, ",")
+    local bufnr = fn.bufnr()
+    local suffixes = string.split(api.nvim_buf_get_option(bufnr, "suffixesadd"), ",")
 
     local filename = fn.expand("%:t")
     for index, suffix in ipairs(suffixes) do
@@ -21,7 +22,7 @@ function M.swap_source_header()
         end
     end
 
-    local status, path_backup = pcall(api.nvim_buf_get_option, fn.bufnr(), "path")
+    local status, path_backup = pcall(api.nvim_buf_get_option, bufnr, "path")
 
     if status == false then
         path_backup = ""
