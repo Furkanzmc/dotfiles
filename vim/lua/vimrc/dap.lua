@@ -37,7 +37,12 @@ local function setup_keymaps()
     )
 
     map("n", "<leader>dui", ":lua require'dapui'.toggle()<CR>", { silent = true, noremap = true })
-    map("n", "<leader>dr", ":lua require'dap'.run_to_cursor()<CR>", { silent = true, noremap = true })
+    map(
+        "n",
+        "<leader>dr",
+        ":lua require'dap'.run_to_cursor()<CR>",
+        { silent = true, noremap = true }
+    )
     map(
         "n",
         "<leader>dl",
@@ -57,7 +62,7 @@ local function setup_commands()
     cmd([[command! DapUIClose :lua require'dapui'.close()]])
 end
 
-function M.init()
+function M.init(opts)
     assert(fn.exists(":DapUIOpen") == 0, "nvim-dap is already initialized.")
     if fn.filereadable(vim.g.vimrc_dap_lldb_vscode_path) == 0 then
         cmd([[echohl ErrorMsg]])
@@ -80,6 +85,23 @@ function M.init()
         command = vim.g.vimrc_dap_lldb_vscode_path,
         env = { LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES" },
     }
+
+    if opts then
+        opts.language = opts.language or "cpp"
+        require("dap").configurations[opts.language] = {
+            {
+                type = "cpp",
+                request = "launch",
+                name = opts.name,
+                program = opts.program,
+                symbolSearchPath = opts.cwd,
+                cwd = opts.cwd,
+                debuggerRoot = opts.cwd,
+                env = opts.env,
+                runInTerminal = opts.run_in_terminal,
+            },
+        }
+    end
 end
 
 return M
