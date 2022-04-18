@@ -340,6 +340,10 @@ local function setup_null_ls_cmp_patch()
                 TypeParameter = vim.lsp.protocol.CompletionItemKind["TypeParameter"],
             },
         },
+        -- FIXME: lsp_signature relies on this function.
+        visible = function()
+            return vim.fn.pumvisible() ~= 0
+        end,
     }
 end
 
