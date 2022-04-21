@@ -338,6 +338,8 @@ map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", { silent = true, noremap = true })
 
 cmd([[abbreviate langauge language]])
 cmd([[abbreviate Langauge Language]])
+cmd([[abbreviate lenght length]])
+cmd([[abbreviate Lenght Length]])
 
 cmd([[cnoreabbrev git Git]])
 cmd([[cnoreabbrev gst Gstatus]])
