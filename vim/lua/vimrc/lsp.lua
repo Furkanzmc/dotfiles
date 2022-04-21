@@ -123,28 +123,6 @@ end
 
 -- }}}
 
-local function on_publish_diagnostics(u1, result, ctx, config)
-    local bufnr = vim.uri_to_bufnr(result.uri)
-    if not api.nvim_buf_is_loaded(bufnr) then
-        return
-    end
-
-    local client = lsp.get_client_by_id(ctx.client_id)
-    if not is_configured(bufnr, client, "configured") then
-        return
-    end
-
-    lsp.diagnostic.on_publish_diagnostics(u1, result, ctx, config)
-
-    if is_enabled(bufnr, client, "location_list_enabled") == true then
-        update_loc_list({
-            bufnr = bufnr,
-            open_loclist = false,
-            client_id = ctx.client_id,
-        })
-    end
-end
-
 local function set_handlers(client, bufnr)
     vim.lsp.handlers["textDocument/references"] = vim.lsp.with(
         vim.lsp.handlers["textDocument/references"],
@@ -199,6 +177,7 @@ local function set_up_keymap(client, bufnr)
     end
 
     map("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
+    map("n", "<leader>gE", "<cmd>lua require'vimrc.lsp'.show_diagnostics(vim.api.nvim_get_current_buf(), true)<CR>", opts)
 
     if resolved_capabilities.document_symbol ~= false then
         map("n", "<leader>gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
@@ -239,10 +218,6 @@ local function setup_buffer_vars(client, bufnr)
 
     if not option_exists(bufnr, client, "events_set") then
         set_enabled(bufnr, client, "events_set", false)
-    end
-
-    if not option_exists(bufnr, client, "location_list_enabled") then
-        set_enabled(bufnr, client, "location_list_enabled", false)
     end
 
     if not option_exists(bufnr, client, "signs_enabled") then
@@ -353,6 +328,21 @@ end
 
 function M.is_lsp_running(bufnr)
     return next(lsp.buf_get_clients(bufnr)) ~= nil
+end
+
+function M.show_diagnostics(bufnr, open_loclist)
+    local clients = lsp.get_active_clients()
+    for _, client in ipairs(clients) do
+        update_loc_list({
+            bufnr = bufnr,
+            open_loclist = false,
+            client_id = client.id,
+        })
+    end
+
+    if open_loclist then
+        vim.cmd[[lopen]]
+    end
 end
 
 function M.setup_lsp()
