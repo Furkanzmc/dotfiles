@@ -6,7 +6,7 @@ local M = {}
 
 local function setup_keymaps()
     map("n", "<leader>dc", ":lua require'dap'.continue()<CR>", { silent = true, noremap = true })
-    map("n", "<leader>dt", ":lua require'dap'.stop()<CR>", { silent = true, noremap = true })
+    map("n", "<leader>dt", ":lua require'dap'.close()<CR>", { silent = true, noremap = true })
     map("n", "<leader>ds", ":lua require'dap'.step_into()<CR>", { silent = true, noremap = true })
 
     map("n", "<leader>dk", ":lua require('dapui').eval()<CR>", { silent = true, noremap = true })
