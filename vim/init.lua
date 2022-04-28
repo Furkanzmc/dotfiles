@@ -3,7 +3,13 @@ local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 local opt = vim.opt
-local add_command = vim.api.nvim_add_user_command
+
+local add_command = nil
+if vim.api.nvim_create_user_command ~= nil then
+    add_command = vim.api.nvim_create_user_command
+else
+    add_command = vim.api.nvim_add_user_command
+end
 
 if vim.o.loadplugins == true then
     g.did_load_filetypes = 1

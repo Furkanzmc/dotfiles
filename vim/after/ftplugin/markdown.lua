@@ -2,6 +2,13 @@ if vim.b.did_ftp == true then
     return
 end
 
+local add_command = nil
+if vim.api.nvim_create_user_command ~= nil then
+    add_command = vim.api.nvim_buf_create_user_command
+else
+    add_command = vim.api.nvim_buf_add_user_command
+end
+
 if vim.o.loadplugins and vim.g.vimrc_markdown_loaded_plugins == nil then
     vim.g.vimrc_markdown_loaded_plugins = true
 end
@@ -29,7 +36,7 @@ if vim.fn.executable("qlmanage") == 1 then
     )
 end
 
-vim.api.nvim_buf_add_user_command(0, "MdWriteMermaid", function(opts)
+add_command(0, "MdWriteMermaid", function(opts)
     local lines = vim.api.nvim_buf_get_lines(
         vim.api.nvim_get_current_buf(),
         opts.line1 - 1,
@@ -50,7 +57,7 @@ end, {
     range = "%",
 })
 
-vim.api.nvim_buf_add_user_command(0, "MdZkInsertTOC", function(opts)
+add_command(0, "MdZkInsertTOC", function(opts)
     vim.api.nvim_buf_set_lines(
         vim.api.nvim_get_current_buf(),
         opts.line1,
@@ -63,7 +70,7 @@ end, {
     range = true,
 })
 
-vim.api.nvim_buf_add_user_command(0, "MdZkNoteBrowserContent", function(opts)
+add_command(0, "MdZkNoteBrowserContent", function(opts)
     local lines = require("zettelkasten").get_note_browser_content()
     lines = vim.tbl_map(function(item)
         local file_name = string.match(item, "^.*.md")
@@ -76,7 +83,7 @@ end, {
 })
 
 if vim.fn.executable("ctags") == 1 then
-    vim.api.nvim_buf_add_user_command(
+    add_command(
         0,
         "MdZkUpdateTags",
         "!ctags -R --langdef=markdowntags --languages=markdowntags --langmap=markdowntags:.md --kinddef-markdowntags=t,tag,tags --mline-regex-markdowntags='/(^|[[:space:]])\\#(\\w\\S*)/\\2/t/{mgroup=1}' .",
