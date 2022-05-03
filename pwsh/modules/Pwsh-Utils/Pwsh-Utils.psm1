@@ -420,6 +420,33 @@ function Install-Lua-Lang-Server() {
     Pop-Location
 }
 
+function Post-Notification() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [String]
+        $Title,
+        [Parameter(Position=1, Mandatory=$false)]
+        [String]
+        $Message
+    )
+
+    if ($IsMacOS) {
+        osascript -e "display notification \`"$Message\`" with title \`"$Title\`""
+    }
+    else {
+        Add-Type -AssemblyName System.Windows.Forms
+
+        $balloon = New-Object System.Windows.Forms.NotifyIcon
+        $path = (Get-Process -id $pid).Path
+        $balloon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path)
+        $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info
+        $balloon.BalloonTipText = "$Message"
+        $balloon.BalloonTipTitle = "$Title"
+        $balloon.Visible = $true
+        $balloon.ShowBalloonTip(1000)
+    }
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()

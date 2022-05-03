@@ -30,19 +30,6 @@ function Disable-Dylib-Verbose() {
     $env:DYLD_PRINT_RPATHS=0
 }
 
-function Post-Notification() {
-    Param(
-            [Parameter(Position=0, Mandatory=$true)]
-            [String]
-            $Title,
-            [Parameter(Position=1, Mandatory=$false)]
-            [String]
-            $Message
-         )
-
-    osascript -e "display notification \`"$Message\`" with title \`"$Title\`""
-}
-
 function Cd-iCloud() {
     cd "~/Library/Mobile Documents/com~apple~CloudDocs/"
 }
