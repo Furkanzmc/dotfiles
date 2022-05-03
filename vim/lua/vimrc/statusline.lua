@@ -210,7 +210,7 @@ function M.init(winnr)
 
     local is_lsp_running = require("vimrc.lsp").is_lsp_running(bufnr)
     if active and is_lsp_running then
-        st("⚙", active, "StatusLineLspStatus", "StatusLineNC", 1)
+        st("가", active, "StatusLineLspStatus", "StatusLineNC", 1)
     end
 
     -- }}}
