@@ -8,8 +8,6 @@ Dotfiles for macOS and (Partially) Windows.
 - [bat](https://github.com/sharkdp/bat)
 - [exa](https://the.exa.website/)
 - [fd](https://github.com/sharkdp/fd)
-- [nnn](https://github.com/jarun/nnn)
-- [tmux](https://github.com/tmux/tmux)
 
 ## Powershell Profile
 
