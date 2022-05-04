@@ -1,11 +1,21 @@
 vim.cmd([[augroup vimrc_filetypes]])
 vim.cmd([[au!]])
-vim.cmd([[autocmd BufNewFile,BufRead term://* setlocal filetype=terminal]])
 vim.cmd([[autocmd TermOpen * setlocal filetype=terminal]])
-vim.cmd([[autocmd BufNewFile,BufRead todo.txt setlocal filetype=todo]])
-vim.cmd([[autocmd BufNewFile,BufRead *.todo setlocal filetype=todo]])
-vim.cmd([[autocmd BufNewFile,BufRead *.http setlocal filetype=http]])
-vim.cmd([[autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake]])
-vim.cmd([[autocmd BufNewFile,BufRead *.mt setlocal filetype=tags]])
-vim.cmd([[autocmd BufNewFile,BufRead .gitignore,.gitignore_global setlocal filetype=gitignore]])
 vim.cmd([[augroup END]])
+
+vim.filetype.add({
+    extension = {
+        todo = "todo",
+        http = "http",
+        mt = "tags",
+    },
+    filename = {
+        ["todo.txt"] = "todo",
+        ["CMakeLists.txt"] = "cmake",
+        [".gitignore"] = "gitignore",
+        [".gitignore_global"] = "gitignore",
+    },
+    pattern = {
+        ["term:.*"] = "terminal",
+    },
+})

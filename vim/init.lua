@@ -11,10 +11,6 @@ else
     add_command = vim.api.nvim_add_user_command
 end
 
-if vim.o.loadplugins == true then
-    g.did_load_filetypes = 1
-end
-
 -- Disable some built-in plugins
 g.loaded_2html_plugin = 1
 g.loaded_getscript = 1
@@ -34,6 +30,8 @@ g.loaded_vimballPlugin = 1
 g.loaded_zip = 1
 g.loaded_zipPlugin = 1
 g.qf_disable_statusline = 1
+g.do_filetype_lua = 1
+g.did_load_filetypes = 0
 
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
@@ -570,7 +568,7 @@ end
 g.firvish_shell = "pwsh"
 g.firvish_use_default_mappings = true
 
-if fn.has("mac") == 1 and vim.o.loadplugins then
+if vim.o.loadplugins then
     require("firvish.notifications").notify = function(msg, _, opts)
         opts.title = opts.title or "Neovim"
         local firvish = require("firvish.job_control")
@@ -911,12 +909,6 @@ cmd(
 )
 
 cmd([[autocmd VimEnter * lua require'vimrc'.create_custom_nvim_server()]])
-
-if vim.o.loadplugins == true then
-    cmd(
-        [[autocmd VimEnter * runtime! ftdetect/*.vim ftdetect/*.lua after/ftdetect/*.vim after/ftdetect/*.lua]]
-    )
-end
 
 -- Return to last edit position when opening files (You want this!)
 cmd(
