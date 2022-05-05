@@ -135,13 +135,13 @@ end
 
 local function set_up_keymap(client, bufnr)
     local opts = { noremap = true, silent = true, buffer = bufnr }
-    local resolved_capabilities = client.resolved_capabilities
+    local server_capabilities = client.server_capabilities
 
-    if resolved_capabilities.completion == true then
+    if server_capabilities.completionProvider then
         api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
     end
 
-    if resolved_capabilities.hover ~= false then
+    if server_capabilities.hoverProvider then
         api.nvim_buf_set_option(bufnr, "keywordprg", ":LspHover")
     end
 
@@ -149,58 +149,58 @@ local function set_up_keymap(client, bufnr)
         return
     end
 
-    if resolved_capabilities.rename == true then
+    if server_capabilities.renameProvider then
         map("n", "<leader>gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
     end
 
-    if resolved_capabilities.signature_help == true then
+    if server_capabilities.signatureHelpProvider then
         map("n", "<leader>gs", "<Cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
     end
 
-    if resolved_capabilities.goto_definition ~= false then
+    if server_capabilities.definitionProvider then
         map("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
         if options.get_option_value("lsp_tagfunc_enabled") then
             api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
         end
     end
 
-    if resolved_capabilities.declaration == true then
+    if server_capabilities.declarationProvider then
         map("n", "<leader>gD", "<Cmd>lua vim.lsp.buf.declaration()<CR>", opts)
     end
 
-    if resolved_capabilities.implementation == true then
+    if server_capabilities.implementationProvider then
         map("n", "<leader>gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
     end
 
-    if resolved_capabilities.find_references ~= false then
+    if server_capabilities.referencesProvider then
         map("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
     end
 
     map("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
     map("n", "<leader>gE", "<cmd>lua require'vimrc.lsp'.show_diagnostics(vim.api.nvim_get_current_buf(), true)<CR>", opts)
 
-    if resolved_capabilities.document_symbol ~= false then
+    if server_capabilities.documentSymbolProvider then
         map("n", "<leader>gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
     end
 
-    if resolved_capabilities.workspace_symbol ~= true then
+    if server_capabilities.workspaceSymbolProvider then
         map("n", "<leader>gw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
     end
 
-    if resolved_capabilities.code_action ~= false then
+    if server_capabilities.codeActionProvider ~= false then
         map("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
     end
 
-    if resolved_capabilities.document_formatting == true then
+    if server_capabilities.documentFormattingProvider == true then
         api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-        map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+        map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.format()<CR>", opts)
     end
 
-    if resolved_capabilities.document_range_formatting == true then
+    if server_capabilities.documentRangeFormattingProvider == true then
         map("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
 
-    if resolved_capabilities.hover ~= false then
+    if server_capabilities.hoverProvider then
         api.nvim_command("command! -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
     end
 
@@ -238,8 +238,9 @@ end
 
 local function setup_null_ls_cmp_patch()
     -- FIXME:
-    -- [ ] Some sources rely on their own custom keyword patterns. For example, this prevents cmp-calc
-    --     from working properly. Or cmp-path cannot complete hidden directories becauase of it.
+    -- [ ] Some sources rely on their own custom keyword patterns. For example, this prevents
+    -- cmp-calc from working properly. Or cmp-path cannot complete hidden directories becauase of
+    -- it.
     -- [ ] cmp-emoji source doesn't work.
     package.loaded["cmp"] = {
         register_source = function(name, source)
@@ -379,7 +380,7 @@ function M.setup_lsp()
     end
 
     local setup_without_formatting = function(client)
-        client.resolved_capabilities.document_formatting = false
+        client.server_capabilities.documentFormattingProvider = false
         setup(client)
     end
 
