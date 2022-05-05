@@ -193,7 +193,7 @@ local function set_up_keymap(client, bufnr)
 
     if server_capabilities.documentFormattingProvider == true then
         api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-        map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.format()<CR>", opts)
+        map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
     end
 
     if server_capabilities.documentRangeFormattingProvider == true then
