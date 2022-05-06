@@ -187,16 +187,16 @@ local function set_up_keymap(client, bufnr)
         map("n", "<leader>gw", "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
     end
 
-    if server_capabilities.codeActionProvider ~= false then
+    if server_capabilities.codeActionProvider then
         map("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
     end
 
-    if server_capabilities.documentFormattingProvider == true then
+    if server_capabilities.documentFormattingProvider then
         api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
         map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
     end
 
-    if server_capabilities.documentRangeFormattingProvider == true then
+    if server_capabilities.documentRangeFormattingProvider then
         map("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
 
@@ -380,7 +380,8 @@ function M.setup_lsp()
     end
 
     local setup_without_formatting = function(client)
-        client.server_capabilities.documentFormattingProvider = false
+        client.resolved_capabilities.document_formatting = false
+        client.server_capabilities.documentFormattingProvider = {}
         setup(client)
     end
 
