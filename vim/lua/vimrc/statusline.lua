@@ -292,10 +292,10 @@ function M.init(winnr)
 
     if fn.exists("*FugitiveHead") > 0 and active then
         local head = fn["FugitiveHead"]()
-        if head == "" and fn.exists("*FugitiveDetect") > 0 and fn.exists("b:git_dir") == 0 then
-            fn["FugitiveDetect"](fn.expand("%"))
-            head = fn["fugitive#head"]()
-        end
+        -- if head == "" and fn.exists("*FugitiveDetect") > 0 and fn.exists("b:git_dir") == 0 then
+        --     fn["FugitiveDetect"](fn.expand("%"))
+        --     head = fn["fugitive#head"]()
+        -- end
 
         if head ~= "" then
             st(" " .. head, active, "StatusLineBranch", "StatusLineNC", 1)
