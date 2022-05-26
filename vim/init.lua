@@ -233,14 +233,13 @@ opt.matchtime = 3
 opt.errorbells = false
 opt.visualbell = false
 opt.tm = 300
+opt.guifont = "JetBrainsMonoMedium Nerd Font Mono:h10"
 
-cmd([[
-try
-    set guifont=Fira\ Code:h12
-catch
-    set guifont=SauceCodePro\ Nerd\ Font\ Mono:h12
-endtry
-]])
+-- Neovide {{{
+
+g.neovide_cursor_vfx_mode = "torpedo"
+
+-- }}}
 
 -- }}}
 
