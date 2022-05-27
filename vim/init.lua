@@ -237,7 +237,9 @@ opt.guifont = "JetBrainsMonoMedium Nerd Font Mono:h10"
 
 -- Neovide {{{
 
-g.neovide_cursor_vfx_mode = "torpedo"
+g.neovide_cursor_vfx_mode = "sonicboom"
+g.neovide_cursor_trail_size = 0.5
+g.neovide_hide_mouse_when_typing = true
 
 -- }}}
 
