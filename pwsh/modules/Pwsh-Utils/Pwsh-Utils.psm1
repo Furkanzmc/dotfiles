@@ -145,7 +145,7 @@ if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
     function Generate-Tags() {
         Param(
             [Parameter(Position=0, Mandatory=$true)]
-            [ValidateSet("c++", "python")]
+            [ValidateSet("c++", "python", "c")]
             [String]
             $Langauge="c++"
         )
@@ -155,6 +155,9 @@ if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
         }
         elseif ($Langauge -eq "python") {
             ctags -R --fields=+l --languages=python --python-kinds=-iv .
+        }
+        elseif ($Langauge -eq "c") {
+            ctags -R --fields=+l --languages=c++,c --python-kinds=-iv .
         }
         else {
             Write-Error "$Language is not supported."
