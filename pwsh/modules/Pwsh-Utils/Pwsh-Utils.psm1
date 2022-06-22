@@ -318,7 +318,7 @@ function Build-Neovim() {
     Write-Host -ForegroundColor Blue "Configuring the third party dependancies."
 
     if ($IsWindows) {
-        cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\third-party\
+        cmake -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\third-party\
     }
     else {
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\third-party\
@@ -332,7 +332,7 @@ function Build-Neovim() {
     Write-Host -ForegroundColor Blue "Building the third party dependancies."
 
     if ($IsWindows) {
-        jom -j12
+        cmake --build . --config Release
     }
     else {
         ninja -j12
@@ -350,7 +350,7 @@ function Build-Neovim() {
     Write-Host -ForegroundColor Blue "Configuring neovim."
 
     if ($IsWindows) {
-        cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
+        cmake -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
     }
     else {
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
@@ -364,7 +364,7 @@ function Build-Neovim() {
     Write-Host -ForegroundColor Blue "Building neovim."
 
     if ($IsWindows) {
-        jom -j12
+        cmake --build . --config Release
     }
     else {
         ninja -j12
@@ -377,7 +377,7 @@ function Build-Neovim() {
 
     if ($Install -and $IsWindows) {
         Write-Host -ForegroundColor Blue "Installing neovim."
-        jom install
+        cmake --build . --target install --config Release
     }
     elseif ($Install -and $IsMacOS) {
         Write-Host -ForegroundColor Blue "Installing neovim."
