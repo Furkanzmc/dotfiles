@@ -53,23 +53,28 @@ M.diagnostics = {
         },
         factory = helpers.generator_factory,
     }),
-    cmake_lint = helpers.make_builtin({
-        method = DIAGNOSTICS,
-        filetypes = { "cmake" },
-        generator_opts = {
-            command = "cmake-lint",
-            args = { "--line-width=100", "$FILENAME" },
-            to_stdin = false,
-            format = "raw",
-            from_stderr = true,
-            to_temp_file = true,
-            on_output = helpers.diagnostics.from_errorformat(
+    cmake_lint = (function()
+        if vim.fn.executable("cmake-lint") == 0 then
+            return nil
+        end
+
+        return helpers.make_builtin({
+            method = DIAGNOSTICS,
+            filetypes = { "cmake" },
+            generator_opts = {
+                command = "cmake-lint",
+                args = { "--line-width=100", "$FILENAME" },
+                to_stdin = false,
+                format = "raw",
+                from_stderr = true,
+                to_temp_file = true,
+                on_output = helpers.diagnostics.from_errorformat(
                 table.concat({ "%f:%l: [%t%n] %m", "%f:%l,%c: [%t%n] %m" }, ","),
                 "qmllint"
-            ),
-        },
-        factory = helpers.generator_factory,
-    }),
+                ),
+            },
+            factory = helpers.generator_factory})
+        end)()
 }
 
 M.formatting = {
