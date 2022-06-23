@@ -42,6 +42,14 @@
         {
             "command":
             {
+                "action": "moveFocus",
+                "direction": "right"
+            },
+            "keys": "ctrl+shift+l"
+        },
+        {
+            "command":
+            {
                 "action": "splitPane",
                 "split": "right"
             },
@@ -120,6 +128,52 @@
     },
     "schemes":
     [
+        {
+            "background": "#FFF8E7",
+            "black": "#FFF8E7",
+            "blue": "#0075C9",
+            "brightBlack": "#63757E",
+            "brightBlue": "#0075C9",
+            "brightCyan": "#007F8A",
+            "brightGreen": "#1F8332",
+            "brightPurple": "#A154AE",
+            "brightRed": "#C44756",
+            "brightWhite": "#364850",
+            "brightYellow": "#916D03",
+            "cursorColor": "#485A62",
+            "cyan": "#007F8A",
+            "foreground": "#485A62",
+            "green": "#1F8332",
+            "name": "cosmic_latte_light",
+            "purple": "#A154AE",
+            "red": "#C44756",
+            "selectionBackground": "#485A62",
+            "white": "#485A62",
+            "yellow": "#916D03"
+        },
+        {
+            "background": "#202A31",
+            "black": "#202A31",
+            "blue": "#5496BD",
+            "brightBlack": "#898F9E",
+            "brightBlue": "#5496BD",
+            "brightCyan": "#459D90",
+            "brightGreen": "#7D9761",
+            "brightPurple": "#9B85BB",
+            "brightRed": "#C17B8D",
+            "brightWhite": "#C5CBDB",
+            "brightYellow": "#B28761",
+            "cursorColor": "#ABB0C0",
+            "cyan": "#459D90",
+            "foreground": "#ABB0C0",
+            "green": "#7D9761",
+            "name": "cosmic_latte_dark",
+            "purple": "#9B85BB",
+            "red": "#C17B8D",
+            "selectionBackground": "#485A62",
+            "white": "#ABB0C0",
+            "yellow": "#B28761"
+        },
         {
             "background": "#0C0C0C",
             "black": "#0C0C0C",
