@@ -38,21 +38,26 @@ local function define_pylint_code(cword)
 end
 
 M.diagnostics = {
-    jq = helpers.make_builtin({
-        method = DIAGNOSTICS,
-        filetypes = { "json" },
-        generator_opts = {
-            command = "jq",
-            to_stdin = true,
-            format = "raw",
-            from_stderr = true,
-            on_output = helpers.diagnostics.from_errorformat(
+    jq = (function()
+        if vim.fn.executable("jq") == 0 then
+            return nil
+        end
+
+        return helpers.make_builtin({
+            method = DIAGNOSTICS,
+            filetypes = { "json" },
+            generator_opts = {
+                command = "jq",
+                to_stdin = true,
+                format = "raw",
+                from_stderr = true,
+                on_output = helpers.diagnostics.from_errorformat(
                 [[parse error: %m %l, column %c]],
                 "jq"
-            ),
-        },
-        factory = helpers.generator_factory,
-    }),
+                ),
+            },
+            factory = helpers.generator_factory })
+        end)(),
     cmake_lint = (function()
         if vim.fn.executable("cmake-lint") == 0 then
             return nil
@@ -78,12 +83,17 @@ M.diagnostics = {
 }
 
 M.formatting = {
-    jq = helpers.make_builtin({
-        method = FORMATTING,
-        filetypes = { "json" },
-        generator_opts = { command = "jq", args = { "--tab" }, to_stdin = true },
-        factory = helpers.formatter_factory,
-    }),
+    jq = (function()
+        if vim.fn.executable("jq") == 0 then
+            return nil
+        end
+
+        return helpers.make_builtin({
+            method = FORMATTING,
+            filetypes = { "json" },
+            generator_opts = { command = "jq", args = { "--tab" }, to_stdin = true },
+            factory = helpers.formatter_factory })
+        end)(),
 }
 
 M.hover = {
