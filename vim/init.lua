@@ -30,8 +30,6 @@ g.loaded_vimballPlugin = 1
 g.loaded_zip = 1
 g.loaded_zipPlugin = 1
 g.qf_disable_statusline = 1
-g.do_filetype_lua = 1
-g.did_load_filetypes = 0
 
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
