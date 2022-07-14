@@ -10,6 +10,7 @@ setlocal colorcolumn=81,101
 setlocal includeexpr=includeexpr#find(v:fname\,[])
 setlocal nocursorline
 setlocal nocursorcolumn
+setlocal formatexpr=
 
 setlocal errorformat=file://%f:%l:\ %s%trror:\ %m
 setlocal errorformat+=file://%f:%l:%c:\ %m
