@@ -895,8 +895,8 @@ end
 
 -- }}}
 
+cmd([[augroup vimrc_init]])
 if vim.o.loadplugins == true then
-    cmd([[augroup vimrc_init]])
     cmd([[autocmd!]])
     cmd(
         [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:vimrc_rest_nvim_loaded") && &loadplugins | packadd rest.nvim | call luaeval('require"vimrc".setup_rest_nvim()') | let g:vimrc_rest_nvim_loaded = v:true | endif]]
