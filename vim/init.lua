@@ -712,7 +712,13 @@ end
 map(
     "n",
     "gx",
-    "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor()<CR>",
+    "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor(vim.fn.expand('<cWORD>'))<CR>",
+    { silent = true, noremap = true }
+)
+map(
+    "v",
+    "gx",
+    ":lua require'vimrc.buffers'.open_uri_under_cursor(vim.fn['buffers#get_visual_selection']()[1])<CR>",
     { silent = true, noremap = true }
 )
 
