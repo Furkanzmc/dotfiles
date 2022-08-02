@@ -232,6 +232,7 @@ opt.errorbells = false
 opt.visualbell = false
 opt.tm = 300
 opt.guifont = "JetBrainsMonoMedium Nerd Font Mono:h10"
+opt.mouse = ""
 
 -- Neovide {{{
 
@@ -922,6 +923,24 @@ cmd(
 cmd([[autocmd BufReadPost * lua require'vimrc'.load_dictionary()]])
 
 cmd([[augroup END]])
+
+local augroup_vimrc_gui_events = vim.api.nvim_create_augroup("vimrc_gui_events", {clear=true})
+vim.api.nvim_create_autocmd({"UIEnter"}, {
+    group = augroup_vimrc_gui_events,
+    callback = function(opts)
+        if vim.v.event.chan == 1 then
+            opt.mouse = "nvi"
+        end
+    end
+})
+vim.api.nvim_create_autocmd({"UILeave"}, {
+    group = augroup_vimrc_gui_events,
+    callback = function(opts)
+        if vim.v.event.chan == 1 then
+            opt.mouse = ""
+        end
+    end
+})
 
 if fn.filereadable(fn.expand("~/.vimrc")) == 1 then
     cmd("source ~/.vimrc")
