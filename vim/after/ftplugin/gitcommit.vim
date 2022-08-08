@@ -29,8 +29,11 @@ if (exists("g:vimrc_active_jira_ticket") || exists("b:vimrc_active_jira_ticket")
         let s:ticket_number = b:vimrc_active_jira_ticket
     endif
 
-    call append(line("^"), [s:ticket_number . ": "])
-    execute ":normal gg$"
+    let s:already_exists = search(s:ticket_number, "n") != 0
+    if !s:already_exists
+        call append(line("^"), [s:ticket_number . ": "])
+        execute ":normal gg$"
+    endif
 
     let b:vimrc_ticket_number_appended = v:true
 endif
