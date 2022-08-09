@@ -1,6 +1,7 @@
 [alias]
   st = status
   stage = add
+  bisect-bug = bisect start --term-new fixed --term-old broken
   unstage = reset HEAD --
   last = log -1 HEAD
   logall = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
