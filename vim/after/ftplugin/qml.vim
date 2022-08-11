@@ -4,7 +4,7 @@ endif
 
 setlocal suffixesadd=.qml
 setlocal foldmethod=indent
-setlocal signcolumn=number
+setlocal signcolumn=yes
 setlocal textwidth=100
 setlocal colorcolumn=81,101
 setlocal includeexpr=includeexpr#find(v:fname\,[])

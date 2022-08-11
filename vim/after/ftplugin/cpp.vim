@@ -8,7 +8,7 @@ if !get(s:, "vimrc_cpp_plugins_loaded", v:false) && &loadplugins
 endif
 
 setlocal foldmethod=indent
-setlocal signcolumn=number
+setlocal signcolumn=yes
 setlocal suffixesadd=.cpp,.h,.hxx,.cxx,.hpp,_p.h,_p_p.h,.c
 setlocal includeexpr=cpp#includeexpr(v:fname)
 setlocal commentstring=//%s

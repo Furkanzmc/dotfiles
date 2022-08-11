@@ -12,7 +12,7 @@ setlocal expandtab
 setlocal autoindent
 
 setlocal foldmethod=indent
-setlocal signcolumn=number
+setlocal signcolumn=yes
 setlocal wildignore+=*.pyc,__pycache__
 
 setlocal shiftwidth=4
