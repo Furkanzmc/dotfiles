@@ -13,6 +13,7 @@ if vim.o.loadplugins and vim.g.vimrc_markdown_loaded_plugins == nil then
     vim.g.vimrc_markdown_loaded_plugins = true
 end
 
+vim.opt_local.signcolumn = "no"
 vim.opt_local.spell = true
 vim.opt_local.colorcolumn = "100"
 vim.opt_local.foldmethod = "expr"

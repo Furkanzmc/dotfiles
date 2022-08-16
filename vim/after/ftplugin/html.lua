@@ -8,6 +8,7 @@ vim.wo.colorcolumn = "120"
 vim.bo.suffixesadd = ".html"
 vim.opt_local.cursorline = false
 vim.opt_local.cursorcolumn = false
+vim.opt_local.signcolumn = "no"
 
 require("options").set_local("indentsize", 2, bufnr)
 

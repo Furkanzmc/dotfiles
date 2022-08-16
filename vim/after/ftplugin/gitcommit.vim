@@ -7,6 +7,7 @@ setlocal colorcolumn=
 setlocal nonumber
 setlocal nocursorline
 setlocal nocursorcolumn
+setlocal signcolumn=no
 
 setlocal norelativenumber
 

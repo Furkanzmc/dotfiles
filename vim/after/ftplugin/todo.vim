@@ -13,6 +13,7 @@ setlocal nocursorcolumn
 setlocal foldmethod=expr
 setlocal textwidth=1000
 
+setlocal signcolumn=no
 setlocal spell
 setlocal foldexpr=todo#foldexpr(v:lnum)
 setlocal foldtext=todo#foldtext()
