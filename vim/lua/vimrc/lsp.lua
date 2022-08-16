@@ -84,6 +84,8 @@ local function set_up_keymap(client, bufnr)
         map("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
         if options.get_option_value("lsp_tagfunc_enabled") then
             api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+        elseif api.nvim_buf_get_option(bufnr, "tagfunc") == "v:lua.vim.lsp.tagfunc" then
+            api.nvim_buf_set_option(bufnr, "tagfunc", "")
         end
     end
 
