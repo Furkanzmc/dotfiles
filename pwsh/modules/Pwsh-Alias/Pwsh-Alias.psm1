@@ -32,7 +32,7 @@ if (Get-Command "fcp" -ErrorAction SilentlyContinue) {
 }
 
 function global:vit() {
-    nvim "+Git | wincmd p | bdelete"
+    nvim "+Git"
 }
 
 function global:vnote() {
