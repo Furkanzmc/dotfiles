@@ -14,6 +14,14 @@ function <SID>compare_modified_time(f1, f2)
     return 0
 endfunction
 
+function <SID>compare_modified_time_dirvish(f1, f2)
+    return <SID>compare_modified_time(a:f1, a:f2)
+endfunction
+
+function <SID>compare_modified_time_zkbrowser(f1, f2)
+    return <SID>compare_modified_time(a:f1[:21], a:f2[:21])
+endfunction
+
 function s:compare_length(a, b)
     let x = strlen(a:a)
     let y = strlen(a:b)
@@ -44,14 +52,19 @@ function custom_sort#sort(mode, start_line, end_line)
     endif
 
     if a:mode == "-modified"
-        if &filetype != "dirvish"
+        if &filetype != "dirvish" && &filetype != "zkbrowser"
             echohl Error
-            echo "[custom-sort] This mode is only available in dirvish buffer: " . a:mode
+            echo "[custom-sort] This mode is only available in dirvish/zkbrowser buffers: " . a:mode
             echohl Normal
             return
         endif
 
-        call sort(l:lines, expand("<SID>") . "compare_modified_time")
+        if &filetype == "dirvish"
+            call sort(l:lines, expand("<SID>") . "compare_modified_time_dirvish")
+        else
+            call sort(l:lines, expand("<SID>") . "compare_modified_time_zkbrowser")
+        endif
+
         call setline(l:start_index, l:lines)
     elseif a:mode == "-length"
         call sort(l:lines, expand("<SID>") . "compare_length")
