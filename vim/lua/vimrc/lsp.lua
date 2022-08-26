@@ -423,12 +423,16 @@ function M.setup_lsp()
             -- }}}
             -- Builtin diagnostics sources {{{
             null_ls.builtins.diagnostics.pylint.with({
-                condition = function(_)
-                    return fn.expand("$VIMRC_PYLINT_DISABLE") == ""
+                runtime_condition = function(params)
+                    return options.get_option_value("pylint_enabled", params.bufnr)
                 end,
             }),
             null_ls.builtins.diagnostics.yamllint,
-            null_ls.builtins.diagnostics.qmllint,
+            null_ls.builtins.diagnostics.qmllint.with({
+                runtime_condition = function(params)
+                    return options.get_option_value("qmllint_enabled", params.bufnr)
+                end,
+            }),
             -- }}}
             -- Custom sources {{{
             null_ls_sources.hover.pylint_error,
