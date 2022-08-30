@@ -5,7 +5,7 @@ endif
 setlocal spell
 setlocal colorcolumn=
 setlocal nonumber
-setlocal nocursorline
+setlocal cursorline
 setlocal nocursorcolumn
 setlocal signcolumn=no
 
