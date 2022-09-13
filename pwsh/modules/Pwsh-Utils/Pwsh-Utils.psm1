@@ -450,6 +450,39 @@ function Post-Notification() {
     }
 }
 
+if (Get-Command "ffmpeg" -ErrorAction SilentlyContinue) {
+    function Create-Time-Lapse() {
+        Param(
+            [Parameter(Mandatory=$true)]
+            [String]
+            $SourceDir,
+            [Parameter(Mandatory=$false)]
+            [String]
+            $FramesOutDir,
+            [Parameter(Mandatory=$true)]
+            [String]
+            $OutDir,
+            [Parameter(Mandatory=$true)]
+            [String]
+            $SourceExtension,
+            [Parameter(Mandatory=$true)]
+            [String]
+            $OutExtension="mov"
+        )
+
+        $files = $(Get-ChildItem -Name -Filter *.$SourceExtension -Path $SourceDir)
+        $files | ForEach-Object {
+            Remove-Item -Path "$FramesOutDir/*"
+            if ($_ -ne $Entry) {
+                ffmpeg -i "$SourceDir/$_" -vf fps=2 "$FramesOutDir/%06d.png"
+                if ($?) {
+                    ffmpeg -framerate 10 -i "$FramesOutDir/%06d.png" "$OutDir/$_.$OutExtension"
+                }
+            }
+        }
+    }
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
