@@ -23,6 +23,10 @@ if (Get-Command "rmtrash" -ErrorAction SilentlyContinue) {
     Set-Alias trash rmtrash
 }
 
+if (-not (Get-Command "wc" -ErrorAction SilentlyContinue)) {
+    Set-Alias wc Measure-Object
+}
+
 if (Get-Command "Source-Env" -ErrorAction SilentlyContinue) {
     Set-Alias -Value Source-Env -Name :
 }
