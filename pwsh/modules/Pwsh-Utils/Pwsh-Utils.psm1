@@ -357,7 +357,7 @@ function Build-Neovim() {
     }
 
     if (-not $?) {
-        Write-Host -ForegroundColor Red "Error while configuring the neovim."
+        Write-Host -ForegroundColor Red "Error while configuring neovim."
         return 1
     }
 
@@ -375,18 +375,23 @@ function Build-Neovim() {
         return 1
     }
 
+    Write-Host -ForegroundColor Blue "Installing neovim."
     if ($Install -and $IsWindows) {
-        Write-Host -ForegroundColor Blue "Installing neovim."
         cmake --build . --target install --config Release
     }
     elseif ($Install -and $IsMacOS) {
-        Write-Host -ForegroundColor Blue "Installing neovim."
         ninja install
     }
 
     Pop-Location
 
-    Write-Host -ForegroundColor Green "Build succeeded."
+    if (-not $?) {
+        Write-Host -ForegroundColor Red "Error while installing neovim."
+        return 1
+    }
+    else {
+        Write-Host -ForegroundColor Green "Build succeeded."
+    }
 
     Pop-Location
 }

@@ -4,12 +4,36 @@
     "actions":
     [
         {
+            "command": "find",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "command": "paste",
+            "keys": "ctrl+v"
+        },
+        {
+            "command":
+            {
+                "action": "splitPane",
+                "split": "right"
+            },
+            "keys": "ctrl+\\"
+        },
+        {
             "command":
             {
                 "action": "copy",
                 "singleLine": false
             },
             "keys": "ctrl+c"
+        },
+        {
+            "command":
+            {
+                "action": "moveFocus",
+                "direction": "up"
+            },
+            "keys": "ctrl+shift+k"
         },
         {
             "command": "unbound",
@@ -28,16 +52,8 @@
             "keys": "alt+shift+plus"
         },
         {
-            "command": "paste",
-            "keys": "ctrl+v"
-        },
-        {
-            "command":
-            {
-                "action": "moveFocus",
-                "direction": "up"
-            },
-            "keys": "ctrl+shift+k"
+            "command": "unbound",
+            "keys": "win+sc(41)"
         },
         {
             "command":
@@ -50,14 +66,10 @@
         {
             "command":
             {
-                "action": "splitPane",
-                "split": "right"
+                "action": "moveFocus",
+                "direction": "down"
             },
-            "keys": "ctrl+\\"
-        },
-        {
-            "command": "find",
-            "keys": "ctrl+shift+f"
+            "keys": "ctrl+shift+j"
         },
         {
             "command":
@@ -77,16 +89,15 @@
             "keys": "alt+shift+d"
         },
         {
-            "command":
-            {
-                "action": "moveFocus",
-                "direction": "down"
-            },
-            "keys": "ctrl+shift+j"
-        },
-        {
             "command": "togglePaneZoom",
             "keys": "ctrl+shift+o"
+        },
+        {
+            "command":
+            {
+                "action": "quakeMode"
+            },
+            "keys": "win+shift+q"
         }
     ],
     "copyFormatting": "none",
@@ -96,24 +107,37 @@
     {
         "defaults":
         {
-            "colorScheme": "cosmic_latte_light",
+            "colorScheme": "cosmic_latte_dark",
             "cursorShape": "filledBox",
+            "experimental.useAtlasEngine": true,
             "font":
             {
-                "face": "JetBrainsMono Nerd Font Mono",
+                "face": "JetBrainsMonoMedium Nerd Font Mono",
                 "size": 10
             },
-            "padding": "0"
+            "intenseTextStyle": "bold",
+            "padding": "0",
+            "scrollbarState": "hidden"
         },
         "list":
         [
             {
                 "colorScheme": "cosmic_latte_light",
+                "font":
+                {
+                    "size": 9
+                },
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
-                "name": "PowerShell",
                 "intenseTextStyle": "bold",
-                "source": "Windows.Terminal.PowershellCore"
+                "name": "PowerShell",
+                "source": "Windows.Terminal.PowershellCore",
+                "useAcrylic": false
+            },
+            {
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
             },
             {
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
@@ -378,7 +402,8 @@
             "yellow": "#808000"
         }
     ],
-    "tabWidthMode": "equal",
+    "showTerminalTitleInTitlebar": true,
+    "tabWidthMode": "compact",
     "trimBlockSelection": true,
     "useAcrylicInTabRow": true
 }
