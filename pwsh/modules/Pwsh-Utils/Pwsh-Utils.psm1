@@ -456,7 +456,7 @@ function Post-Notification() {
 }
 
 if (Get-Command "ffmpeg" -ErrorAction SilentlyContinue) {
-    function Create-Time-Lapse() {
+    function Ffmpeg-Create-Time-Lapse() {
         Param(
             [Parameter(Mandatory=$true)]
             [String]
@@ -472,7 +472,10 @@ if (Get-Command "ffmpeg" -ErrorAction SilentlyContinue) {
             $SourceExtension,
             [Parameter(Mandatory=$true)]
             [String]
-            $OutExtension="mov"
+            $OutExtension="mov",
+            [Parameter(Mandatory=$true)]
+            [String]
+            $Framerate=10
         )
 
         $files = $(Get-ChildItem -Name -Filter *.$SourceExtension -Path $SourceDir)
@@ -481,10 +484,23 @@ if (Get-Command "ffmpeg" -ErrorAction SilentlyContinue) {
             if ($_ -ne $Entry) {
                 ffmpeg -i "$SourceDir/$_" -vf fps=2 "$FramesOutDir/%06d.png"
                 if ($?) {
-                    ffmpeg -framerate 10 -i "$FramesOutDir/%06d.png" "$OutDir/$_.$OutExtension"
+                    ffmpeg -framerate $Framerate -i "$FramesOutDir/%06d.png" "$OutDir/$_.$OutExtension"
                 }
             }
         }
+    }
+
+    function Ffmpeg-Merge-Videos() {
+        Param(
+            [Parameter(Mandatory=$true)]
+            [String]
+            $InputFile,
+            [Parameter(Mandatory=$true)]
+            [String]
+            $Out
+        )
+
+        ffmpeg -f concat -i $InputFile -c copy $Out
     }
 }
 
