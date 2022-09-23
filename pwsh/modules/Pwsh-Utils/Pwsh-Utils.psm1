@@ -11,108 +11,106 @@ function Virtualenv-Activate() {
     }
 }
 
-if (Get-Command "fzf" -ErrorAction SilentlyContinue) {
-    function Fzf-List-Process() {
-        $color = $env:VIMRC_BACKGROUND -eq "light" ? "light" : "dark"
-        $command = 'Get-Process | Where-Object { `
-            $_.ProcessName.Length -gt 0 `
-        } | Format-Table Id,ProcessName,StartTime'
-        $killCommand = '$processId = Select-String -Pattern "^[0-9]+" -InputObject {} `
-                    | Select-Object -ExpandProperty Matches `
-                    | Select-Object -Index 0 | Select-Object -ExpandProperty Value;`
-                    Stop-Process $processId'
+function Fzf-List-Process() {
+    $color = $env:VIMRC_BACKGROUND -eq "light" ? "light" : "dark"
+    $command = 'Get-Process | Where-Object { `
+        $_.ProcessName.Length -gt 0 `
+    } | Format-Table Id,ProcessName,StartTime'
+    $killCommand = '$processId = Select-String -Pattern "^[0-9]+" -InputObject {} `
+                | Select-Object -ExpandProperty Matches `
+                | Select-Object -Index 0 | Select-Object -ExpandProperty Value;`
+                Stop-Process $processId'
 
-        Get-Process | Where-Object {`
-            $_.ProcessName.Length -gt 0 `
-        } | Format-Table Id,ProcessName,StartTime `
-          | fzf --reverse --no-mouse --color=$color `
-            --header 'Press <C-q> to kill the process, <C-r> to refresh the list.' `
-            --bind 'ctrl-d:page-down' `
-            --bind 'ctrl-u:page-up' `
-            --bind "ctrl-q:execute-silent($killCommand)+kill-line+clear-query+reload($command)" `
-            --bind "ctrl-r:reload($command)"
-    }
-
-    function Fzf-History() {
-        Param(
-            [Parameter(Position=0, Mandatory=$false)]
-            [Switch]
-            $All=$false
-        )
-
-        $count = 1000
-        if ($All) {
-            $count = -1
-        }
-
-        $selectedItem = Get-Content (Get-PSReadlineOption).HistorySavePath `
-            -Tail $count | `
-            fzf --header `
-                "Press Enter to copy the line, <C-r> to list all history, <C-l> to only list the last 1000." `
-                --reverse --tac `
-                --bind "ctrl-r:reload(Get-Content (Get-PSReadlineOption).HistorySavePath)" `
-                --bind "ctrl-l:reload(Get-Content (Get-PSReadlineOption).HistorySavePath -Tail 1000)"
-        Write-Host $selectedItem -ForegroundColor blue
-        Set-Clipboard $selectedItem
-    }
-
-    function Add-Dir-Bookmark() {
-        $location = Get-Location
-        Add-Content -Path "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt" `
-            -Value $location.Path
-    }
-
-    function Remove-Dir-Bookmark() {
-        Param(
-            [Parameter(Position=0, Mandatory=$true)]
-            [String]
-            $Entry
-        )
-
-        $bookmarkPath = "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt"
-        $content = Get-Content -Path $bookmarkPath
-        $newContent = [System.Collections.ArrayList]@()
-
-        Set-Content -Path $bookmarkPath -Value ""
-        $content | ForEach-Object {
-            if ($_ -ne $Entry) {
-                Add-Content -Path $bookmarkPath -Value $_
-            }
-        }
-    }
-
-    function Get-Dir-Bookmarks() {
-        $bookmarkPath = "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt"
-        $refreshCommand = 'Get-Content ' + $bookmarkPath + ' | Sort-Object -Unique | Where-Object { $_.Length -gt 0 }'
-        if (Test-Path $bookmarkPath -ErrorAction SilentlyContinue) {
-            Get-Content $bookmarkPath | Sort-Object -Unique `
-                | Where-Object { $_.Length -gt 0 } `
-                | fzf --reverse +x --header "Press enter to navigate, <C-r> to remove the selected bookmark." `
-                --bind "ctrl-r:execute-silent(Remove-Dir-Bookmark {})+reload($refreshCommand)" `
-                | Where-Object { Test-Path $_ -ErrorAction SilentlyContinue} | Set-Location
-        }
-        else {
-            Write-Host "No bookmarks file."
-        }
-    }
-
-    function Get-Commands() {
-        $selected = Get-Command -All | Select-Object -Property CommandType,Name `
-            | fzf --reverse +x --header "Press enter to copy the command."
-        if ($selected) {
-            $selected = $selected.Trim().Split(" ")[1]
-            Write-Host $selected -ForegroundColor blue
-            Set-Clipboard $selected
-        }
-    }
-
-    Set-Alias -Name hs -Value Fzf-History
-    Set-Alias -Name mm -Value Add-Dir-Bookmark
-    Set-Alias -Name ms -Value Get-Dir-Bookmarks
-
-    Set-Alias -Name commands -Value Get-Commands
-    Set-Alias -Name ps -Value Fzf-List-Process
+    Get-Process | Where-Object {`
+        $_.ProcessName.Length -gt 0 `
+    } | Format-Table Id,ProcessName,StartTime `
+        | fzf --reverse --no-mouse --color=$color `
+        --header 'Press <C-q> to kill the process, <C-r> to refresh the list.' `
+        --bind 'ctrl-d:page-down' `
+        --bind 'ctrl-u:page-up' `
+        --bind "ctrl-q:execute-silent($killCommand)+kill-line+clear-query+reload($command)" `
+        --bind "ctrl-r:reload($command)"
 }
+
+function Fzf-History() {
+    Param(
+        [Parameter(Position=0, Mandatory=$false)]
+        [Switch]
+        $All=$false
+    )
+
+    $count = 1000
+    if ($All) {
+        $count = -1
+    }
+
+    $selectedItem = Get-Content (Get-PSReadlineOption).HistorySavePath `
+        -Tail $count | `
+        fzf --header `
+            "Press Enter to copy the line, <C-r> to list all history, <C-l> to only list the last 1000." `
+            --reverse --tac `
+            --bind "ctrl-r:reload(Get-Content (Get-PSReadlineOption).HistorySavePath)" `
+            --bind "ctrl-l:reload(Get-Content (Get-PSReadlineOption).HistorySavePath -Tail 1000)"
+    Write-Host $selectedItem -ForegroundColor blue
+    Set-Clipboard $selectedItem
+}
+
+function Add-Dir-Bookmark() {
+    $location = Get-Location
+    Add-Content -Path "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt" `
+        -Value $location.Path
+}
+
+function Remove-Dir-Bookmark() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [String]
+        $Entry
+    )
+
+    $bookmarkPath = "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt"
+    $content = Get-Content -Path $bookmarkPath
+    $newContent = [System.Collections.ArrayList]@()
+
+    Set-Content -Path $bookmarkPath -Value ""
+    $content | ForEach-Object {
+        if ($_ -ne $Entry) {
+            Add-Content -Path $bookmarkPath -Value $_
+        }
+    }
+}
+
+function Get-Dir-Bookmarks() {
+    $bookmarkPath = "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt"
+    $refreshCommand = 'Get-Content ' + $bookmarkPath + ' | Sort-Object -Unique | Where-Object { $_.Length -gt 0 }'
+    if (Test-Path $bookmarkPath -ErrorAction SilentlyContinue) {
+        Get-Content $bookmarkPath | Sort-Object -Unique `
+            | Where-Object { $_.Length -gt 0 } `
+            | fzf --reverse +x --header "Press enter to navigate, <C-r> to remove the selected bookmark." `
+            --bind "ctrl-r:execute-silent(Remove-Dir-Bookmark {})+reload($refreshCommand)" `
+            | Where-Object { Test-Path $_ -ErrorAction SilentlyContinue} | Set-Location
+    }
+    else {
+        Write-Host "No bookmarks file."
+    }
+}
+
+function Get-Commands() {
+    $selected = Get-Command -All | Select-Object -Property CommandType,Name `
+        | fzf --reverse +x --header "Press enter to copy the command."
+    if ($selected) {
+        $selected = $selected.Trim().Split(" ")[1]
+        Write-Host $selected -ForegroundColor blue
+        Set-Clipboard $selected
+    }
+}
+
+Set-Alias -Name hs -Value Fzf-History
+Set-Alias -Name mm -Value Add-Dir-Bookmark
+Set-Alias -Name ms -Value Get-Dir-Bookmarks
+
+Set-Alias -Name commands -Value Get-Commands
+Set-Alias -Name ps -Value Fzf-List-Process
 
 function Copy-Pwd() {
     if ($IsMacOS) {
@@ -141,27 +139,25 @@ function Decode-Base64() {
     return [BitConverter]::ToString($bytes)
 }
 
-if (Get-Command "ctags" -ErrorAction SilentlyContinue) {
-    function Generate-Tags() {
-        Param(
-            [Parameter(Position=0, Mandatory=$true)]
-            [ValidateSet("c++", "python", "c")]
-            [String]
-            $Langauge="c++"
-        )
+function Generate-Tags() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [ValidateSet("c++", "python", "c")]
+        [String]
+        $Langauge="c++"
+    )
 
-        if ($Langauge -eq "c++") {
-            ctags -R --fields=+l --languages=c++ .
-        }
-        elseif ($Langauge -eq "python") {
-            ctags -R --fields=+l --languages=python --python-kinds=-iv .
-        }
-        elseif ($Langauge -eq "c") {
-            ctags -R --fields=+l --languages=c++,c --python-kinds=-iv .
-        }
-        else {
-            Write-Error "$Language is not supported."
-        }
+    if ($Langauge -eq "c++") {
+        ctags -R --fields=+l --languages=c++ .
+    }
+    elseif ($Langauge -eq "python") {
+        ctags -R --fields=+l --languages=python --python-kinds=-iv .
+    }
+    elseif ($Langauge -eq "c") {
+        ctags -R --fields=+l --languages=c++,c --python-kinds=-iv .
+    }
+    else {
+        Write-Error "$Language is not supported."
     }
 }
 
@@ -455,52 +451,92 @@ function Post-Notification() {
     }
 }
 
-if (Get-Command "ffmpeg" -ErrorAction SilentlyContinue) {
-    function Ffmpeg-Create-Time-Lapse() {
-        Param(
-            [Parameter(Mandatory=$true)]
-            [String]
-            $SourceDir,
-            [Parameter(Mandatory=$false)]
-            [String]
-            $FramesOutDir,
-            [Parameter(Mandatory=$true)]
-            [String]
-            $OutDir,
-            [Parameter(Mandatory=$true)]
-            [String]
-            $SourceExtension,
-            [Parameter(Mandatory=$true)]
-            [String]
-            $OutExtension="mov",
-            [Parameter(Mandatory=$true)]
-            [String]
-            $Framerate=10
-        )
+function Ffmpeg-Create-Time-Lapse() {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $SourceDir,
+        [Parameter(Mandatory=$false)]
+        [String]
+        $FramesOutDir,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $OutDir,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $SourceExtension,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $OutExtension="mov",
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Framerate=10
+    )
 
-        $files = $(Get-ChildItem -Name -Filter *.$SourceExtension -Path $SourceDir)
-        $files | ForEach-Object {
-            Remove-Item -Path "$FramesOutDir/*"
-            if ($_ -ne $Entry) {
-                ffmpeg -i "$SourceDir/$_" -vf fps=2 "$FramesOutDir/%06d.png"
-                if ($?) {
-                    ffmpeg -framerate $Framerate -i "$FramesOutDir/%06d.png" "$OutDir/$_.$OutExtension"
-                }
+    $files = $(Get-ChildItem -Name -Filter *.$SourceExtension -Path $SourceDir)
+    $files | ForEach-Object {
+        Remove-Item -Path "$FramesOutDir/*"
+        if ($_ -ne $Entry) {
+            ffmpeg -i "$SourceDir/$_" -vf fps=2 "$FramesOutDir/%06d.png"
+            if ($?) {
+                ffmpeg -framerate $Framerate -i "$FramesOutDir/%06d.png" "$OutDir/$_.$OutExtension"
             }
         }
     }
+}
 
-    function Ffmpeg-Merge-Videos() {
-        Param(
-            [Parameter(Mandatory=$true)]
-            [String]
-            $InputFile,
-            [Parameter(Mandatory=$true)]
-            [String]
-            $Out
-        )
+function Ffmpeg-Merge-Videos() {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $InputFile,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Out
+    )
 
-        ffmpeg -f concat -i $InputFile -c copy $Out
+    ffmpeg -f concat -i $InputFile -c copy $Out
+}
+
+function Pwsh-Check-Health() {
+    Write-Host "Checking for required binaries..." -ForegroundColor Blue
+
+    if (-not (Get-Command "fd" -ErrorAction SilentlyContinue)) {
+        Write-Host "  - Cannot find fd..." -ForegroundColor Red
+    }
+
+    if (-not (Get-Command "nvim" -ErrorAction SilentlyContinue)) {
+        Write-Host "  - Cannot find nvim..." -ForegroundColor Red
+    }
+
+    if (-not (Get-Command "wc" -ErrorAction SilentlyContinue)) {
+        Write-Host "  - Cannot find wc..." -ForegroundColor Red
+    }
+
+    if (-not (Get-Command "Source-Env" -ErrorAction SilentlyContinue)) {
+        Write-Host "  - Cannot find Source-Env..." -ForegroundColor Red
+    }
+
+    if (-not (Get-Command "fzf" -ErrorAction SilentlyContinue)) {
+        Write-Host "  - Cannot find fzf..." -ForegroundColor Red
+    }
+
+    if (-not (Get-Command "ffmpeg" -ErrorAction SilentlyContinue)) {
+        Write-Host "  - Cannot find ffmpeg..." -ForegroundColor Red
+    }
+
+    if ($IsMacOS) {
+        if (-not (Get-Command "exa" -ErrorAction SilentlyContinue)) {
+            Write-Host "  - Cannot find exa..." -ForegroundColor Red
+        }
+
+        if (-not (Get-Command "bat" -ErrorAction SilentlyContinue)) {
+            Write-Host "  - Cannot find bat..." -ForegroundColor Red
+        }
+
+        if (-not (Get-Command "rmtrash" -ErrorAction SilentlyContinue)) {
+            Write-Host "  - Cannot find rmtrash..." -ForegroundColor Red
+        }
     }
 }
 
