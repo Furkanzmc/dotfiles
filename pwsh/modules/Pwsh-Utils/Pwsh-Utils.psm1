@@ -540,6 +540,50 @@ function Pwsh-Check-Health() {
     }
 }
 
+function Diff-Branches() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [String]
+        $Branch,
+        [Parameter(Mandatory=$false)]
+        [String]
+        $Target="",
+        [Parameter(Mandatory=$false)]
+        [String]
+        $App="nvim"
+    )
+
+
+	if ($Target -ne "") {
+        $arguments = '+source .nvimrc | let $NO_AUTO_SESSION=1 | ' + "nmap <leader>d :lua require('vimrc').gdiffsplit('$Branch', '$Target')<CR>"
+        $files = $(git diff $Branch $Target --name-only)
+        $hash = $(git rev-parse $Branch)
+        $git_path = $(git rev-parse --git-path /$hash)
+        $branch_files = $(git diff --name-only $Branch $Target | ForEach-Object { "fugitive:///$git_path/$_"})
+        if ($App -eq "nvim") {
+            nvim $arguments -- $branch_files
+        }
+        elseif ($App -eq "neovide") {
+            neovide --notabs $branch_files -- $arguments
+        }
+        else {
+            Write-Host -ForegroundColor Red "Unsupported app: $App"
+        }
+	}
+    else {
+        $arguments = "+source .nvimrc | nmap <leader>d :Gdiffsplit! $Branch<CR> | " + ' let $NO_AUTO_SESSION=1'
+        if ($App -eq "nvim") {
+            nvim $arguments -- $(git diff $Branch --name-only)
+        }
+        elseif ($App -eq "neovide") {
+            neovide --notabs $(git diff $Branch --name-only) -- $arguments
+        }
+        else {
+            Write-Host -ForegroundColor Red "Unsupported app: $App"
+        }
+    }
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()

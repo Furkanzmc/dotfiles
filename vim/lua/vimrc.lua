@@ -173,27 +173,17 @@ function M.on_source_post()
 end
 
 -- Creates a diffsplit between two remote files. I could not find a way to do this with Gdiffsplit
+-- Expects that Diff-Branches Powershell command was used.
 function M.gdiffsplit(source_branch, target_branch)
-    local full_path = string.gsub(fn.expand("%"), "\\", "/")
-    local file_name = fn.expand("%:t")
-    local source_file = source_branch .. ":" .. full_path
-    local target_file = target_branch .. ":" .. full_path
-
-    cmd("Git show " .. target_file)
-    cmd("file target:" .. file_name)
-    vim.b[api.nvim_get_current_buf()].vimrc_buffer_type="vimrc_diffsplit"
-    vim.b[api.nvim_get_current_buf()].vimrc_diffsplit_branch=target_branch
-    cmd[[execute "setlocal filetype=" . expand("%:e")]]
-
-    cmd("vertical Git show " .. source_file)
-    cmd("file source:" .. file_name)
-    cmd[[execute "setlocal filetype=" . expand("%:e")]]
+    cmd("Gdiffsplit! " .. target_branch)
     vim.b[api.nvim_get_current_buf()].vimrc_buffer_type="vimrc_diffsplit"
     vim.b[api.nvim_get_current_buf()].vimrc_diffsplit_branch=source_branch
-    cmd[[diffthis]]
+
     cmd[[normal p]]
-    cmd[[diffthis]]
-    cmd[[normal _]]
+    vim.b[api.nvim_get_current_buf()].vimrc_buffer_type="vimrc_diffsplit"
+    vim.b[api.nvim_get_current_buf()].vimrc_diffsplit_branch=target_branch
+
+    cmd[[normal p]]
 end
 
 return M
