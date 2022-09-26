@@ -137,6 +137,23 @@ function _G.is_fugitive_buffer(bufnr)
         or string.match(fn.expand("%"), "^diffview") ~= nil
 end
 
+function _G.vimrc_statusline_get_git_tag(bufnr)
+    local ok, value = pcall(api.nvim_buf_get_var, bufnr, "vimrc_buffer_type")
+    if not ok then
+        if _G.is_fugitive_buffer(bufnr) then
+            return "[head]"
+        else
+            return "[local]"
+        end
+    end
+
+    if value == "vimrc_diffsplit" then
+        return "[" .. vim.b[api.nvim_get_current_buf()].vimrc_diffsplit_branch .. "]"
+    end
+
+    return ""
+end
+
 function _G.statusline(txt, padding)
     if txt == "" or txt == nil then
         return ""
@@ -220,7 +237,7 @@ function M.init(winnr)
     local buffer_git_tag = {
         "%{",
         "!&diff ? '' : ",
-        "(luaeval('_G.is_fugitive_buffer(vim.fn.bufnr())') ? '[head]' : '[local]')",
+        "(luaeval('_G.vimrc_statusline_get_git_tag(vim.fn.bufnr())'))",
         "}",
     }
 
