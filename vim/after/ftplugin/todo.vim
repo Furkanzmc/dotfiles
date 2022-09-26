@@ -7,11 +7,11 @@ if !get(g:, "vimrc_todo_plugins_loaded", v:false) && &loadplugins
     let g:vimrc_todo_plugins_loaded = v:true
 endif
 
-setlocal colorcolumn=
+setlocal colorcolumn=121
 setlocal cursorline
 setlocal nocursorcolumn
 setlocal foldmethod=expr
-setlocal textwidth=1000
+setlocal textwidth=120
 
 setlocal signcolumn=no
 setlocal spell
@@ -19,10 +19,16 @@ setlocal foldexpr=todo#foldexpr(v:lnum)
 setlocal foldtext=todo#foldtext()
 setlocal expandtab
 
+setlocal showbreak=\ \ \ \ 
 setlocal tabstop=4
 setlocal softtabstop=4
 setlocal shiftwidth=4
 setlocal commentstring=>\ %s
+setlocal comments=fb:*,fb:-,fb:+,n:>
+
+" Since I'm using a single line for the todo items, this makes more sense.
+nmap <buffer> j gj
+nmap <buffer> k gk
 
 nmap <buffer> <silent> <leader>x :normal! mt0f]hrxA finished: =strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
 nmap <buffer> <silent> <leader>i :normal! mt0f]hriA started: =strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
