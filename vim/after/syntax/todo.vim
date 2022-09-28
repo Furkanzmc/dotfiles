@@ -27,6 +27,8 @@ syntax match TodoDate '\d\{2,4\}-\d\{2\}-\d\{4\}' contains=NONE
 syntax match TodoTime '\d\{2\}:\d\{2\}' contains=TodoDate
 syntax match TodoProject '\(^\|\W\)+[^[:blank:]]\+' contains=NONE
 syntax match TodoContext '\(^\|\W\)@[^[:blank:]]\+' contains=NONE
+syntax match TodoStarted 'started:' contains=TodoDate
+syntax match TodoFinished 'finished:' contains=TodoDate
 
 syntax match TodoLeadingWhiteSpace '^-\ \ \{1,\}' contains=NONE
 syntax match TodoDone '\(-\ \[[xX]\]\|-\ \ \{4,\}\[[xX]\]\)\s.\+$' contains=TodoLeadingWhiteSpace
@@ -60,6 +62,8 @@ highlight default link TodoContext Label
 
 highlight default link TodoComment Comment
 highlight default link TodoSubTask NONE
+highlight default link TodoStarted Label
+highlight default link TodoFinished Label
 
 call matchadd('Conceal', '^\ \{4,\}```[a-z]\+$', 10, -1, {'conceal':' '})
 call matchadd('Conceal', '^\ \{4,\}```$', 10, -1, {'conceal':' '})
