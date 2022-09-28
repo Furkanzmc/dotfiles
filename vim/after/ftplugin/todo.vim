@@ -7,11 +7,11 @@ if !get(g:, "vimrc_todo_plugins_loaded", v:false) && &loadplugins
     let g:vimrc_todo_plugins_loaded = v:true
 endif
 
-setlocal colorcolumn=121
+setlocal colorcolumn=201
 setlocal cursorline
 setlocal nocursorcolumn
 setlocal foldmethod=expr
-setlocal textwidth=120
+setlocal textwidth=200
 
 setlocal signcolumn=no
 setlocal spell
