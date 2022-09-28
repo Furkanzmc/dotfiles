@@ -31,7 +31,7 @@ syntax match TodoStarted 'started:' contains=TodoDate
 syntax match TodoFinished 'finished:' contains=TodoDate
 
 syntax match TodoLeadingWhiteSpace '^-\ \ \{1,\}' contains=NONE
-syntax match TodoDone '\(-\ \[[xX]\]\|-\ \ \{4,\}\[[xX]\]\)\s.\+$' contains=TodoLeadingWhiteSpace
+syntax match TodoDone '\(-\ \[[xX]\]\|-\ \ \{4,\}\[[xX]\]\)\s.\+$' contains=TodoLeadingWhiteSpace,TodoStarted,TodoFinished,TodoDate,TodoProject,TodoContext,OverDueDate
 syntax match TodoRemoved '\(-\ \[[\~]\]\|-\ \ \{4,\}\[[\~]\]\)\s.\+$' contains=TodoLeadingWhiteSpace
 syntax match TodoInProgress '\(-\ \[[iI]\]\|-\ \ \{4,\}\[[iI]\]\)' contains=TodoLeadingWhiteSpace
 
@@ -60,7 +60,7 @@ highlight default link TodoTime PreProc
 highlight default link TodoProject SpecialKey
 highlight default link TodoContext Label
 
-highlight default link TodoComment Comment
+highlight default link TodoComment SpecialComment
 highlight default link TodoSubTask NONE
 highlight default link TodoStarted Label
 highlight default link TodoFinished Label
