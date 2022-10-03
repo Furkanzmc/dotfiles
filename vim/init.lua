@@ -496,7 +496,7 @@ if fn.exists("$VIMRC_TREESITTER_DISABLED") ~= 1 then
         "wgsl",
         "yaml",
         "yang",
-        "zig"
+        "zig",
     }
 end
 
@@ -711,7 +711,7 @@ if vim.o.loadplugins == true then
 
     cmd([[augroup vimrc_options_plugin]])
     cmd(
-        [[autocmd BufReadPost *.md,todo.txt :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]]
+        [[autocmd BufWinEnter *.md :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]]
     )
     cmd([[augroup END]])
 end
@@ -946,22 +946,22 @@ cmd([[autocmd BufReadPost * lua require'vimrc'.load_dictionary()]])
 
 cmd([[augroup END]])
 
-local augroup_vimrc_gui_events = vim.api.nvim_create_augroup("vimrc_gui_events", {clear=true})
-vim.api.nvim_create_autocmd({"UIEnter"}, {
+local augroup_vimrc_gui_events = vim.api.nvim_create_augroup("vimrc_gui_events", { clear = true })
+vim.api.nvim_create_autocmd({ "UIEnter" }, {
     group = augroup_vimrc_gui_events,
     callback = function(opts)
         if vim.v.event.chan == 1 then
             opt.mouse = "nvi"
         end
-    end
+    end,
 })
-vim.api.nvim_create_autocmd({"UILeave"}, {
+vim.api.nvim_create_autocmd({ "UILeave" }, {
     group = augroup_vimrc_gui_events,
     callback = function(opts)
         if vim.v.event.chan == 1 then
             opt.mouse = ""
         end
-    end
+    end,
 })
 
 if fn.filereadable(fn.expand("~/.vimrc")) == 1 then

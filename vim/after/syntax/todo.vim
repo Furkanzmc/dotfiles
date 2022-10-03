@@ -77,27 +77,6 @@ syntax match TodoDateTime '\d\{2,4\}-\d\{2\}-\d\{4\}-\d\{2\}:\d\{2\}' contained
 
 syn match TodoComment '\ \{2,\}>\s.\+$' contained contains=TodoTag,TodoProject,TodoContext,TodoDueDate,TodoLeadingSpace
 
-" Other priority colours might be defined by the user
-highlight default link TodoDone Comment
-highlight default link TodoRemoved DiffDelete
-highlight default link TodoInProgress WarningMsg
-highlight default link TodoPriorityA Identifier
-
-highlight default link TodoPriorityB Constant
-highlight default link TodoPriorityC Type
-highlight default link TodoPriorityD SpecialKey
-
-highlight default link TodoDate PreProc
-highlight default link TodoTime PreProc
-highlight default link TodoProject SpecialKey
-highlight default link TodoContext Label
-
-highlight default link TodoComment SpecialComment
-highlight default link TodoSubTask NONE
-highlight default link TodoStarted Label
-highlight default link TodoFinished Label
-highlight default link TodoDueDate Label
-
 hi def link TodoCheckboxOpen Identifier
 hi def link TodoCheckboxOpenPriority Type
 hi def link TodoCheckboxOpenDesc NONE
