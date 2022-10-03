@@ -774,7 +774,7 @@ end, {})
 if vim.o.loadplugins == true then
     cmd([[augroup vimrc_plugin_todo_init]])
     cmd([[au!]])
-    cmd([[autocmd FileType todo :lua require"vimrc.todo".init()]])
+    cmd([[autocmd FileType todo ++once :lua require"vimrc.todo".init()]])
     cmd([[augroup END]])
 end
 

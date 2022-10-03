@@ -30,10 +30,9 @@ setlocal comments=fb:*,fb:-,fb:+,n:>
 nmap <buffer> j gj
 nmap <buffer> k gk
 
-nmap <buffer> <silent> <leader>x :normal! mt0f]hrxA finished: =strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
-nmap <buffer> <silent> <leader>i :normal! mt0f]hriA started: =strftime("%d-%m-%Y %H:%M")<CR>`t<ESC>
-nmap <buffer> <silent> <leader>t :normal! mt0f]hr `t<CR>
-nmap <buffer> <silent> <leader>d :normal! mt$a due: =strftime("%d-%m-%Y")<CR><ESC>`t
+nmap <buffer> <silent> <leader>x :normal! mt0f]hrxA finished: =strftime("%d-%m-%Y-%H:%M")<CR>`t<ESC>
+nmap <buffer> <silent> <leader>i :normal! mt0f]hr@A started: =strftime("%d-%m-%Y-%H:%M")<CR>`t<ESC>
+nmap <buffer> <silent> <leader>d :normal! mt$a -> =strftime("%d-%m-%Y")<CR><ESC>`t
 
 augroup vimrc_todo_buf_fenced
     au! * <buffer>
