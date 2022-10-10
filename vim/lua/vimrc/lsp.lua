@@ -12,6 +12,15 @@ local M = {}
 
 -- Utils {{{
 
+local function is_null_ls_formatting_enabed(bufnr)
+    local file_type = api.nvim_buf_get_option(bufnr, "filetype")
+    local generators = require("null-ls.generators").get_available(
+        file_type,
+        require("null-ls.methods").internal.FORMATTING
+    )
+    return #generators > 0
+end
+
 local function get_option_var(client, option)
     local name = string.gsub(client.name, "-", "_")
     return "vimrc_" .. name .. "_lsp_" .. option
@@ -117,8 +126,15 @@ local function set_up_keymap(client, bufnr)
     end
 
     if server_capabilities.documentFormattingProvider then
-        api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-        map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
+        if
+            client.name == "null-ls" and is_null_ls_formatting_enabed(bufnr)
+            or client.name ~= "null-ls"
+        then
+            api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
+            map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
+        else
+            api.nvim_buf_set_option(bufnr, "formatexpr", "")
+        end
     end
 
     if server_capabilities.documentRangeFormattingProvider then
@@ -189,10 +205,7 @@ local function setup_null_ls_cmp_patch()
                         local pos = api.nvim_win_get_cursor(0)
                         params.line_to_cursor = line:sub(1, pos[2])
                         params.offset = regex:match_str(params.line_to_cursor) + 1
-                        params.option = params.option
-                            or {
-                                get_bufnrs = get_bufnrs,
-                            }
+                        params.option = params.option or { get_bufnrs = get_bufnrs }
                         params.context = params.context
                             or {
                                 cursor_before_line = params.line_to_cursor,
@@ -202,7 +215,12 @@ local function setup_null_ls_cmp_patch()
                             if result == nil then
                                 done({ { items = {}, isIncomplete = true } })
                             elseif result.items == nil then
-                                done({ { items = result, isIncomplete = #result == 0 } })
+                                done({
+                                    {
+                                        items = result,
+                                        isIncomplete = #result == 0,
+                                    },
+                                })
                             else
                                 done({ result })
                             end
