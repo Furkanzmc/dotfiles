@@ -18,15 +18,6 @@ Optionally check for `$profile` in Powershell and copy the file to that location
 I don't use Windows that often, so the settings for Windows is very minimal.
 I mostly try to mimic the same git commands.
 
-## Tmux
-
-- `tmux-dump`: Dump the given session.
-- `tmux-save`: Save the given session to the given file.
-- `tmux-restore`: Restore a tmux session from a session file that was saved
-using `tmux-save`.
-- A minimal status bar configuration with session name, centered tabs and clock
-on the right.
-
 ### Mappings and Aliases
 
 - Alias `rename-pane` to `select-pane -T`.

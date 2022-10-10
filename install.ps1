@@ -16,7 +16,6 @@ New-Item -ItemType Directory -Force -Path "~/.config/alacritty"
 New-Item -Force -ItemType SymbolicLink -Path "~/.config/alacritty/alacritty.yml" -Target "~/.dotfiles/terminals/alacritty.yml"
 
 if ($IsMacOS) {
-    New-Item -Force -ItemType SymbolicLink -Path "~/.tmux.conf" -Target "~/.dotfiles/tmux.conf"
     New-Item -ItemType Directory -Force -Path "~/.config/karabiner/assets/complex_modifications/"
     New-Item -Force -ItemType SymbolicLink -Path "~/.config/karabiner/assets/complex_modifications/karabiner_vi_style.json" -Target "~/.dotfiles/karabiner_vi_style.json"
     New-Item -ItemType Directory -Force -Path "~/.hammerspoon/Spoons"

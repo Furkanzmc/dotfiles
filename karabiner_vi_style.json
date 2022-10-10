@@ -342,30 +342,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "description": "Map LeftControl + Spacebar to Ctrl + b for tmux",
-            "manipulators": [
-                {
-                    "type": "basic",
-                    "from": {
-                        "key_code": "spacebar",
-                        "modifiers": {
-                            "mandatory": [
-                                "left_control"
-                            ]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "b",
-                            "modifiers": [
-                                "left_control"
-                            ]
-                        }
-                    ]
-                }
-            ]
         }
     ]
 }

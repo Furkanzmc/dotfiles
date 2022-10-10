@@ -11,6 +11,7 @@ from logging import getLogger, Logger, DEBUG
 try:
     from pynvim import attach
 except ImportError:
+    print("nvim.py::ImportError] pynvim...")
     exit(0)
 
 try:
@@ -22,6 +23,7 @@ try:
         Process,
     )
 except ImportError:
+    print("nvim.py::ImportError] psutil...")
     exit(0)
 
 logger: Logger = getLogger("zmc.dotfiles.nvim")
