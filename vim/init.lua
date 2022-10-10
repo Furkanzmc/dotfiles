@@ -741,7 +741,7 @@ map(
 map(
     "v",
     "gx",
-    ":lua require'vimrc.buffers'.open_uri_under_cursor(vim.fn['buffers#get_visual_selection']()[1])<CR>",
+    ":lua require'vimrc.buffers'.open_uri_under_cursor(require'vimrc.buffers'.get_last_selection(vim.api.nvim_get_current_buf())[1])<CR>",
     { silent = true, noremap = true }
 )
 

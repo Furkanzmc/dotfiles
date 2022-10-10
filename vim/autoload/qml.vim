@@ -14,7 +14,7 @@ function! qml#run(line1, line2)
     endif
 
     if a:line1 != a:line2
-        let l:lines = buffers#get_visual_selection()
+        let l:lines = luaeval("require'vimrc.buffers'.get_last_selection(vim.api.nvim_get_current_buf())")
         let l:qml_file = tempname() . '.qml'
 
         call insert(l:lines, "import QtQuick 2.15")

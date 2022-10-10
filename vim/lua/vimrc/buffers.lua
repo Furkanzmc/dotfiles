@@ -6,6 +6,8 @@ local b = vim.b
 local bo = vim.bo
 local wo = vim.wo
 local opt_local = vim.opt_local
+local opt = vim.opt
+local api = vim.api
 local options = require("options")
 local typing = require("vimrc.typing")
 local s_buffer_minimal_cache = {}
@@ -253,6 +255,35 @@ function M.get_modified_buf_count(tabnr, exclude)
     end
 
     return modified_buf_count
+end
+
+-- Code taken from here: https://stackoverflow.com/a/6271254
+function M.get_last_selection(bufnr)
+    local line_start, column_start = (function()
+        local pos = fn.getpos("'<")
+        return pos[2], pos[3]
+    end)()
+    local line_end, column_end = (function()
+        local pos = fn.getpos("'>")
+        return pos[2], pos[3]
+    end)()
+
+    local lines = api.nvim_buf_get_lines(bufnr, line_start - 1, line_end, true)
+    if #lines == 0 then
+        return lines
+    end
+
+    local last_index = #lines
+    local selection = opt.selection:get()
+    if selection == "inclusive" then
+        lines[last_index] = string.sub(lines[last_index], 0, column_end - 1)
+    else
+        lines[last_index] = string.sub(lines[last_index], 0, column_end - 2)
+    end
+
+    lines[1] = string.sub(lines[1], column_start - 1, #lines[1])
+
+    return lines
 end
 
 return M
