@@ -135,6 +135,8 @@ local function set_up_keymap(client, bufnr)
         else
             api.nvim_buf_set_option(bufnr, "formatexpr", "")
         end
+    else
+        api.nvim_buf_set_option(bufnr, "formatexpr", "")
     end
 
     if server_capabilities.documentRangeFormattingProvider then
@@ -430,7 +432,9 @@ function M.setup_lsp()
         on_attach = setup,
         sources = {
             -- Builtin formatting sources {{{
-            null_ls.builtins.formatting.stylua,
+            null_ls.builtins.formatting.stylua.with({
+                extra_args = { "--config-path", "~/.dotfiles/vim/stylua.toml" },
+            }),
             null_ls.builtins.formatting.cmake_format,
             null_ls.builtins.formatting.black,
             null_ls.builtins.formatting.rustfmt,
