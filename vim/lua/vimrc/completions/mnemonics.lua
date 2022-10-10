@@ -39,7 +39,12 @@ local function get_mnemonics(token, sep, base)
         end
 
         if mnemonic == base then
-            table.insert(items, { word = result.word, dup = 0, empty = 0, kind = "mnemonic" })
+            table.insert(items, {
+                word = result.word,
+                dup = 0,
+                empty = 0,
+                kind = "mnemonic",
+            })
         end
     end
 
@@ -56,10 +61,12 @@ function M.complete(lines, base)
             if #characters > 0 then
                 local mnemonic = string.join(characters, "")
                 if mnemonic == base then
-                    table.insert(
-                        words,
-                        { word = result.word, dup = 0, empty = 0, kind = "mnemonic" }
-                    )
+                    table.insert(words, {
+                        word = result.word,
+                        dup = 0,
+                        empty = 0,
+                        kind = "mnemonic",
+                    })
                 end
             end
 

@@ -176,14 +176,14 @@ end
 -- Expects that Diff-Branches Powershell command was used.
 function M.gdiffsplit(source_branch, target_branch)
     cmd("Gdiffsplit! " .. target_branch)
-    vim.b[api.nvim_get_current_buf()].vimrc_buffer_type="vimrc_diffsplit"
-    vim.b[api.nvim_get_current_buf()].vimrc_diffsplit_branch=source_branch
+    vim.b[api.nvim_get_current_buf()].vimrc_buffer_type = "vimrc_diffsplit"
+    vim.b[api.nvim_get_current_buf()].vimrc_diffsplit_branch = source_branch
 
-    cmd[[normal p]]
-    vim.b[api.nvim_get_current_buf()].vimrc_buffer_type="vimrc_diffsplit"
-    vim.b[api.nvim_get_current_buf()].vimrc_diffsplit_branch=target_branch
+    cmd([[normal p]])
+    vim.b[api.nvim_get_current_buf()].vimrc_buffer_type = "vimrc_diffsplit"
+    vim.b[api.nvim_get_current_buf()].vimrc_diffsplit_branch = target_branch
 
-    cmd[[normal p]]
+    cmd([[normal p]])
 end
 
 return M

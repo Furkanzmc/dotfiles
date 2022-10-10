@@ -52,12 +52,13 @@ M.diagnostics = {
                 format = "raw",
                 from_stderr = true,
                 on_output = helpers.diagnostics.from_errorformat(
-                [[parse error: %m %l, column %c]],
-                "jq"
+                    [[parse error: %m %l, column %c]],
+                    "jq"
                 ),
             },
-            factory = helpers.generator_factory })
-        end)(),
+            factory = helpers.generator_factory,
+        })
+    end)(),
     cmake_lint = (function()
         if vim.fn.executable("cmake-lint") == 0 then
             return nil
@@ -74,12 +75,13 @@ M.diagnostics = {
                 from_stderr = true,
                 to_temp_file = true,
                 on_output = helpers.diagnostics.from_errorformat(
-                table.concat({ "%f:%l: [%t%n] %m", "%f:%l,%c: [%t%n] %m" }, ","),
-                "qmllint"
+                    table.concat({ "%f:%l: [%t%n] %m", "%f:%l,%c: [%t%n] %m" }, ","),
+                    "cmake"
                 ),
             },
-            factory = helpers.generator_factory})
-        end)()
+            factory = helpers.generator_factory,
+        })
+    end)(),
 }
 
 M.formatting = {
@@ -92,8 +94,9 @@ M.formatting = {
             method = FORMATTING,
             filetypes = { "json" },
             generator_opts = { command = "jq", args = { "--tab" }, to_stdin = true },
-            factory = helpers.formatter_factory })
-        end)(),
+            factory = helpers.formatter_factory,
+        })
+    end)(),
 }
 
 M.hover = {
@@ -121,12 +124,10 @@ M.hover = {
             end,
             fn = function(_, done)
                 local cword = vim.fn.expand("<cword>")
-                done(
-                    require("zettelkasten").keyword_expr(
-                        cword,
-                        { preview_note = true, return_lines = true }
-                    )
-                )
+                done(require("zettelkasten").keyword_expr(cword, {
+                    preview_note = true,
+                    return_lines = true,
+                }))
             end,
             async = true,
             use_cache = true,
