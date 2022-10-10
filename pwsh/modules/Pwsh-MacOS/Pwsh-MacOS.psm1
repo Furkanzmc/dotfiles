@@ -3,6 +3,7 @@ if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
 }
 
 $env:EDITOR = 'nvim'
+$global:ICLOUD = "~/Library/Mobile Documents/com~apple~CloudDocs/"
 
 function Is-Dark-Mode() {
     $output = (~/.dotfiles/scripts/Is-Dark-Theme.osascript) | Out-String
