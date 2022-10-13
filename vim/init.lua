@@ -36,6 +36,7 @@ vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 vim.opt.packpath:append(fn.expand("~/.dotfiles/vim/"))
 
 local map = require("vimrc").map
+local del_map = require("vimrc").del_map
 
 -- General {{{
 
@@ -924,27 +925,64 @@ end
 
 -- }}}
 
-cmd([[augroup vimrc_init]])
+local augroup_vimrc_init = vim.api.nvim_create_augroup("vimrc_init", { clear = true })
 if vim.o.loadplugins == true then
-    cmd([[autocmd!]])
-    cmd(
-        [[autocmd BufReadPre,FileReadPre *.http :if !exists("g:vimrc_rest_nvim_loaded") && &loadplugins | packadd rest.nvim | call luaeval('require"vimrc".setup_rest_nvim()') | let g:vimrc_rest_nvim_loaded = v:true | endif]]
-    )
+    vim.api.nvim_create_autocmd({ "BufReadPre", "FileReadPre" }, {
+        pattern = "*.http",
+        group = augroup_vimrc_init,
+        callback = function(opts)
+            if g.vimrc_rest_nvim_loaded == nil and vim.o.loadplugins then
+                cmd[[packadd rest.nvim]]
+                require"vimrc".setup_rest_nvim()
+                g.vimrc_rest_nvim_loaded = true
+            end
+        end,
+    })
 end
 
-cmd(
-    [[autocmd TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
-)
+vim.api.nvim_create_autocmd({ "TextYankPost" }, {
+    pattern = "*",
+    group = augroup_vimrc_init,
+    callback = function(opts)
+        cmd[[silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
+    end,
+})
 
-cmd([[autocmd VimEnter * lua require'vimrc'.create_custom_nvim_server()]])
+vim.api.nvim_create_autocmd({ "VimEnter" }, {
+    pattern = "*",
+    group = augroup_vimrc_init,
+    callback = function(opts)
+        require'vimrc'.create_custom_nvim_server()
+    end,
+})
 
--- Return to last edit position when opening files (You want this!)
-cmd(
-    [[autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g'\"" | endif]]
-)
-cmd([[autocmd BufReadPost * lua require'vimrc'.load_dictionary()]])
+vim.api.nvim_create_autocmd({ "BufReadPost" }, {
+    pattern = "*",
+    group = augroup_vimrc_init,
+    callback = function(opts)
+        -- Return to last edit position when opening files (You want this!)
+        if fn.line("'\"") > 1 and fn.line("'\"") <= fn.line("$") then
+            cmd[[execute "normal! g'\""]]
+        end
 
-cmd([[augroup END]])
+        require'vimrc'.load_dictionary()
+    end,
+})
+
+vim.api.nvim_create_autocmd({ "OptionSet" }, {
+    pattern = "diff",
+    group = augroup_vimrc_init,
+    callback = function(opts)
+        local bufnr = opts.buf
+        if vim.wo.diff then
+            map("n", "<leader>dgh", ":diffget \\\\2<CR>", { silent = true, buffer = bufnr })
+            map("n", "<leader>dgl", ":diffget \\\\3<CR>", { silent = true, buffer = bufnr })
+        else
+            del_map("n", "<leader>dgh", bufnr)
+            del_map("n", "<leader>dgl", bufnr)
+        end
+    end,
+})
 
 local augroup_vimrc_gui_events = vim.api.nvim_create_augroup("vimrc_gui_events", { clear = true })
 vim.api.nvim_create_autocmd({ "UIEnter" }, {

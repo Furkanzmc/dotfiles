@@ -30,6 +30,14 @@ function M.map(mode, lhs, rhs, opts)
     end
 end
 
+function M.del_map(mode, lhs, bufnr)
+    if bufnr ~= nil then
+        vim.api.nvim_buf_del_keymap(bufnr, mode, lhs)
+    else
+        vim.api.nvim_set_keymap(mode, lhs)
+    end
+end
+
 function M.setup_treesitter()
     if vim.o.loadplugins == false or fn.exists("$VIMRC_TREESITTER_DISABLED") == 1 then
         return
