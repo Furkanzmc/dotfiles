@@ -114,6 +114,14 @@ LAlt & w::
     }
     return
 
+LAlt & n::
+    id := WinExist("A")
+    if GetKeyState("LShift")
+    {
+        CenterWindow(id, 0.3)
+    }
+    return
+
 LAlt & a::
     id := WinExist("A")
     if GetKeyState("LShift")
