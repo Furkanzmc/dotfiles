@@ -219,7 +219,7 @@ function Set-Terminal-Theme() {
         $nvimPath = "$HOME/.dotfiles/scripts/nvim.py"
         $command = "`"set background=$Color`""
         Start-Process -FilePath python3 -ArgumentList `
-            $nvimPath,"--command ",$command -NoNewWindow
+            $nvimPath,"--command ",$command -NoNewWindow | Out-Null
     }
 
     if ($Color -ne "") {
