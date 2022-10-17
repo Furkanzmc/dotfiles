@@ -219,9 +219,14 @@ function Write-Prompt() {
     }
 
     $themeFile = "~/.dotfiles/pwsh/tmp_dirs/system_theme"
+    $currentThemeFile = "~/.dotfiles/pwsh/tmp_dirs/system_theme_current"
     if (Test-Path $themeFile -ErrorAction SilentlyContinue) {
         $content = Get-Content $themeFile
-        Set-Terminal-Theme $content | Out-Null
+        $currentContent = Get-Content $currentThemeFile
+        if ($content -ne $currentContent) {
+            Set-Terminal-Theme $content
+            Add-Content -Path $currentThemeFile -Value $content
+        }
     }
 }
 
