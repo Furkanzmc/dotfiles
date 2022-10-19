@@ -7,22 +7,7 @@ function global:vit() {
 }
 
 function global:vnote() {
-    if (-not (Test-Path env:ZNOTES_GIT_DIR)) {
-        Write-Host -ForegroundColor red "ZNOTES_GIT_DIR environment variable is reuired."
-        return
-    }
-
-    if (-not (Test-Path env:ZNOTES_DIR)) {
-        Write-Host -ForegroundColor red "ZNOTES_DIR environment variable is reuired."
-        return
-    }
-
-    if (-not (Test-Path $env:ZNOTES_DIR/.nvimrc)) {
-        Write-Host -ForegroundColor red "$env:ZNOTES_DIR/.nvimrc file doesn't exist."
-        return
-    }
-
-    nvim -S $env:ZNOTES_DIR/.nvimrc "+ZkBrowse"
+    nvim "+ZkBrowse"
 }
 
 function Pwsh-Exit() {
