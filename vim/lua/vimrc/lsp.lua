@@ -111,7 +111,7 @@ local function set_up_keymap(client, bufnr)
     end
 
     map("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
-    map("n", "<leader>gE", "<cmd>lua vim.diagnostic.setloclist({open=true})<CR>", opts)
+    map("n", "<leader>gl", "<cmd>lua vim.diagnostic.setloclist({open=true})<CR>", opts)
 
     if server_capabilities.documentSymbolProvider then
         map("n", "<leader>gds", "<cmd>lua vim.lsp.buf.document_symbol()<CR>", opts)
