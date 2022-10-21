@@ -196,7 +196,9 @@ function Set-Terminal-Theme() {
         [Parameter(Mandatory=$false)]
         [Switch]$ChangeInAllNeovimInstances=$true,
         [Parameter(Mandatory=$false)]
-        [Switch]$MatchTheme=$false
+        [Switch]$MatchTheme=$false,
+        [Parameter(Mandatory=$false)]
+        [Switch]$EnvOnly=$false
      )
 
     if ($MatchTheme) {
@@ -215,7 +217,7 @@ function Set-Terminal-Theme() {
         }
     }
 
-    if ($ChangeInAllNeovimInstances) {
+    if ($ChangeInAllNeovimInstances -and !($EnvOnly)) {
         $nvimPath = "$HOME/.dotfiles/scripts/nvim.py"
         $command = "`"set background=$Color`""
         Start-Process -FilePath python3 -ArgumentList `
@@ -236,7 +238,7 @@ function Set-Terminal-Theme() {
         }
     }
 
-    if ($IsWindows -and (Test-Path env:PWSH_WINDOWS_TERMINAL_SETTINGS -ErrorAction SilentlyContinue)) {
+    if ($IsWindows -and (Test-Path env:PWSH_WINDOWS_TERMINAL_SETTINGS -ErrorAction SilentlyContinue) -and !($EnvOnly)) {
         $content = Get-Content $env:PWSH_WINDOWS_TERMINAL_SETTINGS
         # Lazy way of doing this...
         $content = $content.Replace('"colorScheme": "dark"', '"colorScheme": "' + $Color + '"')
