@@ -10,13 +10,11 @@ endif
 setlocal colorcolumn=201
 setlocal cursorline
 setlocal nocursorcolumn
-setlocal foldmethod=expr
+setlocal foldmethod=marker
 setlocal textwidth=200
 
 setlocal signcolumn=no
 setlocal spell
-setlocal foldexpr=todo#foldexpr(v:lnum)
-setlocal foldtext=todo#foldtext()
 setlocal expandtab
 
 setlocal showbreak=\ \ \ \ 
