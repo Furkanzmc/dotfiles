@@ -98,3 +98,6 @@
 [submodule "vim/pack/packages/start/zettelkasten.nvim"]
 	path = vim/pack/packages/start/zettelkasten.nvim
 	url = https://github.com/Furkanzmc/zettelkasten.nvim.git
+[submodule "vim/pack/packages/opt/zig.vim"]
+	path = vim/pack/packages/opt/zig.vim
+	url = https://github.com/ziglang/zig.vim.git
