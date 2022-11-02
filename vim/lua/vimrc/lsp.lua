@@ -56,13 +56,11 @@ end
 -- }}}
 
 local function set_handlers(client, bufnr)
-    vim.lsp.handlers["textDocument/references"] = vim.lsp.with(
-        vim.lsp.handlers["textDocument/references"],
-        {
+    vim.lsp.handlers["textDocument/references"] =
+        vim.lsp.with(vim.lsp.handlers["textDocument/references"], {
             -- Use location list instead of quickfix list
             loclist = true,
-        }
-    )
+        })
 end
 
 local function set_up_keymap(client, bufnr)
@@ -394,6 +392,20 @@ function M.setup_lsp()
                     },
                     cargo = { loadOutDirsFromCheck = true },
                     procMacro = { enable = true },
+                },
+            },
+        })
+    end
+
+    if fn.executable("zls") == 1 then
+        lspconfig.zls.setup({
+            on_attach = setup_without_formatting,
+            filetypes = { "zig" },
+            settings = {
+                ["zls"] = {
+                    enable_inlay_hints = true,
+                    inlay_hints_show_builtin = true,
+                    include_at_in_builtins = true,
                 },
             },
         })
