@@ -727,6 +727,15 @@ end
 
 -- }}}
 
+-- vim-fugitive {{{
+
+if vim.o.loadplugins == true then
+    map("n", "<C-f>o", ":Git<CR>", { silent = true })
+    map("n", "<C-f>q", ":bd fugitive:*.git<CR>", { silent = true })
+end
+
+-- }}}
+
 -- }}}
 
 -- Local Plugins {{{
@@ -746,11 +755,13 @@ map(
     { silent = true, noremap = true }
 )
 
-add_command(
-    "FGit",
-    ":lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')",
-    { complete = "customlist,fugitive#Complete", nargs = "*", range = true }
-)
+if vim.o.loadplugins then
+    add_command(
+        "FGit",
+        ":lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')",
+        { complete = "customlist,fugitive#Complete", nargs = "*", range = true }
+    )
+end
 
 add_command("JiraStartTicket", "let g:vimrc_active_jira_ticket=<f-args>", { nargs = 1 })
 add_command("JiraCloseTicket", function(_)
