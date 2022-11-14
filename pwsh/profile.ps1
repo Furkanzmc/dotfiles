@@ -46,15 +46,6 @@ $PSReadLineOptions = @{
     HistorySearchCursorMovesToEnd = $true
     HistorySaveStyle = "SaveIncrementally"
     ViModeIndicator = "Cursor"
-    Colors = @{
-        # cosmic-latte colors
-        "Error" = "#202a31"
-        "String" = "#7d9761"
-        "Command" = "#8181f7"
-        "Comment" = "#898f9e"
-        "Operator" = "#459d90"
-        "Number" = "#5496bd"
-    }
 }
 
 Set-PSReadLineOption @PSReadLineOptions
@@ -77,6 +68,8 @@ Set-PSReadLineKeyHandler -Chord "Ctrl+p" -Function TabCompletePrevious
 Set-PSReadLineKeyHandler -Chord "Ctrl+w" -Function BackwardDeleteWord
 Set-PSReadLineKeyHandler -Chord "Ctrl+j" -Function AcceptLine
 Set-PSReadLineKeyHandler -Chord "Ctrl+h" -Function BackwardDeleteChar
+Set-PSReadLineKeyHandler -Chord "Shift+Tab" -Function AcceptSuggestion
+Set-PSReadLineKeyHandler -Chord "Tab" -Function AcceptNextSuggestionWord
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded PowerShell config in $($MainStopwatch.Elapsed.TotalSeconds) seconds."

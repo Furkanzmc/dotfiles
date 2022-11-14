@@ -236,6 +236,29 @@ function Set-Terminal-Theme() {
         else {
             $env:BAT_THEME = "gruvbox"
         }
+
+        if ($Color -eq "dark") {
+            Set-PSReadLineOption -Colors @{
+                "Error" = "#202a31"
+                "String" = "#7d9761"
+                "Command" = "#8181f7"
+                "Comment" = "#898f9e"
+                "Operator" = "#459d90"
+                "Number" = "#5496bd"
+                "InlinePrediction" = "#725658"
+            }
+        }
+        else {
+            Set-PSReadLineOption -Colors @{
+                "Error" = "#202a31"
+                "String" = "#7d9761"
+                "Command" = "#8181f7"
+                "Comment" = "#898f9e"
+                "Operator" = "#459d90"
+                "Number" = "#5496bd"
+                "InlinePrediction" = "#e2aab0"
+            }
+        }
     }
 
     if ($IsWindows -and (Test-Path env:PWSH_WINDOWS_TERMINAL_SETTINGS -ErrorAction SilentlyContinue) -and !($EnvOnly)) {
