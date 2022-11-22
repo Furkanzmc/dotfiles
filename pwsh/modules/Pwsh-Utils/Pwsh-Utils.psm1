@@ -241,22 +241,34 @@ function Set-Terminal-Theme() {
             Set-PSReadLineOption -Colors @{
                 "Error" = "#202a31"
                 "String" = "#7d9761"
-                "Command" = "#8181f7"
                 "Comment" = "#898f9e"
-                "Operator" = "#459d90"
-                "Number" = "#5496bd"
                 "InlinePrediction" = "#725658"
+                "Command" = "#8181f7"
+                "Number" = "#5496bd"
+                "Member" = "DarkGray"
+                "Operator" = "#459d90"
+                "Type" = "DarkGray"
+                "Variable" = "DarkGreen"
+                "Parameter" = "DarkGreen"
+                "ContinuationPrompt" = "DarkGray"
+                "Default" = "DarkGray"
             }
         }
         else {
             Set-PSReadLineOption -Colors @{
                 "Error" = "#202a31"
                 "String" = "#7d9761"
-                "Command" = "#8181f7"
                 "Comment" = "#898f9e"
-                "Operator" = "#459d90"
-                "Number" = "#5496bd"
                 "InlinePrediction" = "#e2aab0"
+                "Command" = "#8181f7"
+                "Number" = "#5496bd"
+                "Member" = "DarkGray"
+                "Operator" = "#459d90"
+                "Type" = "DarkGray"
+                "Variable" = "DarkGreen"
+                "Parameter" = "DarkGreen"
+                "ContinuationPrompt" = "DarkGray"
+                "Default" = "DarkGray"
             }
         }
     }
