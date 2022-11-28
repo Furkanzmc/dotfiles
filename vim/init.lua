@@ -731,7 +731,7 @@ end
 
 if vim.o.loadplugins == true then
     map("n", "<C-f>o", ":Git<CR>", { silent = true })
-    map("n", "<C-f>q", ":bd fugitive:*.git<CR>", { silent = true })
+    map("n", "<C-f>z", ":bd fugitive:*.git<CR>", { silent = true })
 end
 
 -- }}}
