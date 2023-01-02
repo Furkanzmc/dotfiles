@@ -591,8 +591,18 @@ function Diff-Branches() {
     )
 
 
+    $nvimrcExists = $false
+    $arguments = ""
+    if (Test-Path .nvimrc -ErrorAction SilentlyContinue) {
+        $nvimrcExists = $true
+        $arguments = '+source .nvimrc | '
+    }
+    else {
+        $arguments = '+'
+    }
+
 	if ($Target -ne "") {
-        $arguments = '+source .nvimrc | let $NO_AUTO_SESSION=1 | ' + "nmap <leader>d :lua require('vimrc').gdiffsplit('$Branch', '$Target')<CR>"
+        $arguments += 'let $NO_AUTO_SESSION=1 | ' + "nmap <leader>d :lua require('vimrc').gdiffsplit('$Branch', '$Target')<CR>"
         $files = $(git diff $Branch $Target --name-only)
         $hash = $(git rev-parse $Branch)
         $git_path = $(git rev-parse --git-path /$hash)
@@ -608,7 +618,7 @@ function Diff-Branches() {
         }
 	}
     else {
-        $arguments = "+source .nvimrc | nmap <leader>d :Gdiffsplit! $Branch<CR> | " + ' let $NO_AUTO_SESSION=1'
+        $arguments += "nmap <leader>d :Gdiffsplit! $Branch<CR> | " + ' let $NO_AUTO_SESSION=1'
         if ($App -eq "nvim") {
             nvim $arguments -- $(git diff $Branch --name-only)
         }
