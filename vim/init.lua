@@ -122,6 +122,8 @@ if fn.executable("pwsh") == 1 and fn.exists("$VIMRC_PWSH_ENABLED") == 1 then
     opt.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
 elseif fn.has("mac") == 1 then
     vim.opt.shell = "zsh"
+elseif fn.has("unix") == 1 then
+    vim.opt.shell = "bash"
 else
     vim.opt.shell = "cmd"
 end
