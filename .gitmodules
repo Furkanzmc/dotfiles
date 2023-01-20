@@ -101,3 +101,6 @@
 [submodule "vim/pack/packages/opt/zig.vim"]
 	path = vim/pack/packages/opt/zig.vim
 	url = https://github.com/ziglang/zig.vim.git
+[submodule "vim/pack/packages/start/nvim-navic"]
+	path = vim/pack/packages/start/nvim-navic
+	url = https://github.com/SmiteshP/nvim-navic.git

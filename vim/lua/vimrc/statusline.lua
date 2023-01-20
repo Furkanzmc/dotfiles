@@ -5,6 +5,7 @@ local fn = vim.fn
 local opt_local = vim.opt_local
 local g = vim.g
 local buffers = require("vimrc.buffers")
+local options = require("options")
 local M = {}
 
 -- Utility Functions {{{
@@ -280,6 +281,17 @@ function M.init(winnr)
     -- Right side {{{
 
     table.insert(status, "%=")
+
+    -- LSP Context {{{
+
+    if options.get_option_value("lsp_context_enabled", bufnr) == true then
+        local navic = require'nvim-navic'
+        if active and navic.is_available() then
+            st(navic.get_location(), active, "StatusLineLspStatus", "StatusLineNC", 1)
+        end
+    end
+
+    -- }}}
 
     -- LSP Diagnostic {{{
 

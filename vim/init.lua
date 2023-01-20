@@ -711,6 +711,13 @@ if vim.o.loadplugins == true then
         source = "buffers",
         buffer_local = true,
     })
+    options.register_option({
+        name = "lsp_context_enabled",
+        default = true,
+        type_info = "boolean",
+        source = "buffers",
+        buffer_local = true,
+    })
 
     cmd([[augroup vimrc_options_plugin]])
     cmd(
