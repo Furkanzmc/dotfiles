@@ -112,26 +112,29 @@
             "font":
             {
                 "face": "JetBrainsMonoMedium Nerd Font Mono",
-                "size": 10
+                "size": 10.0
             },
             "intenseTextStyle": "bold",
             "padding": "0",
-            "scrollbarState": "hidden"
+            "scrollbarState": "hidden",
+            "useAtlasEngine": true
         },
         "list":
         [
             {
-                "colorScheme": "cosmic_latte_light",
+                "backgroundImage": null,
+                "colorScheme": "cosmic_latte_dark",
                 "font":
                 {
-                    "size": 9
+                    "size": 9.0
                 },
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
                 "intenseTextStyle": "bold",
                 "name": "PowerShell",
+                "opacity": 90,
                 "source": "Windows.Terminal.PowershellCore",
-                "useAcrylic": false
+                "useAcrylic": true
             },
             {
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
@@ -406,5 +409,6 @@
     "theme": "system",
     "themes": [],
     "trimBlockSelection": true,
-    "useAcrylicInTabRow": true
+    "useAcrylicInTabRow": true,
+    "windowingBehavior": "useExisting"
 }
