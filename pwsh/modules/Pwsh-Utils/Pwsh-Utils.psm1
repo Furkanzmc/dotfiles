@@ -32,6 +32,44 @@ function Fzf-List-Process() {
         --bind "ctrl-r:reload($command)"
 }
 
+function List-PRs() {
+    Param(
+        [Parameter(Mandatory=$false)]
+        [String]
+        $Reviewer="@me",
+        [Parameter(Mandatory=$false)]
+        [Switch]
+        $Review
+    )
+    $color = $env:VIMRC_BACKGROUND -eq "light" ? "light" : "dark"
+    $command = 'gh pr list --search "is:open is:pr review-requested:' + "$Reviewer"
+    $reviewCommand = '$processId = Select-String -Pattern "^[0-9]+" -InputObject {} `
+                ; git pr diff $processId > tmp.patch ; git apply tmp.patch | rm tmp.patch'
+
+    $message = 'Press <C-r> to refresh the list'
+    if ($Review) {
+        $message += ", <enter> to review the PR locally."
+    }
+    $selection = gh pr list --search "is:open is:pr review-requested:$Reviewer" `
+        | fzf --reverse --no-mouse --color=$color `
+            --header $message `
+            --bind 'ctrl-d:page-down' `
+            --bind 'ctrl-u:page-up' `
+            --bind "ctrl-r:reload($command)"
+    if ($Review) {
+        $prMatches = $(Select-String -Pattern "^[0-9]+" -InputObject $selection).Matches
+        if ($prMatches.Length -ge 1) {
+            gh pr diff $prMatches[0].Value > tmp.patch
+            git apply tmp.patch
+            $applySuccess = $?
+            rm tmp.patch
+            if ($applySuccess) {
+                git add .
+            }
+        }
+    }
+}
+
 function Fzf-History() {
     Param(
         [Parameter(Position=0, Mandatory=$false)]
