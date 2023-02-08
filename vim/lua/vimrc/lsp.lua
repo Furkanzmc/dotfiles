@@ -341,7 +341,10 @@ function M.setup_lsp()
     end
 
     if fn.executable("clangd") == 1 then
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        capabilities.offsetEncoding = { "utf-16" }
         lspconfig.clangd.setup({
+            capabilities = capabilities,
             on_attach = setup_without_formatting,
             cmd = {
                 "clangd",
