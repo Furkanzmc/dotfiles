@@ -360,15 +360,8 @@ function M.setup_lsp()
         })
     end
 
-    local sumneko_bin_path = vim.fn.expand("$SUMNEKO_BIN_PATH")
-    if sumneko_bin_path ~= "" then
-        local sumneko_binary = sumneko_bin_path .. "/lua-language-server"
-        local runtime_path = vim.split(package.path, ";")
-        table.insert(runtime_path, "lua/?.lua")
-        table.insert(runtime_path, "lua/?/init.lua")
-
-        lspconfig.sumneko_lua.setup({
-            cmd = { sumneko_binary, "-E", sumneko_bin_path .. "/main.lua" },
+    if fn.executable("lua-language-server") == 1 then
+        lspconfig.lua_ls.setup({
             on_attach = setup_without_formatting,
             settings = {
                 Lua = {
