@@ -389,7 +389,7 @@ function Build-Neovim() {
     Write-Host -ForegroundColor Blue "Configuring the third party dependancies."
 
     if ($IsWindows) {
-        cmake -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\cmake.deps\
+        cmake -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\cmake.deps\
     }
     else {
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 ..\cmake.deps\
@@ -421,7 +421,7 @@ function Build-Neovim() {
     Write-Host -ForegroundColor Blue "Configuring neovim."
 
     if ($IsWindows) {
-        cmake -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
+        cmake -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
     }
     else {
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DUSE_BUNDLED=1 -DCMAKE_INSTALL_PREFIX="$InstallPath" ../
