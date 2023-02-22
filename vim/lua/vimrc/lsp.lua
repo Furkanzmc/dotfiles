@@ -446,7 +446,7 @@ function M.setup_lsp()
         sources = {
             -- Builtin formatting sources {{{
             null_ls.builtins.formatting.stylua.with({
-                extra_args = { "--config-path", "~/.dotfiles/vim/stylua.toml" },
+                extra_args = { "--config-path", fn.expand("$HOME") .. "/.dotfiles/vim/stylua.toml" },
             }),
             null_ls.builtins.formatting.cmake_format,
             null_ls.builtins.formatting.black,
