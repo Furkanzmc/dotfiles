@@ -15,6 +15,11 @@ local M = {}
 
 local s_scratch_buffer_count = 1
 
+-- Buffer related code from https://stackoverflow.com/a/4867969
+local function get_buflist()
+    return fn.filter(fn.range(1, fn.bufnr('$')), 'buflisted(v:val)')
+end
+
 local function set_minimal_mode(is_minimal, bufnr)
     if is_minimal then
         assert(s_buffer_minimal_cache[bufnr] == nil)
@@ -284,6 +289,10 @@ function M.get_last_selection(bufnr)
     lines[1] = string.sub(lines[1], column_start - 1, #lines[1])
 
     return lines
+end
+
+function M.get_buffer_names()
+    return fn.map(get_buflist(), 'bufname(v:val)')
 end
 
 return M

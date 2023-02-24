@@ -362,6 +362,10 @@ cmd([[cnoreabbrev fgit FGit]])
 
 cmd([[cnoreabbrev bc Bclose]])
 
+cmd(
+    [[cnoreabbrev buffs@ <C-R>=luaeval("table.concat(require'vimrc.buffers'.get_buffer_names(), ' ')")<CR>]]
+)
+
 -- }}}
 
 -- Plugins {{{
@@ -952,8 +956,8 @@ if vim.o.loadplugins == true then
         group = augroup_vimrc_init,
         callback = function(opts)
             if g.vimrc_rest_nvim_loaded == nil and vim.o.loadplugins then
-                cmd[[packadd rest.nvim]]
-                require"vimrc".setup_rest_nvim()
+                cmd([[packadd rest.nvim]])
+                require("vimrc").setup_rest_nvim()
                 g.vimrc_rest_nvim_loaded = true
             end
         end,
@@ -964,7 +968,7 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
     callback = function(opts)
-        cmd[[silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
+        cmd([[silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]])
     end,
 })
 
@@ -972,7 +976,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
     pattern = "*",
     group = augroup_vimrc_init,
     callback = function(opts)
-        require'vimrc'.create_custom_nvim_server()
+        require("vimrc").create_custom_nvim_server()
     end,
 })
 
@@ -982,10 +986,10 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
     callback = function(opts)
         -- Return to last edit position when opening files (You want this!)
         if fn.line("'\"") > 1 and fn.line("'\"") <= fn.line("$") then
-            cmd[[execute "normal! g'\""]]
+            cmd([[execute "normal! g'\""]])
         end
 
-        require'vimrc'.load_dictionary()
+        require("vimrc").load_dictionary()
     end,
 })
 
