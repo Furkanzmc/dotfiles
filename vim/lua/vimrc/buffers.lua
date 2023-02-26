@@ -17,7 +17,7 @@ local s_scratch_buffer_count = 1
 
 -- Buffer related code from https://stackoverflow.com/a/4867969
 local function get_buflist()
-    return fn.filter(fn.range(1, fn.bufnr('$')), 'buflisted(v:val)')
+    return fn.filter(fn.range(1, fn.bufnr("$")), "buflisted(v:val)")
 end
 
 local function set_minimal_mode(is_minimal, bufnr)
@@ -109,10 +109,8 @@ function M.clean_trailing_spaces()
 
     local save_cursor = fn.getpos(".")
     local old_query = fn.getreg("/")
-    local threshold = options.get_option_value(
-        "clstrailingspacelimit",
-        vim.api.nvim_get_current_buf()
-    )
+    local threshold =
+        options.get_option_value("clstrailingspacelimit", vim.api.nvim_get_current_buf())
     if threshold > 0 then
         cmd([[redir => g:trailing_space_count]])
         cmd([[silent %s/\s\+$//egn]])
@@ -243,6 +241,10 @@ function M.get_modified_buf_count(tabnr, exclude)
     if tabnr == -1 then
         local modified_list = fn.filter(fn.getbufinfo(), "v:val.changed == 1")
         modified_list = table.filter(modified_list, function(buf_info)
+            if vim.bo[buf_info.bufnr].buftype == "prompt" then
+                return false
+            end
+
             return table.index_of(modified_list, buf_info.bufnr) == -1
         end)
 
@@ -250,6 +252,9 @@ function M.get_modified_buf_count(tabnr, exclude)
     else
         local buflist = table.uniq(fn.tabpagebuflist(tabnr))
         local modified_list = table.filter(buflist, function(bufnr)
+            if vim.bo[bufnr].buftype == "prompt" then
+                return false
+            end
             if fn.getbufvar(bufnr, "&mod") == 1 then
                 return true
             end
@@ -292,7 +297,7 @@ function M.get_last_selection(bufnr)
 end
 
 function M.get_buffer_names()
-    return fn.map(get_buflist(), 'bufname(v:val)')
+    return fn.map(get_buflist(), "bufname(v:val)")
 end
 
 return M

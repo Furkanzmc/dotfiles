@@ -257,7 +257,13 @@ function M.init(winnr)
 
     -- Modified sign {{{
 
-    st("%{&modified ? ' +' : ''}", active, "StatusLineModified", "StatusLineNC", active and 0 or 1)
+    st(
+        "%{&modified && &buftype != 'prompt' ? ' +' : ''}",
+        active,
+        "StatusLineModified",
+        "StatusLineNC",
+        active and 0 or 1
+    )
     if active then
         -- Code from: https://vi.stackexchange.com/a/14313
         local modified_buf_count = buffers.get_modified_buf_count(-1, { bufnr })

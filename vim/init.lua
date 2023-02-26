@@ -4,12 +4,7 @@ local fn = vim.fn
 local g = vim.g
 local opt = vim.opt
 
-local add_command = nil
-if vim.api.nvim_create_user_command ~= nil then
-    add_command = vim.api.nvim_create_user_command
-else
-    add_command = vim.api.nvim_add_user_command
-end
+local add_command = vim.api.nvim_create_user_command
 
 -- Disable some built-in plugins
 g.loaded_2html_plugin = 1
@@ -968,7 +963,9 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
     callback = function(opts)
-        cmd([[silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]])
+        cmd(
+            [[silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
+        )
     end,
 })
 
