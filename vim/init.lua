@@ -145,6 +145,7 @@ opt.pumblend = 10
 
 opt.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
 opt.title = true
+opt.winblend = 80
 opt.titlelen = 80
 opt.titlestring = table.concat({
     "%<",
