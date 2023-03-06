@@ -113,7 +113,8 @@ if fn.executable("pwsh") == 1 and fn.exists("$VIMRC_PWSH_ENABLED") == 1 then
     opt.shellquote = ""
     opt.shellpipe = "| Out-File -Encoding UTF8"
     opt.shellxquote = ""
-    opt.shellcmdflag = "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command"
+    opt.shellcmdflag =
+        "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering = [System.Management.Automation.OutputRendering]::PlainText;"
     opt.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
 elseif fn.has("mac") == 1 then
     vim.opt.shell = "zsh"
