@@ -1,17 +1,31 @@
 [alias]
-  st = status
-  stage = add
-  bisect-bug = bisect start --term-new fixed --term-old broken
-  unstage = reset HEAD --
-  last = log -1 HEAD
-  logall = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-  logcurrent = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-  logpretty = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-  tasks = !rg 'TODO|FIXME' ./
-  discard = checkout --
-  code-changes = !git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10
-  show-updates = !git submodule foreach 'git fetch --prune && git logpretty HEAD..origin/HEAD && echo "-----"'
-  update-packages = !git submodule foreach 'git fetch --prune && git logpretty HEAD..origin/HEAD > updates.git && git logpretty HEAD..origin/HEAD' && git submodule update --remote
+    st = status
+    stage = add
+    bisect-bug = bisect start --term-new fixed --term-old broken
+    unstage = reset HEAD --
+    last = log -1 HEAD
+    logall = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    logcurrent = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    logpretty = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    tasks = !rg 'TODO|FIXME' ./
+    discard = checkout --
+    code-changes = !git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10
+    show-updates = !git submodule foreach 'git fetch --prune && git logpretty HEAD..origin/HEAD && echo "-----"'
+    update-packages = !git submodule foreach 'git fetch --prune && git logpretty HEAD..origin/HEAD > updates.git && git logpretty HEAD..origin/HEAD' && git submodule update --remote
 
 [core]
-  excludesFile=~/.gitignore_global
+    excludesFile=~/.gitignore_global
+    pager = delta --line-numbers
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    # use n and N to move between diff sections
+    navigate = true
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default

@@ -233,6 +233,10 @@ opt.tm = 300
 opt.guifont = "JetBrainsMonoMedium Nerd Font Mono:h10"
 opt.mouse = ""
 
+if fn.executable("just") then
+    opt.makeprg = "just"
+end
+
 -- Neovide {{{
 
 g.neovide_cursor_vfx_mode = "sonicboom"
@@ -748,6 +752,11 @@ end
 -- }}}
 
 -- Local Plugins {{{
+
+if fn.executable("just") then
+    add_command("Make", ":Cfrun just <f-args>", { nargs = "*" })
+    add_command("Lmake", ":Lfrun just <f-args>", { nargs = "*" })
+end
 
 -- Buffers, Jira, Time {{{
 

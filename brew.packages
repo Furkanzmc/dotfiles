@@ -25,3 +25,5 @@ font-jetbrains-mono
 tree-sitter
 gdu
 node
+zoxide
+git-delta

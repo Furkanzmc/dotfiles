@@ -269,10 +269,10 @@ function Set-Terminal-Theme() {
         _Set-Alacritty-Color $Color
 
         if ($Color -eq "light") {
-            $env:BAT_THEME = "gruvbox-light"
+            $env:BAT_THEME = "OneHalfLight"
         }
         else {
-            $env:BAT_THEME = "gruvbox"
+            $env:BAT_THEME = "OneHalfDark"
         }
 
         if ($Color -eq "dark") {
