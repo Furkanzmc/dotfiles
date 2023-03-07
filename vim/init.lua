@@ -24,6 +24,7 @@ g.loaded_vimball = 1
 g.loaded_vimballPlugin = 1
 g.loaded_zip = 1
 g.loaded_zipPlugin = 1
+g.loaded_matchit = 1
 g.qf_disable_statusline = 1
 
 vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
@@ -748,6 +749,12 @@ if vim.o.loadplugins == true then
     map("n", "<C-f>z", ":bd fugitive:*.git<CR>", { silent = true })
 end
 
+-- }}}
+
+-- vim-matchup {{{
+if vim.o.loadplugins == true then
+    g.matchup_matchparen_offscreen = { method = "popup" }
+end
 -- }}}
 
 -- }}}

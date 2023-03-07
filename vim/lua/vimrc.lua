@@ -74,6 +74,12 @@ function M.setup_treesitter()
         matchup = { enable = true },
     })
 
+    require("nvim-treesitter.configs").setup({
+        matchup = {
+            enable = true, -- mandatory, false will disable the whole extension
+        },
+    })
+
     cmd([[augroup vimrc_plugin_nvim_treesitter_init]])
     cmd([[au!]])
     cmd([[augroup END]])
