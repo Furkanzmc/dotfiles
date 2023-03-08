@@ -12,10 +12,11 @@ setlocal nocursorline
 setlocal nocursorcolumn
 setlocal formatexpr=
 
-setlocal errorformat=file://%f:%l:\ %s%trror:\ %m
-setlocal errorformat+=file://%f:%l:%c:\ %m
-setlocal errorformat+=qml:\ [%f::%l::%o]\ %m
+setlocal errorformat=file://%f:%l:%c:\ %m
+setlocal errorformat+=file://%f:\ %m
 setlocal errorformat+=file://%f:%l\ %m
+setlocal errorformat+=file://%f:%l:\ %s%trror:\ %m
+setlocal errorformat+=qml:\ [%f::%l::%o]\ %m
 setlocal errorformat+=%f:%l:%c:\ %t%*[^:]:%m
 setlocal errorformat+=%f:%l:\ %t%*[^:]:%m
 setlocal errorformat+=%m\ (file://%f:%l)
