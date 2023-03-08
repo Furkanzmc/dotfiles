@@ -27,7 +27,8 @@ function! fold#fold_text()
                 \     strdisplaywidth(l:fold_char)])
                 \ )
     let l:line_count = line("$")
-    let l:fold_lines = float2nr(((v:foldend - v:foldstart + 1) / (l:line_count * 1.0)) * 100)
+    let l:folded_line_count = v:foldend - v:foldstart + 1
+    let l:fold_lines = float2nr(((l:folded_line_count * 1.0) / (l:line_count * 1.0)) * 100)
 
     " Always strip away fold markers
     let l:strip_regex = '\%(\s*{{{\d*\s*\)'
@@ -55,11 +56,12 @@ function! fold#fold_text()
         let l:foldless_padding = ' '
     endif
 
-    return printf("%s%s%s%s[%d/%d%%]",
+    let l:percent = l:fold_lines < 1 ? "<1" : l:fold_lines
+    return printf("%s%s%s%s[%d|%s%%]",
                 \ l:foldlevel,
                 \ l:fold_indent,
                 \ l:fold_text,
                 \ l:foldless_padding,
-                \ l:line_count,
-                \ l:fold_lines)
+                \ l:folded_line_count,
+                \ l:percent)
 endfunction
