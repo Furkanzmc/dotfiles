@@ -620,6 +620,18 @@ end
 
 -- }}}
 
+-- nvim-bqf {{{
+
+if vim.o.loadplugins == true then
+    require("bqf").setup({
+        preview = {
+            auto_preview = false,
+        },
+    })
+end
+
+-- }}}
+
 -- options.nvim {{{
 
 if vim.o.loadplugins == true then
@@ -752,9 +764,11 @@ end
 -- }}}
 
 -- vim-matchup {{{
+
 if vim.o.loadplugins == true then
     g.matchup_matchparen_offscreen = { method = "popup" }
 end
+
 -- }}}
 
 -- }}}
