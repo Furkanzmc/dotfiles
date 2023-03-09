@@ -107,6 +107,3 @@
 [submodule "vim/pack/packages/start/vim-matchup"]
 	path = vim/pack/packages/start/vim-matchup
 	url = https://github.com/andymass/vim-matchup.git
-[submodule "vim/pack/packages/start/nvim-bqf"]
-	path = vim/pack/packages/start/nvim-bqf
-	url = https://github.com/kevinhwang91/nvim-bqf.git
