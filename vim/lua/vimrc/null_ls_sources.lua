@@ -118,10 +118,6 @@ M.hover = {
         method = HOVER,
         filetypes = { "markdown" },
         generator = {
-            runtime_condition = function(_)
-                local zettelkasten_loaded, _ = require("zettelkasten")
-                return zettelkasten_loaded
-            end,
             fn = function(_, done)
                 local cword = vim.fn.expand("<cword>")
                 done(require("zettelkasten").keyword_expr(cword, {

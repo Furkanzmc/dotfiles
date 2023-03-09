@@ -7,6 +7,7 @@ setlocal norelativenumber
 setlocal colorcolumn=
 setlocal breakindentopt=shift:1
 setlocal signcolumn=no
+setlocal wrap
 
 setlocal cursorline
 setlocal nocursorcolumn

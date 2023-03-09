@@ -147,7 +147,6 @@ opt.pumblend = 10
 
 opt.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
 opt.title = true
-opt.winblend = 30
 opt.titlelen = 80
 opt.titlestring = table.concat({
     "%<",
@@ -624,9 +623,46 @@ end
 
 if vim.o.loadplugins == true then
     require("bqf").setup({
+        auto_enable = true,
+        auto_resize_height = false,
+        filter = {
+            fzf = {},
+        },
+        func_map = {
+            drop = "O",
+            filter = "zn",
+            filterr = "zN",
+            fzffilter = "",
+            lastleave = "",
+            nextfile = "",
+            nexthist = ">",
+            open = "",
+            openc = "",
+            prevfile = "",
+            prevhist = "<",
+            pscrolldown = "",
+            pscrollorig = "",
+            pscrollup = "",
+            ptoggleauto = "P",
+            ptoggleitem = "p",
+            ptogglemode = "zp",
+            sclear = "",
+            split = "",
+            stogglebuf = "",
+            stoggledown = "",
+            stoggleup = "",
+            stogglevm = "",
+            tab = "",
+            tabb = "",
+            tabc = "",
+            tabdrop = "",
+            vsplit = "",
+        },
+        magic_window = false,
         preview = {
             auto_preview = false,
         },
+        previous_winid_ft_skip = {},
     })
 end
 
