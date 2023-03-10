@@ -177,9 +177,9 @@ function M.init()
     options.register_callback("scratchpad", function()
         mark_scratch(vim.api.nvim_get_current_buf())
     end)
-    options.register_callback("trailingwhitespacehighlight", function()
+    options.register_callback("highlight_trailing_whitespace", function()
         local bufnr = vim.api.nvim_get_current_buf()
-        if options.get_option_value("trailingwhitespacehighlight", bufnr) then
+        if options.get_option_value("highlight_trailing_whitespace", bufnr) then
             M.setup_white_space_highlight(bufnr)
         else
             fn.clearmatches()
@@ -216,7 +216,7 @@ function M.setup_white_space_highlight(bufnr)
         return
     end
 
-    if options.get_option_value("trailingwhitespacehighlight", bufnr) == false then
+    if options.get_option_value("highlight_trailing_whitespace", bufnr) == false then
         return
     end
 

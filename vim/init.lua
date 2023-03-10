@@ -668,7 +668,7 @@ if vim.o.loadplugins == true then
         description = "If the number of trailing white spaces below this number, they will be cleared automatically. Otherwise you will be prompted for each one.",
     })
     options.register_option({
-        name = "trailingwhitespacehighlight",
+        name = "highlight_trailing_whitespace",
         default = true,
         type_info = "boolean",
         source = "buffers",
