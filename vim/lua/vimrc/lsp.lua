@@ -313,8 +313,7 @@ function M.setup_lsp()
     end
 
     local setup_without_formatting = function(client)
-        client.resolved_capabilities.document_formatting = false
-        client.server_capabilities.documentFormattingProvider = {}
+        client.server_capabilities.documentFormattingProvider = false
         setup(client)
     end
 
