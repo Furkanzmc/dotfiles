@@ -27,9 +27,9 @@ g.loaded_zipPlugin = 1
 g.loaded_matchit = 1
 g.qf_disable_statusline = 1
 
-vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
-vim.opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
-vim.opt.packpath:append(fn.expand("~/.dotfiles/vim/"))
+opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
+opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
+opt.packpath:append(fn.expand("~/.dotfiles/vim/"))
 
 local map = require("vimrc").map
 local del_map = require("vimrc").del_map
@@ -118,11 +118,11 @@ if fn.executable("pwsh") == 1 and fn.exists("$VIMRC_PWSH_ENABLED") == 1 then
         "-NoLogo -NonInteractive -NoProfile -ExecutionPolicy RemoteSigned -Command $PSStyle.OutputRendering = [System.Management.Automation.OutputRendering]::PlainText;"
     opt.shellredir = "| Out-File -Encoding UTF8 %s | Out-Null"
 elseif fn.has("mac") == 1 then
-    vim.opt.shell = "zsh"
+    opt.shell = "zsh"
 elseif fn.has("unix") == 1 then
-    vim.opt.shell = "bash"
+    opt.shell = "bash"
 else
-    vim.opt.shell = "cmd"
+    opt.shell = "cmd"
 end
 
 -- Specify the behavior when switching between buffers
@@ -159,17 +159,17 @@ opt.titlestring = table.concat({
 opt.statusline = '%!luaeval("require\'vimrc.statusline\'.init(" . g:statusline_winid . ")")'
 
 if vim.env.VIMRC_BACKGROUND == "dark" then
-    vim.opt.background = "dark"
+    opt.background = "dark"
 else
-    vim.opt.background = "light"
+    opt.background = "light"
 end
 
 opt.diffopt = "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
 
 opt.langmenu = "en"
-vim.opt.number = true
-vim.opt.numberwidth = 2
-vim.opt.relativenumber = true
+opt.number = true
+opt.numberwidth = 2
+opt.relativenumber = true
 
 -- Turn on the Wild menu
 opt.wildmenu = true
