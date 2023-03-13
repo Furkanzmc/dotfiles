@@ -56,14 +56,13 @@ end
 -- }}}
 
 local function set_handlers(client, bufnr)
-    vim.lsp.handlers["textDocument/references"] =
-        vim.lsp.with(vim.lsp.handlers["textDocument/references"], {
-            -- Use location list instead of quickfix list
-            loclist = true,
-        })
+    lsp.handlers["textDocument/references"] = lsp.with(lsp.handlers["textDocument/references"], {
+        -- Use location list instead of quickfix list
+        loclist = true,
+    })
 end
 
-local function set_up_keymap(client, bufnr)
+local function set_up_keymap(client, format_enabled, bufnr)
     local opts = { noremap = true, silent = true, buffer = bufnr }
     local server_capabilities = client.server_capabilities
 
@@ -73,6 +72,29 @@ local function set_up_keymap(client, bufnr)
 
     if server_capabilities.hoverProvider then
         api.nvim_buf_set_option(bufnr, "keywordprg", ":LspHover")
+    end
+
+    if server_capabilities.definitionProvider then
+        map("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        if options.get_option_value("lsp_tagfunc_enabled") then
+            api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
+        elseif api.nvim_buf_get_option(bufnr, "tagfunc") == "v:lua.vim.lsp.tagfunc" then
+            api.nvim_buf_set_option(bufnr, "tagfunc", "")
+        end
+    end
+
+    if server_capabilities.documentFormattingProvider then
+        if
+            client.name == "null-ls" and is_null_ls_formatting_enabed(bufnr)
+            or client.name ~= "null-ls"
+        then
+            api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
+            map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
+        else
+            api.nvim_buf_set_option(bufnr, "formatexpr", "")
+        end
+    elseif format_enabled then
+        api.nvim_buf_set_option(bufnr, "formatexpr", "")
     end
 
     if is_configured(bufnr, client, "shortcuts_set") then
@@ -85,15 +107,6 @@ local function set_up_keymap(client, bufnr)
 
     if server_capabilities.signatureHelpProvider then
         map("n", "<leader>gs", "<Cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-    end
-
-    if server_capabilities.definitionProvider then
-        map("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
-        if options.get_option_value("lsp_tagfunc_enabled") then
-            api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-        elseif api.nvim_buf_get_option(bufnr, "tagfunc") == "v:lua.vim.lsp.tagfunc" then
-            api.nvim_buf_set_option(bufnr, "tagfunc", "")
-        end
     end
 
     if server_capabilities.declarationProvider then
@@ -121,20 +134,6 @@ local function set_up_keymap(client, bufnr)
 
     if server_capabilities.codeActionProvider then
         map("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
-    end
-
-    if server_capabilities.documentFormattingProvider then
-        if
-            client.name == "null-ls" and is_null_ls_formatting_enabed(bufnr)
-            or client.name ~= "null-ls"
-        then
-            api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
-            map("n", "<leader>gq", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
-        else
-            api.nvim_buf_set_option(bufnr, "formatexpr", "")
-        end
-    else
-        api.nvim_buf_set_option(bufnr, "formatexpr", "")
     end
 
     if server_capabilities.documentRangeFormattingProvider then
@@ -232,31 +231,31 @@ local function setup_null_ls_cmp_patch()
         end,
         lsp = {
             CompletionItemKind = {
-                Text = vim.lsp.protocol.CompletionItemKind["Text"],
-                Method = vim.lsp.protocol.CompletionItemKind["Method"],
-                Function = vim.lsp.protocol.CompletionItemKind["Function"],
-                Constructor = vim.lsp.protocol.CompletionItemKind["Constructor"],
-                Field = vim.lsp.protocol.CompletionItemKind["Field"],
-                Variable = vim.lsp.protocol.CompletionItemKind["Variable"],
-                Class = vim.lsp.protocol.CompletionItemKind["Class"],
-                Interface = vim.lsp.protocol.CompletionItemKind["Interface"],
-                Module = vim.lsp.protocol.CompletionItemKind["Module"],
-                Property = vim.lsp.protocol.CompletionItemKind["Property"],
-                Unit = vim.lsp.protocol.CompletionItemKind["Unit"],
-                Value = vim.lsp.protocol.CompletionItemKind["Value"],
-                Enum = vim.lsp.protocol.CompletionItemKind["Enum"],
-                Keyword = vim.lsp.protocol.CompletionItemKind["Keyword"],
-                Snippet = vim.lsp.protocol.CompletionItemKind["Snippet"],
-                Color = vim.lsp.protocol.CompletionItemKind["Color"],
-                File = vim.lsp.protocol.CompletionItemKind["File"],
-                Reference = vim.lsp.protocol.CompletionItemKind["Reference"],
-                Folder = vim.lsp.protocol.CompletionItemKind["Folder"],
-                EnumMember = vim.lsp.protocol.CompletionItemKind["EnumMember"],
-                Constant = vim.lsp.protocol.CompletionItemKind["Constant"],
-                Struct = vim.lsp.protocol.CompletionItemKind["Struct"],
-                Event = vim.lsp.protocol.CompletionItemKind["Event"],
-                Operator = vim.lsp.protocol.CompletionItemKind["Operator"],
-                TypeParameter = vim.lsp.protocol.CompletionItemKind["TypeParameter"],
+                Text = lsp.protocol.CompletionItemKind["Text"],
+                Method = lsp.protocol.CompletionItemKind["Method"],
+                Function = lsp.protocol.CompletionItemKind["Function"],
+                Constructor = lsp.protocol.CompletionItemKind["Constructor"],
+                Field = lsp.protocol.CompletionItemKind["Field"],
+                Variable = lsp.protocol.CompletionItemKind["Variable"],
+                Class = lsp.protocol.CompletionItemKind["Class"],
+                Interface = lsp.protocol.CompletionItemKind["Interface"],
+                Module = lsp.protocol.CompletionItemKind["Module"],
+                Property = lsp.protocol.CompletionItemKind["Property"],
+                Unit = lsp.protocol.CompletionItemKind["Unit"],
+                Value = lsp.protocol.CompletionItemKind["Value"],
+                Enum = lsp.protocol.CompletionItemKind["Enum"],
+                Keyword = lsp.protocol.CompletionItemKind["Keyword"],
+                Snippet = lsp.protocol.CompletionItemKind["Snippet"],
+                Color = lsp.protocol.CompletionItemKind["Color"],
+                File = lsp.protocol.CompletionItemKind["File"],
+                Reference = lsp.protocol.CompletionItemKind["Reference"],
+                Folder = lsp.protocol.CompletionItemKind["Folder"],
+                EnumMember = lsp.protocol.CompletionItemKind["EnumMember"],
+                Constant = lsp.protocol.CompletionItemKind["Constant"],
+                Struct = lsp.protocol.CompletionItemKind["Struct"],
+                Event = lsp.protocol.CompletionItemKind["Event"],
+                Operator = lsp.protocol.CompletionItemKind["Operator"],
+                TypeParameter = lsp.protocol.CompletionItemKind["TypeParameter"],
             },
         },
         -- FIXME: lsp_signature relies on this function.
@@ -291,11 +290,14 @@ function M.setup_lsp()
         severity_sort = true,
     })
 
-    local setup = function(client)
+    local setup = function(client, format_enabled)
         local bufnr = api.nvim_get_current_buf()
+        if format_enabled == nil then
+            format_enabled = true
+        end
 
         setup_buffer_vars(client, bufnr)
-        set_up_keymap(client, bufnr)
+        set_up_keymap(client, format_enabled, bufnr)
 
         set_enabled(bufnr, client, "configured", true)
         set_handlers(client, bufnr)
@@ -314,7 +316,7 @@ function M.setup_lsp()
 
     local setup_without_formatting = function(client)
         client.server_capabilities.documentFormattingProvider = false
-        setup(client)
+        setup(client, false)
     end
 
     local lspconfig = require("lspconfig")
@@ -340,7 +342,7 @@ function M.setup_lsp()
     end
 
     if fn.executable("clangd") == 1 then
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        local capabilities = lsp.protocol.make_client_capabilities()
         capabilities.offsetEncoding = { "utf-16" }
         lspconfig.clangd.setup({
             capabilities = capabilities,
