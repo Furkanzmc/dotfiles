@@ -1,4 +1,5 @@
 local vim = vim
+local keymap = vim.keymap
 local fn = vim.fn
 local cmd = vim.cmd
 local M = {}
@@ -44,46 +45,44 @@ function M.fence_text_object(opt)
 end
 
 function M.init()
-    local map = require("vimrc").map
-
     -- URL text object.
-    map(
+    keymap.set(
         "x",
         "iu",
         ":<C-u>lua require'vimrc.textobjects'.url_text_object()<CR>",
-        { silent = true, noremap = true }
+        { silent = true, remap = false }
     )
-    map("o", "iu", ":<C-u>normal viu<CR>", { silent = true, noremap = true })
+    keymap.set("o", "iu", ":<C-u>normal viu<CR>", { silent = true, remap = false })
 
     -- Line text objects.
-    map("x", "il", "g_o^", { silent = true, noremap = true })
-    map("o", "il", ":<C-u>normal vil<CR>", { silent = true, noremap = true })
+    keymap.set("x", "il", "g_o^", { silent = true, remap = false })
+    keymap.set("o", "il", ":<C-u>normal vil<CR>", { silent = true, remap = false })
 
     -- Number
-    map(
+    keymap.set(
         "x",
         "in",
         ":<C-u>lua require'vimrc.textobjects'.number_text_object()<CR>",
-        { silent = true, noremap = true }
+        { silent = true, remap = false }
     )
-    map("o", "in", ":<C-u>normal viu<CR>", { silent = true, noremap = true })
+    keymap.set("o", "in", ":<C-u>normal viu<CR>", { silent = true, remap = false })
 
     -- Code Fence
-    map(
+    keymap.set(
         "x",
         "i`",
         ":<C-u>lua require'vimrc.textobjects'.fence_text_object({inside=true})<CR>",
-        { silent = true, noremap = true }
+        { silent = true, remap = false }
     )
-    map("o", "i`", ":<C-u>normal viu<CR>", { silent = true, noremap = true })
+    keymap.set("o", "i`", ":<C-u>normal viu<CR>", { silent = true, remap = false })
 
-    map(
+    keymap.set(
         "x",
         "a`",
         ":<C-u>lua require'vimrc.textobjects'.fence_text_object({around=true})<CR>",
-        { silent = true, noremap = true }
+        { silent = true, remap = false }
     )
-    map("o", "a`", ":<C-u>normal vau<CR>", { silent = true, noremap = true })
+    keymap.set("o", "a`", ":<C-u>normal vau<CR>", { silent = true, remap = false })
 end
 
 return M

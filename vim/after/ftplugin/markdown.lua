@@ -29,7 +29,7 @@ if vim.fn.has("win32") == 1 then
 end
 
 if vim.fn.executable("qlmanage") == 1 then
-    require("vimrc").map(
+    vim.keymap.set(
         "n",
         "<leader>p",
         ':call jobstart(["qlmanage", "-p", expand("<cfile>")], {"cwd": expand("%:h")})<CR>',
@@ -38,12 +38,8 @@ if vim.fn.executable("qlmanage") == 1 then
 end
 
 add_command(0, "MdWriteMermaid", function(opts)
-    local lines = vim.api.nvim_buf_get_lines(
-        vim.api.nvim_get_current_buf(),
-        opts.line1 - 1,
-        opts.line2,
-        true
-    )
+    local lines =
+        vim.api.nvim_buf_get_lines(vim.api.nvim_get_current_buf(), opts.line1 - 1, opts.line2, true)
     local tmp_file = vim.fn.tempname()
     local file_handle = io.open(tmp_file, "w")
     file_handle:write(table.concat(lines, "\n"))

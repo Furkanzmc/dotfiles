@@ -1,4 +1,5 @@
 local vim = vim
+local keymap = vim.keymap
 local fn = vim.fn
 local cmd = vim.cmd
 local g = vim.g
@@ -12,30 +13,6 @@ local function init_nvim_colorizer()
     cmd(
         [[command! EnableNvimColorizer :lua require"vimrc".enable_nvim_colorizer(vim.api.nvim_get_current_buf())]]
     )
-end
-
-function M.map(mode, lhs, rhs, opts)
-    local options = {}
-    if opts then
-        options = vim.tbl_extend("force", options, opts)
-    end
-    if opts.buffer ~= nil then
-        assert(type(opts.buffer) == "number")
-
-        local bufnr = opts.buffer
-        options.buffer = nil
-        vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, options)
-    else
-        vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-    end
-end
-
-function M.del_map(mode, lhs, bufnr)
-    if bufnr ~= nil then
-        vim.api.nvim_buf_del_keymap(bufnr, mode, lhs)
-    else
-        vim.api.nvim_set_keymap(mode, lhs)
-    end
 end
 
 function M.setup_treesitter()
@@ -93,14 +70,13 @@ function M.setup_rest_nvim()
         jump_to_request = false,
     })
 
-    local map = require("vimrc").map
-    map(
+    keymap.set(
         "n",
         "<leader>tt",
         "<Plug>RestNvim",
         { silent = true, buffer = vim.api.nvim_get_current_buf() }
     )
-    map(
+    keymap.set(
         "n",
         "<leader>tp",
         "<Plug>RestNvimPreview",

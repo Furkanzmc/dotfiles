@@ -1,4 +1,5 @@
 local vim = vim
+local keymap = vim.keymap
 local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
@@ -30,9 +31,6 @@ g.qf_disable_statusline = 1
 opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
 opt.packpath:append(fn.expand("~/.dotfiles/vim/"))
-
-local map = require("vimrc").map
-local del_map = require("vimrc").del_map
 
 -- General {{{
 
@@ -251,95 +249,105 @@ g.neovide_scroll_animation_length = 0.05
 
 -- Moving around, tabs, windows and buffers {{{
 
-map("n", "<Up>", "<NOP>", { noremap = true })
-map("n", "<Left>", "<NOP>", { noremap = true })
-map("n", "<Right>", "<NOP>", { noremap = true })
-map("n", "<Down>", "<NOP>", { noremap = true })
+keymap.set("n", "<Up>", "<NOP>", { remap = false })
+keymap.set("n", "<Left>", "<NOP>", { remap = false })
+keymap.set("n", "<Right>", "<NOP>", { remap = false })
+keymap.set("n", "<Down>", "<NOP>", { remap = false })
 
-map("c", "<C-u>", "<Up>", { noremap = true })
-map("c", "<C-d>", "<Down>", { noremap = true })
+keymap.set("c", "<C-u>", "<Up>", { remap = false })
+keymap.set("c", "<C-d>", "<Down>", { remap = false })
 
 -- Disable highlight when <leader><cr> is pressed
-map("n", "<leader><CR>", ":nohlsearch<CR>", { silent = true })
+keymap.set("n", "<leader><CR>", ":nohlsearch<CR>", { silent = true })
 
 -- Jump to the previous git conflict start
-map("n", "[cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'Wb')<CR>", {
+keymap.set("n", "[cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'Wb')<CR>", {
     silent = true,
-    noremap = true,
+    remap = false,
 })
 
 -- Jump to the previous git conflict end
-map("n", "[ce", ":call search('^>\\{4,\\} \\w\\+.*$', 'Wb')<CR>", {
+keymap.set("n", "[ce", ":call search('^>\\{4,\\} \\w\\+.*$', 'Wb')<CR>", {
     silent = true,
-    noremap = true,
+    remap = false,
 })
 
 -- Jump to the next git conflict start
-map("n", "]cc", ":call search('^<\\{4,\\} \\w\\+.*$', 'W')<CR>", { silent = true, noremap = true })
+keymap.set(
+    "n",
+    "]cc",
+    ":call search('^<\\{4,\\} \\w\\+.*$', 'W')<CR>",
+    { silent = true, remap = false }
+)
 
 -- Jump to the next git conflict end
-map("n", "]ce", ":call search('^>\\{4,\\} \\w\\+.*$', 'W')<CR>", { silent = true, noremap = true })
+keymap.set(
+    "n",
+    "]ce",
+    ":call search('^>\\{4,\\} \\w\\+.*$', 'W')<CR>",
+    { silent = true, remap = false }
+)
 
 -- Jump to previous divider
-map("n", "[cm", ":call search('^=\\{4,\\}$', 'Wb')<CR>", { silent = true, noremap = true })
+keymap.set("n", "[cm", ":call search('^=\\{4,\\}$', 'Wb')<CR>", { silent = true, remap = false })
 
 -- Jump to next divider
-map("n", "]cm", ":call search('^=\\{4,\\}$', 'W')<CR>", { silent = true, noremap = true })
+keymap.set("n", "]cm", ":call search('^=\\{4,\\}$', 'W')<CR>", { silent = true, remap = false })
 
 -- }}}
 
 -- Maps, Commands {{{
 
-map("n", "]a", ':execute ":" . v:count . "next"<CR>', { silent = true, noremap = true })
-map("n", "[a", ':execute ":" . v:count . "previous"<CR>', { silent = true, noremap = true })
+keymap.set("n", "]a", ':execute ":" . v:count . "next"<CR>', { silent = true, remap = false })
+keymap.set("n", "[a", ':execute ":" . v:count . "previous"<CR>', { silent = true, remap = false })
 
-map("n", "]l", ':execute ":" . v:count . "lnext"<CR>', { silent = true, noremap = true })
-map("n", "[l", ':execute ":" . v:count . "lprevious"<CR>', { silent = true, noremap = true })
+keymap.set("n", "]l", ':execute ":" . v:count . "lnext"<CR>', { silent = true, remap = false })
+keymap.set("n", "[l", ':execute ":" . v:count . "lprevious"<CR>', { silent = true, remap = false })
 
-map("n", "]q", ':execute ":" . v:count . "cnext"<CR>', { silent = true, noremap = true })
-map("n", "[q", ':execute ":" . v:count . "cprevious"<CR>', { silent = true, noremap = true })
+keymap.set("n", "]q", ':execute ":" . v:count . "cnext"<CR>', { silent = true, remap = false })
+keymap.set("n", "[q", ':execute ":" . v:count . "cprevious"<CR>', { silent = true, remap = false })
 
-map("n", "]b", ':execute ":" . v:count . "bnext"<CR>', { silent = true, noremap = true })
-map("n", "[b", ':execute ":" . v:count . "bprevious"<CR>', { silent = true, noremap = true })
+keymap.set("n", "]b", ':execute ":" . v:count . "bnext"<CR>', { silent = true, remap = false })
+keymap.set("n", "[b", ':execute ":" . v:count . "bprevious"<CR>', { silent = true, remap = false })
 
 -- Switch to a terminal buffer using [count]gs.
-map(
+keymap.set(
     "n",
     "<leader>gt",
     '<cmd>execute "lua require\\"vimrc.terminal\\".switch_to_terminal(" . v:count . ")"<CR>',
-    { silent = true, noremap = true }
+    { silent = true, remap = false }
 )
 
 -- Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 -- Allows running macros only on selected files.
-map(
+keymap.set(
     "x",
     "@",
     ':<C-u>echo "@".getcmdline() | execute ":\'<,\'>normal @" . nr2char(getchar())<CR>',
-    { silent = true, noremap = true }
+    { silent = true, remap = false }
 )
 
-map("x", ".", ":normal .<CR>", { silent = true })
+keymap.set("x", ".", ":normal .<CR>", { silent = true })
 
-map("n", "L", "$", { silent = true })
-map("v", "L", "$", { silent = true })
+keymap.set("n", "L", "$", { silent = true })
+keymap.set("v", "L", "$", { silent = true })
 
-map("n", "H", "^", { silent = true })
-map("v", "H", "^", { silent = true })
+keymap.set("n", "H", "^", { silent = true })
+keymap.set("v", "H", "^", { silent = true })
 
-map("n", "Y", "y$", { silent = true })
+keymap.set("n", "Y", "y$", { silent = true })
 
 -- Pressing <leader>ss will toggle and untoggle spell checking
-map("n", "<leader>ss", ":setlocal spell!<CR>", { silent = true })
+keymap.set("n", "<leader>ss", ":setlocal spell!<CR>", { silent = true })
 
-map("t", "<C-d>", "<PageDown>", { silent = true })
-map("t", "<C-u>", "<PageUp>", { silent = true })
+keymap.set("t", "<C-d>", "<PageDown>", { silent = true })
+keymap.set("t", "<C-u>", "<PageUp>", { silent = true })
 
-map("t", "<C-w><C-q>", "<C-\\><C-n>", { silent = true, noremap = true })
-map("t", "<C-w><C-h>", "<C-\\><C-n><C-w>h", { silent = true, noremap = true })
-map("t", "<C-w><C-j>", "<C-\\><C-n><C-w>j", { silent = true, noremap = true })
-map("t", "<C-w><C-k>", "<C-\\><C-n><C-w>k", { silent = true, noremap = true })
-map("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", { silent = true, noremap = true })
+keymap.set("t", "<C-w><C-q>", "<C-\\><C-n>", { silent = true, remap = false })
+keymap.set("t", "<C-w><C-h>", "<C-\\><C-n><C-w>h", { silent = true, remap = false })
+keymap.set("t", "<C-w><C-j>", "<C-\\><C-n><C-w>j", { silent = true, remap = false })
+keymap.set("t", "<C-w><C-k>", "<C-\\><C-n><C-w>k", { silent = true, remap = false })
+keymap.set("t", "<C-w><C-l>", "<C-\\><C-n><C-w>l", { silent = true, remap = false })
 
 -- }}}
 
@@ -744,8 +752,8 @@ end
 -- vim-fugitive {{{
 
 if vim.o.loadplugins == true then
-    map("n", "<C-f>o", ":Git<CR>", { silent = true })
-    map("n", "<C-f>z", ":bd fugitive:*.git<CR>", { silent = true })
+    keymap.set("n", "<C-f>o", ":Git<CR>", { silent = true })
+    keymap.set("n", "<C-f>z", ":bd fugitive:*.git<CR>", { silent = true })
 end
 
 -- }}}
@@ -769,17 +777,17 @@ end
 
 -- Buffers, Jira, Time {{{
 
-map(
+keymap.set(
     "n",
     "gx",
     "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor(vim.fn.expand('<cWORD>'))<CR>",
-    { silent = true, noremap = true }
+    { silent = true, remap = false }
 )
-map(
+keymap.set(
     "v",
     "gx",
     ":lua require'vimrc.buffers'.open_uri_under_cursor(require'vimrc.buffers'.get_last_selection(vim.api.nvim_get_current_buf())[1])<CR>",
-    { silent = true, noremap = true }
+    { silent = true, remap = false }
 )
 
 if vim.o.loadplugins then
@@ -831,7 +839,7 @@ end
 -- Help {{{
 
 if vim.o.loadplugins == true then
-    map("n", "gh", ":call help#search_docs()<CR>", { silent = true })
+    keymap.set("n", "gh", ":call help#search_docs()<CR>", { silent = true })
     cmd([[command! -nargs=1 Search :call help#search_docs(<f-args>)]])
 end
 
@@ -847,20 +855,20 @@ cmd(
 
 -- QuickFix {{{
 
-map("n", "<C-q>z", ":cclose<CR>", { silent = true })
-map(
+keymap.set("n", "<C-q>z", ":cclose<CR>", { silent = true })
+keymap.set(
     "n",
     "<C-q>o",
     ":botright copen | if exists('g:vimrc_quickfix_size_cache') && has_key(g:vimrc_quickfix_size_cache, tabpagenr()) | execute 'resize ' . g:vimrc_quickfix_size_cache[tabpagenr()] | endif<CR>",
     { silent = true }
 )
-map(
+keymap.set(
     "n",
     "<C-q>lo",
     ":botright lopen | if exists('g:vimrc_quickfix_size_cache') && has_key(g:vimrc_quickfix_size_cache, tabpagenr()) | execute 'resize ' . g:vimrc_quickfix_size_cache[tabpagenr()] | endif<CR>",
     { silent = true }
 )
-map("n", "<C-q>lz", ":lclose<CR>", { silent = true })
+keymap.set("n", "<C-q>lz", ":lclose<CR>", { silent = true })
 
 -- }}}
 
@@ -878,30 +886,30 @@ if vim.o.loadplugins == true then
     require("vimrc.buffers").init()
 end
 
-map(
+keymap.set(
     "v",
     "<leader>s",
     ":call buffers#visual_selection('search', '')<CR>",
-    { silent = true, noremap = true }
+    { silent = true, remap = false }
 )
-map(
+keymap.set(
     "v",
     "<leader>r",
     ":call buffers#visual_selection('replace', '')<CR>",
-    { silent = true, noremap = true }
+    { silent = true, remap = false }
 )
 
-map(
+keymap.set(
     "n",
     "<leader>cc",
     ":lua require'vimrc.buffers'.toggle_colorcolumn(vim.api.nvim_win_get_cursor(0)[2] + 1)<CR>",
-    { silent = true, noremap = true }
+    { silent = true, remap = false }
 )
-map(
+keymap.set(
     "n",
     "<leader>cd",
     ":lua require'vimrc.buffers'.toggle_colorcolumn(-1)<CR>",
-    { silent = true, noremap = true }
+    { silent = true, remap = false }
 )
 
 cmd([[command! CleanTrailingWhiteSpace :lua require"vimrc.buffers".clean_trailing_spaces()]])
@@ -1015,11 +1023,11 @@ vim.api.nvim_create_autocmd({ "OptionSet" }, {
     callback = function(opts)
         local bufnr = opts.buf
         if vim.wo.diff then
-            map("n", "<leader>dgh", ":diffget \\\\2<CR>", { silent = true, buffer = bufnr })
-            map("n", "<leader>dgl", ":diffget \\\\3<CR>", { silent = true, buffer = bufnr })
+            keymap.set("n", "<leader>dgh", ":diffget \\\\2<CR>", { silent = true, buffer = bufnr })
+            keymap.set("n", "<leader>dgl", ":diffget \\\\3<CR>", { silent = true, buffer = bufnr })
         else
-            del_map("n", "<leader>dgh", bufnr)
-            del_map("n", "<leader>dgl", bufnr)
+            keymap.del("n", "<leader>dgh", { buffer = bufnr })
+            keymap.del("n", "<leader>dgl", { buffer = bufnr })
         end
     end,
 })
