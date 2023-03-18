@@ -11,6 +11,38 @@ function Virtualenv-Activate() {
     }
 }
 
+function pvim() {
+    $sessionFile = ""
+    $rcFile = ""
+    if (Test-Path session.vim -ErrorAction SilentlyContinue) {
+        $sessionFile = "session.vim"
+    }
+    elseif (Test-Path session.nvim -ErrorAction SilentlyContinue) {
+        $sessionFile = "session.nvim"
+    }
+
+    if (Test-Path .nvimrc -ErrorAction SilentlyContinue) {
+        $rcFile = ".nvimrc"
+    }
+    elseif (Test-Path .nvim.lua -ErrorAction SilentlyContinue) {
+        $rcFile = ".nvim.lua"
+    }
+
+    $arguments = ""
+    if ($sessionFile -ne "" -and $rcFile -ne "") {
+        nvim -S $rcFile -S $sessionFile
+    }
+    elseif ($sessionFile -ne "") {
+        nvim $sessionFile
+    }
+    elseif ($rcFile -ne "") {
+        nvim $rcFile
+    }
+    else {
+        nvim
+    }
+}
+
 function Fzf-List-Process() {
     $color = $env:VIMRC_BACKGROUND -eq "light" ? "light" : "dark"
     $command = 'Get-Process | Where-Object { `
