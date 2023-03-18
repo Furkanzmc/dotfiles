@@ -155,7 +155,6 @@ opt.titlestring = table.concat({
     '%{strftime("%b\\ %d\\ %A,\\ %H:%M")}',
 })
 opt.statusline = '%!luaeval("require\'vimrc.statusline\'.init(" . g:statusline_winid . ")")'
-opt.winbar = '%!luaeval("require\'vimrc.statusline\'.init_winbar(" . g:statusline_winid . ")")'
 
 if vim.env.VIMRC_BACKGROUND == "dark" then
     opt.background = "dark"
@@ -1047,6 +1046,19 @@ vim.api.nvim_create_autocmd({ "UILeave" }, {
     callback = function(opts)
         if vim.v.event.chan == 1 then
             opt.mouse = ""
+        end
+    end,
+})
+
+vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
+    group = vim.api.nvim_create_augroup("vimrc_winbar_events", { clear = true }),
+    callback = function(opts)
+        local lsp = require("vimrc.lsp")
+        if lsp.is_lsp_running(opts.buf) then
+            vim.wo[fn.bufwinid(opts.buf)].winbar =
+                '%!luaeval("require\'vimrc.statusline\'.init_winbar(" . g:statusline_winid . ")")'
+        else
+            vim.wo[fn.bufwinid(opts.buf)].winbar = ""
         end
     end,
 })
