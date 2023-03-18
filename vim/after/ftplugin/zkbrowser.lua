@@ -5,3 +5,4 @@ end
 vim.opt_local.keywordprg = ":ZkHover -preview"
 vim.opt_local.signcolumn = "no"
 vim.opt_local.showbreak = "                       "
+vim.opt_local.winbar = ""

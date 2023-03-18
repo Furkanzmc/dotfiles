@@ -12,6 +12,7 @@ setlocal cursorline
 
 setlocal signcolumn=no
 setlocal nocursorcolumn
+setlocal winbar=
 
 " Jump to the previous shell prompt
 nmap <buffer> <silent> [t :call search('^\(!!\ =>\\|=>\)', 'Wb')<CR>

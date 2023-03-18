@@ -16,6 +16,7 @@ setlocal textwidth=200
 setlocal signcolumn=no
 setlocal spell
 setlocal expandtab
+setlocal winbar=
 
 setlocal showbreak=\ \ \ \ 
 setlocal tabstop=4

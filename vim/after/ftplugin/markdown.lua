@@ -22,6 +22,7 @@ vim.opt_local.textwidth = 99
 vim.opt_local.cursorline = true
 vim.opt_local.cursorcolumn = false
 vim.opt_local.formatexpr = ""
+vim.opt_local.winbar = ""
 
 if vim.fn.has("win32") == 1 then
     vim.opt_local.isfname:remove("[")

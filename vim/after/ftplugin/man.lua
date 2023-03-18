@@ -10,3 +10,4 @@ vim.opt_local.signcolumn = "no"
 
 vim.opt_local.statusline = ""
 vim.o.laststatus = 0
+vim.opt_local.winbar = ""

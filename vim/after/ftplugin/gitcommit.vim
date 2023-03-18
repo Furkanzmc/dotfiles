@@ -8,6 +8,7 @@ setlocal nonumber
 setlocal cursorline
 setlocal nocursorcolumn
 setlocal signcolumn=no
+setlocal winbar=
 
 setlocal norelativenumber
 
