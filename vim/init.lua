@@ -155,6 +155,7 @@ opt.titlestring = table.concat({
     '%{strftime("%b\\ %d\\ %A,\\ %H:%M")}',
 })
 opt.statusline = '%!luaeval("require\'vimrc.statusline\'.init(" . g:statusline_winid . ")")'
+opt.winbar = '%!luaeval("require\'vimrc.statusline\'.init_winbar(" . g:statusline_winid . ")")'
 
 if vim.env.VIMRC_BACKGROUND == "dark" then
     opt.background = "dark"
