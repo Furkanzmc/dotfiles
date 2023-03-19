@@ -236,6 +236,10 @@ if fn.executable("just") then
     opt.makeprg = "just"
 end
 
+if vim.o.loadplugins == true and fn.executable("just") then
+    vim.api.nvim_create_user_command("Just", ":Cfrun just <args>", { nargs = "*" })
+end
+
 -- Neovide {{{
 
 g.neovide_cursor_vfx_mode = "sonicboom"
@@ -1054,11 +1058,15 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
     group = vim.api.nvim_create_augroup("vimrc_winbar_events", { clear = true }),
     callback = function(opts)
         local lsp = require("vimrc.lsp")
+        local winid = fn.bufwinid(opts.buf)
+        if winid == -1 then
+            return
+        end
         if lsp.is_lsp_running(opts.buf) then
-            vim.wo[fn.bufwinid(opts.buf)].winbar =
+            vim.wo[winid].winbar =
                 '%!luaeval("require\'vimrc.statusline\'.init_winbar(" . g:statusline_winid . ")")'
         else
-            vim.wo[fn.bufwinid(opts.buf)].winbar = ""
+            vim.wo[winid].winbar = ""
         end
     end,
 })

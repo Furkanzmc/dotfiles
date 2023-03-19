@@ -1,0 +1,26 @@
+---
+AlignConsecutiveAssignments: 'false'
+AccessModifierOffset: -4
+AlignConsecutiveDeclarations: 'false'
+AlignOperands: 'false'
+AllowAllConstructorInitializersOnNextLine: 'false'
+AllowAllParametersOfDeclarationOnNextLine: 'true'
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortCaseLabelsOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: None
+AllowShortLoopsOnASingleLine: 'false'
+BreakBeforeBraces: BS_GNU
+ColumnLimit: '90'
+ConstructorInitializerIndentWidth: '4'
+ContinuationIndentWidth: '4'
+Cpp11BracedListStyle: 'true'
+IndentWidth: '4'
+Standard: Cpp11
+TabWidth: '4'
+UseTab: Never
+BreakConstructorInitializers: BeforeComma
+SortIncludes: Never
+
+...

@@ -9,90 +9,7 @@ local utils = require("vimrc.utils")
 local log = require("vimrc.log")
 local M = {}
 
-function M.swap_source_header()
-    local bufnr = fn.bufnr()
-    local suffixes = string.split(api.nvim_buf_get_option(bufnr, "suffixesadd"), ",")
-
-    local filename = fn.expand("%:t")
-    for index, suffix in ipairs(suffixes) do
-        local tmp = string.gsub(filename, suffix .. "$", "")
-        if filename ~= tmp then
-            filename = tmp
-            table.remove(suffixes, index)
-        end
-    end
-
-    local status, path_backup = pcall(api.nvim_buf_get_option, bufnr, "path")
-
-    if status == false then
-        path_backup = ""
-    end
-
-    vim.opt_local.path:append(fn.expand("%:h"))
-
-    local found = false
-    for _, suffix in ipairs(suffixes) do
-        local found_file = fn.findfile(filename .. suffix)
-        if found_file ~= "" then
-            found = true
-            cmd("edit " .. found_file)
-            break
-        end
-    end
-
-    bo.path = path_backup
-
-    if found == false then
-        log.error("cpp", "Cannot swap source/header for " .. fn.expand("%:t"))
-    end
-end
-
--- Sample call:
---   require"vimrc.cpp".setup_cmake({
---       env={},
---       name="MuseScore",
---       program="~/random/MuseScore/build.debug/src/main/mscore.app/Contents/MacOS/mscore",
---       cwd="~/random/MuseScore/build.debug/src/main/mscore.app/Contents/MacOS/",
---       project_path="~/random/MuseScore/",
---       build_dir="~/random/MuseScore/build.debug/",
---       test_cwd="~/random/MuseScore/build.debug/test"
---       generator="Ninja"
---       cmake_args={}
---   })
-function M.setup_cmake(opts)
-    if vim.o.loadplugins == false then
-        return
-    end
-
-    require("vimrc.dap").init()
-
-    opts.env = opts.env or {}
-    opts.run_in_terminal = opts.run_in_terminal or false
-    opts.cmake_args = opts.cmake_args or {}
-
-    assert(opts.env, "env is required.")
-    assert(opts.name, "name is required.")
-    assert(opts.program, "program is required.")
-    assert(opts.cwd, "cwd is required.")
-    assert(opts.project_path, "project_path is required.")
-    assert(opts.build_dir, "build_dir is required.")
-
-    opts.test_cwd = opts.test_cwd or ""
-
-    require("dap").configurations.cpp = {
-        {
-            type = "cpp",
-            request = "launch",
-            name = opts.name,
-            program = opts.program,
-            symbolSearchPath = opts.cwd,
-            cwd = opts.cwd,
-            debuggerRoot = opts.cwd,
-            env = opts.env,
-            runInTerminal = opts.run_in_terminal,
-        },
-    }
-
+local function setup_cmake_commands(opts)
     local functions = {}
     functions.build_project = function(output_qf)
         require("firvish.job_control").start_job({
@@ -171,6 +88,97 @@ function M.setup_cmake(opts)
             .. opts.project_path
             .. " -Command Generate-Tags c++'"
     )
+end
+
+function M.swap_source_header()
+    local bufnr = fn.bufnr()
+    local suffixes = string.split(api.nvim_buf_get_option(bufnr, "suffixesadd"), ",")
+
+    local filename = fn.expand("%:t")
+    for index, suffix in ipairs(suffixes) do
+        local tmp = string.gsub(filename, suffix .. "$", "")
+        if filename ~= tmp then
+            filename = tmp
+            table.remove(suffixes, index)
+        end
+    end
+
+    local status, path_backup = pcall(api.nvim_buf_get_option, bufnr, "path")
+
+    if status == false then
+        path_backup = ""
+    end
+
+    vim.opt_local.path:append(fn.expand("%:h"))
+
+    local found = false
+    for _, suffix in ipairs(suffixes) do
+        local found_file = fn.findfile(filename .. suffix)
+        if found_file ~= "" then
+            found = true
+            cmd("edit " .. found_file)
+            break
+        end
+    end
+
+    bo.path = path_backup
+
+    if found == false then
+        log.error("cpp", "Cannot swap source/header for " .. fn.expand("%:t"))
+    end
+end
+
+-- Sample call:
+--   require"vimrc.cpp".setup_cmake({
+--       env={},
+--       name="MuseScore",
+--       program="~/random/MuseScore/build.debug/src/main/mscore.app/Contents/MacOS/mscore",
+--       cwd="~/random/MuseScore/build.debug/src/main/mscore.app/Contents/MacOS/",
+--       project_path="~/random/MuseScore/",
+--       build_dir="~/random/MuseScore/build.debug/",
+--       test_cwd="~/random/MuseScore/build.debug/test"
+--       generator="Ninja"
+--       cmake_args={},
+--       no_cmake=false
+--   })
+function M.setup_cmake(opts)
+    if vim.o.loadplugins == false then
+        return
+    end
+
+    require("vimrc.dap").init()
+
+    opts.env = opts.env or {}
+    opts.run_in_terminal = opts.run_in_terminal or false
+    opts.cmake_args = opts.cmake_args or {}
+    if opts.no_cmake == nil then
+        opts.no_cmake = false
+    end
+
+    assert(opts.env, "env is required.")
+    assert(opts.name, "name is required.")
+    assert(opts.program, "program is required.")
+    assert(opts.cwd, "cwd is required.")
+    assert(opts.project_path, "project_path is required.")
+    assert(opts.build_dir, "build_dir is required.")
+
+    opts.test_cwd = opts.test_cwd or ""
+
+    require("dap").configurations.cpp = {
+        {
+            type = "cpp",
+            request = "launch",
+            name = opts.name,
+            program = opts.program,
+            symbolSearchPath = opts.cwd,
+            cwd = opts.cwd,
+            debuggerRoot = opts.cwd,
+            env = opts.env,
+            runInTerminal = opts.run_in_terminal,
+        },
+    }
+
+    setup_cmake_commands(opts)
 end
 
 return M
