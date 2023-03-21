@@ -330,7 +330,7 @@ function M.init_winbar(winnr)
     if options.get_option_value("lsp_context_enabled", bufnr) == true then
         local navic = require("nvim-navic")
         if navic.is_available(bufnr) then
-            st(navic.get_location({ bufnr = bufnr }), active, "WinBarLspStatus", "WinBarNC", 1)
+            st(navic.get_location(nil, bufnr), active, "WinBarLspStatus", "WinBarNC", 1)
         end
     end
 
