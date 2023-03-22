@@ -33,10 +33,10 @@ function pvim() {
         nvim -S $rcFile -S $sessionFile
     }
     elseif ($sessionFile -ne "") {
-        nvim $sessionFile
+        nvim -S $sessionFile
     }
     elseif ($rcFile -ne "") {
-        nvim $rcFile
+        nvim -S $rcFile
     }
     else {
         nvim
