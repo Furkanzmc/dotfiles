@@ -289,7 +289,13 @@ function M.init(winnr)
     -- Branch name {{{
 
     if fn.exists("*FugitiveHead") > 0 and active then
-        local head = fn["FugitiveHead"]()
+        -- [Git(master)]
+        local head = fn["FugitiveStatusline"]()
+        head = string.gsub(head, "Git", "")
+        head = string.gsub(head, "%[", "")
+        head = string.gsub(head, "%]", "")
+        head = string.gsub(head, "%(", "")
+        head = string.gsub(head, "%)", "")
         if head ~= "" then
             st(" " .. head, active, "StatusLineBranch", "StatusLineNC", 1)
         end
