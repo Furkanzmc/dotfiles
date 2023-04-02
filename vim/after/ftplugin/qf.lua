@@ -19,19 +19,6 @@ if vim.o.loadplugins == true then
 end
 
 vim.keymap.set(
-    "v",
-    "D",
-    [[:call quickfix#remove_lines(line("'<") - 1, line("'>") - 1)<CR>]],
-    { silent = true, buffer = bufnr }
-)
-vim.keymap.set(
-    "n",
-    "D",
-    [[:call quickfix#remove_lines(line(".") - 1, line(".") - 1)<CR>]],
-    { silent = true, buffer = bufnr }
-)
-vim.keymap.set("n", "CC", [[:call setqflist([])<CR>]], { silent = true, buffer = bufnr })
-vim.keymap.set(
     "n",
     "p",
     [[:lua require"vimrc.quickfix".preview_file_on_line(vim.fn.line('.'), vim.fn.getloclist(0, { filewinid = 0 }).filewinid > 0, false)<CR>]],
@@ -47,12 +34,12 @@ vim.keymap.set(
 vim.api.nvim_create_autocmd({ "BufLeave" }, {
     buffer = bufnr,
     callback = function(opts)
-    local bufnr = opts.buf
-    local tabpagenr = vim.fn.tabpagenr()
-    local winheight = vim.fn.winheight(vim.fn.winnr())
-    local data = vim.g.vimrc_quickfix_size_cache or {}
+        local bufnr = opts.buf
+        local tabpagenr = vim.fn.tabpagenr()
+        local winheight = vim.fn.winheight(vim.fn.winnr())
+        local data = vim.g.vimrc_quickfix_size_cache or {}
 
-    data[tostring(tabpagenr)] = winheight
+        data[tostring(tabpagenr)] = winheight
         vim.g.vimrc_quickfix_size_cache = data
     end,
 })
