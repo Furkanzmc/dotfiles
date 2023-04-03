@@ -31,6 +31,20 @@ vim.keymap.set(
     { silent = true, buffer = bufnr }
 )
 
+vim.keymap.set(
+    "n",
+    "dd",
+    [[:lua require"vimrc.quickfix".remove_qf_entries(vim.api.nvim_get_current_buf(), vim.fn.line("."), vim.fn.line("."))<CR>]],
+    { silent = true, buffer = bufnr }
+)
+
+vim.keymap.set(
+    "v",
+    "d",
+    [[:lua require"vimrc.quickfix".remove_qf_entries(vim.api.nvim_get_current_buf(), vim.fn.getpos("'<")[2], vim.fn.getpos("'>")[2])<CR>]],
+    { silent = true, buffer = bufnr }
+)
+
 vim.api.nvim_create_autocmd({ "BufLeave" }, {
     buffer = bufnr,
     callback = function(opts)
