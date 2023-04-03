@@ -20,6 +20,13 @@
 [interactive]
     diffFilter = delta --color-only
 
+[rerere]
+	enabled = true
+    autoupdate = true
+
+[rerere]
+	stat = true
+
 [delta]
     # use n and N to move between diff sections
     navigate = true
