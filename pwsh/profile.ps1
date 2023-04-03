@@ -4,9 +4,7 @@ if ((Test-Path env:VIRTUAL_ENV) -and (Test-Path "${env:VIRTUAL_ENV}/bin/activate
     . ${env:VIRTUAL_ENV}/bin/activate.ps1
 }
 
-if (-not [System.Environment]::UserInteractive) {
-    $PSStyle.OutputRendering = [System.Management.Automation.OutputRendering]::PlainText;
-}
+$PSStyle.OutputRendering = [System.Management.Automation.OutputRendering]::PlainText;
 
 if ($IsWindows) {
     $env:PSModulePath += ";~/.dotfiles/pwsh/modules/"
