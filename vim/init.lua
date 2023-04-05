@@ -4,8 +4,7 @@ local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 local opt = vim.opt
-
-local add_command = vim.api.nvim_create_user_command
+local api = vim.api
 
 -- Disable some built-in plugins
 g.loaded_2html_plugin = 1
@@ -237,7 +236,7 @@ if fn.executable("just") then
 end
 
 if vim.o.loadplugins == true and fn.executable("just") then
-    vim.api.nvim_create_user_command("Just", ":Cfrun just <args>", { nargs = "*" })
+    api.nvim_create_user_command("Just", ":Cfrun just <args>", { nargs = "*" })
 end
 
 -- Neovide {{{
@@ -775,8 +774,8 @@ end
 -- Local Plugins {{{
 
 if fn.executable("just") then
-    add_command("Make", ":Cfrun just <f-args>", { nargs = "*" })
-    add_command("Lmake", ":Lfrun just <f-args>", { nargs = "*" })
+    api.nvim_create_user_command("Make", ":Cfrun just <f-args>", { nargs = "*" })
+    api.nvim_create_user_command("Lmake", ":Lfrun just <f-args>", { nargs = "*" })
 end
 
 -- Buffers, Jira, Time {{{
@@ -794,16 +793,34 @@ keymap.set(
     { silent = true, remap = false }
 )
 
+api.nvim_create_user_command("DiffWithSaved", function(_)
+    local filetype = vim.opt_local.filetype
+    vim.cmd([[vnew | r # | normal! 1Gdd]])
+    vim.opt_local.buftype = "nofile"
+    vim.opt_local.bufhidden = "wipe"
+    vim.opt_local.buflisted = false
+    vim.opt_local.swapfile = false
+    vim.opt_local.readonly = true
+    vim.opt_local.filetype = filetype
+    vim.cmd([[diffthis]])
+    vim.cmd([[wincmd p]])
+    vim.cmd([[diffthis]])
+end, {})
+
 if vim.o.loadplugins then
-    add_command(
+    api.nvim_create_user_command(
         "FGit",
         ":lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')",
         { complete = "customlist,fugitive#Complete", nargs = "*", range = true }
     )
 end
 
-add_command("JiraStartTicket", "let g:vimrc_active_jira_ticket=<f-args>", { nargs = 1 })
-add_command("JiraCloseTicket", function(_)
+api.nvim_create_user_command(
+    "JiraStartTicket",
+    "let g:vimrc_active_jira_ticket=<f-args>",
+    { nargs = 1 }
+)
+api.nvim_create_user_command("JiraCloseTicket", function(_)
     if g.vimrc_active_jira_ticket ~= nil then
         g.vimrc_active_jira_ticket = nil
     end
@@ -811,10 +828,14 @@ end, {
     nargs = 1,
 })
 
-add_command("JiraOpenTicket", ":call jira#open_ticket(<f-args>)", { nargs = "?" })
-add_command("JiraOpenTicketJson", ":call jira#open_ticket_in_json(<f-args>)", { nargs = "?" })
+api.nvim_create_user_command("JiraOpenTicket", ":call jira#open_ticket(<f-args>)", { nargs = "?" })
+api.nvim_create_user_command(
+    "JiraOpenTicketJson",
+    ":call jira#open_ticket_in_json(<f-args>)",
+    { nargs = "?" }
+)
 
-add_command("Time", function(_)
+api.nvim_create_user_command("Time", function(_)
     cmd([[echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE']])
 end, {})
 
@@ -975,9 +996,9 @@ end
 
 -- }}}
 
-local augroup_vimrc_init = vim.api.nvim_create_augroup("vimrc_init", { clear = true })
+local augroup_vimrc_init = api.nvim_create_augroup("vimrc_init", { clear = true })
 if vim.o.loadplugins == true then
-    vim.api.nvim_create_autocmd({ "BufReadPre", "FileReadPre" }, {
+    api.nvim_create_autocmd({ "BufReadPre", "FileReadPre" }, {
         pattern = "*.http",
         group = augroup_vimrc_init,
         callback = function(opts)
@@ -990,7 +1011,7 @@ if vim.o.loadplugins == true then
     })
 end
 
-vim.api.nvim_create_autocmd({ "TextYankPost" }, {
+api.nvim_create_autocmd({ "TextYankPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
     callback = function(opts)
@@ -1000,7 +1021,7 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
     end,
 })
 
-vim.api.nvim_create_autocmd({ "VimEnter" }, {
+api.nvim_create_autocmd({ "VimEnter" }, {
     pattern = "*",
     group = augroup_vimrc_init,
     callback = function(opts)
@@ -1008,7 +1029,7 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, {
     end,
 })
 
-vim.api.nvim_create_autocmd({ "BufReadPost" }, {
+api.nvim_create_autocmd({ "BufReadPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
     callback = function(opts)
@@ -1021,7 +1042,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
     end,
 })
 
-vim.api.nvim_create_autocmd({ "OptionSet" }, {
+api.nvim_create_autocmd({ "OptionSet" }, {
     pattern = "diff",
     group = augroup_vimrc_init,
     callback = function(opts)
@@ -1036,8 +1057,8 @@ vim.api.nvim_create_autocmd({ "OptionSet" }, {
     end,
 })
 
-local augroup_vimrc_gui_events = vim.api.nvim_create_augroup("vimrc_gui_events", { clear = true })
-vim.api.nvim_create_autocmd({ "UIEnter" }, {
+local augroup_vimrc_gui_events = api.nvim_create_augroup("vimrc_gui_events", { clear = true })
+api.nvim_create_autocmd({ "UIEnter" }, {
     group = augroup_vimrc_gui_events,
     callback = function(opts)
         if vim.v.event.chan == 1 then
@@ -1045,7 +1066,7 @@ vim.api.nvim_create_autocmd({ "UIEnter" }, {
         end
     end,
 })
-vim.api.nvim_create_autocmd({ "UILeave" }, {
+api.nvim_create_autocmd({ "UILeave" }, {
     group = augroup_vimrc_gui_events,
     callback = function(opts)
         if vim.v.event.chan == 1 then
@@ -1054,8 +1075,8 @@ vim.api.nvim_create_autocmd({ "UILeave" }, {
     end,
 })
 
-vim.api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
-    group = vim.api.nvim_create_augroup("vimrc_winbar_events", { clear = true }),
+api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
+    group = api.nvim_create_augroup("vimrc_winbar_events", { clear = true }),
     callback = function(opts)
         local lsp = require("vimrc.lsp")
         local winid = fn.bufwinid(opts.buf)
