@@ -333,10 +333,10 @@ function M.init_winbar(winnr)
 
     -- LSP Context {{{
 
-    if options.get_option_value("lsp_context_enabled", bufnr) == true then
-        local navic = require("nvim-navic")
-        if navic.is_available(bufnr) then
-            st(navic.get_location(nil, bufnr), active, "WinBarLspStatus", "WinBarNC", 1)
+    if is_lsp_running and options.get_option_value("lsp_context_enabled", bufnr) == true then
+        local content = require("lspsaga.symbolwinbar"):get_winbar()
+        if content ~= nil then
+            table.insert(status, " " .. content)
         end
     end
 

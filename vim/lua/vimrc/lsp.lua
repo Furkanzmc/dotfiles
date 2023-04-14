@@ -75,7 +75,9 @@ local function set_up_keymap(client, format_enabled, bufnr)
     end
 
     if server_capabilities.definitionProvider then
-        keymap.set("n", "<leader>gd", "<Cmd>lua vim.lsp.buf.definition()<CR>", opts)
+        keymap.set("n", "<leader>gd", "<Cmd>lua Lspsaga goto_definition<CR>", opts)
+        keymap.set("n", "<leader>gp", "<cmd>Lspsaga peek_definition<CR>", opts)
+
         if options.get_option_value("lsp_tagfunc_enabled") then
             api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
         elseif api.nvim_buf_get_option(bufnr, "tagfunc") == "v:lua.vim.lsp.tagfunc" then
@@ -102,7 +104,7 @@ local function set_up_keymap(client, format_enabled, bufnr)
     end
 
     if server_capabilities.renameProvider then
-        keymap.set("n", "<leader>gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
+        keymap.set("n", "<leader>gr", "<Cmd>Lspsaga rename<CR>", opts)
     end
 
     if server_capabilities.signatureHelpProvider then
@@ -121,7 +123,8 @@ local function set_up_keymap(client, format_enabled, bufnr)
         keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
     end
 
-    keymap.set("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
+    keymap.set("n", "<leader>ge", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
+    keymap.set("n", "<leader>gc", "<cmd>Lspsaga show_cursor_diagnostics<CR>", opts)
     keymap.set("n", "<leader>gl", "<cmd>lua vim.diagnostic.setloclist({open=true})<CR>", opts)
 
     if server_capabilities.documentSymbolProvider then
@@ -133,7 +136,7 @@ local function set_up_keymap(client, format_enabled, bufnr)
     end
 
     if server_capabilities.codeActionProvider then
-        keymap.set("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+        keymap.set("n", "<leader>ga", "<cmd>Lspsaga code_action<CR>", opts)
     end
 
     if server_capabilities.documentRangeFormattingProvider then
@@ -290,8 +293,22 @@ function M.setup_lsp()
         severity_sort = true,
     })
 
+    require("lspsaga").setup({
+        symbol_in_winbar = {
+            enable = false,
+            separator = " ",
+            ignore_patterns = {},
+            hide_keyword = true,
+            show_file = false,
+            folder_level = 2,
+            respect_root = false,
+            color_mode = true,
+        },
+    })
+
     local setup = function(client, format_enabled)
         local bufnr = api.nvim_get_current_buf()
+
         if format_enabled == nil then
             format_enabled = true
         end
@@ -308,10 +325,6 @@ function M.setup_lsp()
             toggle_key = "<C-g><C-s>",
             extra_trigger_chars = { "{", "}" },
         }, bufnr)
-
-        if client.server_capabilities.documentSymbolProvider then
-            require("nvim-navic").attach(client, bufnr)
-        end
     end
 
     local setup_without_formatting = function(client)
