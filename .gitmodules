@@ -80,9 +80,6 @@
 [submodule "vim/pack/packages/opt/svg.vim"]
 	path = vim/pack/packages/start/svg.vim
 	url = https://github.com/vim-scripts/svg.vim.git
-[submodule "vim/pack/packages/opt/vim-qml"]
-	path = vim/pack/packages/start/vim-qml
-	url = https://github.com/Furkanzmc/vim-qml.git
 [submodule "vim/pack/packages/opt/csv.vim"]
 	path = vim/pack/packages/start/csv.vim
 	url = https://github.com/chrisbra/csv.vim.git
