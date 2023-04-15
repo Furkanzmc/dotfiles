@@ -38,9 +38,6 @@
 	path = vim/pack/packages/start/Comment.nvim
 	url = https://github.com/numToStr/Comment.nvim.git
 
-[submodule "vim/pack/packages/opt/nvim-colorizer.lua"]
-	path = vim/pack/packages/opt/nvim-colorizer.lua
-	url = https://github.com/norcalli/nvim-colorizer.lua.git
 [submodule "vim/pack/packages/opt/nvim-dap"]
 	path = vim/pack/packages/opt/nvim-dap
 	url = https://github.com/mfussenegger/nvim-dap.git
@@ -104,3 +101,6 @@
 [submodule "vim/pack/packages/start/lspsaga"]
 	path = vim/pack/packages/start/lspsaga
 	url = https://github.com/nvimdev/lspsaga.nvim.git
+[submodule "vim/pack/packages/opt/nvim-highlight-colors"]
+	path = vim/pack/packages/opt/nvim-highlight-colors
+	url = https://github.com/brenoprata10/nvim-highlight-colors.git
