@@ -123,7 +123,7 @@ local function set_up_keymap(client, format_enabled, bufnr)
         keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
     end
 
-    keymap.set("n", "<leader>ge", "<cmd>Lspsaga show_line_diagnostics<CR>", opts)
+    keymap.set("n", "<leader>ge", "<cmd>Lspsaga show_line_diagnostics ++unfocus<CR>", opts)
     keymap.set("n", "<leader>gc", "<cmd>Lspsaga show_cursor_diagnostics<CR>", opts)
     keymap.set("n", "<leader>gl", "<cmd>lua vim.diagnostic.setloclist({open=true})<CR>", opts)
 
