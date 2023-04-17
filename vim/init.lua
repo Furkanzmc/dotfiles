@@ -161,7 +161,7 @@ else
     opt.background = "light"
 end
 
-opt.diffopt = "vertical,filler,context:5,closeoff,algorithm:histogram,internal"
+opt.diffopt = "vertical,filler,context:7,closeoff,algorithm:histogram,internal,linematch:60"
 
 opt.langmenu = "en"
 opt.number = true
