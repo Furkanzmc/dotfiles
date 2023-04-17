@@ -12,6 +12,11 @@ function Virtualenv-Activate() {
 }
 
 function pvim() {
+    Param(
+        [Parameter(Mandatory=$false)]
+        [Switch]
+        $Neovide
+    )
     $sessionFile = ""
     $rcFile = ""
     if (Test-Path session.vim -ErrorAction SilentlyContinue) {
@@ -30,16 +35,36 @@ function pvim() {
 
     $arguments = ""
     if ($sessionFile -ne "" -and $rcFile -ne "") {
-        nvim -S $rcFile -S $sessionFile
+        if ($Neovide) {
+            neovide --multigrid --notabs -- -S $rcFile -S $sessionFile '+let $AW_AUTO_SESSION=1'
+        }
+        else {
+            nvim -S $rcFile -S $sessionFile '+let $AW_AUTO_SESSION=1'
+        }
     }
     elseif ($sessionFile -ne "") {
-        nvim -S $sessionFile
+        if ($Neovide) {
+            neovide --multigrid --notabs -- -S $sessionFile '+let $AW_AUTO_SESSION=1'
+        }
+        else {
+            nvim -S $sessionFile '+let $AW_AUTO_SESSION=1'
+        }
     }
     elseif ($rcFile -ne "") {
-        nvim -S $rcFile
+        if ($Neovide) {
+            neovide --multigrid --notabs -- -S $rcFile '+let $AW_AUTO_SESSION=1'
+        }
+        else {
+            nvim -S $rcFile '+let $AW_AUTO_SESSION=1'
+        }
     }
     else {
-        nvim
+        if ($Neovide) {
+            neovide --multigrid --notabs '+let $AW_AUTO_SESSION=1'
+        }
+        else {
+            nvim '+let $AW_AUTO_SESSION=1'
+        }
     }
 }
 
@@ -656,8 +681,8 @@ function Diff-Branches() {
         [String]
         $Target="",
         [Parameter(Mandatory=$false)]
-        [String]
-        $App="nvim"
+        [Switch]
+        $Neovide
     )
 
 
@@ -672,31 +697,25 @@ function Diff-Branches() {
     }
 
 	if ($Target -ne "") {
-        $arguments += 'let $NO_AUTO_SESSION=1 | ' + "nmap <leader>d :lua require('vimrc').gdiffsplit('$Branch', '$Target')<CR>"
+        $arguments += 'let $AW_AUTO_SESSION=0 | ' + "nmap <leader>d :lua require('vimrc').gdiffsplit('$Branch', '$Target')<CR>"
         $files = $(git diff $Branch $Target --name-only)
         $hash = $(git rev-parse $Branch)
         $git_path = $(git rev-parse --git-path /$hash)
         $branch_files = $(git diff --name-only $Branch $Target | ForEach-Object { "fugitive:///$git_path/$_"})
-        if ($App -eq "nvim") {
-            nvim $arguments -- $branch_files
-        }
-        elseif ($App -eq "neovide") {
-            neovide --notabs $branch_files -- $arguments
+        if ($Neovide) {
+            neovide --multigrid --notabs $branch_files -- $arguments
         }
         else {
-            Write-Host -ForegroundColor Red "Unsupported app: $App"
+            nvim $arguments -- $branch_files
         }
 	}
     else {
-        $arguments += "nmap <leader>d :Gdiffsplit! $Branch<CR> | " + ' let $NO_AUTO_SESSION=1'
-        if ($App -eq "nvim") {
-            nvim $arguments -- $(git diff $Branch --name-only)
-        }
-        elseif ($App -eq "neovide") {
-            neovide --notabs $(git diff $Branch --name-only) -- $arguments
+        $arguments += "nmap <leader>d :Gdiffsplit! $Branch<CR> | " + ' let $AW_AUTO_SESSION=0'
+        if ($Neovide) {
+            neovide --multigrid --notabs $(git diff $Branch --name-only) -- $arguments
         }
         else {
-            Write-Host -ForegroundColor Red "Unsupported app: $App"
+            nvim $arguments -- $(git diff $Branch --name-only)
         }
     }
 }
