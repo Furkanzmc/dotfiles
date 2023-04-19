@@ -722,7 +722,7 @@ if vim.o.loadplugins == true then
         buffer_local = true,
     })
     options.register_option({
-        name = "clstrailingwhitespace",
+        name = "clean_trailing_whitespace",
         default = true,
         type_info = "boolean",
         source = "buffers",
@@ -736,7 +736,7 @@ if vim.o.loadplugins == true then
         global = true,
     })
     options.register_option({
-        name = "clstrailingspacelimit",
+        name = "clean_trailing_whitespace_limit",
         default = 0,
         type_info = "number",
         source = "buffers",
@@ -1002,7 +1002,9 @@ keymap.set(
     { silent = true, remap = false }
 )
 
-cmd([[command! CleanTrailingWhiteSpace :lua require"vimrc.buffers".clean_trailing_spaces()]])
+cmd(
+    [[command! CleanTrailingWhiteSpace :lua require"vimrc.buffers".clean_trailing_spaces(vim.api.nvim_get_current_buf())]]
+)
 
 cmd([[command! Bclose :lua require"vimrc.buffers".close()]])
 cmd([[command! -nargs=1 -bang Bdeletes :call buffers#wipe_matching('<args>', <q-bang>)]])
@@ -1011,7 +1013,7 @@ cmd([[command! Bdnonexisting :call buffers#wipe_nonexisting_files()]])
 cmd([[augroup vimrc_plugin_buffers]])
 cmd([[au!]])
 cmd(
-    [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html,*.lua :lua require"vimrc.buffers".clean_trailing_spaces()]]
+    [[autocmd BufWritePre *.py,*.cpp,*.qml,*.js,*.txt,*.json,*.html,*.lua :lua require"vimrc.buffers".clean_trailing_spaces(vim.api.nvim_get_current_buf())]]
 )
 cmd([[augroup END]])
 
