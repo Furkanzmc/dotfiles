@@ -38,6 +38,10 @@ if vim.fn.executable("qlmanage") == 1 then
     )
 end
 
+vim.cmd(
+    [[abbreviate <silent> <buffer> today@ <C-R>=strftime("%d.%m.%Y")<CR><C-R>=abbreviations#eat_char('\s')<CR>]]
+)
+
 add_command(0, "MdWriteMermaid", function(opts)
     local lines =
         vim.api.nvim_buf_get_lines(vim.api.nvim_get_current_buf(), opts.line1 - 1, opts.line2, true)
