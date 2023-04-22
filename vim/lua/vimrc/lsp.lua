@@ -367,7 +367,7 @@ function M.setup_lsp()
                 "--completion-style=bundled",
                 "--header-insertion=iwyu",
                 "--inlay-hints",
-                "--offset-encoding=utf-8",
+                "--offset-encoding=utf-16",
                 "--header-insertion-decorators",
                 "-j=1",
             },
