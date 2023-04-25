@@ -336,7 +336,7 @@ function M.init_winbar(winnr)
     if is_lsp_running and options.get_option_value("lsp_context_enabled", bufnr) == true then
         local content = require("lspsaga.symbolwinbar"):get_winbar()
         if content ~= nil then
-            table.insert(status, " " .. content)
+            table.insert(status, " " .. content .. " ")
         end
     end
 
@@ -355,7 +355,7 @@ function M.init_winbar(winnr)
 
     -- }}}
 
-    return table.concat(status, "|")
+    return table.concat(status, color("|", true, "WinBar", "WinBar", 0))
 end
 
 return M
