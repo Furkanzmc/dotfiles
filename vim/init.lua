@@ -228,7 +228,7 @@ opt.matchtime = 3
 opt.errorbells = false
 opt.visualbell = false
 opt.tm = 300
-opt.guifont = "JetBrainsMonoMedium Nerd Font Mono:h10"
+opt.guifont = "JetBrainsMono Nerd Font Mono:h9"
 opt.mouse = ""
 
 if fn.executable("just") then
