@@ -11,7 +11,7 @@ AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: None
 AllowShortLoopsOnASingleLine: 'false'
-BreakBeforeBraces: BS_GNU
+BreakBeforeBraces: Stroustrup
 ColumnLimit: '90'
 ConstructorInitializerIndentWidth: '4'
 ContinuationIndentWidth: '4'
