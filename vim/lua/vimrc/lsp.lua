@@ -62,7 +62,7 @@ local function set_handlers(client, bufnr)
     })
 end
 
-local function set_up_keymap(client, format_enabled, bufnr)
+local function set_up_keymap(client, bufnr, format_enabled)
     local opts = { remap = true, silent = true, buffer = bufnr }
     local server_capabilities = client.server_capabilities
 
@@ -150,7 +150,96 @@ local function set_up_keymap(client, format_enabled, bufnr)
     set_enabled(bufnr, client, "shortcuts_set", true)
 end
 
-local function setup_buffer_vars(client, bufnr)
+local function delete_keymaps(client, bufnr, format_enabled)
+    local opts = { buffer = bufnr }
+    local server_capabilities = client.server_capabilities
+    local del_keymap = function(mode, rhs, opts)
+        if fn.maparg(rhs, mode) ~= "" then
+            keymap.del(mode, rhs, opts, opts)
+        end
+    end
+
+    if server_capabilities.completionProvider then
+        api.nvim_buf_set_option(bufnr, "omnifunc", "")
+    end
+
+    if server_capabilities.hoverProvider then
+        api.nvim_buf_set_option(bufnr, "keywordprg", "")
+    end
+
+    if server_capabilities.definitionProvider then
+        del_keymap("n", "<leader>gd", opts)
+        del_keymap("n", "<leader>gp", opts)
+
+        if options.get_option_value("lsp_tagfunc_enabled") then
+            api.nvim_buf_set_option(bufnr, "tagfunc", "")
+        end
+    end
+
+    if server_capabilities.documentFormattingProvider then
+        if
+            client.name == "null-ls" and is_null_ls_formatting_enabed(bufnr)
+            or client.name ~= "null-ls"
+        then
+            api.nvim_buf_set_option(bufnr, "formatexpr", "")
+            del_keymap("n", "<leader>gq", opts)
+        end
+    end
+
+    if is_configured(bufnr, client, "shortcuts_set") == false then
+        return
+    end
+
+    if server_capabilities.renameProvider then
+        del_keymap("n", "<leader>gr", opts)
+    end
+
+    if server_capabilities.signatureHelpProvider then
+        del_keymap("n", "<leader>gs", opts)
+    end
+
+    if server_capabilities.declarationProvider then
+        del_keymap("n", "<leader>gD", opts)
+    end
+
+    if server_capabilities.implementationProvider then
+        del_keymap("n", "<leader>gi", opts)
+    end
+
+    if server_capabilities.referencesProvider then
+        del_keymap("n", "<leader>gg", opts)
+    end
+
+    del_keymap("n", "<leader>ge", opts)
+    del_keymap("n", "<leader>gc", opts)
+    del_keymap("n", "<leader>gl", opts)
+
+    if server_capabilities.documentSymbolProvider then
+        del_keymap("n", "<leader>gds", opts)
+    end
+
+    if server_capabilities.workspaceSymbolProvider then
+        del_keymap("n", "<leader>gw", opts)
+    end
+
+    if server_capabilities.codeActionProvider then
+        del_keymap("n", "<leader>ga", opts)
+    end
+
+    if server_capabilities.documentRangeFormattingProvider then
+        del_keymap("v", "<leader>gq", opts)
+    end
+
+    if server_capabilities.hoverProvider then
+        pcall(api.nvim_buf_del_user_command, bufnr, "LspHover")
+    end
+
+    set_enabled(bufnr, client, "shortcuts_set", false)
+end
+
+local function setup_buffer_vars(client, bufnr, format_enabled)
+    set_enabled(bufnr, client, "format_enabled", format_enabled)
+
     if not option_exists(bufnr, client, "auto_stop") then
         set_enabled(bufnr, client, "auto_stop", false)
     end
@@ -285,6 +374,22 @@ function M.setup_lsp()
         return
     end
 
+    vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+            local bufnr = args.buf
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            set_up_keymap(client, bufnr, is_enabled(bufnr, client, "format_enabled"))
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("LspDetach", {
+        callback = function(args)
+            local bufnr = args.buf
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            delete_keymaps(client, bufnr, is_enabled(bufnr, client, "format_enabled"))
+        end,
+    })
+
     vim.diagnostic.config({
         signs = true,
         virtual_text = false,
@@ -313,8 +418,7 @@ function M.setup_lsp()
             format_enabled = true
         end
 
-        setup_buffer_vars(client, bufnr)
-        set_up_keymap(client, format_enabled, bufnr)
+        setup_buffer_vars(client, bufnr, format_enabled)
 
         set_enabled(bufnr, client, "configured", true)
         set_handlers(client, bufnr)
