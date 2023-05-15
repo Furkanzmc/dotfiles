@@ -98,11 +98,28 @@
                 "action": "quakeMode"
             },
             "keys": "win+shift+q"
+        },
+        {
+            "command":
+            {
+                "action": "moveTab",
+                "direction": "backward"
+            },
+            "keys": "ctrl+shift+["
+        },
+        {
+            "command":
+            {
+                "action": "moveTab",
+                "direction": "forward"
+            },
+            "keys": "ctrl+shift+]"
         }
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
     "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+    "firstWindowPreference": "persistedWindowLayout",
     "profiles":
     {
         "defaults":
@@ -111,7 +128,7 @@
             "cursorShape": "filledBox",
             "font":
             {
-                "face": "JetBrainsMonoMedium Nerd Font Mono",
+                "face": "Cascadia Mono",
                 "size": 10.0
             },
             "intenseTextStyle": "bold",
@@ -122,17 +139,19 @@
         "list":
         [
             {
+                "adjustIndistinguishableColors": "indexed",
                 "backgroundImage": null,
-                "colorScheme": "cosmic_latte_dark",
+                "colorScheme": "cosmic_latte_light",
                 "font":
                 {
+                    "face": "JetBrainsMono Nerd Font Mono",
                     "size": 9.0
                 },
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
                 "hidden": false,
                 "intenseTextStyle": "bold",
                 "name": "PowerShell",
-                "opacity": 90,
+                "opacity": 85,
                 "source": "Windows.Terminal.PowershellCore",
                 "useAcrylic": true
             },
@@ -405,10 +424,10 @@
         }
     ],
     "showTerminalTitleInTitlebar": true,
-    "tabWidthMode": "compact",
+    "tabWidthMode": "equal",
     "theme": "system",
     "themes": [],
     "trimBlockSelection": true,
     "useAcrylicInTabRow": true,
-    "windowingBehavior": "useExisting"
+    "windowingBehavior": "useAnyExisting"
 }
