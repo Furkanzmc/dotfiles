@@ -685,7 +685,6 @@ function Diff-Branches() {
         $Neovide
     )
 
-
     $nvimrcExists = $false
     $arguments = ""
     if (Test-Path .nvimrc -ErrorAction SilentlyContinue) {
@@ -718,6 +717,17 @@ function Diff-Branches() {
             nvim $arguments -- $(git diff $Branch --name-only)
         }
     }
+}
+
+function Diff-PR() {
+    Param(
+        [Parameter(Position=0, Mandatory=$true)]
+        [String]
+        $PR
+    )
+
+    $TempFile = New-TemporaryFile
+    gh pr diff $PR > $TempFile && git apply $TempFile && git add .
 }
 
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
