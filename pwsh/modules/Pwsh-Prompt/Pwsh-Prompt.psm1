@@ -123,7 +123,7 @@ function Write-Git-Prompt() {
 
         if ($staged -eq 0 -and $modified -eq 0 -and $deleted -eq 0 -and $untracked `
             -eq 0 -and $behind -eq 0 -and $ahead -eq 0) {
-            Write-Host -ForegroundColor Green " ✔ " -NoNewLine
+            Write-Host -ForegroundColor Green " ✔  " -NoNewLine
             return
         }
 
