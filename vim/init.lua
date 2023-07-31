@@ -1168,4 +1168,8 @@ if fn.filereadable(fn.expand("~/.vimrc")) == 1 then
     cmd("source ~/.vimrc")
 end
 
+if fn.filereadable(fn.expand("~/.nvim.lua")) == 1 then
+    cmd("source ~/.nvim.lua")
+end
+
 -- vim: foldmethod=marker

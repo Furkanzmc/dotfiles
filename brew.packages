@@ -1,4 +1,4 @@
-aria2
+aria2d
 bat
 cmake
 ctags
@@ -14,7 +14,7 @@ llvm
 ripgrep
 sd
 karabiner-elements
-iterm
+iterm2
 hammerspoon
 firefox
 ninja
