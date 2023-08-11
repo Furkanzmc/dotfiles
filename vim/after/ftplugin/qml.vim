@@ -52,10 +52,10 @@ abbreviate <silent> <buffer> pr@ property TYPE NAME:<Esc>/\(TYPE\\|NAME\)<Enter>
 abbreviate <silent> <buffer> outline@ Rectangle {<CR>objectName: "outline"<CR>anchors.fill: parent<CR>color: "transparent"<CR>border {<CR>width: 1<CR>color: "red"<C-R>=abbreviations#eat_char('\s')<CR>
 
 " Create signal handler.
-abbreviate <silent> <buffer> s@ :<Esc>hxbion<Esc>l~$a<Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> s@ :<Esc>h"_xbion<Esc>l~$a<Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
 
 " Create property change handler.
-abbreviate <silent> <buffer> p@ :<Esc>hxbion<Esc>l~$iChanged<Right><Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> p@ :<Esc>h"_xbion<Esc>l~$iChanged<Right><Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
 
 abbreviate <silent> <buffer> iqqc@ import QtQuick.Controls 2.<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> iqq@ import QtQuick 2.<C-R>=abbreviations#eat_char('\s')<CR>
