@@ -567,7 +567,8 @@ function Post-Notification() {
     )
 
     if ($IsMacOS) {
-        osascript -e "display notification \`"$Message\`" with title \`"$Title\`""
+        $command = "display notification" + '"' + $Message + '"' + " with title " + '"' + $Title + '"'
+        osascript -e $command
     }
     else {
         Add-Type -AssemblyName System.Windows.Forms

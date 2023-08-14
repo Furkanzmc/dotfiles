@@ -471,6 +471,7 @@ function M.setup_lsp()
                 "--completion-style=bundled",
                 "--header-insertion=iwyu",
                 "--inlay-hints",
+                "--enable-config",
                 "--offset-encoding=utf-16",
                 "--header-insertion-decorators",
                 "-j=1",
