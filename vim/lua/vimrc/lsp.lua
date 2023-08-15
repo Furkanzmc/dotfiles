@@ -517,9 +517,15 @@ function M.setup_lsp()
         })
     end
 
+    if fn.executable("gopls") == 1 then
+        lspconfig.gopls.setup({
+            on_attach = setup,
+        })
+    end
+
     if fn.executable("zls") == 1 then
         lspconfig.zls.setup({
-            on_attach = setup_without_formatting,
+            on_attach = setup,
             filetypes = { "zig" },
             settings = {
                 ["zls"] = {
