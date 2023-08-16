@@ -159,17 +159,6 @@ function M.toggle_colorcolumn(col)
     wo.colorcolumn = fn.join(columns, ",")
 end
 
-function M.open_uri_under_cursor(uri)
-    uri = fn.substitute(uri, "?", "\\\\?", "")
-    uri = fn.substitute(uri, " ", "\\ ", "")
-    uri = fn.shellescape(uri, 1)
-
-    if uri ~= "" then
-        cmd("silent !open '" .. uri .. "'")
-        cmd(":redraw!")
-    end
-end
-
 function M.init()
     options.register_callback("scratchpad", function()
         mark_scratch(vim.api.nvim_get_current_buf())

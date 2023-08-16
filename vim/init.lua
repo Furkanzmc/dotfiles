@@ -839,6 +839,12 @@ end
 
 -- }}}
 
+-- zig.vim {{{
+
+g.zig_fmt_autosave = false
+
+-- }}}
+
 -- }}}
 
 -- Local Plugins {{{
@@ -849,19 +855,6 @@ if fn.executable("just") then
 end
 
 -- Buffers, Jira, Time {{{
-
-keymap.set(
-    "n",
-    "gx",
-    "<CMD>lua require'vimrc.buffers'.open_uri_under_cursor(vim.fn.expand('<cWORD>'))<CR>",
-    { silent = true, remap = false }
-)
-keymap.set(
-    "v",
-    "gx",
-    ":lua require'vimrc.buffers'.open_uri_under_cursor(require'vimrc.buffers'.get_last_selection(vim.api.nvim_get_current_buf())[1])<CR>",
-    { silent = true, remap = false }
-)
 
 api.nvim_create_user_command("DiffWithSaved", function(_)
     local filetype = vim.opt_local.filetype
