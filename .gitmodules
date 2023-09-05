@@ -107,3 +107,6 @@
 [submodule "vim/pack/packages/opt/nvim-highlight-colors"]
 	path = vim/pack/packages/opt/nvim-highlight-colors
 	url = https://github.com/brenoprata10/nvim-highlight-colors.git
+[submodule "vim/pack/packages/opt/copilot.vim"]
+	path = vim/pack/packages/opt/copilot.vim
+	url = https://github.com/github/copilot.vim
