@@ -80,12 +80,6 @@
 [submodule "vim/pack/packages/opt/vim-qml"]
 	path = vim/pack/packages/start/vim-qml
 	url = https://github.com/Furkanzmc/vim-qml.git
-[submodule "vim/pack/packages/opt/csv.vim"]
-	path = vim/pack/packages/start/csv.vim
-	url = https://github.com/chrisbra/csv.vim.git
-[submodule "vim/pack/packages/opt/vim-git"]
-	path = vim/pack/packages/start/vim-git
-	url = https://github.com/tpope/vim-git.git
 [submodule "vim/pack/packages/opt/vim-autohotkey"]
 	path = vim/pack/packages/start/vim-autohotkey
 	url = https://github.com/hnamikaw/vim-autohotkey.git
