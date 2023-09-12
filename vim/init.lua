@@ -547,7 +547,6 @@ if fn.exists("$VIMRC_TREESITTER_DISABLED") ~= 1 then
         "python",
         "ql",
         "qmldir",
-        "qmljs",
         "query",
         "r",
         "racket",
