@@ -178,7 +178,9 @@ function M.setup_cmake(opts)
         },
     }
 
-    setup_cmake_commands(opts)
+    if opts.no_cmake == false then
+        setup_cmake_commands(opts)
+    end
 end
 
 return M
