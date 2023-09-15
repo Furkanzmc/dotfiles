@@ -21,9 +21,9 @@ ninja
 pkg-config
 libtool
 gettext
-font-jetbrains-mono
 tree-sitter
 gdu
 node
 zoxide
 git-delta
+powershell
