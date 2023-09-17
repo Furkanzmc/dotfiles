@@ -1093,7 +1093,7 @@ if vim.o.loadplugins == true then
     api.nvim_create_autocmd({ "BufReadPre", "FileReadPre" }, {
         pattern = "*.http",
         group = augroup_vimrc_init,
-        callback = function(opts)
+        callback = function(_)
             if g.vimrc_rest_nvim_loaded == nil and vim.o.loadplugins then
                 cmd([[packadd rest.nvim]])
                 require("vimrc").setup_rest_nvim()
@@ -1106,7 +1106,7 @@ end
 api.nvim_create_autocmd({ "TextYankPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
-    callback = function(opts)
+    callback = function(_)
         cmd(
             [[silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
         )
@@ -1116,7 +1116,7 @@ api.nvim_create_autocmd({ "TextYankPost" }, {
 api.nvim_create_autocmd({ "VimEnter" }, {
     pattern = "*",
     group = augroup_vimrc_init,
-    callback = function(opts)
+    callback = function(_)
         require("vimrc").create_custom_nvim_server()
     end,
 })
@@ -1124,7 +1124,7 @@ api.nvim_create_autocmd({ "VimEnter" }, {
 api.nvim_create_autocmd({ "BufReadPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
-    callback = function(opts)
+    callback = function(_)
         -- Return to last edit position when opening files (You want this!)
         if fn.line("'\"") > 1 and fn.line("'\"") <= fn.line("$") then
             cmd([[execute "normal! g'\""]])
@@ -1152,7 +1152,7 @@ api.nvim_create_autocmd({ "OptionSet" }, {
 local augroup_vimrc_gui_events = api.nvim_create_augroup("vimrc_gui_events", { clear = true })
 api.nvim_create_autocmd({ "UIEnter" }, {
     group = augroup_vimrc_gui_events,
-    callback = function(opts)
+    callback = function(_)
         if vim.v.event.chan == 1 then
             opt.mouse = "nvi"
         end
@@ -1160,7 +1160,7 @@ api.nvim_create_autocmd({ "UIEnter" }, {
 })
 api.nvim_create_autocmd({ "UILeave" }, {
     group = augroup_vimrc_gui_events,
-    callback = function(opts)
+    callback = function(_)
         if vim.v.event.chan == 1 then
             opt.mouse = ""
         end
