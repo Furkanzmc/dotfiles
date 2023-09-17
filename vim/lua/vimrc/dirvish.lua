@@ -10,8 +10,8 @@ local M = {}
 local function get_longest_line_length(lines)
     local tmp_list = {}
     table.extend(tmp_list, lines)
-    table.sort(tmp_list, function(a, b)
-        return #a > #b
+    table.sort(tmp_list, function(left, right)
+        return #left > #right
     end)
     return #tmp_list[1]
 end

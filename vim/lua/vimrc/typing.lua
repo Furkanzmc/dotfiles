@@ -58,7 +58,6 @@ function M.convert(value, type_name)
     end
 
     local converted_value = converter(value)
-
     if converted_value == nil then
         log.error("typing", "Cannot convert `" .. value .. "` to " .. type_name .. ".")
     end

@@ -1,11 +1,7 @@
 local vim = vim
 local fn = vim.fn
-local cmd = vim.cmd
 local api = vim.api
-local g = vim.g
-local b = vim.b
 local bo = vim.bo
-local utils = require("vimrc.utils")
 local log = require("vimrc.log")
 local M = {}
 
@@ -79,11 +75,11 @@ local function setup_cmake_commands(opts)
 
     _G.cmake_functions = functions
 
-    cmd([[command! -bang CMake :lua _G.cmake_functions.run_cmake("<bang>" ~= "!")]])
-    cmd([[command! -bang Run :lua _G.cmake_functions.run_project("<bang>" ~= "!")]])
-    cmd([[command! -bang Build :lua _G.cmake_functions.build_project("<bang>" ~= "!")]])
-    cmd([[command! -bang RunTests :lua _G.cmake_functions.run_tests("<bang>" ~= "!")]])
-    cmd(
+    vim.api.nvim_command([[command! -bang CMake :lua _G.cmake_functions.run_cmake("<bang>" ~= "!")]])
+    vim.api.nvim_command([[command! -bang Run :lua _G.cmake_functions.run_project("<bang>" ~= "!")]])
+    vim.api.nvim_command([[command! -bang Build :lua _G.cmake_functions.build_project("<bang>" ~= "!")]])
+    vim.api.nvim_command([[command! -bang RunTests :lua _G.cmake_functions.run_tests("<bang>" ~= "!")]])
+    vim.api.nvim_command(
         "command! UpdateTags :execute 'FRun! pwsh -NoLogo -NoProfile -NonInteractive -WorkingDirectory "
             .. opts.project_path
             .. " -Command Generate-Tags c++'"
@@ -116,7 +112,7 @@ function M.swap_source_header()
         local found_file = fn.findfile(filename .. suffix)
         if found_file ~= "" then
             found = true
-            cmd("edit " .. found_file)
+            vim.api.nvim_command("edit " .. found_file)
             break
         end
     end

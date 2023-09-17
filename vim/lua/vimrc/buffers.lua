@@ -124,7 +124,7 @@ function M.clean_trailing_spaces(bufnr)
         if result <= threshold then
             cmd([[silent! %s/\s\+$//e]])
         else
-            local choice = fn.inputdialog(
+            local choice = fn.input(
                 "[buffers] Found "
                     .. result
                     .. " trailing white spaces. Do you want to clean? [y/n/p] "

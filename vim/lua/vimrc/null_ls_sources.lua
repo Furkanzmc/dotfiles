@@ -14,8 +14,10 @@ local function define_pylint_code(cword)
     if fn.filereadable(cache_path) == 0 then
         lines = vim.fn.systemlist("pylint --list-msgs")
         local fh = io.open(cache_path, "w")
-        fh:write(table.concat(lines, "\n"))
-        fh:close()
+        if fh then
+            fh:write(table.concat(lines, "\n"))
+            fh:close()
+        end
     end
 
     local found = false

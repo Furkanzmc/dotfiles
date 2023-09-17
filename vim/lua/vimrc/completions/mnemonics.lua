@@ -5,7 +5,7 @@ local function split_token(str, sep, sep2)
     local mn_chars = {}
 
     local ww = {}
-    string.gsub(str, sep, function(w)
+    local _ = string.gsub(str, sep, function(w)
         table.insert(res, w)
     end)
     for _, v in ipairs(res) do

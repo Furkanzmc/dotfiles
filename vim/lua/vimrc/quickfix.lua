@@ -1,9 +1,7 @@
 local vim = vim
 local fn = vim.fn
-local cmd = vim.cmd
 local api = vim.api
 
-local s_auto_preview_enabled = false
 local s_augroup_vimrc_init = -1
 local s_autocmd_id = -1
 
@@ -39,8 +37,6 @@ function M.preview_file_on_line(linenr, use_loclist, enable_auto_preview)
         if enable_auto_preview == false and s_augroup_vimrc_init ~= -1 then
             delete_event()
         end
-
-        s_auto_preview_enabled = enable_auto_preview
     end
 
     use_loclist = use_loclist or false
@@ -52,13 +48,13 @@ function M.preview_file_on_line(linenr, use_loclist, enable_auto_preview)
     end
 
     local data = items[linenr]
-    cmd("pedit +" .. data.lnum .. "," .. data.col .. " " .. fn.bufname(data.bufnr))
-    cmd([[normal p]])
-    cmd([[setlocal cursorline]])
-    cmd("normal " .. data.lnum .. "G")
-    cmd([[normal 0]])
-    cmd("normal " .. data.col .. "l")
-    cmd([[normal p]])
+    vim.api.nvim_command("pedit +" .. data.lnum .. "," .. data.col .. " " .. fn.bufname(data.bufnr))
+    vim.api.nvim_command([[normal p]])
+    vim.api.nvim_command([[setlocal cursorline]])
+    vim.api.nvim_command("normal " .. data.lnum .. "G")
+    vim.api.nvim_command([[normal 0]])
+    vim.api.nvim_command("normal " .. data.col .. "l")
+    vim.api.nvim_command([[normal p]])
 
     if enable_auto_preview and s_augroup_vimrc_init == -1 then
         create_event(fn.bufnr())

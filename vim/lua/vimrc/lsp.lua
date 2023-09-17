@@ -3,7 +3,6 @@ local keymap = vim.keymap
 local api = vim.api
 local lsp = vim.lsp
 local fn = vim.fn
-local utils = require("vimrc.utils")
 local null_ls_sources = require("vimrc.null_ls_sources")
 local options = require("options")
 local M = {}
@@ -49,13 +48,16 @@ local function set_enabled(bufnr, client, option, enabled)
 end
 
 local function option_exists(bufnr, client, option)
-    local ok, value = pcall(api.nvim_buf_get_var, bufnr, get_option_var(client, option))
+    local ok, _ = pcall(api.nvim_buf_get_var, bufnr, get_option_var(client, option))
     return ok
 end
 
 -- }}}
 
-local function set_handlers(client, bufnr)
+local function set_handlers(
+    _, --[[ client ]]
+    _ --[[ bufnr ]]
+)
     lsp.handlers["textDocument/references"] = lsp.with(lsp.handlers["textDocument/references"], {
         -- Use location list instead of quickfix list
         loclist = true,
@@ -150,12 +152,16 @@ local function set_up_keymap(client, bufnr, format_enabled)
     set_enabled(bufnr, client, "shortcuts_set", true)
 end
 
-local function delete_keymaps(client, bufnr, format_enabled)
+local function delete_keymaps(
+    client,
+    bufnr,
+    _ --[[ format_enabled ]]
+)
     local opts = { buffer = bufnr }
     local server_capabilities = client.server_capabilities
-    local del_keymap = function(mode, rhs, opts)
+    local del_keymap = function(mode, rhs, _opts)
         if fn.maparg(rhs, mode) ~= "" then
-            keymap.del(mode, rhs, opts, opts)
+            keymap.del(mode, rhs, _opts)
         end
     end
 
@@ -362,7 +368,7 @@ end
 -- Public Functions {{{
 
 function M.is_lsp_running(bufnr)
-    return next(lsp.buf_get_clients(bufnr)) ~= nil
+    return next(lsp.get_clients({ bufnr = bufnr })) ~= nil
 end
 
 function M.setup_lsp()
@@ -484,7 +490,7 @@ function M.setup_lsp()
             on_attach = setup_without_formatting,
             settings = {
                 Lua = {
-                    runtime = { path = runtime_path },
+                    runtime = { library = api.nvim_list_runtime_paths()[1] },
                     diagnostics = { globals = { "vim" } },
                     workspace = { library = api.nvim_get_runtime_file("", true) },
                     telemetry = { enable = false },
@@ -543,20 +549,6 @@ function M.setup_lsp()
             filetypes = { "vim" },
         })
     end
-
-    local unused_pyright_config = {
-        lintCommand = "pyright",
-        lintStdin = false,
-        lintIgnoreExitCode = true,
-        lintFormats = {
-            "%t%n:%f:%l:%c %m",
-            "%-P%f",
-            "  %#%l:%c - %# %tarning: %m",
-            "  %#%l:%c - %# %trror: %m",
-            "    %Eerror %m",
-            "    %C%\\s%+%m",
-        },
-    }
 
     local cmp_exists, _ = pcall(require, "cmp")
     if not cmp_exists then

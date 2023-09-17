@@ -3,10 +3,10 @@ local fn = vim.fn
 local g = vim.g
 local b = vim.b
 local cmd = vim.cmd
-local utils = require("vimrc.utils")
 local options = require("options")
 local s_initialized = false
 local s_syntax_enabled = {}
+
 local M = {}
 
 function M.enable_highlight()

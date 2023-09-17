@@ -160,9 +160,9 @@ function M.init(winnr)
     local active = winnr == fn.win_getid()
     local bufnr = fn.winbufnr(winnr)
     local status = {}
-    local st = function(str, active, active_color, inactive_color, padding)
+    local st = function(str, _active, active_color, inactive_color, padding)
         if str ~= "" then
-            table.insert(status, color(str, active, active_color, inactive_color, padding))
+            table.insert(status, color(str, _active, active_color, inactive_color, padding))
         end
     end
 
@@ -312,9 +312,9 @@ function M.init_winbar(winnr)
     local active = winnr == fn.win_getid()
     local bufnr = fn.winbufnr(winnr)
     local status = {}
-    local st = function(str, active, active_color, inactive_color, padding)
+    local st = function(str, _active, active_color, inactive_color, padding)
         if str ~= "" then
-            table.insert(status, color(str, active, active_color, inactive_color, padding))
+            table.insert(status, color(str, _active, active_color, inactive_color, padding))
         end
     end
 
