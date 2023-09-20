@@ -598,6 +598,7 @@ function M.setup_lsp()
                 end,
             }),
             null_ls.builtins.diagnostics.yamllint,
+            null_ls.builtins.diagnostics.cppcheck,
             null_ls.builtins.diagnostics.qmllint.with({
                 runtime_condition = function(params)
                     return options.get_option_value("qmllint_enabled", params.bufnr)
