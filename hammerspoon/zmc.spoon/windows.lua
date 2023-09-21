@@ -1,8 +1,9 @@
+local hs = hs
 -- TODO:
 --     [ ] Restore window size.
 hs.window.animationDuration = 0.2
 
-windowLayoutMode = hs.hotkey.modal.new({}, "F16")
+local g_windowLayoutMode = hs.hotkey.modal.new({}, "F16")
 
 local s_window_mappings = dofile(hs.spoons.resourcePath("windows-bindings.lua"))
 local s_modifiers = s_window_mappings.modifiers
@@ -10,15 +11,16 @@ local s_show_help = s_window_mappings.showHelp
 local s_trigger = s_window_mappings.trigger
 local s_mappings = s_window_mappings.mappings
 local eventtap = require("hs.eventtap")
-local keycodes = require("hs.keycodes")
 
 local function exit_window_layout_mode()
-    windowLayoutMode:exit()
+    g_windowLayoutMode:exit()
 end
 
-eventtap.new({ eventtap.event.types.keyDown }, function(event)
-    return false
-end):start()
+eventtap
+    .new({ eventtap.event.types.keyDown }, function(_)
+        return false
+    end)
+    :start()
 
 -----------------------------------------
 
@@ -180,8 +182,13 @@ function hs.window.center_full_height(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
+    local is_wide = max.w > 1920
 
-    f.w = max.w * 0.6
+    if is_wide then
+        f.w = max.w * 0.45
+    else
+        f.w = max.w * 0.6
+    end
     f.h = max.h
     f.x = max.x + (max.w / 2) - f.w / 2
     f.y = max.y
@@ -197,8 +204,13 @@ function hs.window.center_narrow(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
+    local is_wide = max.w > 1920
 
-    f.w = max.w * 0.325
+    if is_wide then
+        f.w = max.w * 0.3
+    else
+        f.w = max.w * 0.325
+    end
     f.h = max.h
     f.x = max.x + (max.w / 2) - f.w / 2
     f.y = max.y
@@ -214,8 +226,13 @@ function hs.window.center_wide(win)
     local f = win:frame()
     local screen = win:screen()
     local max = screen:fullFrame()
+    local is_wide = max.w > 1920
 
-    f.w = max.w * 0.8
+    if is_wide then
+        f.w = max.w * 0.7
+    else
+        f.w = max.w * 0.8
+    end
     f.h = max.h
     f.x = max.x + (max.w / 2) - f.w / 2
     f.y = max.y
@@ -344,15 +361,15 @@ function hs.window.up_right(win)
     win:setFrame(f)
 end
 
-windowLayoutMode.entered = function()
-    windowLayoutMode.statusMessage:show()
+g_windowLayoutMode.entered = function()
+    g_windowLayoutMode.statusMessage:show()
 end
-windowLayoutMode.exited = function()
-    windowLayoutMode.statusMessage:hide()
+g_windowLayoutMode.exited = function()
+    g_windowLayoutMode.statusMessage:hide()
 end
 
 -- Bind the given key to call the given function and exit WindowLayout mode
-function windowLayoutMode.bindWithAutomaticExit(mode, modifiers, key, fn, autoClose)
+function g_windowLayoutMode.bindWithAutomaticExit(mode, modifiers, key, fn, autoClose)
     mode:bind(modifiers, key, function()
         fn()
 
@@ -366,7 +383,7 @@ local function getModifiersStr(modifiers)
     local modMap = { shift = "⇧", ctrl = "⌃", alt = "⌥", cmd = "⌘" }
     local retVal = ""
 
-    for i, v in ipairs(modifiers) do
+    for _, v in ipairs(modifiers) do
         retVal = retVal .. modMap[v]
     end
 
@@ -380,7 +397,7 @@ msgStr = "Window Layout Mode ("
     .. s_trigger
     .. ")"
 
-for i, mapping in ipairs(s_mappings) do
+for _, mapping in ipairs(s_mappings) do
     local modifiers, trigger, winFunction, autoClose = table.unpack(mapping)
     local hotKeyStr = getModifiersStr(modifiers)
 
@@ -392,7 +409,7 @@ for i, mapping in ipairs(s_mappings) do
         end
     end
 
-    windowLayoutMode:bindWithAutomaticExit(modifiers, trigger, function()
+    g_windowLayoutMode:bindWithAutomaticExit(modifiers, trigger, function()
         -- example: hs.window.focusedWindow():upRight()
         local fw = hs.window.focusedWindow()
         hs.window[winFunction](fw)
@@ -400,13 +417,13 @@ for i, mapping in ipairs(s_mappings) do
 end
 
 local message = dofile(hs.spoons.resourcePath("status-message.lua"))
-windowLayoutMode.statusMessage = message.new(msgStr)
+g_windowLayoutMode.statusMessage = message.new(msgStr)
 
 -- Use modifiers+trigger to toggle WindowLayout Mode
 hs.hotkey.bind(s_modifiers, s_trigger, function()
-    windowLayoutMode:enter()
+    g_windowLayoutMode:enter()
 end)
 
-windowLayoutMode:bind(s_modifiers, s_trigger, function()
+g_windowLayoutMode:bind(s_modifiers, s_trigger, function()
     exit_window_layout_mode()
 end)

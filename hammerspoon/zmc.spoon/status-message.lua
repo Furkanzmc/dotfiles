@@ -1,3 +1,4 @@
+local hs = hs
 local drawing = require("hs.drawing")
 local screen = require("hs.screen")
 local styledtext = require("hs.styledtext")
@@ -7,13 +8,14 @@ local statusmessage = {}
 statusmessage.new = function(messageText)
     local buildParts = function(message)
         local frame = screen.primaryScreen():frame()
+        local file_handle =
+            io.open(os.getenv("HOME") .. "/.dotfiles/pwsh/tmp_dirs/system_theme", "r")
 
-        local file_handle = io.open(
-            os.getenv("HOME") .. "/.dotfiles/pwsh/tmp_dirs/system_theme",
-            "r"
-        )
-        local theme = file_handle:read()
-        file_handle:close()
+        local theme = "light"
+        if file_handle then
+            theme = file_handle:read()
+            file_handle:close()
+        end
 
         local text_color = nil
         if theme == "dark" then
@@ -89,9 +91,11 @@ statusmessage.new = function(messageText)
         notify = function(self, seconds)
             seconds = seconds or 1
             self:show()
-            hs.timer.delayed.new(seconds, function()
-                self:hide()
-            end):start()
+            hs.timer.delayed
+                .new(seconds, function()
+                    self:hide()
+                end)
+                :start()
         end,
     }
 end
