@@ -1,0 +1,6 @@
+{
+    "enable_inlay_hints": true,
+    "inlay_hints_show_builtin": true,
+    "include_at_in_builtins": true,
+    "enable_argument_placeholders": true
+}

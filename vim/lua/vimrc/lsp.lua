@@ -533,12 +533,10 @@ function M.setup_lsp()
         lspconfig.zls.setup({
             on_attach = setup,
             filetypes = { "zig" },
-            settings = {
-                ["zls"] = {
-                    enable_inlay_hints = true,
-                    inlay_hints_show_builtin = true,
-                    include_at_in_builtins = true,
-                },
+            cmd = {
+                "zls",
+                "--config-path",
+                fn.expand("$HOME") .. "/.dotfiles/vim/zls_config.json",
             },
         })
     end
