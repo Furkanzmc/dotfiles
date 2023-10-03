@@ -232,11 +232,11 @@ opt.guifont = "JetBrainsMono Nerd Font Mono:h9"
 opt.mouse = ""
 
 if fn.executable("just") then
-    opt.makeprg = "just"
+    opt.makeprg = "just $*"
 end
 
 if vim.o.loadplugins == true and fn.executable("just") then
-    api.nvim_create_user_command("Just", ":Cfrun just <args>", { nargs = "*" })
+    api.nvim_create_user_command("Just", ":Cfrun just <args>", { nargs = "*", complete = "file" })
 end
 
 -- Neovide {{{
