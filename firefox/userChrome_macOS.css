@@ -1,0 +1,10 @@
+/* Example userChrome.css file */
+/* Clone https://github.com/MrOtherGuy/firefox-csshacks.git to profile folder found in about:supprt */
+
+/* Import your desired components first */
+
+@import url(chrome/hide_tabs_toolbar_osx.css);
+@import url(chrome/compact_proton.css);
+@import url(chrome/tab_closing_animation.css);
+
+/* Apply your custom modifications after imports */
