@@ -30,10 +30,10 @@ if (Test-Path -Path env:FIREFOX_PROFILE_PATH) {
     }
 
     if ($IsMacOS) {
-        New-Item -Force -ItemType SymbolicLink -Path "$HOME/.dotfiles/firefox/userChrome_macOS.css" -Target $chromePath
+        New-Item -Force -ItemType SymbolicLink -Path $chromePath -Target "$HOME/.dotfiles/firefox/userChrome_macOS.css"
     }
     else {
-        Write-Host "userChrome.css for this operating system doesn't exist yet."
+        New-Item -Force -ItemType SymbolicLink -Path $chromePath -Target "$HOME/.dotfiles/firefox/userChrome_windows.css"
     }
 }
 

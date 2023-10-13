@@ -3,7 +3,12 @@
 
 /* Import your desired components first */
 
-@import url(chrome/hide_tabs_toolbar_osx.css);
+@import url(chrome/hide_tabs_toolbar.css);
 @import url(chrome/compact_proton.css);
+
+/* Moves the application menu button to the left of the window controls. */
+#PanelUI-button {
+    margin-right: 100pt;
+}
 
 /* Apply your custom modifications after imports */
