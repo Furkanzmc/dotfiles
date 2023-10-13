@@ -22,6 +22,21 @@ Write-Output '    path = ~/.dotfiles/gitconfig' >> ~/.gitconfig
 New-Item -ItemType Directory -Force -Path "~/.config/alacritty"
 New-Item -Force -ItemType SymbolicLink -Path "$HOME/.config/alacritty/alacritty.yml" -Target "$HOME/.dotfiles/terminals/alacritty.yml"
 
+if (Test-Path -Path env:FIREFOX_PROFILE_PATH) {
+    $profileFolder = Join-Path -Path $env:FIREFOX_PROFILE_PATH -ChildPath chrome
+    $chromePath = Join-Path -Path $profileFolder -ChildPath userChrome.css
+    if (-Not (Test-Path -Path $profileFolder)) {
+        git clone https://github.com/MrOtherGuy/firefox-csshacks.git $profileFolder
+    }
+
+    if ($IsMacOS) {
+        New-Item -Force -ItemType SymbolicLink -Path "$HOME/.dotfiles/firefox/userChrome_macOS.css" -Target $chromePath
+    }
+    else {
+        Write-Host "userChrome.css for this operating system doesn't exist yet."
+    }
+}
+
 if ($IsMacOS) {
     if (-Not (Test-Path -Path ~/.config/nvim)) {
         New-Item -Path ~/.config/nvim -ItemType Directory -Force
