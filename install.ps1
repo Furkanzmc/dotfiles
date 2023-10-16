@@ -13,7 +13,6 @@ $profileFolder = [System.IO.Path]::GetDirectoryName($PROFILE)
 Write-Output '. "~/.dotfiles/pwsh/profile.ps1"' >> $PROFILE
 if ($IsWindows) {
     Write-Output '$env:PSModulePath += $([System.IO.Path]::PathSeparator) + $HOME/.dotfiles/pwsh/modules/'
-    Write-Output '. "~/.dotfiles/pwsh/pwsh_profile.ps1"' >> $profile
 }
 
 Write-Output '[include]' >> ~/.gitconfig
