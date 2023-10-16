@@ -5,6 +5,7 @@
 
 @import url(chrome/hide_tabs_toolbar.css);
 @import url(chrome/compact_proton.css);
+@import url(autoHide.css);
 
 /* Moves the application menu button to the left of the window controls. */
 #PanelUI-button {

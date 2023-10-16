@@ -29,6 +29,8 @@ if (Test-Path -Path env:FIREFOX_PROFILE_PATH) {
         git clone https://github.com/MrOtherGuy/firefox-csshacks.git $profileFolder
     }
 
+    $autoHidePath = Join-Path -Path $profileFolder -ChildPath autoHide.css
+    New-Item -Force -ItemType SymbolicLink -Path $autoHidePath -Target "$HOME/.dotfiles/firefox/autoHide.css"
     if ($IsMacOS) {
         New-Item -Force -ItemType SymbolicLink -Path $chromePath -Target "$HOME/.dotfiles/firefox/userChrome_macOS.css"
     }
