@@ -2,7 +2,7 @@
 
 :root {
     --uc-autohide-toolbox-delay: 300ms; /* Wait 0.1s before hiding toolbars */
-    --uc-toolbox-rotation: 60deg; /* This may need to be lower on mac - like 75 or so */
+    --uc-toolbox-rotation: 70deg; /* This may need to be lower on mac - like 75 or so */
 }
 
 #navigator-toolbox {

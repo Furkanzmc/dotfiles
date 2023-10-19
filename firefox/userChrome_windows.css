@@ -3,7 +3,6 @@
 
 /* Import your desired components first */
 
-@import url(chrome/hide_tabs_toolbar.css);
 @import url(chrome/compact_proton.css);
 @import url(autoHide.css);
 
