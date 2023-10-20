@@ -4,7 +4,6 @@
 /* Import your desired components first */
 
 @import url(chrome/compact_proton.css);
-@import url(chrome/autohide_tabstoolbar.css);
-@import url(chrome/autohide_bookmarks_and_main_toolbars.css);
+@import url(chrome/hide_tabs_toolbar_osx.css);
 
 /* Apply your custom modifications after imports */
