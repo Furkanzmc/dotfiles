@@ -1149,24 +1149,6 @@ api.nvim_create_autocmd({ "OptionSet" }, {
     end,
 })
 
-local augroup_vimrc_gui_events = api.nvim_create_augroup("vimrc_gui_events", { clear = true })
-api.nvim_create_autocmd({ "UIEnter" }, {
-    group = augroup_vimrc_gui_events,
-    callback = function(_)
-        if vim.v.event.chan == 1 then
-            opt.mouse = "nvi"
-        end
-    end,
-})
-api.nvim_create_autocmd({ "UILeave" }, {
-    group = augroup_vimrc_gui_events,
-    callback = function(_)
-        if vim.v.event.chan == 1 then
-            opt.mouse = ""
-        end
-    end,
-})
-
 api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
     group = api.nvim_create_augroup("vimrc_winbar_events", { clear = true }),
     callback = function(opts)
