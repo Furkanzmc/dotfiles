@@ -5,6 +5,5 @@
 
 @import url(chrome/compact_proton.css);
 @import url(chrome/hide_tabs_toolbar_osx.css);
-@import url(chrome/centered_statuspanel.css);
 
 /* Apply your custom modifications after imports */
