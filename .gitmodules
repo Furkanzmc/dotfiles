@@ -28,9 +28,6 @@
 [submodule "vim/pack/packages/start/plenary.nvim"]
 	path = vim/pack/packages/start/plenary.nvim
 	url = https://github.com/nvim-lua/plenary.nvim.git
-[submodule "vim/pack/packages/start/null-ls.nvim"]
-	path = vim/pack/packages/start/null-ls.nvim
-	url = https://github.com/jose-elias-alvarez/null-ls.nvim.git
 [submodule "vim/pack/packages/start/sekme.nvim"]
 	path = vim/pack/packages/start/sekme.nvim
 	url = https://github.com/Furkanzmc/sekme.nvim
@@ -101,3 +98,6 @@
 [submodule "vim/pack/packages/opt/copilot.vim"]
 	path = vim/pack/packages/opt/copilot.vim
 	url = https://github.com/github/copilot.vim
+[submodule "vim/pack/packages/start/none-ls.nvim"]
+	path = vim/pack/packages/start/none-ls.nvim
+	url = https://github.com/nvimtools/none-ls.nvim.git
