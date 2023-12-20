@@ -458,6 +458,9 @@ function M.setup_lsp()
                         reportUnusedFunction = "error",
                         reportUnusedVariable = "error",
                         reportDuplicateImport = "error",
+                        autoSearchPaths = true,
+                        diagnosticMode = "openFilesOnly",
+                        useLibraryCodeForTypes = true,
                     },
                 },
             },
@@ -635,11 +638,6 @@ function M.setup_lsp()
     vim.cmd(
         [[packadd cmp-path | lua require('cmp').register_source('path', require('cmp_path').new())]]
     )
-    if vim.fn.expand("$VIMRC_LSP_TREESITTER_ENABLED") == 1 then
-        vim.cmd(
-            [[packadd cmp-treesitter | lua require('cmp').register_source('treesitter', require('cmp_treesitter').new())]]
-        )
-    end
 
     setup_signs()
 end

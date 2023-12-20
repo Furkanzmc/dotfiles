@@ -71,9 +71,6 @@
 [submodule "vim/pack/packages/opt/cmp-buffer"]
 	path = vim/pack/packages/opt/cmp-buffer
 	url = https://github.com/hrsh7th/cmp-buffer.git
-[submodule "vim/pack/packages/opt/cmp-treesitter"]
-	path = vim/pack/packages/opt/cmp-treesitter
-	url = https://github.com/ray-x/cmp-treesitter.git
 [submodule "vim/pack/packages/opt/svg.vim"]
 	path = vim/pack/packages/start/svg.vim
 	url = https://github.com/vim-scripts/svg.vim.git
