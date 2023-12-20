@@ -85,10 +85,15 @@ end, {
 })
 
 if vim.fn.exists(":ZkBrowse") == 2 then
-    local file_name = string.gsub(vim.fn.expand("%:p"), '\\', '/')
-    local notes_path = string.gsub(require"zettelkasten.config".get().notes_path, '\\', '/')
+    local file_name = string.gsub(vim.fn.expand("%:p"), "\\", "/")
+    local notes_path = string.gsub(require("zettelkasten.config").get().notes_path, "\\", "/")
     if string.sub(file_name, 1, string.len(notes_path)) == notes_path then
-        add_command(0, "Write", "write | Git add % | Git commit -m Update | FGit push", {})
+        vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+            buffer = 0,
+            callback = function(_)
+                vim.fn.execute("Git add % | Git commit -m Update | FGit push")
+            end,
+        })
     end
 end
 
