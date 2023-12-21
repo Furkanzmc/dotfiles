@@ -334,9 +334,15 @@ function M.init_winbar(winnr)
     -- LSP Context {{{
 
     if is_lsp_running and options.get_option_value("lsp_context_enabled", bufnr) == true then
-        local content = require("lspsaga.symbol.winbar"):get_bar()
-        if content ~= nil then
-            table.insert(status, " " .. content .. " ")
+        if not active and vim.b[bufnr].vimrc_winbar_status then
+            table.insert(status, vim.b[bufnr].vimrc_winbar_status)
+        else
+            local content = require("lspsaga.symbol.winbar"):get_bar()
+            if content ~= nil and content ~= "" then
+                local bar = " " .. content .. " "
+                table.insert(status, bar)
+                vim.b[bufnr].vimrc_winbar_status = bar
+            end
         end
     end
 
