@@ -95,7 +95,7 @@ hi def link TodoCheckboxObsoleteDesc Comment
 
 hi def link TodoTag PreProc
 hi def link TodoContext Label
-hi def link TodoProject SpecialKey
+hi def link TodoProject Title
 hi def link TodoDueDate Constant
 hi def link TodoDateTime Constant
 hi def link TodoComment SpecialComment
