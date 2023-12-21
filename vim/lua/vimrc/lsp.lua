@@ -544,6 +544,12 @@ function M.setup_lsp()
         })
     end
 
+    if vim.fn.has("osx") == 1 then
+        require("lspconfig").sourcekit.setup({
+            filetypes = { "swift", "objcpp", "objc" },
+        })
+    end
+
     if fn.executable("vimls") == 1 then
         lspconfig.vimls.setup({
             on_attach = setup_without_formatting,
