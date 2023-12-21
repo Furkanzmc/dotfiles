@@ -1,6 +1,3 @@
-[submodule "vim/pack/packages/start/cosmic_latte"]
-	path = vim/pack/packages/start/cosmic_latte
-	url = https://github.com/furkanzmc/cosmic_latte.git
 [submodule "vim/pack/packages/start/firvish.nvim"]
 	path = vim/pack/packages/start/firvish.nvim
 	url = https://github.com/Furkanzmc/firvish.nvim.git
@@ -101,3 +98,6 @@
 [submodule "vim/pack/packages/start/none-ls.nvim"]
 	path = vim/pack/packages/start/none-ls.nvim
 	url = https://github.com/nvimtools/none-ls.nvim.git
+[submodule "vim/pack/packages/start/catppuccin"]
+	path = vim/pack/packages/start/catppuccin
+	url = https://github.com/catppuccin/nvim.git

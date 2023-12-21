@@ -873,7 +873,50 @@ end
 -- cosmic_latte {{{
 
 if vim.o.loadplugins == true then
-    cmd([[autocmd VimEnter * colorscheme cosmic_latte ]])
+    require("catppuccin").setup({
+        background = {
+            light = "latte",
+            dark = "frappe",
+        },
+        styles = {
+            comments = { "italic" },
+            strings = { "italic" },
+            numbers = { "italic" },
+        },
+        highlight_overrides = {
+            latte = function(latte)
+                return {
+                    Tag = { fg = latte.yellow },
+                    StatusLineBranch = { fg = latte.mantle, bg = latte.rosewater },
+                }
+            end,
+            all = function(colors)
+                return {
+                    Link = { fg = colors.blue, underline = true },
+                    Tag = { fg = colors.peach },
+                    StatusLineMode = { fg = colors.mantle, bg = colors.text },
+                    StatusLineSpecialWindow = { fg = colors.base, bg = colors.pink },
+                    StatusLineTerm = { fg = colors.text, bg = colors.base },
+                    StatusLineTermNC = { fg = colors.text, bg = colors.surface2 },
+                    StatusLineFilePath = { fg = colors.text, bg = colors.mantle },
+                    StatusDiffFileSign = { fg = colors.pink, bg = colors.mantle },
+                    StatusDiffFileSignNC = { fg = colors.pink, bg = colors.mantle },
+                    StatusLineError = { fg = colors.red, bg = colors.mantle },
+                    StatusLineModified = { fg = colors.yellow, bg = colors.mantle },
+                    StatusLineLspStatus = { fg = colors.yellow, bg = colors.mantle },
+                    StatusLineRowColumn = { fg = colors.text, bg = colors.mantle },
+                    StatusLineBranch = { fg = colors.mantle, bg = colors.maroon },
+                    WinBarLspStatus = { fg = colors.peach, bg = "NONE" },
+                    WinBarError = { fg = colors.red, bg = "NONE" },
+                    WinBarWarning = { fg = colors.blue, bg = "NONE" },
+                    WinBarHint = { fg = colors.green, bg = "NONE" },
+                    WinBarInfo = { fg = colors.flamingo, bg = "NONE" },
+                }
+            end,
+        },
+    })
+
+    cmd([[autocmd VimEnter * colorscheme catppuccin ]])
 end
 
 -- }}}

@@ -34,7 +34,7 @@ async def main(connection):
             parts = theme.split(" ")
             if "dark" in parts:
                 preset = await iterm2.ColorPreset.async_get(
-                    connection, "cosmic_latte_dark"
+                    connection, "catppuccin_frappe"
                 )
                 pwsh_args.append("set background=dark")
                 with open(
@@ -43,7 +43,7 @@ async def main(connection):
                     file_handle.write("dark")
             else:
                 preset = await iterm2.ColorPreset.async_get(
-                    connection, "cosmic_latte_light"
+                    connection, "catppuccin_latte"
                 )
                 pwsh_args.append("set background=light")
                 with open(

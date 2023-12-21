@@ -16,6 +16,7 @@ env:
 window:
   # Allow terminal applications to change Alacritty's window title.
   dynamic_title: true
+
   # Window dimensions (changes require restart)
   #
   # Specified in number of columns/lines, not pixels.
@@ -147,63 +148,64 @@ font:
   #
   # This is a global setting and will require a log out or restart to take
   # effect.
-  use_thin_strokes: true
+  AppleFontSmooting: true
 
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
 
 # Colors (Cosmic Latte Dark)
 schemes:
-  cosmic_latte_light: &light
+  catppuccin_light: &light
     # Default colors
     primary:
-      background: '0xfff8e7'
-      foreground: '0x485a62'
+      background: '0xeff1f5'
+      foreground: '0x4c4f69'
     # Normal colors
     normal:
-      black:   '0xfff8e7'
-      red:     '0xc44756'
-      green:   '0x1f8332'
-      yellow:  '0x916d03'
-      blue:    '0x0075c9'
-      magenta: '0xa154ae'
-      cyan:    '0x007f8a'
-      white:   '0x485a62'
+      black:   '0xdce0e8'
+      blue:    '0x1e66f5'
+      cyan:    '0x179299'
+      green:   '0x40a02b'
+      magenta: '0x8839ef'
+      red:     '0xd20f39'
+      white:   '0x4c4f69'
+      yellow:  '0xdf8e1d'
     # Bright colors
     bright:
-      black:   '0x63757e'
-      red:     '0xc44756'
-      green:   '0x1f8332'
-      yellow:  '0x916d03'
-      blue:    '0x0075c9'
-      magenta: '0xa154ae'
-      cyan:    '0x007f8a'
-      white:   '0x364850'
-  cosmic_latte_dark: &dark
+      black:   '0x232634'
+      blue:    '0x1e66f5'
+      cyan:    '0x179299'
+      green:   '0x40a02b'
+      magenta: '0x8839ef'
+      red:     '0xd20f39'
+      white:   '0x4c4f69'
+      yellow:  '0xdf8e1d'
+
+  catppuccin_dark: &dark
     # Default colors
     primary:
-      background: '0x202A31'
-      foreground: '0xABB0C0'
+      background: '0x303446'
+      foreground: '0xc6d0f5'
     # Normal colors
     normal:
-      black:   '0x202a31'
-      red:     '0xc17b8d'
-      green:   '0x7d9761'
-      yellow:  '0xb28761'
-      blue:    '0x5496bd'
-      magenta: '0x9b85bb'
-      cyan:    '0x459d90'
-      white:   '0xabb0c0'
+      black:   '0x232634'
+      red:     '0xe78284'
+      green:   '0xa6d189'
+      yellow:  '0x7d9761'
+      blue:    '0x8caaee'
+      magenta: '0xca9ee6'
+      cyan:    '0x81c8be'
+      white:   '0xc6d0f5'
     # Bright colors
     bright:
-      black:   '0x898f9e'
-      red:     '0xc17b8d'
-      green:   '0x7d9761'
-      yellow:  '0xb28761'
-      blue:    '0x5496bd'
-      magenta: '0x9b85bb'
-      cyan:    '0x459d90'
-      white:   '0xc5cbdb'
+      black:   '0xdce0e8'
+      red:     '0xe78284'
+      green:   '0xa6d189'
+      yellow:  '0x7d9761'
+      blue:    '0x8caaee'
+      magenta: '0xca9ee6'
+      cyan:    '0x81c8be'
+      white:   '0xc6d0f5'
 
 colors: *dark
 
@@ -321,9 +323,6 @@ working_directory: None
 # Alacritty will fall back to the WinPTY automatically if the ConPTY
 # backend cannot be initialized.
 enable_experimental_conpty_backend: true
-
-# Send ESC (\x1b) before characters when alt is pressed.
-alt_send_esc: true
 
 debug:
   # Display the time it takes to redraw each frame.
