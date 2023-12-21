@@ -230,7 +230,7 @@ function M.init(winnr)
 
     -- Read only and spell sign {{{
 
-    st("%r", active, "StatusLineError", "StatusLineNC")
+    st(" %r", active, "StatusLineError", "StatusLineNC")
     if opt_local.spell:get() then
         st("☰", active, "StatusLineError", "StatusLineNC", 1)
     end
