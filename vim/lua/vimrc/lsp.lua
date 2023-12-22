@@ -398,11 +398,17 @@ function M.setup_lsp()
 
     vim.diagnostic.config({
         signs = true,
-        virtual_text = false,
+        virtual_text = options.get_option_value("lsp_virtual_text", bufnr),
         underline = false,
         update_in_insert = false,
-        severity_sort = true,
+        severity_sort = false,
     })
+
+    options.register_callback("lsp_virtual_text", function()
+        vim.diagnostic.config({
+            virtual_text = options.get_option_value("lsp_virtual_text", bufnr),
+        })
+    end)
 
     require("lspsaga").setup({
         symbol_in_winbar = {

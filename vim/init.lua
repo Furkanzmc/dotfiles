@@ -859,6 +859,14 @@ if vim.o.loadplugins == true then
         source = "buffers",
         buffer_local = true,
     })
+    options.register_option({
+        name = "lsp_virtual_text",
+        default = false,
+        type_info = "boolean",
+        source = "lsp",
+        buffer_local = false,
+        description = "Enable virtual text for LSP globally.",
+    })
 
     cmd([[augroup vimrc_options_plugin]])
     cmd(
