@@ -84,16 +84,20 @@ end, {
 })
 
 if vim.fn.exists(":ZkBrowse") == 2 then
-    local file_name = string.gsub(vim.fn.expand("%:p"), "\\", "/")
-    local notes_path = string.gsub(require("zettelkasten.config").get().notes_path, "\\", "/")
-    if string.sub(file_name, 1, string.len(notes_path)) == notes_path then
-        vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-            buffer = 0,
-            callback = function(_)
-                vim.fn.execute("Git add % | Git commit -m Update | FGit push")
-            end,
-        })
-    end
+    vim.defer_fn(function()
+        -- Looks like the file_name is not resolved when a new file is created with a name.
+        -- Deferring this call so that I can get to the resolved name.
+        local file_name = string.gsub(vim.fn.expand("%:p"), "\\", "/")
+        local notes_path = string.gsub(require("zettelkasten.config").get().notes_path, "\\", "/")
+        if string.sub(file_name, 1, string.len(notes_path)) == notes_path then
+            vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+                buffer = 0,
+                callback = function(_)
+                    vim.fn.execute("Git add % | Git commit -m Update | FGit push")
+                end,
+            })
+        end
+    end, 10)
 end
 
 if vim.fn.executable("ctags") == 1 then
