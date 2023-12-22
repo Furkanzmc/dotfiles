@@ -11,7 +11,6 @@ vim.wo.signcolumn = "yes"
 vim.opt_local.cursorline = false
 vim.opt_local.cursorcolumn = false
 vim.opt_local.textwidth = 90
-vim.opt_local.colorcolumn = { 91 }
 
 if vim.fn.executable("zig") == 1 then
     vim.opt_local.formatprg = "zig fmt --stdin --check"

@@ -42,7 +42,6 @@ opt.completeopt = "menuone,noselect"
 
 opt.termguicolors = true
 opt.foldenable = false
-opt.colorcolumn = "81"
 
 opt.showmode = false
 opt.shortmess:append("c")

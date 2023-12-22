@@ -7,7 +7,6 @@ local b = vim.b
 
 opt_local.textwidth = 100
 opt_local.cursorline = true
-opt_local.colorcolumn = "101"
 opt_local.signcolumn = "yes"
 opt_local.cursorline = false
 opt_local.cursorcolumn = false
