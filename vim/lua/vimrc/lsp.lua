@@ -77,7 +77,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     if server_capabilities.definitionProvider then
-        keymap.set("n", "<leader>gd", "<Cmd>lua Lspsaga goto_definition<CR>", opts)
+        keymap.set("n", "<leader>gd", "<Cmd>Lspsaga goto_definition<CR>", opts)
         keymap.set("n", "<leader>gp", "<cmd>Lspsaga peek_definition<CR>", opts)
 
         if options.get_option_value("lsp_tagfunc_enabled") then
@@ -553,6 +553,7 @@ function M.setup_lsp()
     if vim.fn.has("osx") == 1 then
         require("lspconfig").sourcekit.setup({
             filetypes = { "swift", "objcpp", "objc" },
+            on_attach = setup,
         })
     end
 
