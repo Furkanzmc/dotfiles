@@ -584,6 +584,7 @@ function M.setup_lsp()
             null_ls.builtins.formatting.rustfmt,
             null_ls.builtins.formatting.clang_format,
             null_ls.builtins.formatting.qmlformat,
+            null_ls.builtins.formatting.swift_format,
             null_ls.builtins.formatting.prettier.with({
                 filetypes = {
                     "javascript",

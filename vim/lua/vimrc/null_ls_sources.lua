@@ -99,6 +99,18 @@ M.formatting = {
             factory = helpers.formatter_factory,
         })
     end)(),
+    swift_format = (function()
+        if vim.fn.executable("swift-format") == 0 then
+            return nil
+        end
+
+        return helpers.make_builtin({
+            method = FORMATTING,
+            filetypes = { "swift" },
+            generator_opts = { command = "swift", args = { "format" }, to_stdin = true },
+            factory = helpers.formatter_factory,
+        })
+    end)(),
 }
 
 M.hover = {
