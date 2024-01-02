@@ -294,6 +294,12 @@ local function setup_null_ls_cmp_patch()
                 method = require("null-ls.methods").internal.COMPLETION,
                 filetypes = {},
                 name = name,
+                runtime_condition = function(params)
+                    return options.get_option_value(
+                        "lsp_completion_" .. name .. "_enabled",
+                        params.bufnr
+                    )
+                end,
                 generator = {
                     name = name,
                     fn = function(params, done)

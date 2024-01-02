@@ -129,7 +129,7 @@ opt.switchbuf = "useopen,usetab"
 opt.stal = 2
 
 if fn.expand("$MANPAGER") ~= "$MANPAGER" then
-    cmd("let $MANPAGER=''")
+    cmd([[let $MANPAGER='']])
 end
 
 -- }}}
@@ -183,7 +183,6 @@ if fn.has("mac") == 1 then
 end
 
 opt.wildignorecase = true
-
 opt.cursorline = false
 
 -- Always show current position
@@ -197,6 +196,7 @@ opt.hidden = true
 
 -- Configure backspace so it acts as it should act
 opt.backspace = "eol,start,indent"
+
 opt.whichwrap:append(",<,>,h,l")
 
 -- Ignore case when searching
@@ -226,16 +226,20 @@ opt.matchtime = 3
 -- No annoying sound on errors
 opt.errorbells = false
 opt.visualbell = false
-opt.tm = 300
+opt.timeoutlen = 300
 opt.guifont = "JetBrainsMono Nerd Font Mono:h9"
 opt.mouse = ""
 
 if fn.executable("just") then
     opt.makeprg = "just $*"
-end
 
-if vim.o.loadplugins == true and fn.executable("just") then
-    api.nvim_create_user_command("Just", ":Cfrun just <args>", { nargs = "*", complete = "file" })
+    if vim.o.loadplugins == true then
+        api.nvim_create_user_command(
+            "Just",
+            ":Cfrun just <args>",
+            { nargs = "*", complete = "file" }
+        )
+    end
 end
 
 -- Neovide {{{
@@ -312,14 +316,6 @@ keymap.set("n", "[q", ':execute ":" . v:count . "cprevious"<CR>', { silent = tru
 keymap.set("n", "]b", ':execute ":" . v:count . "bnext"<CR>', { silent = true, remap = false })
 keymap.set("n", "[b", ':execute ":" . v:count . "bprevious"<CR>', { silent = true, remap = false })
 
--- Switch to a terminal buffer using [count]gs.
-keymap.set(
-    "n",
-    "<leader>gt",
-    '<cmd>execute "lua require\\"vimrc.terminal\\".switch_to_terminal(" . v:count . ")"<CR>',
-    { silent = true, remap = false }
-)
-
 -- Taking from here: https://github.com/stoeffel/.dotfiles/blob/master/vim/visual-at.vim
 -- Allows running macros only on selected files.
 keymap.set(
@@ -380,17 +376,6 @@ cmd(
 -- }}}
 
 -- Plugins {{{
-
--- Pre-configuration {{{
-
-if vim.o.loadplugins == true then
-    cmd([[augroup vimrc_source_post]])
-    cmd([[au!]])
-    cmd([[autocmd SourcePost * lua require"vimrc".on_source_post()]])
-    cmd([[augroup END]])
-end
-
--- }}}
 
 -- nvim-treesitter {{{
 
@@ -867,12 +852,22 @@ if vim.o.loadplugins == true then
         buffer_local = false,
         description = "Enable virtual text for LSP globally.",
     })
-
-    cmd([[augroup vimrc_options_plugin]])
-    cmd(
-        [[autocmd BufWinEnter *.md :lua require"options".set_modeline(vim.api.nvim_get_current_buf())]]
-    )
-    cmd([[augroup END]])
+    options.register_option({
+        name = "lsp_completion_buffer_enabled",
+        default = true,
+        type_info = "boolean",
+        source = "lsp",
+        buffer_local = true,
+        description = "Enable cmp-buffer completion source.",
+    })
+    options.register_option({
+        name = "lsp_completion_path_enabled",
+        default = true,
+        type_info = "boolean",
+        source = "lsp",
+        buffer_local = true,
+        description = "Enable cmp-path completion source.",
+    })
 end
 
 -- }}}
@@ -922,8 +917,6 @@ if vim.o.loadplugins == true then
             end,
         },
     })
-
-    cmd([[autocmd VimEnter * colorscheme catppuccin ]])
 end
 
 -- }}}
@@ -1132,12 +1125,7 @@ cmd([[augroup END]])
 
 -- Terminal {{{
 
-cmd([[command! -nargs=? -complete=shellcmd Terminal :call term#open(<f-args>)]])
-
-cmd([[augroup vimrc_term_plugin]])
-cmd([[autocmd!]])
-cmd([[autocmd TermOpen * lua require"vimrc.terminal".index_terminals()]])
-cmd([[augroup END]])
+require("vimrc.terminal").setup()
 
 -- }}}
 
@@ -1173,11 +1161,19 @@ if vim.o.loadplugins == true then
         pattern = "*.http",
         group = augroup_vimrc_init,
         callback = function(_)
-            if g.vimrc_rest_nvim_loaded == nil and vim.o.loadplugins then
+            if g.vimrc_rest_nvim_loaded == nil then
                 cmd([[packadd rest.nvim]])
                 require("vimrc").setup_rest_nvim()
                 g.vimrc_rest_nvim_loaded = true
             end
+        end,
+    })
+
+    api.nvim_create_autocmd({ "BufWinEnter" }, {
+        pattern = "*.md",
+        group = augroup_vimrc_init,
+        callback = function(_)
+            require("options").set_modeline(vim.api.nvim_get_current_buf())
         end,
     })
 end
@@ -1186,9 +1182,7 @@ api.nvim_create_autocmd({ "TextYankPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
     callback = function(_)
-        cmd(
-            [[silent! lua vim.highlight.on_yank{on_visual=false, higroup="IncSearch", timeout=100}]]
-        )
+        vim.highlight.on_yank({ on_visual = false, higroup = "IncSearch", timeout = 150 })
     end,
 })
 
@@ -1197,6 +1191,9 @@ api.nvim_create_autocmd({ "VimEnter" }, {
     group = augroup_vimrc_init,
     callback = function(_)
         require("vimrc").create_custom_nvim_server()
+        if vim.o.loadplugins == true then
+            cmd([[colorscheme catppuccin]])
+        end
     end,
 })
 
@@ -1208,7 +1205,13 @@ api.nvim_create_autocmd({ "BufReadPost" }, {
         if fn.line("'\"") > 1 and fn.line("'\"") <= fn.line("$") then
             cmd([[execute "normal! g'\""]])
         end
+    end,
+})
 
+api.nvim_create_autocmd({ "BufEnter" }, {
+    pattern = "*",
+    group = augroup_vimrc_init,
+    callback = function(_)
         require("vimrc").load_dictionary()
     end,
 })
@@ -1245,11 +1248,11 @@ api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
     end,
 })
 
-if fn.filereadable(fn.expand("~/.vimrc")) == 1 then
+if fn.filereadable(tostring(fn.expand("~/.vimrc"))) == 1 then
     cmd("source ~/.vimrc")
 end
 
-if fn.filereadable(fn.expand("~/.nvim.lua")) == 1 then
+if fn.filereadable(tostring(fn.expand("~/.nvim.lua"))) == 1 then
     cmd("source ~/.nvim.lua")
 end
 

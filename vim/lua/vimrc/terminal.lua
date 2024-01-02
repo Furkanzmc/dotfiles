@@ -7,6 +7,17 @@ local M = {}
 local utils = require("vimrc.utils")
 local s_terminals = {}
 
+--- @param nr integer
+local function get_terminal_bufnr(nr)
+    local bufnr = s_terminals[nr]
+    if bufnr == nil then
+        return -1
+    end
+
+    return bufnr
+end
+
+--- @param exclude_bufnr integer
 function M.index_terminals(exclude_bufnr)
     s_terminals = {}
     local buffers = table.filter(fn.range(1, fn.bufnr("$")), function(_, key, _)
@@ -21,17 +32,9 @@ function M.index_terminals(exclude_bufnr)
     end
 end
 
-function M.get_terminal_bufnr(nr)
-    local bufnr = s_terminals[nr]
-    if bufnr == nil then
-        return -1
-    end
-
-    return bufnr
-end
-
+--- @param index integer
 function M.switch_to_terminal(index)
-    local bufnr = M.get_terminal_bufnr(index)
+    local bufnr = get_terminal_bufnr(index)
     if bufnr == -1 then
         cmd("echohl Error")
         cmd("echo '[vimrc] Cannot find terminal buffer.'")
@@ -55,6 +58,31 @@ function M.switch_to_terminal(index)
         cmd("echo '[vimrc] Cannot find terminal buffer.'")
         cmd("echohl Normal")
     end
+end
+
+function M.setup()
+    api.nvim_create_user_command(
+        "Terminal",
+        ":call term#open(<f-args>)",
+        { nargs = "?", complete = "shellcmd" }
+    )
+
+    local augroup_vimrc_init = api.nvim_create_augroup("vimrc_terminal", { clear = true })
+    api.nvim_create_autocmd({ "TermOpen" }, {
+        pattern = "*",
+        group = augroup_vimrc_init,
+        callback = function(_)
+            M.index_terminals(-1)
+        end,
+    })
+
+    -- Switch to a terminal buffer using [count]gs.
+    vim.keymap.set(
+        "n",
+        "<leader>gt",
+        '<cmd>execute "lua require\\"vimrc.terminal\\".switch_to_terminal(" . v:count . ")"<CR>',
+        { silent = true, remap = false }
+    )
 end
 
 return M

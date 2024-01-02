@@ -6,14 +6,7 @@ local g = vim.g
 local b = vim.b
 local bo = vim.bo
 local api = vim.api
-local utils = require("vimrc.utils")
 local M = {}
-
-local function init_nvim_colorizer()
-    cmd(
-        [[command! EnableNvimColorizer :lua require"vimrc".enable_nvim_colorizer(vim.api.nvim_get_current_buf())]]
-    )
-end
 
 function M.setup_treesitter()
     if vim.o.loadplugins == false or fn.exists("$VIMRC_TREESITTER_DISABLED") == 1 then
@@ -133,33 +126,6 @@ function M.run_git(args, is_background_job)
         cwd = vim.fn.FugitiveGitDir(),
         listed = true,
     })
-end
-
-function M.enable_nvim_colorizer(bufnr)
-    require("colorizer").setup()
-    cmd("augroup nvim_colorizer_buf_" .. bufnr)
-    cmd([[ColorizerAttachToBuffer]])
-    cmd([[au!]])
-    cmd("autocmd FileType <buffer=" .. bufnr .. "> lua require'colorizer'.setup()")
-    cmd([[augroup END]])
-    cmd(
-        [[command! -buffer DisableNvimColorizer :lua require"vimrc".disable_nvim_colorizer(vim.api.nvim_get_current_buf())]]
-    )
-end
-
-function M.disable_nvim_colorizer(bufnr)
-    cmd("augroup nvim_colorizer_buf_" .. bufnr)
-    cmd([[au!]])
-    cmd([[augroup END]])
-    cmd([[delcommand DisableNvimColorizer]])
-    cmd([[ColorizerDetachFromBuffer]])
-end
-
-function M.on_source_post()
-    local file_path = fn.expand("<afile>")
-    if string.match(file_path, "colorizer.vim") ~= nil then
-        init_nvim_colorizer()
-    end
 end
 
 -- Creates a diffsplit between two remote files. I could not find a way to do this with Gdiffsplit
