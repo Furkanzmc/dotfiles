@@ -12,6 +12,7 @@
     code-changes = !git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10
     show-updates = !git submodule foreach 'git fetch --prune && git logpretty HEAD..origin/HEAD && echo "-----"'
     update-packages = !git submodule foreach 'git fetch --prune && git logpretty HEAD..origin/HEAD > updates.git && git logpretty HEAD..origin/HEAD' && git submodule update --remote
+    save-zettelkasten = "!f() { git add $1 && git commit -m Update && git push; }; f"
 
 [core]
     excludesFile=~/.gitignore_global

@@ -93,7 +93,7 @@ if vim.fn.exists(":ZkBrowse") == 2 then
             vim.api.nvim_create_autocmd({ "BufWritePost" }, {
                 buffer = 0,
                 callback = function(_)
-                    vim.fn.execute("Git add % | Git commit -m Update | FGit push")
+                    vim.fn.execute("FGit save-zettelkasten " .. vim.fn.expand("%"))
                 end,
             })
         end

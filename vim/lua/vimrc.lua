@@ -123,7 +123,7 @@ function M.run_git(args, is_background_job)
         filetype = "job-output",
         title = "Git",
         is_background_job = is_background_job,
-        cwd = vim.fn.FugitiveGitDir(),
+        cwd = vim.fn.getcwd(vim.fn.winnr()),
         listed = true,
     })
 end
