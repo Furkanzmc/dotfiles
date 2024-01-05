@@ -295,10 +295,7 @@ local function setup_null_ls_cmp_patch()
                 filetypes = {},
                 name = name,
                 runtime_condition = function(params)
-                    return options.get_option_value(
-                        "lsp_completion_" .. name .. "_enabled",
-                        params.bufnr
-                    )
+                    return options.get_option_value("lsp_completion_" .. name .. "_enabled")
                 end,
                 generator = {
                     name = name,

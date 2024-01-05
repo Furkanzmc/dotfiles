@@ -857,7 +857,7 @@ if vim.o.loadplugins == true then
         default = true,
         type_info = "boolean",
         source = "lsp",
-        buffer_local = true,
+        buffer_local = false,
         description = "Enable cmp-buffer completion source.",
     })
     options.register_option({
@@ -865,7 +865,7 @@ if vim.o.loadplugins == true then
         default = true,
         type_info = "boolean",
         source = "lsp",
-        buffer_local = true,
+        buffer_local = false,
         description = "Enable cmp-path completion source.",
     })
 end
