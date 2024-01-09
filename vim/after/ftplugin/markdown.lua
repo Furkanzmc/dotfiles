@@ -13,6 +13,51 @@ if vim.o.loadplugins and vim.g.vimrc_markdown_loaded_plugins == nil then
     vim.g.vimrc_markdown_loaded_plugins = true
 end
 
+local function setup_zettelkasten()
+    vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+        buffer = 0,
+        callback = function(_)
+            vim.fn.execute("FGit save-zettelkasten " .. vim.fn.expand("%"))
+        end,
+    })
+
+    add_command(0, "ZkInsertTOC", function(opts)
+        vim.api.nvim_buf_set_lines(
+            vim.api.nvim_get_current_buf(),
+            opts.line1,
+            opts.line2,
+            true,
+            require("zettelkasten").get_toc(opts.args)
+        )
+    end, {
+        nargs = 1,
+        range = true,
+    })
+
+    add_command(0, "ZkNoteBrowserContent", function(opts)
+        local lines = require("zettelkasten").get_note_browser_content()
+        lines = vim.tbl_map(function(item)
+            local file_name = string.match(item, "^.*.md")
+            return "- " .. string.gsub(item, "^.*.md", "[" .. file_name .. "](" .. file_name .. ")")
+        end, lines)
+
+        vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), opts.line1, opts.line2, true, lines)
+    end, {
+        range = true,
+    })
+
+    if vim.fn.executable("ctags") == 1 then
+        add_command(
+            0,
+            "ZkUpdateTags",
+            "!ctags -R --langdef=markdowntags --languages=markdowntags --langmap=markdowntags:.md --kinddef-markdowntags=t,tag,tags --mline-regex-markdowntags='/(^|[[:space:]])\\#(\\w\\S*)/\\2/t/{mgroup=1}' .",
+            {
+                range = false,
+            }
+        )
+    end
+end
+
 vim.opt_local.signcolumn = "no"
 vim.opt_local.spell = true
 vim.opt_local.foldmethod = "expr"
@@ -58,57 +103,17 @@ end, {
     range = "%",
 })
 
-add_command(0, "MdZkInsertTOC", function(opts)
-    vim.api.nvim_buf_set_lines(
-        vim.api.nvim_get_current_buf(),
-        opts.line1,
-        opts.line2,
-        true,
-        require("zettelkasten").get_toc(opts.args)
-    )
-end, {
-    nargs = 1,
-    range = true,
-})
-
-add_command(0, "MdZkNoteBrowserContent", function(opts)
-    local lines = require("zettelkasten").get_note_browser_content()
-    lines = vim.tbl_map(function(item)
-        local file_name = string.match(item, "^.*.md")
-        return "- " .. string.gsub(item, "^.*.md", "[" .. file_name .. "](" .. file_name .. ")")
-    end, lines)
-
-    vim.api.nvim_buf_set_lines(vim.api.nvim_get_current_buf(), opts.line1, opts.line2, true, lines)
-end, {
-    range = true,
-})
-
 if vim.fn.exists(":ZkBrowse") == 2 then
     vim.defer_fn(function()
         -- Looks like the file_name is not resolved when a new file is created with a name.
         -- Deferring this call so that I can get to the resolved name.
         local file_name = string.gsub(vim.fn.expand("%:p"), "\\", "/")
         local notes_path = string.gsub(require("zettelkasten.config").get().notes_path, "\\", "/")
-        if string.sub(file_name, 1, string.len(notes_path)) == notes_path then
-            vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-                buffer = 0,
-                callback = function(_)
-                    vim.fn.execute("FGit save-zettelkasten " .. vim.fn.expand("%"))
-                end,
-            })
+        vim.b.vimrc_editing_zettelkasten = string.sub(file_name, 1, string.len(notes_path)) == notes_path
+        if vim.b.vimrc_editing_zettelkasten then
+            setup_zettelkasten()
         end
     end, 10)
-end
-
-if vim.fn.executable("ctags") == 1 then
-    add_command(
-        0,
-        "MdZkUpdateTags",
-        "!ctags -R --langdef=markdowntags --languages=markdowntags --langmap=markdowntags:.md --kinddef-markdowntags=t,tag,tags --mline-regex-markdowntags='/(^|[[:space:]])\\#(\\w\\S*)/\\2/t/{mgroup=1}' .",
-        {
-            range = false,
-        }
-    )
 end
 
 if vim.fn.exists(":RunQML") ~= 2 then
