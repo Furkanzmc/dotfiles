@@ -36,7 +36,7 @@ function pvim() {
     $arguments = ""
     if ($sessionFile -ne "" -and $rcFile -ne "") {
         if ($Neovide) {
-            neovide --multigrid --notabs -- -S $rcFile -S $sessionFile '+let $AW_AUTO_SESSION=1'
+            neovide -- -S $rcFile -S $sessionFile '+let $AW_AUTO_SESSION=1'
         }
         else {
             nvim -S $rcFile -S $sessionFile '+let $AW_AUTO_SESSION=1'
@@ -44,7 +44,7 @@ function pvim() {
     }
     elseif ($sessionFile -ne "") {
         if ($Neovide) {
-            neovide --multigrid --notabs -- -S $sessionFile '+let $AW_AUTO_SESSION=1'
+            neovide -- -S $sessionFile '+let $AW_AUTO_SESSION=1'
         }
         else {
             nvim -S $sessionFile '+let $AW_AUTO_SESSION=1'
@@ -52,7 +52,7 @@ function pvim() {
     }
     elseif ($rcFile -ne "") {
         if ($Neovide) {
-            neovide --multigrid --notabs -- -S $rcFile '+let $AW_AUTO_SESSION=1'
+            neovide -- -S $rcFile '+let $AW_AUTO_SESSION=1'
         }
         else {
             nvim -S $rcFile '+let $AW_AUTO_SESSION=1'
@@ -60,7 +60,7 @@ function pvim() {
     }
     else {
         if ($Neovide) {
-            neovide --multigrid --notabs '+let $AW_AUTO_SESSION=1'
+            neovide '+let $AW_AUTO_SESSION=1'
         }
         else {
             nvim '+let $AW_AUTO_SESSION=1'
@@ -703,7 +703,7 @@ function Diff-Branches() {
         $git_path = $(git rev-parse --git-path /$hash)
         $branch_files = $(git diff --name-only $Branch $Target | ForEach-Object { "fugitive:///$git_path/$_"})
         if ($Neovide) {
-            neovide --multigrid --notabs $branch_files -- $arguments
+            neovide $branch_files -- $arguments
         }
         else {
             nvim $arguments -- $branch_files
@@ -712,7 +712,7 @@ function Diff-Branches() {
     else {
         $arguments += "nmap <leader>d :Gdiffsplit! $Branch<CR> | " + ' let $AW_AUTO_SESSION=0'
         if ($Neovide) {
-            neovide --multigrid --notabs $(git diff $Branch --name-only) -- $arguments
+            neovide $(git diff $Branch --name-only) -- $arguments
         }
         else {
             nvim $arguments -- $(git diff $Branch --name-only)
