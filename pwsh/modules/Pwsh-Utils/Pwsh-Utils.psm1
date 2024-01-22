@@ -36,7 +36,7 @@ function pvim() {
     $arguments = ""
     if ($sessionFile -ne "" -and $rcFile -ne "") {
         if ($Neovide) {
-            neovide --no-tabs -- -S $rcFile -S $sessionFile '+let $AW_AUTO_SESSION=1'
+            Start-Process -FilePath neovide -ArgumentList "--no-tabs -- -S $rcFile -S $sessionFile" -Environment @{AW_AUTO_SESSION=1}
         }
         else {
             nvim -S $rcFile -S $sessionFile '+let $AW_AUTO_SESSION=1'
@@ -44,7 +44,7 @@ function pvim() {
     }
     elseif ($sessionFile -ne "") {
         if ($Neovide) {
-            neovide --no-tabs -- -S $sessionFile '+let $AW_AUTO_SESSION=1'
+            Start-Process -FilePath neovide -ArgumentList "--no-tabs -- -S $sessionFile" -Environment @{AW_AUTO_SESSION=1}
         }
         else {
             nvim -S $sessionFile '+let $AW_AUTO_SESSION=1'
@@ -52,7 +52,7 @@ function pvim() {
     }
     elseif ($rcFile -ne "") {
         if ($Neovide) {
-            neovide --no-tabs -- -S $rcFile '+let $AW_AUTO_SESSION=1'
+            Start-Process -FilePath neovide -ArgumentList "--no-tabs -- -S $rcFile" -Environment @{AW_AUTO_SESSION=1}
         }
         else {
             nvim -S $rcFile '+let $AW_AUTO_SESSION=1'
@@ -60,7 +60,7 @@ function pvim() {
     }
     else {
         if ($Neovide) {
-            neovide --no-tabs '+let $AW_AUTO_SESSION=1'
+            Start-Process -FilePath neovide -ArgumentList "--no-tabs" -Environment @{AW_AUTO_SESSION=1}
         }
         else {
             nvim '+let $AW_AUTO_SESSION=1'
