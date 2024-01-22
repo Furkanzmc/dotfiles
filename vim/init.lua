@@ -1201,6 +1201,22 @@ api.nvim_create_autocmd({ "VimEnter" }, {
     end,
 })
 
+api.nvim_create_autocmd({ "VimLeavePre" }, {
+    pattern = "*",
+    group = augroup_vimrc_init,
+    callback = function(_)
+        if fn.exists("$AW_AUTO_SESSION") ~= 1 then
+            return
+        end
+
+        if fn.exists("$AW_SESSION_DIR") == 1 then
+            cmd([[execute "mksession! " . expand("$AW_SESSION_DIR/session.vim")]])
+        else
+            cmd([[mksession! session.vim]])
+        end
+    end,
+})
+
 api.nvim_create_autocmd({ "BufReadPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
