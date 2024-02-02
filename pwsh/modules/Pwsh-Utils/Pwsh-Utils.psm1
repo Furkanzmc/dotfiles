@@ -134,18 +134,25 @@ function Fzf-History() {
         $All=$false
     )
 
-    $count = 1000
     if ($All) {
-        $count = -1
-    }
-
-    $selectedItem = Get-Content (Get-PSReadlineOption).HistorySavePath `
-        -Tail $count | `
-        fzf --header `
+        $count = 1000
+        $selectedItem = Get-Content (Get-PSReadlineOption).HistorySavePath `
+            -Tail $count | `
+            fzf --header `
             "Press Enter to copy the line, <C-r> to list all history, <C-l> to only list the last 1000." `
             --reverse --tac `
             --bind "ctrl-r:reload(Get-Content (Get-PSReadlineOption).HistorySavePath)" `
             --bind "ctrl-l:reload(Get-Content (Get-PSReadlineOption).HistorySavePath -Tail 1000)"
+    }
+    else {
+        $selectedItem = Get-Content (Get-PSReadlineOption).HistorySavePath | `
+            fzf --header `
+            "Press Enter to copy the line, <C-r> to list all history, <C-l> to only list the last 1000." `
+            --reverse --tac `
+            --bind "ctrl-r:reload(Get-Content (Get-PSReadlineOption).HistorySavePath)" `
+            --bind "ctrl-l:reload(Get-Content (Get-PSReadlineOption).HistorySavePath -Tail 1000)"
+    }
+
     Write-Host $selectedItem -ForegroundColor blue
     Set-Clipboard $selectedItem
 }
