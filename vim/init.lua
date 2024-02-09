@@ -241,8 +241,11 @@ if fn.executable("just") then
         api.nvim_create_user_command(
             "Just",
             ":Cfrun just <args>",
-            { nargs = "*", complete = "file" }
+            { nargs = "*", complete = "file", bar = true }
         )
+
+        api.nvim_create_user_command("Make", ":Cfrun just <f-args>", { nargs = "*", bar = true })
+        api.nvim_create_user_command("Lmake", ":Lfrun just <f-args>", { nargs = "*", bar = true })
     end
 end
 
@@ -952,11 +955,6 @@ g.zig_fmt_autosave = false
 
 -- Local Plugins {{{
 
-if fn.executable("just") then
-    api.nvim_create_user_command("Make", ":Cfrun just <f-args>", { nargs = "*" })
-    api.nvim_create_user_command("Lmake", ":Lfrun just <f-args>", { nargs = "*" })
-end
-
 -- Buffers, Jira, Time {{{
 
 api.nvim_create_user_command("DiffWithSaved", function(_)
@@ -971,39 +969,19 @@ api.nvim_create_user_command("DiffWithSaved", function(_)
     vim.cmd([[diffthis]])
     vim.cmd([[wincmd p]])
     vim.cmd([[diffthis]])
-end, {})
+end, { bar = true })
 
 if vim.o.loadplugins then
     api.nvim_create_user_command(
         "FGit",
         ":lua require'vimrc'.run_git(<q-args>, <q-bang> ~= '!')",
-        { complete = "customlist,fugitive#Complete", nargs = "*", range = true }
+        { complete = "customlist,fugitive#Complete", nargs = "*", range = true, bar = true }
     )
 end
 
-api.nvim_create_user_command(
-    "JiraStartTicket",
-    "let g:vimrc_active_jira_ticket=<f-args>",
-    { nargs = 1 }
-)
-api.nvim_create_user_command("JiraCloseTicket", function(_)
-    if g.vimrc_active_jira_ticket ~= nil then
-        g.vimrc_active_jira_ticket = nil
-    end
-end, {
-    nargs = 1,
-})
-
-api.nvim_create_user_command("JiraOpenTicket", ":call jira#open_ticket(<f-args>)", { nargs = "?" })
-api.nvim_create_user_command(
-    "JiraOpenTicketJson",
-    ":call jira#open_ticket_in_json(<f-args>)",
-    { nargs = "?" }
-)
-
 api.nvim_create_user_command("Time", function(_)
     cmd([[echohl IncSearch | echo "Time: " . strftime('%b %d %A, %H:%M') | echohl NONE']])
-end, {})
+end, { bar = true })
 
 -- }}}
 

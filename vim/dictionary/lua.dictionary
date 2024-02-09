@@ -1,4 +1,3 @@
-vimrc_active_jira_ticket
 vimrc_cpp_plugins_loaded
 vimrc_cpp_remove_whitespace
 vimrc_dictionary_loaded
@@ -15,7 +14,6 @@ vimrc_rust_plugins_loaded
 vimrc_spacehi_enabled_filetypes
 vimrc_spacehi_tab_color
 VIMRC_PWSH_ENABLED
-vimrc_jira_base_url
 vimrc_dirvish_virtual_text_prefix
 VIMRC_DISABLE_LSP
 vimrc_dap_lldb_vscode_path
