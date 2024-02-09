@@ -238,14 +238,18 @@ if fn.executable("just") then
     opt.makeprg = "just $*"
 
     if vim.o.loadplugins == true then
-        api.nvim_create_user_command(
-            "Just",
-            ":Cfrun just <args>",
-            { nargs = "*", complete = "file", bar = true }
-        )
+        api.nvim_create_user_command("Just", ":Cfrun just <args>", {
+            nargs = "*",
+            complete = function(arg_lead, cmd_line, cursor_pos)
+                local output = fn.systemlist("just --summary")[1]
+                local recipes = string.split(output, " ")
+                return recipes
+            end,
+            bar = true,
+        })
 
-        api.nvim_create_user_command("Make", ":Cfrun just <f-args>", { nargs = "*", bar = true })
-        api.nvim_create_user_command("Lmake", ":Lfrun just <f-args>", { nargs = "*", bar = true })
+        api.nvim_create_user_command("Make", ":Cfrun just <args>", { nargs = "*", bar = true })
+        api.nvim_create_user_command("Lmake", ":Lfrun just <args>", { nargs = "*", bar = true })
     end
 end
 
