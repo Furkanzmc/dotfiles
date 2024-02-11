@@ -97,8 +97,17 @@ local function setup_commands()
     cmd([[command! DapUIClose :lua require'dapui'.close()]])
 end
 
+--- @param opts table
+--- @param opts.language string
+--- @param opts.name string
+--- @param opts.program string
+--- @param opts.cwd string
+--- @param opts.env table
+--- @param opts.run_in_terminal boolean
+--- @return nil
 function M.init(opts)
     assert(fn.exists(":DapUIOpen") == 0, "nvim-dap is already initialized.")
+
     if fn.filereadable(vim.g.vimrc_dap_lldb_vscode_path) == 0 then
         cmd([[echohl ErrorMsg]])
         cmd([[echo 'g:vimrc_dap_lldb_vscode_path is not set.']])
@@ -113,7 +122,7 @@ function M.init(opts)
     setup_keymaps()
     setup_commands()
 
-    require("dap").adapters.cpp = {
+    require("dap").adapters[opts.language] = {
         name = "lldb",
         type = "executable",
         attach = { pidProperty = "pid", pidSelect = "ask" },
@@ -125,7 +134,7 @@ function M.init(opts)
         opts.language = opts.language or "cpp"
         require("dap").configurations[opts.language] = {
             {
-                type = "cpp",
+                type = opts.language,
                 request = "launch",
                 name = opts.name,
                 program = opts.program,
