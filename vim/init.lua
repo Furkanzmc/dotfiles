@@ -1055,9 +1055,7 @@ end
 
 -- Buffers {{{
 
-if vim.o.loadplugins == true then
-    require("vimrc.buffers").init()
-end
+require("vimrc.buffers").init()
 
 keymap.set(
     "v",
@@ -1233,22 +1231,24 @@ api.nvim_create_autocmd({ "OptionSet" }, {
     end,
 })
 
-api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
-    group = api.nvim_create_augroup("vimrc_winbar_events", { clear = true }),
-    callback = function(opts)
-        local lsp = require("vimrc.lsp")
-        local winid = fn.bufwinid(opts.buf)
-        if winid == -1 then
-            return
-        end
-        if lsp.is_lsp_running(opts.buf) then
-            vim.wo[winid].winbar =
-                '%!luaeval("require\'vimrc.statusline\'.init_winbar(" . g:statusline_winid . ")")'
-        else
-            vim.wo[winid].winbar = ""
-        end
-    end,
-})
+if vim.o.loadplugins then
+    api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
+        group = api.nvim_create_augroup("vimrc_winbar_events", { clear = true }),
+        callback = function(opts)
+            local lsp = require("vimrc.lsp")
+            local winid = fn.bufwinid(opts.buf)
+            if winid == -1 then
+                return
+            end
+            if lsp.is_lsp_running(opts.buf) then
+                vim.wo[winid].winbar =
+                    '%!luaeval("require\'vimrc.statusline\'.init_winbar(" . g:statusline_winid . ")")'
+            else
+                vim.wo[winid].winbar = ""
+            end
+        end,
+    })
+end
 
 if fn.filereadable(tostring(fn.expand("~/.vimrc"))) == 1 then
     cmd("source ~/.vimrc")

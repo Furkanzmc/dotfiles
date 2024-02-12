@@ -8,8 +8,12 @@ local wo = vim.wo
 local opt_local = vim.opt_local
 local opt = vim.opt
 local api = vim.api
-local options = require("options")
 local typing = require("vimrc.typing")
+local options = nil
+if vim.o.loadplugins then
+    options = require("options")
+end
+
 local s_buffer_minimal_cache = {}
 local M = {}
 
@@ -101,13 +105,17 @@ function M.close()
 end
 
 function M.clean_trailing_spaces(bufnr)
-    if options.get_option_value("clean_trailing_whitespace", bufnr) == false then
+    if options and options.get_option_value("clean_trailing_whitespace", bufnr) == false then
         return
     end
 
     local save_cursor = fn.getpos(".")
     local old_query = fn.getreg("/")
-    local threshold = options.get_option_value("clean_trailing_whitespace_limit", bufnr)
+    local threshold = 0
+    if options then
+        threshold = options.get_option_value("clean_trailing_whitespace_limit", bufnr)
+    end
+
     if threshold > 0 then
         cmd([[redir => g:trailing_space_count]])
         cmd([[silent %s/\s\+$//egn]])
@@ -160,41 +168,51 @@ function M.toggle_colorcolumn(col)
 end
 
 function M.init()
-    options.register_callback("scratchpad", function()
-        mark_scratch(vim.api.nvim_get_current_buf())
-    end)
-    options.register_callback("highlight_trailing_whitespace", function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        if options.get_option_value("highlight_trailing_whitespace", bufnr) then
-            M.setup_white_space_highlight(bufnr)
-        else
-            fn.clearmatches()
-            cmd("augroup vimrc_trailing_white_space_highlight_buffer_" .. bufnr)
-            cmd([[autocmd! * <buffer>]])
-            cmd([[augroup END]])
-        end
-    end)
+    if options then
+        options.register_callback("scratchpad", function()
+            mark_scratch(vim.api.nvim_get_current_buf())
+        end)
+        options.register_callback("highlight_trailing_whitespace", function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            if options.get_option_value("highlight_trailing_whitespace", bufnr) then
+                M.setup_white_space_highlight(bufnr)
+            else
+                fn.clearmatches()
+                cmd("augroup vimrc_trailing_white_space_highlight_buffer_" .. bufnr)
+                cmd([[autocmd! * <buffer>]])
+                cmd([[augroup END]])
+            end
+        end)
 
-    options.register_callback("markdownfenced", function()
-        local langs = options.get_option_value("markdownfenced", vim.api.nvim_get_current_buf())
+        options.register_callback("markdownfenced", function()
+            local langs = options.get_option_value("markdownfenced", vim.api.nvim_get_current_buf())
 
-        if g.markdown_fenced_languages == nil then
-            g.markdown_fenced_languages = {}
-        end
+            if g.markdown_fenced_languages == nil then
+                g.markdown_fenced_languages = {}
+            end
 
-        g.markdown_fenced_languages = table.uniq(table.extend(g.markdown_fenced_languages, langs))
-    end)
+            g.markdown_fenced_languages =
+                table.uniq(table.extend(g.markdown_fenced_languages, langs))
+        end)
 
-    options.register_callback("indentsize", function()
-        local isize = options.get_option_value("indentsize", vim.api.nvim_get_current_buf())
-        cmd(string.format("setlocal tabstop=%s softtabstop=%s shiftwidth=%s", isize, isize, isize))
-    end)
+        options.register_callback("indentsize", function()
+            local isize = options.get_option_value("indentsize", vim.api.nvim_get_current_buf())
+            cmd(
+                string.format(
+                    "setlocal tabstop=%s softtabstop=%s shiftwidth=%s",
+                    isize,
+                    isize,
+                    isize
+                )
+            )
+        end)
 
-    options.register_callback("minimal_buffer", function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        local is_minimal = options.get_option_value("minimal_buffer", bufnr)
-        set_minimal_mode(is_minimal, bufnr)
-    end)
+        options.register_callback("minimal_buffer", function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            local is_minimal = options.get_option_value("minimal_buffer", bufnr)
+            set_minimal_mode(is_minimal, bufnr)
+        end)
+    end
 end
 
 function M.setup_white_space_highlight(bufnr)
@@ -202,7 +220,7 @@ function M.setup_white_space_highlight(bufnr)
         return
     end
 
-    if options.get_option_value("highlight_trailing_whitespace", bufnr) == false then
+    if options and options.get_option_value("highlight_trailing_whitespace", bufnr) == false then
         return
     end
 

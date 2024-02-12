@@ -5,7 +5,10 @@ local fn = vim.fn
 local opt_local = vim.opt_local
 local g = vim.g
 local buffers = require("vimrc.buffers")
-local options = require("options")
+local options = nil
+if vim.o.loadplugins == true then
+    options = require("options")
+end
 local M = {}
 
 -- Utility Functions {{{
@@ -333,7 +336,11 @@ function M.init_winbar(winnr)
 
     -- LSP Context {{{
 
-    if is_lsp_running and options.get_option_value("lsp_context_enabled", bufnr) == true then
+    if
+        options
+        and is_lsp_running
+        and options.get_option_value("lsp_context_enabled", bufnr) == true
+    then
         if not active and vim.b[bufnr].vimrc_winbar_status then
             table.insert(status, vim.b[bufnr].vimrc_winbar_status)
         else
