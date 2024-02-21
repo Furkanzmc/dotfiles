@@ -828,13 +828,6 @@ if vim.o.loadplugins == true then
         buffer_local = true,
     })
     options.register_option({
-        name = "markdownfenced",
-        default = {},
-        type_info = "table",
-        source = "buffers",
-        buffer_local = true,
-    })
-    options.register_option({
         name = "todofenced",
         default = {},
         type_info = "table",

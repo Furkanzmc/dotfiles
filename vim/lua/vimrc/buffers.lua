@@ -184,17 +184,6 @@ function M.init()
             end
         end)
 
-        options.register_callback("markdownfenced", function()
-            local langs = options.get_option_value("markdownfenced", vim.api.nvim_get_current_buf())
-
-            if g.markdown_fenced_languages == nil then
-                g.markdown_fenced_languages = {}
-            end
-
-            g.markdown_fenced_languages =
-                table.uniq(table.extend(g.markdown_fenced_languages, langs))
-        end)
-
         options.register_callback("indentsize", function()
             local isize = options.get_option_value("indentsize", vim.api.nvim_get_current_buf())
             cmd(
