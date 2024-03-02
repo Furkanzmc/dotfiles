@@ -125,7 +125,8 @@ end
 -- Use the current tab for openning files from quickfix.
 -- Otherwise it gets really annoying and each file is opened
 -- in a different tab.
-opt.switchbuf = "useopen,usetab"
+-- Without `uselast`, nvim-dap doesn't open the buffer to the breakpoint.
+opt.switchbuf = "useopen,usetab,uselast"
 opt.stal = 2
 
 if fn.expand("$MANPAGER") ~= "$MANPAGER" then
