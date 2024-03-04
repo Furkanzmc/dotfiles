@@ -82,7 +82,11 @@ if vim.fn.executable("qlmanage") == 1 then
 end
 
 vim.cmd(
-    [[abbreviate <silent> <buffer> today@ <C-R>=strftime("%d.%m.%Y")<CR><C-R>=abbreviations#eat_char('\s')<CR>]]
+    [[abbreviate <silent> <buffer> today@ @<C-R>=strftime("%d.%m.%Y")<CR><C-R>=abbreviations#eat_char('\s')<CR>]]
+)
+
+vim.cmd(
+    [[abbreviate <silent> <buffer> now@ @<C-R>=strftime("%d.%m.%Y-%H:%M")<CR><C-R>=abbreviations#eat_char('\s')<CR>]]
 )
 
 add_command(0, "MdWriteMermaid", function(opts)
