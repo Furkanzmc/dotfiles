@@ -10,7 +10,6 @@ end
 
 vim.wo.signcolumn = "yes"
 vim.bo.suffixesadd = ".rs"
-vim.opt_local.cursorline = false
 vim.opt_local.cursorcolumn = false
 
 if vim.fn.executable("rustfmt") == 1 then

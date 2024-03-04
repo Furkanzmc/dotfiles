@@ -12,7 +12,6 @@ setlocal signcolumn=yes
 setlocal suffixesadd=.cpp,.h,.hxx,.cxx,.hpp,_p.h,_p_p.h,.c
 setlocal includeexpr=cpp#includeexpr(v:fname)
 setlocal commentstring=//%s
-setlocal nocursorline
 setlocal nocursorcolumn
 
 " Assertion

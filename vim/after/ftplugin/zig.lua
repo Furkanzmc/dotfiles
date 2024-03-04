@@ -8,7 +8,6 @@ if vim.g.vimrc_zig_loaded_plugins == nil and vim.o.loadplugins then
 end
 
 vim.wo.signcolumn = "yes"
-vim.opt_local.cursorline = false
 vim.opt_local.cursorcolumn = false
 vim.opt_local.textwidth = 90
 

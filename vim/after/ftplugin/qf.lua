@@ -9,6 +9,7 @@ vim.opt_local.breakindentopt = "shift:1"
 vim.opt_local.signcolumn = "no"
 vim.opt_local.wrap = true
 vim.opt_local.cursorline = true
+vim.opt_local.cursorlineopt = "both"
 vim.opt_local.cursorcolumn = false
 vim.opt_local.winbar = ""
 

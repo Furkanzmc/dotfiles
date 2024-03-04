@@ -184,7 +184,8 @@ if fn.has("mac") == 1 then
 end
 
 opt.wildignorecase = true
-opt.cursorline = false
+opt.cursorline = true
+opt.cursorlineopt = "number"
 
 -- Always show current position
 opt.ruler = true

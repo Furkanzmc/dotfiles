@@ -6,6 +6,7 @@ setlocal spell
 setlocal colorcolumn=
 setlocal nonumber
 setlocal cursorline
+setlocal cursorlineopt=both
 setlocal nocursorcolumn
 setlocal signcolumn=no
 setlocal winbar=

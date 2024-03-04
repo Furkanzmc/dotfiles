@@ -31,7 +31,7 @@ endfunc
 " }}}
 
 function custom_sort#sort_command_completion(A,L,P)
-    return ["-modified", "-length", "-uniq", "-folder-first"]
+    return ["-modified", "-length", "-uniq", "-folder-first", "-size"]
 endfunction
 
 function custom_sort#sort(mode, start_line, end_line)
