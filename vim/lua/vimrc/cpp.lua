@@ -75,10 +75,18 @@ local function setup_cmake_commands(opts)
 
     _G.cmake_functions = functions
 
-    vim.api.nvim_command([[command! -bang CMake :lua _G.cmake_functions.run_cmake("<bang>" ~= "!")]])
-    vim.api.nvim_command([[command! -bang Run :lua _G.cmake_functions.run_project("<bang>" ~= "!")]])
-    vim.api.nvim_command([[command! -bang Build :lua _G.cmake_functions.build_project("<bang>" ~= "!")]])
-    vim.api.nvim_command([[command! -bang RunTests :lua _G.cmake_functions.run_tests("<bang>" ~= "!")]])
+    vim.api.nvim_command(
+        [[command! -bang CMake :lua _G.cmake_functions.run_cmake("<bang>" ~= "!")]]
+    )
+    vim.api.nvim_command(
+        [[command! -bang Run :lua _G.cmake_functions.run_project("<bang>" ~= "!")]]
+    )
+    vim.api.nvim_command(
+        [[command! -bang Build :lua _G.cmake_functions.build_project("<bang>" ~= "!")]]
+    )
+    vim.api.nvim_command(
+        [[command! -bang RunTests :lua _G.cmake_functions.run_tests("<bang>" ~= "!")]]
+    )
     vim.api.nvim_command(
         "command! UpdateTags :execute 'FRun! pwsh -NoLogo -NoProfile -NonInteractive -WorkingDirectory "
             .. opts.project_path
@@ -142,8 +150,7 @@ function M.setup_cmake(opts)
         return
     end
 
-    require("vimrc.dap").init()
-
+    opts.test_cwd = opts.test_cwd or ""
     opts.env = opts.env or {}
     opts.run_in_terminal = opts.run_in_terminal or false
     opts.cmake_args = opts.cmake_args or {}
@@ -158,7 +165,14 @@ function M.setup_cmake(opts)
     assert(opts.project_path, "project_path is required.")
     assert(opts.build_dir, "build_dir is required.")
 
-    opts.test_cwd = opts.test_cwd or ""
+    require("vimrc.dap").init({
+        language = "cpp",
+        name = opts.name,
+        program = opts.program,
+        cwd = opts.cwd,
+        env = opts.env,
+        run_in_terminal = opts.run_in_terminal,
+    })
 
     require("dap").configurations.cpp = {
         {
