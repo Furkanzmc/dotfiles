@@ -14,6 +14,8 @@ if vim.o.loadplugins and vim.g.vimrc_markdown_loaded_plugins == nil then
 end
 
 local function setup_zettelkasten()
+    vim.opt_local.keywordprg = ":ZkHover -preview"
+
     vim.api.nvim_create_autocmd({ "BufWritePost" }, {
         buffer = 0,
         callback = function(_)
