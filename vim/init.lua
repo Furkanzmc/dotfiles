@@ -882,6 +882,18 @@ end
 
 if vim.o.loadplugins == true then
     require("catppuccin").setup({
+        term_colors = true,
+        integrations = {
+            cmp = false,
+            gitsigns = false,
+            nvimtree = false,
+            treesitter = true,
+            notify = false,
+            mini = {
+                enabled = false,
+                indentscope_color = "",
+            },
+        },
         background = {
             light = "latte",
             dark = "frappe",
