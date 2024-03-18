@@ -424,6 +424,9 @@ function M.setup_lsp()
             respect_root = false,
             color_mode = true,
         },
+        outline = {
+            auto_preview = false,
+        },
     })
 
     local setup = function(client, format_enabled)
