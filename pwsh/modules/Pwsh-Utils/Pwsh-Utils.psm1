@@ -157,61 +157,7 @@ function Fzf-History() {
     Set-Clipboard $selectedItem
 }
 
-function Add-Dir-Bookmark() {
-    $location = Get-Location
-    Add-Content -Path "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt" `
-        -Value $location.Path
-}
-
-function Remove-Dir-Bookmark() {
-    Param(
-        [Parameter(Position=0, Mandatory=$true)]
-        [String]
-        $Entry
-    )
-
-    $bookmarkPath = "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt"
-    $content = Get-Content -Path $bookmarkPath
-    $newContent = [System.Collections.ArrayList]@()
-
-    Set-Content -Path $bookmarkPath -Value ""
-    $content | ForEach-Object {
-        if ($_ -ne $Entry) {
-            Add-Content -Path $bookmarkPath -Value $_
-        }
-    }
-}
-
-function Get-Dir-Bookmarks() {
-    $bookmarkPath = "$HOME/.dotfiles/pwsh/tmp_dirs/bookmarks.txt"
-    $refreshCommand = 'Get-Content ' + $bookmarkPath + ' | Sort-Object -Unique | Where-Object { $_.Length -gt 0 }'
-    if (Test-Path $bookmarkPath -ErrorAction SilentlyContinue) {
-        Get-Content $bookmarkPath | Sort-Object -Unique `
-            | Where-Object { $_.Length -gt 0 } `
-            | fzf --reverse +x --header "Press enter to navigate, <C-r> to remove the selected bookmark." `
-            --bind "ctrl-r:execute-silent(Remove-Dir-Bookmark {})+reload($refreshCommand)" `
-            | Where-Object { Test-Path $_ -ErrorAction SilentlyContinue} | Set-Location
-    }
-    else {
-        Write-Host "No bookmarks file."
-    }
-}
-
-function Get-Commands() {
-    $selected = Get-Command -All | Select-Object -Property CommandType,Name `
-        | fzf --reverse +x --header "Press enter to copy the command."
-    if ($selected) {
-        $selected = $selected.Trim().Split(" ")[1]
-        Write-Host $selected -ForegroundColor blue
-        Set-Clipboard $selected
-    }
-}
-
 Set-Alias -Name hs -Value Fzf-History
-Set-Alias -Name mm -Value Add-Dir-Bookmark
-Set-Alias -Name ms -Value Get-Dir-Bookmarks
-
-Set-Alias -Name commands -Value Get-Commands
 Set-Alias -Name ps -Value Fzf-List-Process
 
 function Copy-Pwd() {
@@ -263,25 +209,18 @@ function Generate-Tags() {
     }
 }
 
-function Get-Current-Branch() {
-    return &git rev-parse --abbrev-ref HEAD
-}
-
-function Get-Weather() {
-    (Invoke-WebRequest http://v2.wttr.in/).Content
-}
-
 function _Set-Alacritty-Color($Color) {
-    if (-not (Test-Path ~/.dotfiles/terminals/alacritty.yml -ErrorAction SilentlyContinue)) {
+    $configFile = "~/.dotfiles/terminals/alacritty.yml"
+    if (-not (Test-Path $configFile -ErrorAction SilentlyContinue)) {
         return
     }
 
-    $content = Get-Content ~/.dotfiles/terminals/alacritty.yml
-    if ($content -match "\*dark" -and $Color -eq "light") {
-        $content = $content.Replace("*dark", "*light")
+    $content = Get-Content $configFile
+    if ($content -match "alacritty_catppuccin_dark.toml" -and $Color -eq "light") {
+        $content = $content.Replace("alacritty_catppuccin_dark.toml", "alacritty_catppuccin_light.toml")
     }
-    elseif ($content -match "\*light" -and $Color -eq "dark") {
-        $content = $content.Replace("*light", "*dark")
+    elseif ($content -match "alacritty_catppuccin_light.toml" -and $Color -eq "dark") {
+        $content = $content.Replace("alacritty_catppuccin_light.toml", "alacritty_catppuccin_dark.toml")
     }
     else {
         return
@@ -382,16 +321,6 @@ function Set-Terminal-Theme() {
         $content = $content.Replace('"colorScheme": "light"', '"colorScheme": "' + $Color + '"')
         Set-Content -Path $env:PWSH_WINDOWS_TERMINAL_SETTINGS -Value $content
     }
-}
-
-function Define-Word($word) {
-    curl dict://dict.org/d:"$word" | nvim --noplugin "+setlocal filetype=man"
-}
-Set-Alias -Name dict -Value Define-Word
-
-# Sample usage: `git --help | nman`
-function nman($Input) {
-    $Input | nvim "+setlocal filetype=man"
 }
 
 function Build-Neovim() {
@@ -589,53 +518,6 @@ function Post-Notification() {
         $balloon.Visible = $true
         $balloon.ShowBalloonTip(1000)
     }
-}
-
-function Ffmpeg-Create-Time-Lapse() {
-    Param(
-        [Parameter(Mandatory=$true)]
-        [String]
-        $SourceDir,
-        [Parameter(Mandatory=$false)]
-        [String]
-        $FramesOutDir,
-        [Parameter(Mandatory=$true)]
-        [String]
-        $OutDir,
-        [Parameter(Mandatory=$true)]
-        [String]
-        $SourceExtension,
-        [Parameter(Mandatory=$true)]
-        [String]
-        $OutExtension="mov",
-        [Parameter(Mandatory=$true)]
-        [String]
-        $Framerate=10
-    )
-
-    $files = $(Get-ChildItem -Name -Filter *.$SourceExtension -Path $SourceDir)
-    $files | ForEach-Object {
-        Remove-Item -Path "$FramesOutDir/*"
-        if ($_ -ne $Entry) {
-            ffmpeg -i "$SourceDir/$_" -vf fps=2 "$FramesOutDir/%06d.png"
-            if ($?) {
-                ffmpeg -framerate $Framerate -i "$FramesOutDir/%06d.png" "$OutDir/$_.$OutExtension"
-            }
-        }
-    }
-}
-
-function Ffmpeg-Merge-Videos() {
-    Param(
-        [Parameter(Mandatory=$true)]
-        [String]
-        $InputFile,
-        [Parameter(Mandatory=$true)]
-        [String]
-        $Out
-    )
-
-    ffmpeg -f concat -i $InputFile -c copy $Out
 }
 
 function Pwsh-Check-Health() {
