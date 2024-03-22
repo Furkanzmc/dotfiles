@@ -43,6 +43,7 @@ return {
         { {}, "[", "tile_left_half", true },
         { {}, "]", "tile_right_half", true },
         { {}, "-", "tile_horizontal", true },
+        { { "shift" }, "-", "tile_horizontal_center", true },
         { {}, "\\", "tile_vertical", true },
         { {}, "s", "saveWindow", true },
         { {}, "m", "enableMarkWindowMode", false },

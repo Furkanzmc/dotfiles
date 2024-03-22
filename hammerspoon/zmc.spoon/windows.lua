@@ -53,6 +53,26 @@ function hs.window.tile_horizontal(win)
     end
 end
 
+function hs.window.tile_horizontal_center(win)
+    local windows = get_windows(win)
+    local max = win:screen():frame()
+
+    if #windows > 1 then
+        local multiplier = 0.16
+        hs.window.tiling.tileWindows(
+            windows,
+            hs.geometry(
+                max.x + (max.w * multiplier),
+                max.y,
+                max.w - (max.w * multiplier * 2),
+                max.h
+            ),
+            0,
+            true
+        )
+    end
+end
+
 function hs.window.tile_left_half(win)
     local windows = get_windows(win)
     local max = win:screen():frame()
