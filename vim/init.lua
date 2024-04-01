@@ -370,17 +370,19 @@ cmd([[abbreviate Langauge Language]])
 cmd([[abbreviate lenght length]])
 cmd([[abbreviate Lenght Length]])
 
-cmd([[cnoreabbrev git Git]])
-cmd([[cnoreabbrev gst Gstatus]])
-cmd([[cnoreabbrev fd Fd]])
-cmd([[cnoreabbrev rg Rg]])
+if vim.o.loadplugins == true then
+    cmd([[cnoreabbrev fgit FGit]])
+    cmd([[cnoreabbrev git Git]])
+    cmd([[cnoreabbrev gst Gstatus]])
 
-cmd([[cnoreabbrev frun FRun]])
-cmd([[cnoreabbrev fh Fhdo]])
+    cmd([[cnoreabbrev fd Fd]])
+    cmd([[cnoreabbrev rg Rg]])
+
+    cmd([[cnoreabbrev frun FRun]])
+    cmd([[cnoreabbrev fh Fhdo]])
+end
 
 cmd([[cnoreabbrev time Time]])
-cmd([[cnoreabbrev fgit FGit]])
-
 cmd([[cnoreabbrev bc Bclose]])
 
 cmd(
