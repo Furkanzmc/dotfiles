@@ -1,6 +1,6 @@
 " Syntax from: https://github.com/ryanolsonx/vim-xit/blob/main/syntax/xit.vim
 " Example: {{{
-" - [ ] A todo item with a project and a context +Project @Context
+" - [ ] A todo item with a project and a context +Project #Context
 " - [ ] !! You can use exclamation marks to indicate the priority of the task
 " - [ ] You can use `start-date` and `end-date` to indicate when this task should be worked on start-date: 31-04-2024-13:30 end-date: 31-04-2024-14:30
 " - [x] You can add `x` to mark the task as finished.
@@ -17,7 +17,7 @@
         " ```cpp
         " #include <iostream>
         " ```
-" - [@] Prepend `@` to mark a todo in progress. started: 03-10-2022-23:33
+" - [-] Prepend `-` to mark a todo in progress. started: 03-10-2022-23:33
 " }}}
 if exists("b:current_syntax")
     finish
@@ -46,8 +46,8 @@ syn match TodoCheckboxCheckedPriority "\v( *\.*!* ){,1}" nextgroup=TodoCheckboxC
 " by one so that it doesn't include the first char of a title or the "[".
 syn region TodoCheckboxCheckedDesc start="." end=/\v- \[/me=e-4 contained contains=TodoTag,TodoProject,TodoContext,TodoDueDate,TodoLeadingSpace,TodoComment,TodoStarted,TodoFinished,TodoDateTime,TodoDueAt,TodoStartDate,TodoEndDate
 
-" Matches a checkbox like "- [@]"
-syn region TodoCheckboxOngoing start=/\- \[@/ms=s+2 end=/\v\]/me=e nextgroup=TodoCheckboxOngoingSpace contains=TodoLeadingSpace
+" Matches a checkbox like "- [-]"
+syn region TodoCheckboxOngoing start=/\- \[-/ms=s+2 end=/\v\]/me=e nextgroup=TodoCheckboxOngoingSpace contains=TodoLeadingSpace
 syn match TodoCheckboxOngoingSpace " " nextgroup=TodoCheckboxOngoingPriority contained
 " Matches a priority. Spaces followed by periods followed by exclaimation followed by a space. If it doesn't
 " match, it continues on to the description for the checkbox.
@@ -70,7 +70,7 @@ syn region TodoCheckboxObsoleteDesc start="." end=/\v- \[/me=e-4 contained conta
 
 " Matches a tag with letters, numbers, _, or -
 syn match TodoTag "\v#[a-zA-Z0-9_-]+" contained
-syn match TodoContext "\v\@[a-zA-Z0-9_-]+" contained
+syn match TodoContext "\v\#[a-zA-Z0-9_-]+" contained
 syn match TodoProject "\v\+[a-zA-Z0-9_-]+" contained
 
 syntax match TodoStarted 'started:' contained contains=TodoDateTimeTodoDueDate
