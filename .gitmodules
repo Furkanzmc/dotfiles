@@ -101,3 +101,6 @@
 [submodule "vim/pack/packages/start/catppuccin"]
 	path = vim/pack/packages/start/catppuccin
 	url = https://github.com/catppuccin/nvim.git
+[submodule "vim/pack/packages/opt/nvim-nio"]
+	path = vim/pack/packages/opt/nvim-nio
+	url = https://github.com/nvim-neotest/nvim-nio.git

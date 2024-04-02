@@ -115,6 +115,7 @@ function M.init(opts)
         return
     end
 
+    cmd([[packadd nvim-nio]])
     cmd([[packadd nvim-dap]])
     cmd([[packadd nvim-dap-ui]])
 
