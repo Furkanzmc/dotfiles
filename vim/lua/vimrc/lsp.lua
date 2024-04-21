@@ -587,6 +587,7 @@ function M.setup_lsp()
             }),
             null_ls.builtins.formatting.cmake_format,
             null_ls.builtins.formatting.black,
+            null_ls.builtins.formatting.dart_format,
             null_ls.builtins.formatting.clang_format,
             null_ls.builtins.formatting.qmlformat,
             null_ls.builtins.formatting.swift_format,

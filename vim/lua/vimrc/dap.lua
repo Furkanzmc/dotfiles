@@ -123,15 +123,15 @@ function M.init(opts)
     setup_keymaps()
     setup_commands()
 
-    require("dap").adapters[opts.language] = {
-        name = "lldb",
-        type = "executable",
-        attach = { pidProperty = "pid", pidSelect = "ask" },
-        command = vim.g.vimrc_dap_lldb_vscode_path,
-        env = { LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES" },
-    }
-
     if opts then
+        require("dap").adapters[opts.language] = {
+            name = "lldb",
+            type = "executable",
+            attach = { pidProperty = "pid", pidSelect = "ask" },
+            command = vim.g.vimrc_dap_lldb_vscode_path,
+            env = { LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES" },
+        }
+
         opts.language = opts.language or "cpp"
         require("dap").configurations[opts.language] = {
             {
