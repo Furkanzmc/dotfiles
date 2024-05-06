@@ -196,13 +196,13 @@ function Generate-Tags() {
     )
 
     if ($Langauge -eq "c++") {
-        ctags -R --fields=+l --languages=c++ .
+        ctags --exclude build* --exclude install* -R --fields=+l --languages=c++ .
     }
     elseif ($Langauge -eq "python") {
-        ctags -R --fields=+l --languages=python --python-kinds=-iv .
+        ctags --exclude build/* -R --fields=+l --languages=python --python-kinds=-iv .
     }
     elseif ($Langauge -eq "c") {
-        ctags -R --fields=+l --languages=c++,c --python-kinds=-iv .
+        ctags --exclude build* --exclude install* -R --fields=+l --languages=c++,c --python-kinds=-iv .
     }
     else {
         Write-Error "$Language is not supported."
