@@ -1,2 +1,5 @@
 settings set frame-format "Frame #${frame.index}:${file.basename} -> ${line.file.fullpath}:${line.number} ${function.name-with-args}\n"
 break set -E c++
+breakpoint set -n abort
+breakpoint set -n _assert
+breakpoint set -n __assert_fail
