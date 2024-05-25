@@ -160,7 +160,7 @@ local function delete_keymaps(
     local opts = { buffer = bufnr }
     local server_capabilities = client.server_capabilities
     local del_keymap = function(mode, rhs, _opts)
-        if fn.maparg(rhs, mode) ~= "" then
+        if fn.maparg(mode, rhs) ~= "" then
             keymap.del(mode, rhs, _opts)
         end
     end
