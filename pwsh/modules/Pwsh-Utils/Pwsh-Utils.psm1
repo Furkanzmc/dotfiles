@@ -620,6 +620,19 @@ function Diff-PR() {
     gh pr diff $PR > $TempFile && git apply $TempFile && git add .
 }
 
+function Convert-Video-to-Gif() {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Input,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Output
+    )
+
+    ffmpeg -i $Input -vf "fps=10,scale=1080:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 $Output
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
