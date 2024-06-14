@@ -140,6 +140,12 @@ end
 -- Always show the status line
 opt.laststatus = 2
 
+if vim.g.neovide then
+    opt.winblend = 18
+else
+    opt.winblend = 8
+end
+
 opt.pumblend = 10
 
 opt.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
@@ -262,6 +268,7 @@ g.neovide_cursor_trail_size = 0.5
 g.neovide_hide_mouse_when_typing = true
 g.neovide_scroll_animation_length = 0.0
 g.neovide_cursor_animation_length = 0.02
+g.neovide_window_blurred = true
 
 -- }}}
 
