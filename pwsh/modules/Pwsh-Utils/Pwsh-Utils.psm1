@@ -586,7 +586,7 @@ function Diff-Branches() {
     }
 
 	if ($Target -ne "") {
-        $arguments += 'let $AW_AUTO_SESSION="" | ' + "nmap <leader>d :lua require('vimrc').gdiffsplit('$Branch', '$Target')<CR>"
+        $arguments += "nmap <leader>d :lua require('vimrc').gdiffsplit('$Branch', '$Target')<CR>"
         $files = $(git diff $Branch $Target --name-only)
         $hash = $(git rev-parse $Branch)
         $git_path = $(git rev-parse --git-path /$hash)
@@ -599,7 +599,7 @@ function Diff-Branches() {
         }
 	}
     else {
-        $arguments += "nmap <leader>d :Gdiffsplit! $Branch<CR> | " + ' let $AW_AUTO_SESSION=""'
+        $arguments += "nmap <leader>d :Gdiffsplit! $Branch<CR>"
         if ($Neovide) {
             neovide --no-tabs $(git diff $Branch --name-only) -- $arguments
         }
