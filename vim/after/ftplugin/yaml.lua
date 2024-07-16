@@ -8,6 +8,7 @@ vim.opt_local.cursorlineopt = "both"
 vim.opt_local.cursorcolumn = false
 vim.opt_local.colorcolumn = ""
 vim.opt_local.signcolumn = "yes"
+vim.opt_local.textwidth = 100
 
 vim.b.vimrc_null_ls_lsp_signs_enabled = 1
 vim.b.vimrc_null_ls_lsp_virtual_text_enabled = 1
