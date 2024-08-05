@@ -359,14 +359,12 @@ function Build-Neovim() {
 
     if (Test-Path .deps -ErrorAction SilentlyContinue) {
         Write-Host -ForegroundColor Blue "Deleting the contents of the .deps directory."
-        Push-Location .deps
         if ($IsWindows) {
-            fd . -t f | rm -Force
+            rm -Force -Recurse -Confirm:$false .deps/*
         }
         else {
-            fd . -t f | rm -rf
+            rm -rf .deps/*
         }
-        Pop-Location
     }
     else {
         mkdir .deps
