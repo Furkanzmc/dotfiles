@@ -344,14 +344,12 @@ function Build-Neovim() {
 
     if (Test-Path build -ErrorAction SilentlyContinue) {
         Write-Host -ForegroundColor Blue "Deleting the contents of the build directory."
-        Push-Location build
         if ($IsWindows) {
-            fd . -t f | rm -Force
+            rm -Force -Recurse -Confirm:$false build/*
         }
         else {
-            fd . -t f | rm -rf
+            rm -rf build/*
         }
-        Pop-Location
     }
     else {
         mkdir build
