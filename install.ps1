@@ -38,12 +38,21 @@ if (Test-Path -Path env:FIREFOX_PROFILE_PATH) {
     }
 }
 
+$nvimConfigPath = ""
 if ($IsMacOS) {
-    if (-Not (Test-Path -Path ~/.config/nvim)) {
-        New-Item -Path ~/.config/nvim -ItemType Directory -Force
-        New-Item -Force -ItemType SymbolicLink -Path "$HOME/.config/nvim/init.lua" -Target "$HOME/.dotfiles/vim/init.lua"
-    }
+    $nvimConfigPath = "$HOME/.config/nvim"
+}
+else {
+    $nvimConfigPath = "$HOME/AppData/Local/nvim"
+}
 
+if (-Not (Test-Path -Path $nvimConfigPath)) {
+    New-Item -Path $nvimConfigPath -ItemType Directory -Force
+}
+
+New-Item -Force -ItemType SymbolicLink -Path "$nvimConfigPath/init.lua" -Target "$HOME/.dotfiles/vim/init.lua"
+
+if ($IsMacOS) {
     New-Item -ItemType Directory -Force -Path "$HOME/.config/karabiner/assets/complex_modifications/"
     New-Item -Force -ItemType SymbolicLink -Path "$HOME/.config/karabiner/assets/complex_modifications/karabiner_vi_style.json" -Target "$HOME/.dotfiles/karabiner_vi_style.json"
     New-Item -ItemType Directory -Force -Path "~/.hammerspoon/Spoons"
