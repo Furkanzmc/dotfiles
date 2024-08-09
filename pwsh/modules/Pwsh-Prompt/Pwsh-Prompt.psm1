@@ -225,7 +225,7 @@ function Write-Prompt() {
         $currentContent = Get-Content $currentThemeFile
         if ($content -ne $currentContent) {
             Set-Terminal-Theme $content -EnvOnly
-            Add-Content -Path $currentThemeFile -Value $content
+            Set-Content -Path $currentThemeFile -Value $content
         }
         else {
             Set-Terminal-Theme $content -EnvOnly
