@@ -16,3 +16,5 @@ uutils.coreutils
 Casey.Just
 StrawberryPerl.StrawberryPerl
 GitHub.cli
+jqlang.jq
+UniversalCtags.Ctags
