@@ -544,8 +544,8 @@ function Pwsh-Check-Health() {
     }
 
     if ($IsMacOS) {
-        if (-not (Get-Command "exa" -ErrorAction SilentlyContinue)) {
-            Write-Host "  - Cannot find exa..." -ForegroundColor Red
+        if (-not (Get-Command "eza" -ErrorAction SilentlyContinue)) {
+            Write-Host "  - Cannot find eza..." -ForegroundColor Red
         }
 
         if (-not (Get-Command "bat" -ErrorAction SilentlyContinue)) {

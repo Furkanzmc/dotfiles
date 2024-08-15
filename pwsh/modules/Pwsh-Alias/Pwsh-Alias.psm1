@@ -24,7 +24,7 @@ Set-Alias -Value Source-Env -Name :
 $env:MANPAGER="nvim -U NORC +Man!"
 if ($IsMacOS) {
     Set-Alias trash rmtrash
-    Set-Alias ls exa
+    Set-Alias ls eza
     Set-Alias cat bat
 }
 
