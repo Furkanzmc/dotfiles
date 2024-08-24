@@ -38,7 +38,7 @@ cmd([[filetype indent on]])
 
 opt.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
 opt.complete = ".,w,k,kspell,b"
-opt.completeopt = "menuone,noselect"
+opt.completeopt = "menuone,noselect,fuzzy,popup"
 
 opt.termguicolors = true
 opt.foldenable = false
@@ -728,7 +728,6 @@ if vim.o.loadplugins == true then
                 complete = require("vimrc.completions.mnemonics").complete,
             },
             {
-
                 complete = function(_, base)
                     local rt = require("zettelkasten").completefunc(0, base)
                     if rt == 0 then

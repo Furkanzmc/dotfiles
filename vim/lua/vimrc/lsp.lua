@@ -291,6 +291,7 @@ local function setup_null_ls_cmp_patch()
                 for _, win in ipairs(vim.api.nvim_list_wins()) do
                     bufs[vim.api.nvim_win_get_buf(win)] = true
                 end
+
                 return vim.tbl_keys(bufs)
             end
 
@@ -369,9 +370,6 @@ local function setup_null_ls_cmp_patch()
         end,
     }
 
-    vim.cmd(
-        [[packadd cmp-buffer | lua require('cmp').register_source('buffer', require('cmp_buffer').new())]]
-    )
     vim.cmd(
         [[packadd cmp-path | lua require('cmp').register_source('path', require('cmp_path').new())]]
     )
