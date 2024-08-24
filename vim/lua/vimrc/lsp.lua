@@ -11,8 +11,12 @@ local M = {}
 
 -- Utils {{{
 
+local function set_option(name, value, bufnr)
+    api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", {buf=bufnr, scope="local"})
+end
+
 local function is_null_ls_formatting_enabed(bufnr)
-    local file_type = api.nvim_buf_get_option(bufnr, "filetype")
+    local file_type = api.nvim_get_option_value("filetype", {buf=bufnr, scope="local"})
     local generators = require("null-ls.generators").get_available(
         file_type,
         require("null-ls.methods").internal.FORMATTING
@@ -69,11 +73,11 @@ local function set_up_keymap(client, bufnr, format_enabled)
     local server_capabilities = client.server_capabilities
 
     if server_capabilities.completionProvider then
-        api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+        set_option("omnifunc", "v:lua.vim.lsp.omnifunc", bufnr)
     end
 
     if server_capabilities.hoverProvider then
-        api.nvim_buf_set_option(bufnr, "keywordprg", ":LspHover")
+        set_option("keywordprg", ":LspHover", bufnr)
     end
 
     if server_capabilities.definitionProvider then
@@ -81,9 +85,9 @@ local function set_up_keymap(client, bufnr, format_enabled)
         keymap.set("n", "<leader>gp", "<cmd>Lspsaga peek_definition<CR>", opts)
 
         if options.get_option_value("lsp_tagfunc_enabled") then
-            api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-        elseif api.nvim_buf_get_option(bufnr, "tagfunc") == "v:lua.vim.lsp.tagfunc" then
-            api.nvim_buf_set_option(bufnr, "tagfunc", "")
+            set_option("tagfunc", "v:lua.vim.lsp.tagfunc", bufnr)
+        elseif api.nvim_get_option_value("tagfunc", {buf=bufnr, scope="local"}) == "v:lua.vim.lsp.tagfunc" then
+            set_option("tagfunc", "", bufnr)
         end
     end
 
@@ -92,13 +96,13 @@ local function set_up_keymap(client, bufnr, format_enabled)
             client.name == "null-ls" and is_null_ls_formatting_enabed(bufnr)
             or client.name ~= "null-ls"
         then
-            api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
+            set_option("formatexpr", "v:lua.vim.lsp.formatexpr()", bufnr)
             keymap.set("n", "<leader>gq", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
         else
-            api.nvim_buf_set_option(bufnr, "formatexpr", "")
+            set_option("formatexpr", "", bufnr)
         end
     elseif format_enabled then
-        api.nvim_buf_set_option(bufnr, "formatexpr", "")
+        set_option("formatexpr", "", bufnr)
     end
 
     if is_configured(bufnr, client, "shortcuts_set") then
@@ -166,11 +170,11 @@ local function delete_keymaps(
     end
 
     if server_capabilities.completionProvider then
-        api.nvim_buf_set_option(bufnr, "omnifunc", "")
+        set_option("omnifunc", "", bufnr)
     end
 
     if server_capabilities.hoverProvider then
-        api.nvim_buf_set_option(bufnr, "keywordprg", "")
+        set_option("keywordprg", "", bufnr)
     end
 
     if server_capabilities.definitionProvider then
@@ -178,7 +182,7 @@ local function delete_keymaps(
         del_keymap("n", "<leader>gp", opts)
 
         if options.get_option_value("lsp_tagfunc_enabled") then
-            api.nvim_buf_set_option(bufnr, "tagfunc", "")
+            set_option("tagfunc", "", bufnr)
         end
     end
 
@@ -187,7 +191,7 @@ local function delete_keymaps(
             client.name == "null-ls" and is_null_ls_formatting_enabed(bufnr)
             or client.name ~= "null-ls"
         then
-            api.nvim_buf_set_option(bufnr, "formatexpr", "")
+            set_option("formatexpr", "", bufnr)
             del_keymap("n", "<leader>gq", opts)
         end
     end
@@ -364,6 +368,13 @@ local function setup_null_ls_cmp_patch()
             return vim.fn.pumvisible() ~= 0
         end,
     }
+
+    vim.cmd(
+        [[packadd cmp-buffer | lua require('cmp').register_source('buffer', require('cmp_buffer').new())]]
+    )
+    vim.cmd(
+        [[packadd cmp-path | lua require('cmp').register_source('path', require('cmp_path').new())]]
+    )
 end
 
 -- }}}
@@ -652,12 +663,6 @@ function M.setup_lsp()
             -- }}}
         },
     })
-    vim.cmd(
-        [[packadd cmp-buffer | lua require('cmp').register_source('buffer', require('cmp_buffer').new())]]
-    )
-    vim.cmd(
-        [[packadd cmp-path | lua require('cmp').register_source('path', require('cmp_path').new())]]
-    )
 
     setup_signs()
 end
