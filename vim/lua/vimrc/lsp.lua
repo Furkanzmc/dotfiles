@@ -12,11 +12,15 @@ local M = {}
 -- Utils {{{
 
 local function set_option(name, value, bufnr)
-    api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", {buf=bufnr, scope="local"})
+    api.nvim_set_option_value(
+        "omnifunc",
+        "v:lua.vim.lsp.omnifunc",
+        { buf = bufnr, scope = "local" }
+    )
 end
 
 local function is_null_ls_formatting_enabed(bufnr)
-    local file_type = api.nvim_get_option_value("filetype", {buf=bufnr, scope="local"})
+    local file_type = api.nvim_get_option_value("filetype", { buf = bufnr, scope = "local" })
     local generators = require("null-ls.generators").get_available(
         file_type,
         require("null-ls.methods").internal.FORMATTING
@@ -86,7 +90,10 @@ local function set_up_keymap(client, bufnr, format_enabled)
 
         if options.get_option_value("lsp_tagfunc_enabled") then
             set_option("tagfunc", "v:lua.vim.lsp.tagfunc", bufnr)
-        elseif api.nvim_get_option_value("tagfunc", {buf=bufnr, scope="local"}) == "v:lua.vim.lsp.tagfunc" then
+        elseif
+            api.nvim_get_option_value("tagfunc", { buf = bufnr, scope = "local" })
+            == "v:lua.vim.lsp.tagfunc"
+        then
             set_option("tagfunc", "", bufnr)
         end
     end
