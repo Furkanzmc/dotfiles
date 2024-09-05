@@ -12,11 +12,7 @@ local M = {}
 -- Utils {{{
 
 local function set_option(name, value, bufnr)
-    api.nvim_set_option_value(
-        "omnifunc",
-        "v:lua.vim.lsp.omnifunc",
-        { buf = bufnr, scope = "local" }
-    )
+    api.nvim_set_option_value(name, value, { buf = bufnr, scope = "local" })
 end
 
 local function is_null_ls_formatting_enabed(bufnr)
@@ -88,7 +84,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
         keymap.set("n", "<leader>gd", "<Cmd>Lspsaga goto_definition<CR>", opts)
         keymap.set("n", "<leader>gp", "<cmd>Lspsaga peek_definition<CR>", opts)
 
-        if options.get_option_value("lsp_tagfunc_enabled") then
+        if options.get_option_value("lsp_tagfunc_enabled") == true then
             set_option("tagfunc", "v:lua.vim.lsp.tagfunc", bufnr)
         elseif
             api.nvim_get_option_value("tagfunc", { buf = bufnr, scope = "local" })
@@ -398,6 +394,17 @@ function M.setup_lsp()
     if vim.fn.exists(":LspInfo") == 0 then
         return
     end
+
+    options.register_callback("lsp_tagfunc_enabled", function()
+        local value = options.get_option_value("lsp_tagfunc_enabled")
+        local buffers = vim.api.nvim_list_bufs()
+
+        for _, bufnr in ipairs(buffers) do
+            if not value then
+                set_option("tagfunc", "", bufnr)
+            end
+        end
+    end)
 
     vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
