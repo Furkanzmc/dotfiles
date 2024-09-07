@@ -57,9 +57,9 @@ abbreviate <silent> <buffer> s@ :<Esc>h"_xbion<Esc>l~$a<Space>{}<Esc>i<CR><Esc>O
 " Create property change handler.
 abbreviate <silent> <buffer> p@ :<Esc>h"_xbion<Esc>l~$iChanged<Right><Space>{}<Esc>i<CR><Esc>O<C-R>=abbreviations#eat_char('\s')<CR>
 
-abbreviate <silent> <buffer> iqqc@ import QtQuick.Controls 2.<C-R>=abbreviations#eat_char('\s')<CR>
-abbreviate <silent> <buffer> iqq@ import QtQuick 2.<C-R>=abbreviations#eat_char('\s')<CR>
-abbreviate <silent> <buffer> iqql@ import QtQuick.Layouts 1.<C-R>=abbreviations#eat_char('\s')<CR>
-abbreviate <silent> <buffer> iqqw@ import QtQuick.Window 2.<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> iqqc@ import QtQuick.Controls<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> iqq@ import QtQuick<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> iqql@ import QtQuick.Layouts<C-R>=abbreviations#eat_char('\s')<CR>
+abbreviate <silent> <buffer> iqqw@ import QtQuick.Window<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> clog@ console.log("[<C-r>=expand("%:t") . "::" . line(".")<CR>::]")<Esc>F:a<C-R>=abbreviations#eat_char('\s')<CR>
 abbreviate <silent> <buffer> cl@ console.log("")<Esc>F(la<C-R>=abbreviations#eat_char('\s')<CR>
