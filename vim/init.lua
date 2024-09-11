@@ -270,6 +270,12 @@ g.neovide_scroll_animation_length = 0.0
 g.neovide_cursor_animation_length = 0.02
 g.neovide_window_blurred = true
 
+if vim.g.neovide then
+    keymap.set("n", "<F11>", function()
+        vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
+    end, { remap = false })
+end
+
 -- }}}
 
 -- }}}
