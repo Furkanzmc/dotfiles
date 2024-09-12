@@ -402,6 +402,10 @@ cmd(
     [[cnoreabbrev buffs@ <C-R>=luaeval("table.concat(require'vimrc.buffers'.get_buffer_names(), ' ')")<CR>]]
 )
 
+if vim.o.loadplugins then
+    cmd([[cnoreabbrev head@ <C-R>=FugitiveHead()<CR>]])
+end
+
 -- }}}
 
 -- Plugins {{{
