@@ -1027,6 +1027,12 @@ g.zig_fmt_autosave = false
 
 -- }}}
 
+-- vim-dirvish {{{
+
+vim.g.dirvish_mode = ":sort ,^.*[\\/],"
+
+-- }}}
+
 -- }}}
 
 -- Local Plugins {{{
