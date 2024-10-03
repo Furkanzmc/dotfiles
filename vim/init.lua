@@ -244,6 +244,7 @@ opt.mouse = ""
 
 if fn.executable("just") then
     opt.makeprg = "just $*"
+    cmd([[abbreviate just Just]])
 
     if vim.o.loadplugins == true then
         api.nvim_create_user_command("Just", ":Cfrun just <args>", {
