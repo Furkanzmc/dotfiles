@@ -101,6 +101,3 @@
 [submodule "vim/pack/packages/opt/nvim-nio"]
 	path = vim/pack/packages/opt/nvim-nio
 	url = https://github.com/nvim-neotest/nvim-nio.git
-[submodule "vim/pack/packages/opt/flutter-tools.nvim"]
-	path = vim/pack/packages/opt/flutter-tools.nvim
-	url = https://github.com/akinsho/flutter-tools.nvim.git
