@@ -629,6 +629,25 @@ function Convert-Video-to-Gif() {
     ffmpeg -i $Input -vf "fps=10,scale=1080:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 $Output
 }
 
+function Update-LLVM-Aliases() {
+    if ($IsMacOS) {
+        $version = brew info --json llvm | jq .[0].versions.stable
+        $version = $version.Trim('"')
+        Write-Host -ForegroundColor Blue -Message "Updating aliases for $version..."
+
+        ln -sf /opt/homebrew/Cellar/llvm/$version/bin/lldb-dap /usr/local/bin/
+        ln -sf /opt/homebrew/Cellar/llvm/$version/bin/clang-format /usr/local/bin/
+        ln -sf /opt/homebrew/Cellar/llvm/$version/bin/git-clang-format /usr/local/bin/
+        ln -sf /opt/homebrew/Cellar/llvm/$version/bin/clangd /usr/local/bin/
+        ln -sf /opt/homebrew/Cellar/llvm/$version/bin/clang-check /usr/local/bin/
+        ln -sf /opt/homebrew/Cellar/llvm/$version/bin/clang-tidy /usr/local/bin/
+        Write-Host -ForegroundColor Blue -Message "Done!"
+    }
+    else {
+        Write-Error "Not implemented yet!"
+    }
+}
+
 if (Test-Path env:PWSH_TIME -ErrorAction SilentlyContinue) {
     Write-Host "Loaded Pwsh-Utils in $($Stopwatch.Elapsed.TotalSeconds) seconds."
     $Stopwatch.Stop()
