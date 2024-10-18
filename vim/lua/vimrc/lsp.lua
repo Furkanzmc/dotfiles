@@ -461,6 +461,7 @@ function M.setup_lsp()
 
         setup_buffer_vars(client, bufnr, format_enabled)
 
+        vim.lsp.inlay_hint.enable(true)
         set_enabled(bufnr, client, "configured", true)
         set_handlers(client, bufnr)
 
