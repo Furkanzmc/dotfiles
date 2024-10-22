@@ -300,6 +300,10 @@ function M.init(winnr)
         head = string.gsub(head, "%(", "")
         head = string.gsub(head, "%)", "")
         if head ~= "" then
+            local max_length = 13
+            if #head > max_length then
+                head = head:sub(0, max_length) .. "..."
+            end
             st(" " .. head, active, "StatusLineBranch", "StatusLineNC", 1)
         end
     end
@@ -327,9 +331,9 @@ function M.init_winbar(winnr)
 
     local is_lsp_running = require("vimrc.lsp").is_lsp_running(bufnr)
     if is_lsp_running then
-        st("예", active, "WinBarLspStatus", "WinBarNC", 1)
+        st("對", active, "WinBarLspStatus", "WinBarNC", 1)
     else
-        st("아니", active, "WinBarLspStatus", "WinBarNC", 1)
+        st("不", active, "WinBarLspStatus", "WinBarNC", 1)
     end
 
     -- }}}
