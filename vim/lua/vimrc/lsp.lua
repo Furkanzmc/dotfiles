@@ -152,6 +152,13 @@ local function set_up_keymap(client, bufnr, format_enabled)
         keymap.set("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
 
+    keymap.set(
+        "n",
+        "<leader>gh",
+        "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>",
+        opts
+    )
+
     if server_capabilities.hoverProvider then
         api.nvim_command("command! -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
     end
@@ -226,6 +233,7 @@ local function delete_keymaps(
     del_keymap("n", "<leader>ge", opts)
     del_keymap("n", "<leader>gc", opts)
     del_keymap("n", "<leader>gl", opts)
+    del_keymap("n", "<leader>gh", opts)
 
     if server_capabilities.documentSymbolProvider then
         del_keymap("n", "<leader>gds", opts)
@@ -643,7 +651,9 @@ function M.setup_lsp()
                 end,
             }),
             null_ls.builtins.diagnostics.yamllint,
-            null_ls.builtins.diagnostics.cppcheck,
+            null_ls.builtins.diagnostics.cppcheck.with({
+                extra_args = { "--project=./compile_commands.json" },
+            }),
             null_ls.builtins.diagnostics.qmllint.with({
                 runtime_condition = function(params)
                     return options.get_option_value("qmllint_enabled", params.bufnr)
