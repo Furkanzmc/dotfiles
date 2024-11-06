@@ -631,8 +631,8 @@ function Convert-Video-to-Gif() {
 
 function Update-LLVM-Aliases() {
     if ($IsMacOS) {
-        $version = brew info --json llvm | jq .[0].versions.stable
-        $version = $version.Trim('"')
+        $version = brew list --versions llvm
+        $version = $version.Split(' ')[1]
         Write-Host -ForegroundColor Blue -Message "Updating aliases for $version..."
 
         ln -sf /opt/homebrew/Cellar/llvm/$version/bin/lldb-dap /usr/local/bin/
