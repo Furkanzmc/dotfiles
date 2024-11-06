@@ -104,13 +104,15 @@ end
 --- @param opts.cwd string
 --- @param opts.env table
 --- @param opts.run_in_terminal boolean
+--- @param opts.lldb_dap_path string
 --- @return nil
 function M.init(opts)
     assert(fn.exists(":DapUIOpen") == 0, "nvim-dap is already initialized.")
 
-    if fn.filereadable(vim.g.vimrc_dap_lldb_vscode_path) == 0 then
+    opts.lldb_dap_path = opts.lldb_dap_path or vim.g.vimrc_dap_lldb_vscode_path
+    if fn.filereadable(opts.lldb_dap_path) == 0 then
         cmd([[echohl ErrorMsg]])
-        cmd([[echo 'g:vimrc_dap_lldb_vscode_path is not set.']])
+        cmd([[echo 'lldb_dap_path is not readable.']])
         cmd([[echohl Normal]])
         return
     end
@@ -128,7 +130,7 @@ function M.init(opts)
             name = "lldb",
             type = "executable",
             attach = { pidProperty = "pid", pidSelect = "ask" },
-            command = vim.g.vimrc_dap_lldb_vscode_path,
+            command = opts.lldb_dap_path,
             env = { LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES" },
         }
 
