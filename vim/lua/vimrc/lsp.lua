@@ -12,11 +12,11 @@ local M = {}
 -- Utils {{{
 
 local function set_option(name, value, bufnr)
-    api.nvim_set_option_value(name, value, { buf = bufnr, scope = "local" })
+    api.nvim_set_option_value(name, value, { buf = bufnr })
 end
 
 local function is_null_ls_formatting_enabed(bufnr)
-    local file_type = api.nvim_get_option_value("filetype", { buf = bufnr, scope = "local" })
+    local file_type = api.nvim_get_option_value("filetype", { buf = bufnr })
     local generators = require("null-ls.generators").get_available(
         file_type,
         require("null-ls.methods").internal.FORMATTING
@@ -86,10 +86,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
 
         if options.get_option_value("lsp_tagfunc_enabled") == true then
             set_option("tagfunc", "v:lua.vim.lsp.tagfunc", bufnr)
-        elseif
-            api.nvim_get_option_value("tagfunc", { buf = bufnr, scope = "local" })
-            == "v:lua.vim.lsp.tagfunc"
-        then
+        elseif api.nvim_get_option_value("tagfunc", { buf = bufnr }) == "v:lua.vim.lsp.tagfunc" then
             set_option("tagfunc", "", bufnr)
         end
     end
@@ -152,12 +149,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
         keymap.set("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
 
-    keymap.set(
-        "n",
-        "<leader>gh",
-        "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())<CR>",
-        opts
-    )
+    keymap.set("n", "<leader>gh", "<cmd>lua vim.lsp.inlay_hint(0, nil)<CR>", opts)
 
     if server_capabilities.hoverProvider then
         api.nvim_command("command! -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
@@ -469,7 +461,10 @@ function M.setup_lsp()
 
         setup_buffer_vars(client, bufnr, format_enabled)
 
-        vim.lsp.inlay_hint.enable(true)
+        if client.server_capabilities.inlayHintProvider == true then
+            vim.lsp.enable(bufnr)
+        end
+
         set_enabled(bufnr, client, "configured", true)
         set_handlers(client, bufnr)
 
