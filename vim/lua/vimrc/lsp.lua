@@ -149,7 +149,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
         keymap.set("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
 
-    keymap.set("n", "<leader>gh", "<cmd>lua vim.lsp.inlay_hint(0, nil)<CR>", opts)
+    keymap.set("n", "<leader>gh", "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({bufnr=0}), {bufnr=0})<CR>", opts)
 
     if server_capabilities.hoverProvider then
         api.nvim_command("command! -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
@@ -462,7 +462,7 @@ function M.setup_lsp()
         setup_buffer_vars(client, bufnr, format_enabled)
 
         if client.server_capabilities.inlayHintProvider == true then
-            vim.lsp.enable(bufnr)
+            vim.lsp.inlay_hint.enable(true, {bufnr=bufnr})
         end
 
         set_enabled(bufnr, client, "configured", true)
