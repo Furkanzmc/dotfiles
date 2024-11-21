@@ -484,6 +484,10 @@ function M.setup_lsp()
     local lspconfig = require("lspconfig")
     lsp.set_log_level("error")
 
+    if fn.executable("cmake-language-server") == 1 then
+        require("lspconfig").cmake.setup({})
+    end
+
     if fn.executable("pyright") == 1 then
         lspconfig.pyright.setup({
             on_attach = setup_without_formatting,

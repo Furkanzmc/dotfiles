@@ -39,7 +39,7 @@ cmd([[filetype indent on]])
 opt.foldopen = "block,hor,jump,mark,percent,quickfix,search,tag"
 opt.complete = ".,w,k,kspell,b"
 opt.completeopt = "menuone,noselect"
-opt.wildoptions = "pum,tagfile,fuzzy"
+opt.wildoptions = "pum,tagfile"
 
 opt.termguicolors = true
 opt.foldenable = false
