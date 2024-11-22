@@ -149,7 +149,12 @@ local function set_up_keymap(client, bufnr, format_enabled)
         keymap.set("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
 
-    keymap.set("n", "<leader>gh", "<cmd>lua vim.lsp.inlay_hint(0, nil)<CR>", opts)
+    keymap.set(
+        "n",
+        "<leader>gh",
+        "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), {bufnr=9})<CR>",
+        opts
+    )
 
     if server_capabilities.hoverProvider then
         api.nvim_command("command! -buffer -nargs=1 LspHover lua vim.lsp.buf.hover()<CR>")
@@ -462,7 +467,7 @@ function M.setup_lsp()
         setup_buffer_vars(client, bufnr, format_enabled)
 
         if client.server_capabilities.inlayHintProvider == true then
-            vim.lsp.inlay_hint(bufnr, enable)
+            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
         end
 
         set_enabled(bufnr, client, "configured", true)
@@ -515,14 +520,14 @@ function M.setup_lsp()
         capabilities.offsetEncoding = { "utf-16" }
         lspconfig.clangd.setup({
             capabilities = capabilities,
-            on_attach = setup_without_formatting,
+            on_attach = setup,
             cmd = {
                 "clangd",
                 "--background-index",
+                "--background-index-priority=low",
                 "--clang-tidy",
                 "--completion-style=bundled",
                 "--header-insertion=iwyu",
-                "--inlay-hints",
                 "--enable-config",
                 "--offset-encoding=utf-16",
                 "--header-insertion-decorators",
@@ -619,7 +624,6 @@ function M.setup_lsp()
             null_ls.builtins.formatting.cmake_format,
             null_ls.builtins.formatting.black,
             null_ls.builtins.formatting.dart_format,
-            null_ls.builtins.formatting.clang_format,
             null_ls.builtins.formatting.qmlformat,
             null_ls.builtins.formatting.swift_format,
             null_ls.builtins.formatting.prettier.with({
