@@ -152,7 +152,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
     keymap.set(
         "n",
         "<leader>gh",
-        "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(), {bufnr=9})<CR>",
+        "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({bufnr=0}), {bufnr=0})<CR>",
         opts
     )
 

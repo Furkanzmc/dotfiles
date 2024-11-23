@@ -9,6 +9,7 @@ set scrolloff=0
 setlocal nonumber
 setlocal norelativenumber
 setlocal cursorline
+setlocal cursorlineopt=line
 
 setlocal signcolumn=no
 setlocal nocursorcolumn
