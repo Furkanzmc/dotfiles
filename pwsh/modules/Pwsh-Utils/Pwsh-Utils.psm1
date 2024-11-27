@@ -588,7 +588,7 @@ function Diff-Branches() {
         $git_path = $(git rev-parse --git-path /$hash)
         $branch_files = $(git diff --name-only $Branch $Target | ForEach-Object { "fugitive:///$git_path/$_"})
         if ($Neovide) {
-            neovide --no-tabs $branch_files -- $arguments
+            neovide --fork --no-tabs $branch_files -- $arguments
         }
         else {
             nvim $arguments -- $branch_files
@@ -597,7 +597,7 @@ function Diff-Branches() {
     else {
         $arguments += "nmap <leader>d :Gdiffsplit! $Branch<CR>"
         if ($Neovide) {
-            neovide --no-tabs $(git diff $Branch --name-only) -- $arguments
+            neovide --fork --no-tabs $(git diff $Branch --name-only) -- $arguments
         }
         else {
             nvim $arguments -- $(git diff $Branch --name-only)
