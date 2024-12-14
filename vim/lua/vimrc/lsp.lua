@@ -554,6 +554,13 @@ function M.setup_lsp()
         })
     end
 
+    if fn.executable("qmlls") == 1 then
+        lspconfig.qmlls.setup({
+            cmd = { 'qmlls', '-I', './qml' },
+            on_attach = setup_without_formatting,
+        })
+    end
+
     if fn.executable("rust-analyzer") == 1 then
         lspconfig.rust_analyzer.setup({
             on_attach = setup_without_formatting,
