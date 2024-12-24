@@ -610,6 +610,10 @@ function M.setup_lsp()
         })
     end
 
+    if fn.executable("glsl_analyzer") == 1 then
+        lspconfig.glsl_analyzer.setup{}
+    end
+
     local cmp_exists, _ = pcall(require, "cmp")
     if not cmp_exists then
         setup_null_ls_cmp_patch()
