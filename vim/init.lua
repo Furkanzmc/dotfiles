@@ -75,10 +75,15 @@ opt.autoread = true
 g.mapleader = " "
 g.maplocalleader = " "
 
--- Use ripgrep over grep, if possible
-if fn.executable("rg") then
+-- Prefer ugrep for now.
+if false and fn.executable("rg") then
     opt.grepprg = "rg --vimgrep $*"
     opt.grepformat = "%f:%l:%c:%m"
+end
+
+if fn.executable('ugrep') then
+    opt.grepprg = "ugrep -RInk -j -u --tabs=1 --ignore-files"
+    opt.grepformat = "%f:%l:%c:%m,%f+%l+%c+%m,%-G%f|%l|%c|%m"
 end
 
 -- Means that you can undo even when you close a buffer/VIM
@@ -392,6 +397,7 @@ if vim.o.loadplugins == true then
 
     cmd([[cnoreabbrev fd Fd]])
     cmd([[cnoreabbrev rg Rg]])
+    cmd([[cnoreabbrev ug Ug]])
 
     cmd([[cnoreabbrev frun FRun]])
     cmd([[cnoreabbrev fh Fhdo]])
