@@ -431,7 +431,7 @@ function M.setup_lsp()
 
     vim.diagnostic.config({
         signs = true,
-        virtual_text = options.get_option_value("lsp_virtual_text", bufnr),
+        virtual_text = options.get_option_value("lsp_virtual_text"),
         underline = false,
         update_in_insert = false,
         severity_sort = false,
@@ -439,7 +439,7 @@ function M.setup_lsp()
 
     options.register_callback("lsp_virtual_text", function()
         vim.diagnostic.config({
-            virtual_text = options.get_option_value("lsp_virtual_text", bufnr),
+            virtual_text = options.get_option_value("lsp_virtual_text"),
         })
     end)
 
@@ -560,7 +560,7 @@ function M.setup_lsp()
 
     if fn.executable("qmlls") == 1 then
         lspconfig.qmlls.setup({
-            cmd = { 'qmlls', '-I', './qml' },
+            cmd = { "qmlls", "-I", "./qml" },
             on_attach = setup_without_formatting,
         })
     end
@@ -615,7 +615,7 @@ function M.setup_lsp()
     end
 
     if fn.executable("glsl_analyzer") == 1 then
-        lspconfig.glsl_analyzer.setup{}
+        lspconfig.glsl_analyzer.setup({})
     end
 
     local cmp_exists, _ = pcall(require, "cmp")
