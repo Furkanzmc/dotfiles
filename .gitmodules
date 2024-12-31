@@ -101,3 +101,6 @@
 [submodule "vim/pack/packages/opt/nvim-nio"]
 	path = vim/pack/packages/opt/nvim-nio
 	url = https://github.com/nvim-neotest/nvim-nio.git
+[submodule "vim/pack/packages/start/nvim-lsp-endhints"]
+	path = vim/pack/packages/start/nvim-lsp-endhints
+	url = https://github.com/chrisgrieser/nvim-lsp-endhints.git

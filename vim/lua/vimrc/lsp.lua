@@ -470,6 +470,10 @@ function M.setup_lsp()
         set_enabled(bufnr, client, "configured", true)
         set_handlers(client, bufnr)
 
+        if client.server_capabilities.inlayHintProvider == true then
+            require("lsp-endhints").enable()
+        end
+
         require("lsp_signature").on_attach({
             bind = true,
             handler_opts = { border = "none" },
