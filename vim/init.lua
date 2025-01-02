@@ -785,7 +785,7 @@ if vim.o.loadplugins == true and g.vimrc_treesitter_filetypes ~= nil then
     cmd(
         "au FileType "
             .. table.concat(g.vimrc_treesitter_filetypes, ",")
-            .. " setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()"
+            .. ",qml setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()"
     )
     cmd([[augroup END]])
 
@@ -794,7 +794,7 @@ if vim.o.loadplugins == true and g.vimrc_treesitter_filetypes ~= nil then
     cmd(
         "au FileType "
             .. table.concat(g.vimrc_treesitter_filetypes, ",")
-            .. " lua require'vimrc'.setup_treesitter()"
+            .. ",qml lua require'vimrc'.setup_treesitter()"
     )
     cmd([[augroup END]])
 end
