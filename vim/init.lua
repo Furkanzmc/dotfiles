@@ -81,7 +81,7 @@ if false and fn.executable("rg") then
     opt.grepformat = "%f:%l:%c:%m"
 end
 
-if fn.executable('ugrep') then
+if fn.executable("ugrep") then
     opt.grepprg = "ugrep -RInk -j -u --tabs=1 --ignore-files"
     opt.grepformat = "%f:%l:%c:%m,%f+%l+%c+%m,%-G%f|%l|%c|%m"
 end
@@ -1053,6 +1053,22 @@ g.zig_fmt_autosave = false
 -- vim-dirvish {{{
 
 vim.g.dirvish_mode = ":sort ,^.*[\\/],"
+
+-- }}}
+
+-- nvim-gdb {{{
+
+vim.g.nvimgdb_disable_start_keymaps = true
+vim.g.nvimgdb_config_override = {
+    key_until = "<leader>dr",
+    key_continue = "<leader>dc",
+    key_next = "<leader>dn",
+    key_step = "<leader>ds",
+    key_breakpoint = "<leader>db",
+    key_frameup = "<leader>du",
+    key_framedown = "<leader>dd",
+    key_eval = "<leader>dk",
+}
 
 -- }}}
 

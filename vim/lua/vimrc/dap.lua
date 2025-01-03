@@ -151,4 +151,25 @@ function M.init(opts)
     end
 end
 
+--- @param opts table
+--- @param opts.name string
+--- @param opts.program string
+--- @param opts.cwd string
+--- @param opts.env table
+--- @param opts.run_in_terminal boolean
+--- @param opts.lldb_dap_path string
+--- @return nil
+function M.init_gdb(opts)
+    cmd([[packadd nvim-gdb]])
+
+    keymap.set(
+        "n",
+        "<leader>di",
+        function()
+            vim.cmd(":GdbStartLLDB lldb " .. opts.program)
+        end,
+        { silent = true, remap = false }
+    )
+end
+
 return M

@@ -104,3 +104,6 @@
 [submodule "vim/pack/packages/start/nvim-lsp-endhints"]
 	path = vim/pack/packages/start/nvim-lsp-endhints
 	url = https://github.com/chrisgrieser/nvim-lsp-endhints.git
+[submodule "vim/pack/packages/opt/nvim-gdb"]
+	path = vim/pack/packages/opt/nvim-gdb
+	url = https://github.com/sakhnik/nvim-gdb.git
