@@ -9,7 +9,7 @@ endif
 
 setlocal foldmethod=indent
 setlocal signcolumn=yes
-setlocal suffixesadd=.cpp,.h,.hxx,.cxx,.hpp,_p.h,_p_p.h,.c
+setlocal suffixesadd=.cpp,.h,.hh,.hxx,.cxx,.hpp,_p.h,_p_p.h,.c,.cc
 setlocal includeexpr=cpp#includeexpr(v:fname)
 setlocal commentstring=//%s
 setlocal nocursorcolumn
