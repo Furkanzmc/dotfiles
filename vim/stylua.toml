@@ -1,2 +1,3 @@
 indent_type = "Spaces"
 column_width = 100
+call_parentheses = "NoSingleTable"
