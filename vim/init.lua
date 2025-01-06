@@ -157,14 +157,14 @@ opt.pumblend = 10
 opt.tabline = '%!luaeval("' .. "require'vimrc.tabline'.init()" .. '")'
 opt.title = true
 opt.titlelen = 80
-opt.titlestring = table.concat({
+opt.titlestring = table.concat {
     "%<",
     '%{exists("$VIRTUAL_ENV") ? ".venv" : ""}',
     '%{exists("$VIRTUAL_ENV") && exists("$ENV_NAME") ? "://" : ""}',
     '%{exists("$ENV_NAME") ? expand("$ENV_NAME") : ""}',
     "%=",
     '%{strftime("%b\\ %d\\ %A,\\ %H:%M")}',
-})
+}
 opt.statusline = '%!luaeval("require\'vimrc.statusline\'.init(" . g:statusline_winid . ")")'
 
 if vim.env.VIMRC_BACKGROUND == "dark" then
@@ -819,7 +819,7 @@ if vim.o.loadplugins then
     require("firvish.notifications").notify = function(msg, _, opts)
         opts.title = opts.title or "Neovim"
         local firvish = require("firvish.job_control")
-        firvish.start_job({
+        firvish.start_job {
             cmd = {
                 "pwsh",
                 "-C",
@@ -833,7 +833,7 @@ if vim.o.loadplugins then
             title = "Notification",
             is_background_job = true,
             listed = false,
-        })
+        }
     end
 end
 
@@ -842,7 +842,7 @@ end
 -- comment.nvim {{{
 
 if vim.o.loadplugins == true then
-    require("Comment").setup({ ignore = "^$" })
+    require("Comment").setup { ignore = "^$" }
 
     local ft = require("Comment.ft")
     ft.qml = { "//%s", "/*%s*/" }
@@ -855,122 +855,122 @@ end
 if vim.o.loadplugins == true then
     local options = require("options")
 
-    options.register_option({
+    options.register_option {
         name = "qmllint_enabled",
         default = true,
         type_info = "boolean",
         source = "lsp",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "pylint_enabled",
         default = true,
         type_info = "boolean",
         source = "lsp",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "tags_completion_enabled",
         default = true,
         type_info = "boolean",
         source = "lsp",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "clean_trailing_whitespace",
         default = true,
         type_info = "boolean",
         source = "buffers",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "lsp_tagfunc_enabled",
         default = true,
         type_info = "boolean",
         source = "vimrc",
         global = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "clean_trailing_whitespace_limit",
         default = 0,
         type_info = "number",
         source = "buffers",
         buffer_local = true,
         description = "If the number of trailing white spaces below this number, they will be cleared automatically. Otherwise you will be prompted for each one.",
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "highlight_trailing_whitespace",
         default = true,
         type_info = "boolean",
         source = "buffers",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "indentsize",
         default = 4,
         type_info = "number",
         source = "buffers",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "shell",
         default = "pwsh",
         type_info = "string",
         source = "options",
         global = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "scratchpad",
         default = false,
         type_info = "boolean",
         source = "options",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "todofenced",
         default = {},
         type_info = "table",
         source = "todo",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "minimal_buffer",
         default = false,
         type_info = "boolean",
         source = "buffers",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "lsp_context_enabled",
         default = true,
         type_info = "boolean",
         source = "buffers",
         buffer_local = true,
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "lsp_virtual_text",
         default = false,
         type_info = "boolean",
         source = "lsp",
         buffer_local = false,
         description = "Enable virtual text for LSP globally.",
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "lsp_completion_buffer_enabled",
         default = true,
         type_info = "boolean",
         source = "lsp",
         buffer_local = false,
         description = "Enable cmp-buffer completion source.",
-    })
-    options.register_option({
+    }
+    options.register_option {
         name = "lsp_completion_path_enabled",
         default = true,
         type_info = "boolean",
         source = "lsp",
         buffer_local = false,
         description = "Enable cmp-path completion source.",
-    })
+    }
 end
 
 -- }}}
@@ -978,7 +978,7 @@ end
 -- cosmic_latte {{{
 
 if vim.o.loadplugins == true then
-    require("catppuccin").setup({
+    require("catppuccin").setup {
         term_colors = true,
         integrations = {
             cmp = false,
@@ -1031,7 +1031,7 @@ if vim.o.loadplugins == true then
                 }
             end,
         },
-    })
+    }
 end
 
 -- }}}
@@ -1292,7 +1292,7 @@ api.nvim_create_autocmd({ "TextYankPost" }, {
     pattern = "*",
     group = augroup_vimrc_init,
     callback = function(_)
-        vim.highlight.on_yank({ on_visual = false, higroup = "IncSearch", timeout = 150 })
+        vim.highlight.on_yank { on_visual = false, higroup = "IncSearch", timeout = 150 }
     end,
 })
 

@@ -293,7 +293,7 @@ end
 -- Public Functions {{{
 
 function M.is_lsp_running(bufnr)
-    return next(lsp.get_clients({ bufnr = bufnr })) ~= nil
+    return next(lsp.get_clients { bufnr = bufnr }) ~= nil
 end
 
 function M.setup_lsp()
@@ -332,21 +332,21 @@ function M.setup_lsp()
         end,
     })
 
-    vim.diagnostic.config({
+    vim.diagnostic.config {
         signs = true,
         virtual_text = options.get_option_value("lsp_virtual_text"),
         underline = false,
         update_in_insert = false,
         severity_sort = false,
-    })
+    }
 
     options.register_callback("lsp_virtual_text", function()
-        vim.diagnostic.config({
+        vim.diagnostic.config {
             virtual_text = options.get_option_value("lsp_virtual_text"),
-        })
+        }
     end)
 
-    require("lspsaga").setup({
+    require("lspsaga").setup {
         symbol_in_winbar = {
             enable = false,
             separator = " ",
@@ -360,7 +360,7 @@ function M.setup_lsp()
         outline = {
             auto_preview = false,
         },
-    })
+    }
 
     local setup = function(client, format_enabled)
         local bufnr = api.nvim_get_current_buf()
@@ -387,11 +387,11 @@ function M.setup_lsp()
     lsp.set_log_level("error")
 
     if fn.executable("cmake-language-server") == 1 then
-        require("lspconfig").cmake.setup({})
+        require("lspconfig").cmake.setup {}
     end
 
     if fn.executable("pyright") == 1 then
-        lspconfig.pyright.setup({
+        lspconfig.pyright.setup {
             on_attach = setup_without_formatting,
             filetypes = { "python" },
             settings = {
@@ -409,13 +409,13 @@ function M.setup_lsp()
                     },
                 },
             },
-        })
+        }
     end
 
     if fn.executable("clangd") == 1 then
         local capabilities = lsp.protocol.make_client_capabilities()
         capabilities.offsetEncoding = { "utf-16" }
-        lspconfig.clangd.setup({
+        lspconfig.clangd.setup {
             capabilities = capabilities,
             on_attach = setup,
             cmd = {
@@ -430,11 +430,11 @@ function M.setup_lsp()
                 "--header-insertion-decorators",
                 "-j=1",
             },
-        })
+        }
     end
 
     if fn.executable("lua-language-server") == 1 then
-        lspconfig.lua_ls.setup({
+        lspconfig.lua_ls.setup {
             on_attach = setup_without_formatting,
             settings = {
                 Lua = {
@@ -444,25 +444,25 @@ function M.setup_lsp()
                     telemetry = { enable = false },
                 },
             },
-        })
+        }
     end
 
     if fn.executable("ccls") == 1 then
-        lspconfig.ccls.setup({
+        lspconfig.ccls.setup {
             on_attach = setup_without_formatting,
             settings = { index = { threads = 1 } },
-        })
+        }
     end
 
     if fn.executable("qmlls") == 1 then
-        lspconfig.qmlls.setup({
+        lspconfig.qmlls.setup {
             cmd = { "qmlls", "-I", "./qml" },
             on_attach = setup_without_formatting,
-        })
+        }
     end
 
     if fn.executable("rust-analyzer") == 1 then
-        lspconfig.rust_analyzer.setup({
+        lspconfig.rust_analyzer.setup {
             on_attach = setup_without_formatting,
             filetypes = { "rust" },
             settings = {
@@ -475,17 +475,17 @@ function M.setup_lsp()
                     procMacro = { enable = true },
                 },
             },
-        })
+        }
     end
 
     if fn.executable("gopls") == 1 then
-        lspconfig.gopls.setup({
+        lspconfig.gopls.setup {
             on_attach = setup,
-        })
+        }
     end
 
     if fn.executable("zls") == 1 then
-        lspconfig.zls.setup({
+        lspconfig.zls.setup {
             on_attach = setup,
             filetypes = { "zig" },
             cmd = {
@@ -493,106 +493,111 @@ function M.setup_lsp()
                 "--config-path",
                 fn.expand("$HOME") .. "/.dotfiles/vim/zls_config.json",
             },
-        })
+        }
     end
 
     if vim.fn.has("osx") == 1 then
-        require("lspconfig").sourcekit.setup({
+        require("lspconfig").sourcekit.setup {
             filetypes = { "swift", "objcpp", "objc" },
             on_attach = setup,
-        })
+        }
     end
 
     if fn.executable("vimls") == 1 then
-        lspconfig.vimls.setup({
+        lspconfig.vimls.setup {
             on_attach = setup_without_formatting,
             filetypes = { "vim" },
-        })
+        }
     end
 
     if fn.executable("glsl_analyzer") == 1 then
-        lspconfig.glsl_analyzer.setup({})
+        lspconfig.glsl_analyzer.setup {}
     end
 
     local null_ls = require("null-ls")
-    null_ls.setup({
+    local nullls_sources = {
+        -- Builtin formatting sources {{{
+        null_ls.builtins.formatting.stylua.with {
+            extra_args = { "--config-path", fn.expand("$HOME") .. "/.dotfiles/vim/stylua.toml" },
+        },
+        null_ls.builtins.formatting.cmake_format,
+        null_ls.builtins.formatting.black,
+        null_ls.builtins.formatting.dart_format,
+        null_ls.builtins.formatting.qmlformat,
+        null_ls.builtins.formatting.swift_format,
+        null_ls.builtins.formatting.prettier.with {
+            filetypes = {
+                "javascript",
+                "javascriptreact",
+                "typescript",
+                "typescriptreact",
+                "vue",
+                "css",
+                "scss",
+                "less",
+                "html",
+                "jsonc",
+                "yaml",
+                "markdown.mdx",
+                "graphql",
+                "handlebars",
+            },
+        },
+        -- }}}
+        -- Builtin hover sources {{{
+        -- }}}
+        -- Builtin diagnostics sources {{{
+        null_ls.builtins.diagnostics.pylint.with {
+            runtime_condition = function(params)
+                return options.get_option_value("pylint_enabled", params.bufnr)
+            end,
+        },
+        null_ls.builtins.diagnostics.yamllint,
+        null_ls.builtins.diagnostics.qmllint.with {
+            runtime_condition = function(params)
+                return options.get_option_value("qmllint_enabled", params.bufnr)
+            end,
+            extra_args = { "-I", "./qml/" },
+        },
+        -- }}}
+        -- Custom sources {{{
+        null_ls_sources.hover.pylint_error,
+        null_ls_sources.hover.zettel_context,
+        null_ls_sources.diagnostics.jq,
+        null_ls_sources.formatting.jq,
+        null_ls_sources.diagnostics.cmake_lint,
+        -- }}}
+        -- Builtin completion sources {{{
+        null_ls.builtins.completion.tags.with {
+            generator_opts = {
+                runtime_condition = function(params)
+                    return options.get_option_value("tags_completion_enabled", params.bufnr) == true
+                end,
+            },
+        },
+        null_ls.builtins.completion.spell.with {
+            generator_opts = {
+                runtime_condition = function(_)
+                    return vim.opt_local.spell:get()
+                end,
+            },
+        },
+        -- }}}
+    }
+    if fn.executable("cppcheck") then
+        table.insert(
+            null_ls_sources,
+            null_ls.builtins.diagnostics.cppcheck.with {
+                extra_args = { "--project=./compile_commands.json" },
+            }
+        )
+    end
+
+    null_ls.setup {
         debug = vim.fn.expand("$VIMRC_NULL_LS_DEBUG") == "1",
         update_on_insert = false,
         on_attach = setup,
-        sources = {
-            -- Builtin formatting sources {{{
-            null_ls.builtins.formatting.stylua.with({
-                extra_args = { "--config-path", fn.expand("$HOME") .. "/.dotfiles/vim/stylua.toml" },
-            }),
-            null_ls.builtins.formatting.cmake_format,
-            null_ls.builtins.formatting.black,
-            null_ls.builtins.formatting.dart_format,
-            null_ls.builtins.formatting.qmlformat,
-            null_ls.builtins.formatting.swift_format,
-            null_ls.builtins.formatting.prettier.with({
-                filetypes = {
-                    "javascript",
-                    "javascriptreact",
-                    "typescript",
-                    "typescriptreact",
-                    "vue",
-                    "css",
-                    "scss",
-                    "less",
-                    "html",
-                    "jsonc",
-                    "yaml",
-                    "markdown.mdx",
-                    "graphql",
-                    "handlebars",
-                },
-            }),
-            -- }}}
-            -- Builtin hover sources {{{
-            -- }}}
-            -- Builtin diagnostics sources {{{
-            null_ls.builtins.diagnostics.pylint.with({
-                runtime_condition = function(params)
-                    return options.get_option_value("pylint_enabled", params.bufnr)
-                end,
-            }),
-            null_ls.builtins.diagnostics.yamllint,
-            null_ls.builtins.diagnostics.cppcheck.with({
-                extra_args = { "--project=./compile_commands.json" },
-            }),
-            null_ls.builtins.diagnostics.qmllint.with({
-                runtime_condition = function(params)
-                    return options.get_option_value("qmllint_enabled", params.bufnr)
-                end,
-                extra_args = { "-I", "./qml/" },
-            }),
-            -- }}}
-            -- Custom sources {{{
-            null_ls_sources.hover.pylint_error,
-            null_ls_sources.hover.zettel_context,
-            null_ls_sources.diagnostics.jq,
-            null_ls_sources.formatting.jq,
-            null_ls_sources.diagnostics.cmake_lint,
-            -- }}}
-            -- Builtin completion sources {{{
-            null_ls.builtins.completion.tags.with({
-                generator_opts = {
-                    runtime_condition = function(params)
-                        return options.get_option_value("tags_completion_enabled", params.bufnr)
-                            == true
-                    end,
-                },
-            }),
-            null_ls.builtins.completion.spell.with({
-                generator_opts = {
-                    runtime_condition = function(_)
-                        return vim.opt_local.spell:get()
-                    end,
-                },
-            }),
-            -- }}}
-        },
-    })
+    }
 
     setup_signs()
 end
