@@ -23,7 +23,6 @@ setlocal errorformat+=%m\ (file://%f:%l)
 setlocal errorformat+=%m\ file\ %f\,\ line\ %l
 
 if &loadplugins
-    execute "Setlocal completion_timeout=50"
     execute "Setlocal tags_completion_enabled=false"
 endif
 
