@@ -36,8 +36,22 @@ function Disable-Dylib-Verbose() {
     $env:DYLD_PRINT_RPATHS=0
 }
 
-function Cd-iCloud() {
-    cd "~/Library/Mobile Documents/com~apple~CloudDocs/"
+function Lock-File($file) {
+    chflags uchg $file
+}
+
+function Unlock-File($file) {
+    chflags nouchg $file
+}
+
+function Is-File-Locked($file) {
+    $output = $(/usr/bin/find $file -flags uchg)
+    if ($output.Length -gt 0) {
+        return 1
+    }
+    else {
+        return 0
+    }
 }
 
 function Enable-Dylib-Verbose() {
