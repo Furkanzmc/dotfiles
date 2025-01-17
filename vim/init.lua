@@ -753,35 +753,26 @@ end
 -- Completion {{{
 
 if vim.o.loadplugins == true then
-    require("blink.cmp").setup {
-        completion = {
-            list = { selection = "auto_insert" },
-            ghost_text = {
-                enabled = false
+    require("sekme").setup({
+        completion_key = "<C-n>",
+        completion_rkey = "<C-p>",
+        custom_sources = {
+            {
+                complete = require("vimrc.completions.mnemonics").complete,
             },
-            menu = {
-                auto_show = false,
+            {
+                complete = function(_, base)
+                    local rt = require("zettelkasten").completefunc(0, base)
+                    if rt == 0 then
+                        return {}
+                    end
+
+                    return rt
+                end,
+                filetypes = { "markdown" },
             },
         },
-        signature = { enabled = true },
-        sources = {
-            cmdline = {},
-        },
-        keymap = {
-            preset = "none",
-            ["<C-n>"] = {
-                "select_next",
-                "show",
-                "fallback",
-            },
-            ["<C-e>"] = { "cancel", "fallback" },
-            ["<C-y>"] = { "accept", "fallback" },
-            ["<C-k>"] = { "show_documentation", "hide_documentation", "fallback" },
-            ["<C-p>"] = { "select_prev", "fallback" },
-            ["<C-b>"] = { "scroll_documentation_up", "fallback" },
-            ["<C-f>"] = { "scroll_documentation_down", "fallback" },
-        },
-    }
+    })
 end
 
 -- }}}

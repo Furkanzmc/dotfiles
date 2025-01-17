@@ -1,6 +1,9 @@
 [submodule "vim/pack/packages/start/firvish.nvim"]
 	path = vim/pack/packages/start/firvish.nvim
 	url = https://github.com/Furkanzmc/firvish.nvim.git
+[submodule "vim/pack/packages/start/lsp_signature.nvim"]
+	path = vim/pack/packages/start/lsp_signature.nvim
+	url = https://github.com/ray-x/lsp_signature.nvim.git
 [submodule "vim/pack/packages/start/nvim-lspconfig"]
 	path = vim/pack/packages/start/nvim-lspconfig
 	url = https://github.com/neovim/nvim-lspconfig.git
@@ -22,6 +25,9 @@
 [submodule "vim/pack/packages/start/plenary.nvim"]
 	path = vim/pack/packages/start/plenary.nvim
 	url = https://github.com/nvim-lua/plenary.nvim.git
+[submodule "vim/pack/packages/start/sekme.nvim"]
+	path = vim/pack/packages/start/sekme.nvim
+	url = https://github.com/Furkanzmc/sekme.nvim
 [submodule "vim/pack/packages/start/Comment.nvim"]
 	path = vim/pack/packages/start/Comment.nvim
 	url = https://github.com/numToStr/Comment.nvim.git
@@ -101,6 +107,3 @@
 [submodule "vim/pack/packages/opt/nvim-gdb"]
 	path = vim/pack/packages/opt/nvim-gdb
 	url = https://github.com/sakhnik/nvim-gdb.git
-[submodule "vim/pack/packages/start/blink.cmp"]
-	path = vim/pack/packages/start/blink.cmp
-	url = https://github.com/Saghen/blink.cmp.git

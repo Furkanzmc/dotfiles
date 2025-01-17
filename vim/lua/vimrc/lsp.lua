@@ -288,6 +288,103 @@ local function setup_signs()
     vim.cmd([[sign define DiagnosticSignHint text=⦿ texthl=DiagnosticHint linehl= numhl=]])
 end
 
+local function setup_null_ls_cmp_patch()
+    -- FIXME:
+    -- [ ] Some sources rely on their own custom keyword patterns. For example, this prevents
+    -- cmp-calc from working properly. Or cmp-path cannot complete hidden directories becauase of
+    -- it.
+    -- [ ] cmp-emoji source doesn't work.
+    package.loaded["cmp"] = {
+        register_source = function(name, source)
+            local get_bufnrs = function()
+                local bufs = {}
+                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                    bufs[vim.api.nvim_win_get_buf(win)] = true
+                end
+
+                return vim.tbl_keys(bufs)
+            end
+
+            require("null-ls.init").register(require("null-ls.helpers").make_builtin({
+                method = require("null-ls.methods").internal.COMPLETION,
+                filetypes = {},
+                name = name,
+                runtime_condition = function(params)
+                    return options.get_option_value("lsp_completion_" .. name .. "_enabled")
+                end,
+                generator = {
+                    name = name,
+                    fn = function(params, done)
+                        local regex = vim.regex("\\k*$")
+                        local line = params.content[params.row]
+                        local pos = api.nvim_win_get_cursor(0)
+                        params.line_to_cursor = line:sub(1, pos[2])
+                        params.offset = regex:match_str(params.line_to_cursor) + 1
+                        params.option = params.option or { get_bufnrs = get_bufnrs }
+                        params.context = params.context
+                            or {
+                                cursor_before_line = params.line_to_cursor,
+                                bufnr = params.bufnr,
+                            }
+                        source:complete(params, function(result)
+                            if result == nil then
+                                done({ { items = {}, isIncomplete = true } })
+                            elseif result.items == nil then
+                                done({
+                                    {
+                                        items = result,
+                                        isIncomplete = #result == 0,
+                                    },
+                                })
+                            else
+                                done({ result })
+                            end
+                        end)
+                    end,
+                    async = true,
+                },
+            }))
+        end,
+        lsp = {
+            CompletionItemKind = {
+                Text = lsp.protocol.CompletionItemKind["Text"],
+                Method = lsp.protocol.CompletionItemKind["Method"],
+                Function = lsp.protocol.CompletionItemKind["Function"],
+                Constructor = lsp.protocol.CompletionItemKind["Constructor"],
+                Field = lsp.protocol.CompletionItemKind["Field"],
+                Variable = lsp.protocol.CompletionItemKind["Variable"],
+                Class = lsp.protocol.CompletionItemKind["Class"],
+                Interface = lsp.protocol.CompletionItemKind["Interface"],
+                Module = lsp.protocol.CompletionItemKind["Module"],
+                Property = lsp.protocol.CompletionItemKind["Property"],
+                Unit = lsp.protocol.CompletionItemKind["Unit"],
+                Value = lsp.protocol.CompletionItemKind["Value"],
+                Enum = lsp.protocol.CompletionItemKind["Enum"],
+                Keyword = lsp.protocol.CompletionItemKind["Keyword"],
+                Snippet = lsp.protocol.CompletionItemKind["Snippet"],
+                Color = lsp.protocol.CompletionItemKind["Color"],
+                File = lsp.protocol.CompletionItemKind["File"],
+                Reference = lsp.protocol.CompletionItemKind["Reference"],
+                Folder = lsp.protocol.CompletionItemKind["Folder"],
+                EnumMember = lsp.protocol.CompletionItemKind["EnumMember"],
+                Constant = lsp.protocol.CompletionItemKind["Constant"],
+                Struct = lsp.protocol.CompletionItemKind["Struct"],
+                Event = lsp.protocol.CompletionItemKind["Event"],
+                Operator = lsp.protocol.CompletionItemKind["Operator"],
+                TypeParameter = lsp.protocol.CompletionItemKind["TypeParameter"],
+            },
+        },
+        -- FIXME: lsp_signature relies on this function.
+        visible = function()
+            return vim.fn.pumvisible() ~= 0
+        end,
+    }
+
+    vim.cmd(
+        [[packadd cmp-path | lua require('cmp').register_source('path', require('cmp_path').new())]]
+    )
+end
+
 -- }}}
 
 -- Public Functions {{{
@@ -376,6 +473,13 @@ function M.setup_lsp()
         if client.server_capabilities.inlayHintProvider == true then
             require("lsp-endhints").enable()
         end
+
+        require("lsp_signature").on_attach({
+            bind = true,
+            handler_opts = { border = "none" },
+            toggle_key = "<C-g><C-s>",
+            extra_trigger_chars = { "{", "}" },
+        }, bufnr)
     end
 
     local setup_without_formatting = function(client)
@@ -512,6 +616,11 @@ function M.setup_lsp()
 
     if fn.executable("glsl_analyzer") == 1 then
         lspconfig.glsl_analyzer.setup {}
+    end
+
+    local cmp_exists, _ = pcall(require, "cmp")
+    if not cmp_exists then
+        setup_null_ls_cmp_patch()
     end
 
     local null_ls = require("null-ls")
