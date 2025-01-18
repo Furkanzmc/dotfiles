@@ -695,7 +695,7 @@ function M.setup_lsp()
     }
     if fn.executable("cppcheck") then
         table.insert(
-            null_ls_sources,
+            nullls_sources,
             null_ls.builtins.diagnostics.cppcheck.with {
                 extra_args = { "--project=./compile_commands.json" },
             }
@@ -706,6 +706,7 @@ function M.setup_lsp()
         debug = vim.fn.expand("$VIMRC_NULL_LS_DEBUG") == "1",
         update_on_insert = false,
         on_attach = setup,
+        sources = nullls_sources
     }
 
     setup_signs()
