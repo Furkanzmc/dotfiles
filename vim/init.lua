@@ -255,7 +255,7 @@ if fn.executable("just") then
     if vim.o.loadplugins == true then
         api.nvim_create_user_command("Just", ":Cfrun just <args>", {
             nargs = "*",
-            complete = function(arg_lead, cmd_line, cursor_pos)
+            complete = function(_, _, _)
                 local output = fn.systemlist("just --summary")[1]
                 local recipes = string.split(output, " ")
                 return recipes
