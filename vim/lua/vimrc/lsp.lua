@@ -457,6 +457,9 @@ function M.setup_lsp()
         outline = {
             auto_preview = false,
         },
+        lightbulb = {
+            enable = false
+        }
     }
 
     local setup = function(client, format_enabled)
