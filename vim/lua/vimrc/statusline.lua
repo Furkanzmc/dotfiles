@@ -105,19 +105,19 @@ local function lsp_dianostics(active, bufnr)
 
     local status = {}
     if lsp_errors > 0 then
-        table.insert(status, color("✖ " .. lsp_errors, active, "WinBarError", "WinBarNC", 1))
+        table.insert(status, color("✖ " .. lsp_errors, active, "StatusLineError", "StatusLineNC", 1))
     end
 
     if lsp_warnings > 0 then
-        table.insert(status, color("‼ " .. lsp_warnings, active, "WinBarWarning", "WinBarNC", 1))
+        table.insert(status, color("‼ " .. lsp_warnings, active, "StatusLineWarning", "StatusLineNC", 1))
     end
 
     if lsp_hints > 0 then
-        table.insert(status, color("⦿ " .. lsp_hints, active, "WinBarHint", "WinBarNC", 1))
+        table.insert(status, color("⦿ " .. lsp_hints, active, "StatusLineHint", "StatusLineNC", 1))
     end
 
     if lsp_info > 0 then
-        table.insert(status, color("ℹ " .. lsp_info, active, "WinBarInfo", "WinBarNC", 1))
+        table.insert(status, color("ℹ " .. lsp_info, active, "StatusLineInfo", "StatusLineNC", 1))
     end
 
     return table.concat(status, "|")
@@ -273,6 +273,26 @@ function M.init(winnr)
 
     table.insert(status, "%=")
 
+    -- LSP Status {{{
+
+    local is_lsp_running = require("vimrc.lsp").is_lsp_running(bufnr)
+    if not is_lsp_running then
+        st("不", active, "StatusLineLspStatus", "StatusLineNC", 1)
+    end
+
+    -- }}}
+
+    -- LSP Diagnostic {{{
+
+    if is_lsp_running then
+        local lsp_diag = lsp_dianostics(active, bufnr)
+        if lsp_diag ~= "" then
+            table.insert(status, lsp_diag)
+        end
+    end
+
+    -- }}}
+
     -- HTTP Request Status {{{
 
     if active and fn.exists(":SendHttpRequest") > 0 and g.nvim_http_request_in_progress == true then
@@ -313,66 +333,6 @@ function M.init(winnr)
     -- }}}
 
     return table.concat(status)
-end
-
-function M.init_winbar(winnr)
-    local active = winnr == fn.win_getid()
-    local bufnr = fn.winbufnr(winnr)
-    local status = {}
-    local st = function(str, _active, active_color, inactive_color, padding)
-        if str ~= "" then
-            table.insert(status, color(str, _active, active_color, inactive_color, padding))
-        end
-    end
-
-    -- Left side {{{
-
-    -- LSP Status {{{
-
-    local is_lsp_running = require("vimrc.lsp").is_lsp_running(bufnr)
-    if is_lsp_running then
-        st("對", active, "WinBarLspStatus", "WinBarNC", 1)
-    else
-        st("不", active, "WinBarLspStatus", "WinBarNC", 1)
-    end
-
-    -- }}}
-
-    -- LSP Context {{{
-
-    if
-        options
-        and is_lsp_running
-        and options.get_option_value("lsp_context_enabled", bufnr) == true
-    then
-        if not active and vim.b[bufnr].vimrc_winbar_status then
-            table.insert(status, vim.b[bufnr].vimrc_winbar_status)
-        else
-            local content = require("lspsaga.symbol.winbar"):get_bar()
-            if content ~= nil and content ~= "" then
-                local bar = " " .. content .. " "
-                table.insert(status, bar)
-                vim.b[bufnr].vimrc_winbar_status = bar
-            end
-        end
-    end
-
-    -- }}}
-
-    -- LSP Diagnostic {{{
-
-    if is_lsp_running then
-        local lsp_diag = lsp_dianostics(active, bufnr)
-        if lsp_diag ~= "" then
-            table.insert(status, lsp_diag)
-        end
-    end
-
-    -- }}}
-
-    -- }}}
-
-    return table.concat(status, color("|", true, "WinBar", "WinBar", 0))
 end
 
 return M

@@ -83,9 +83,6 @@
 [submodule "vim/pack/packages/start/vim-matchup"]
 	path = vim/pack/packages/start/vim-matchup
 	url = https://github.com/andymass/vim-matchup.git
-[submodule "vim/pack/packages/start/lspsaga"]
-	path = vim/pack/packages/start/lspsaga
-	url = https://github.com/nvimdev/lspsaga.nvim.git
 [submodule "vim/pack/packages/opt/nvim-highlight-colors"]
 	path = vim/pack/packages/opt/nvim-highlight-colors
 	url = https://github.com/brenoprata10/nvim-highlight-colors.git
@@ -107,3 +104,6 @@
 [submodule "vim/pack/packages/opt/nvim-gdb"]
 	path = vim/pack/packages/opt/nvim-gdb
 	url = https://github.com/sakhnik/nvim-gdb.git
+[submodule "vim/pack/packages/start/dropbar.nvim"]
+	path = vim/pack/packages/start/dropbar.nvim
+	url = https://github.com/Bekaboo/dropbar.nvim.git

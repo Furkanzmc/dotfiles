@@ -753,7 +753,7 @@ end
 -- Completion {{{
 
 if vim.o.loadplugins == true then
-    require("sekme").setup({
+    require("sekme").setup {
         completion_key = "<C-n>",
         completion_rkey = "<C-p>",
         custom_sources = {
@@ -772,7 +772,7 @@ if vim.o.loadplugins == true then
                 filetypes = { "markdown" },
             },
         },
-    })
+    }
 end
 
 -- }}}
@@ -1009,16 +1009,14 @@ if vim.o.loadplugins == true then
                     StatusLineFilePath = { fg = colors.text, bg = colors.mantle },
                     StatusDiffFileSign = { fg = colors.pink, bg = colors.mantle },
                     StatusDiffFileSignNC = { fg = colors.pink, bg = colors.mantle },
-                    StatusLineError = { fg = colors.red, bg = colors.mantle },
                     StatusLineModified = { fg = colors.yellow, bg = colors.mantle },
                     StatusLineLspStatus = { fg = colors.yellow, bg = colors.mantle },
                     StatusLineRowColumn = { fg = colors.text, bg = colors.mantle },
                     StatusLineBranch = { fg = colors.mantle, bg = colors.maroon },
-                    WinBarLspStatus = { fg = colors.peach, bg = "NONE" },
-                    WinBarError = { fg = colors.red, bg = "NONE" },
-                    WinBarWarning = { fg = colors.blue, bg = "NONE" },
-                    WinBarHint = { fg = colors.green, bg = "NONE" },
-                    WinBarInfo = { fg = colors.flamingo, bg = "NONE" },
+                    StatusLineError = { fg = colors.red, bg = colors.mantle },
+                    StatusLineWarning = { fg = colors.blue, bg = colors.mantle },
+                    StatusLineHint = { fg = colors.green, bg = colors.mantle },
+                    StatusLineInfo = { fg = colors.flamingo, bg = colors.mantle },
                 }
             end,
         },
@@ -1032,6 +1030,28 @@ end
 if vim.o.loadplugins == true then
     keymap.set("n", "<C-f>o", ":Git<CR>", { silent = true })
     keymap.set("n", "<C-f>z", ":bd fugitive:*.git<CR>", { silent = true })
+end
+
+-- }}}
+
+-- {{{
+
+if vim.o.loadplugins == true then
+    require("dropbar").setup {
+        bar = {
+            sources = function(buf, _)
+                local sources = require("dropbar.sources")
+                local utils = require("dropbar.utils")
+                if vim.bo[buf].ft == "markdown" then
+                    return { sources.markdown }
+                end
+                if vim.bo[buf].buftype == "terminal" then
+                    return { sources.terminal }
+                end
+                return { utils.source.fallback { sources.lsp, sources.treesitter } }
+            end,
+        },
+    }
 end
 
 -- }}}
@@ -1347,25 +1367,6 @@ api.nvim_create_autocmd({ "OptionSet" }, {
         end
     end,
 })
-
-if vim.o.loadplugins then
-    api.nvim_create_autocmd({ "BufWinEnter", "BufWinLeave" }, {
-        group = api.nvim_create_augroup("vimrc_winbar_events", { clear = true }),
-        callback = function(opts)
-            local lsp = require("vimrc.lsp")
-            local winid = fn.bufwinid(opts.buf)
-            if winid == -1 then
-                return
-            end
-            if lsp.is_lsp_running(opts.buf) then
-                vim.wo[winid].winbar =
-                    '%!luaeval("require\'vimrc.statusline\'.init_winbar(" . g:statusline_winid . ")")'
-            else
-                vim.wo[winid].winbar = ""
-            end
-        end,
-    })
-end
 
 if fn.filereadable(tostring(fn.expand("~/.vimrc"))) == 1 then
     cmd("source ~/.vimrc")

@@ -81,9 +81,6 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     if server_capabilities.definitionProvider then
-        keymap.set("n", "<leader>gd", "<Cmd>Lspsaga goto_definition<CR>", opts)
-        keymap.set("n", "<leader>gp", "<cmd>Lspsaga peek_definition<CR>", opts)
-
         if options.get_option_value("lsp_tagfunc_enabled") == true then
             set_option("tagfunc", "v:lua.vim.lsp.tagfunc", bufnr)
         elseif api.nvim_get_option_value("tagfunc", { buf = bufnr }) == "v:lua.vim.lsp.tagfunc" then
@@ -110,7 +107,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     if server_capabilities.renameProvider then
-        keymap.set("n", "<leader>gr", "<Cmd>Lspsaga rename<CR>", opts)
+        keymap.set("n", "<leader>gr", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
     end
 
     if server_capabilities.signatureHelpProvider then
@@ -129,8 +126,8 @@ local function set_up_keymap(client, bufnr, format_enabled)
         keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
     end
 
-    keymap.set("n", "<leader>ge", "<cmd>Lspsaga show_line_diagnostics ++unfocus<CR>", opts)
-    keymap.set("n", "<leader>gc", "<cmd>Lspsaga show_cursor_diagnostics<CR>", opts)
+    keymap.set("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
+    keymap.set("n", "<leader>gc", "<cmd>lua vim.diagnostic.open_float(0, {scope='cursor'})<CR>", opts)
     keymap.set("n", "<leader>gl", "<cmd>lua vim.diagnostic.setloclist({open=true})<CR>", opts)
 
     if server_capabilities.documentSymbolProvider then
@@ -142,7 +139,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     if server_capabilities.codeActionProvider then
-        keymap.set("n", "<leader>ga", "<cmd>Lspsaga code_action<CR>", opts)
+        keymap.set("n", "<leader>ga", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
     end
 
     if server_capabilities.documentRangeFormattingProvider then
@@ -442,25 +439,6 @@ function M.setup_lsp()
             virtual_text = options.get_option_value("lsp_virtual_text"),
         }
     end)
-
-    require("lspsaga").setup {
-        symbol_in_winbar = {
-            enable = false,
-            separator = " ",
-            ignore_patterns = {},
-            hide_keyword = true,
-            show_file = false,
-            folder_level = 2,
-            respect_root = false,
-            color_mode = true,
-        },
-        outline = {
-            auto_preview = false,
-        },
-        lightbulb = {
-            enable = false
-        }
-    }
 
     local setup = function(client, format_enabled)
         local bufnr = api.nvim_get_current_buf()
