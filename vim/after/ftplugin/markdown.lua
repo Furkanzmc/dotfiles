@@ -123,6 +123,8 @@ if vim.fn.exists(":ZkBrowse") == 2 then
     end, 10)
 end
 
+vim.cmd[[abbreviate <silent> <buffer> zfeeling@ ❤️📝]]
+
 if vim.fn.exists(":RunQML") ~= 2 then
     vim.cmd([[command -buffer -range RunQML :call qml#run()]])
 end
