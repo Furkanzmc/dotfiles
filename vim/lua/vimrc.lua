@@ -16,6 +16,19 @@ function M.setup_treesitter()
     assert(fn.exists(":TSInstall") == 0, "TreeSitter is already configured.")
 
     cmd([[packadd nvim-treesitter]])
+    cmd([[packadd outline.nvim]])
+
+    require("outline").setup {
+        keymaps = {
+            close = {},
+            -- These fold actions are collapsing tree nodes, not code folding
+            fold = "zc",
+            unfold = "zo",
+            fold_all = "zC",
+            unfold_all = "zO",
+            fold_reset = "zx",
+        },
+    }
 
     local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
 

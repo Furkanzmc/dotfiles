@@ -3,7 +3,6 @@ if get(b:, "did_ftp", v:false)
 endif
 
 if !get(s:, "vimrc_cpp_plugins_loaded", v:false) && &loadplugins
-    packadd tagbar
     let s:vimrc_cpp_plugins_loaded = v:true
 endif
 

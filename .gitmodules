@@ -107,3 +107,6 @@
 [submodule "vim/pack/packages/start/dropbar.nvim"]
 	path = vim/pack/packages/start/dropbar.nvim
 	url = https://github.com/Bekaboo/dropbar.nvim.git
+[submodule "vim/pack/packages/start/outline.nvim"]
+	path = vim/pack/packages/opt/outline.nvim
+	url = https://github.com/hedyhli/outline.nvim.git

@@ -733,12 +733,6 @@ end
 
 -- }}}
 
--- TagBar {{{
-
-g.tagbar_show_linenumbers = 1
-
--- }}}
-
 -- nvim-lsp {{{
 
 if vim.o.loadplugins == true then
