@@ -41,7 +41,7 @@ function M.setup_treesitter()
     }
 
     local config = require("nvim-treesitter.configs")
-    config.setup({
+    config.setup {
         ensure_installed = g.vimrc_treesitter_filetypes,
         highlight = { enable = true },
         indent = { enabled = true },
@@ -55,13 +55,13 @@ function M.setup_treesitter()
             },
         },
         matchup = { enable = true },
-    })
+    }
 
-    require("nvim-treesitter.configs").setup({
+    require("nvim-treesitter.configs").setup {
         matchup = {
             enable = true, -- mandatory, false will disable the whole extension
         },
-    })
+    }
 
     cmd([[augroup vimrc_plugin_nvim_treesitter_init]])
     cmd([[au!]])
@@ -69,12 +69,12 @@ function M.setup_treesitter()
 end
 
 function M.setup_rest_nvim()
-    require("rest-nvim").setup({
+    require("rest-nvim").setup {
         result_split_horizontal = false,
         skip_ssl_verification = false,
         highlight = { enabled = true, timeout = 150 },
         jump_to_request = false,
-    })
+    }
 
     keymap.set(
         "n",
@@ -131,14 +131,14 @@ function M.run_git(args, is_background_job)
 
     local cmd = fn.split(args, " ")
     table.insert(cmd, 1, "git")
-    firvish.start_job({
+    firvish.start_job {
         cmd = cmd,
         filetype = "job-output",
         title = "Git",
         is_background_job = is_background_job,
         cwd = vim.fn.getcwd(vim.fn.winnr()),
         listed = true,
-    })
+    }
 end
 
 -- Creates a diffsplit between two remote files. I could not find a way to do this with Gdiffsplit

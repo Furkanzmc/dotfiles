@@ -1011,6 +1011,9 @@ if vim.o.loadplugins == true then
                     StatusLineWarning = { fg = colors.blue, bg = colors.mantle },
                     StatusLineHint = { fg = colors.green, bg = colors.mantle },
                     StatusLineInfo = { fg = colors.flamingo, bg = colors.mantle },
+                    ["@markup.quote.markdown"] = { link = "Comment" },
+                    ["@markup.italic"] = { link = "Italic" },
+                    ["@markup.strong.markdown_inline"] = { link = "Bold" },
                 }
             end,
         },
