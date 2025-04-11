@@ -143,7 +143,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     if server_capabilities.documentRangeFormattingProvider then
-        keymap.set("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+        keymap.set("v", "<leader>gq", "<Esc><Cmd>lua vim.lsp.buf.format()<CR>", opts)
     end
 
     if server_capabilities.inlayHintProvider == true then

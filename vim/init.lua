@@ -270,14 +270,15 @@ end
 
 -- Neovide {{{
 
-g.neovide_cursor_vfx_mode = "sonicboom"
-g.neovide_cursor_trail_size = 0.5
-g.neovide_hide_mouse_when_typing = true
-g.neovide_scroll_animation_length = 0.0
-g.neovide_cursor_animation_length = 0.02
-g.neovide_window_blurred = true
-
 if vim.g.neovide then
+    g.neovide_cursor_vfx_mode = "railgun"
+    g.neovide_cursor_animate_in_insert_mode = false
+    g.neovide_cursor_trail_size = 0.5
+    g.neovide_hide_mouse_when_typing = true
+    g.neovide_scroll_animation_length = 0.0
+    g.neovide_cursor_animation_length = 0.01
+    g.neovide_window_blurred = true
+
     keymap.set("n", "<F11>", function()
         vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
     end, { remap = false })
