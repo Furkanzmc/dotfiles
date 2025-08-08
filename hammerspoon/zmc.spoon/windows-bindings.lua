@@ -45,6 +45,7 @@ return {
         { {}, "-", "tile_horizontal", true },
         { { "shift" }, "-", "tile_horizontal_center", true },
         { {}, "\\", "tile_vertical", true },
+        { {}, "f", "move_to_mouse_screen", true },
         { {}, "s", "saveWindow", true },
         { {}, "m", "enableMarkWindowMode", false },
         { {}, "r", "enableRestoreWindowMode", false },

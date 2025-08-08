@@ -44,6 +44,40 @@ local function get_windows(win)
     return windows
 end
 
+-- Returns the screen that currently contains the mouse cursor.
+local function get_screen_under_mouse()
+    if hs.mouse.getCurrentScreen then
+        return hs.mouse.getCurrentScreen()
+    end
+
+    local mousePoint
+    if hs.mouse.getAbsolutePosition then
+        mousePoint = hs.mouse.getAbsolutePosition()
+    else
+        mousePoint = hs.mouse.absolutePosition()
+    end
+
+    for _, screen in ipairs(hs.screen.allScreens()) do
+        if hs.geometry.rect(screen:frame()):contains(mousePoint) then
+            return screen
+        end
+    end
+
+    return hs.screen.mainScreen()
+end
+
+-- Move the given window to the screen that the mouse cursor is currently in.
+function hs.window.move_to_mouse_screen(win)
+    if not win then
+        return
+    end
+
+    local targetScreen = get_screen_under_mouse()
+    if targetScreen then
+        win:moveToScreen(targetScreen)
+    end
+end
+
 function hs.window.tile_horizontal(win)
     local windows = get_windows(win)
     local max = win:screen():frame()
