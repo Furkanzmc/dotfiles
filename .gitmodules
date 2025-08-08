@@ -110,3 +110,6 @@
 [submodule "vim/pack/packages/start/outline.nvim"]
 	path = vim/pack/packages/opt/outline.nvim
 	url = https://github.com/hedyhli/outline.nvim.git
+[submodule "vim/pack/packages/opt/flutter-tools.nvim"]
+	path = vim/pack/packages/opt/flutter-tools.nvim
+	url = https://github.com/nvim-flutter/flutter-tools.nvim.git
