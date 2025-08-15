@@ -127,7 +127,12 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     keymap.set("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
-    keymap.set("n", "<leader>gc", "<cmd>lua vim.diagnostic.open_float(0, {scope='cursor'})<CR>", opts)
+    keymap.set(
+        "n",
+        "<leader>gc",
+        "<cmd>lua vim.diagnostic.open_float(0, {scope='cursor'})<CR>",
+        opts
+    )
     keymap.set("n", "<leader>gl", "<cmd>lua vim.diagnostic.setloclist({open=true})<CR>", opts)
 
     if server_capabilities.documentSymbolProvider then
@@ -285,103 +290,6 @@ local function setup_signs()
     vim.cmd([[sign define DiagnosticSignHint text=⦿ texthl=DiagnosticHint linehl= numhl=]])
 end
 
-local function setup_null_ls_cmp_patch()
-    -- FIXME:
-    -- [ ] Some sources rely on their own custom keyword patterns. For example, this prevents
-    -- cmp-calc from working properly. Or cmp-path cannot complete hidden directories becauase of
-    -- it.
-    -- [ ] cmp-emoji source doesn't work.
-    package.loaded["cmp"] = {
-        register_source = function(name, source)
-            local get_bufnrs = function()
-                local bufs = {}
-                for _, win in ipairs(vim.api.nvim_list_wins()) do
-                    bufs[vim.api.nvim_win_get_buf(win)] = true
-                end
-
-                return vim.tbl_keys(bufs)
-            end
-
-            require("null-ls.init").register(require("null-ls.helpers").make_builtin({
-                method = require("null-ls.methods").internal.COMPLETION,
-                filetypes = {},
-                name = name,
-                runtime_condition = function(params)
-                    return options.get_option_value("lsp_completion_" .. name .. "_enabled")
-                end,
-                generator = {
-                    name = name,
-                    fn = function(params, done)
-                        local regex = vim.regex("\\k*$")
-                        local line = params.content[params.row]
-                        local pos = api.nvim_win_get_cursor(0)
-                        params.line_to_cursor = line:sub(1, pos[2])
-                        params.offset = regex:match_str(params.line_to_cursor) + 1
-                        params.option = params.option or { get_bufnrs = get_bufnrs }
-                        params.context = params.context
-                            or {
-                                cursor_before_line = params.line_to_cursor,
-                                bufnr = params.bufnr,
-                            }
-                        source:complete(params, function(result)
-                            if result == nil then
-                                done({ { items = {}, isIncomplete = true } })
-                            elseif result.items == nil then
-                                done({
-                                    {
-                                        items = result,
-                                        isIncomplete = #result == 0,
-                                    },
-                                })
-                            else
-                                done({ result })
-                            end
-                        end)
-                    end,
-                    async = true,
-                },
-            }))
-        end,
-        lsp = {
-            CompletionItemKind = {
-                Text = lsp.protocol.CompletionItemKind["Text"],
-                Method = lsp.protocol.CompletionItemKind["Method"],
-                Function = lsp.protocol.CompletionItemKind["Function"],
-                Constructor = lsp.protocol.CompletionItemKind["Constructor"],
-                Field = lsp.protocol.CompletionItemKind["Field"],
-                Variable = lsp.protocol.CompletionItemKind["Variable"],
-                Class = lsp.protocol.CompletionItemKind["Class"],
-                Interface = lsp.protocol.CompletionItemKind["Interface"],
-                Module = lsp.protocol.CompletionItemKind["Module"],
-                Property = lsp.protocol.CompletionItemKind["Property"],
-                Unit = lsp.protocol.CompletionItemKind["Unit"],
-                Value = lsp.protocol.CompletionItemKind["Value"],
-                Enum = lsp.protocol.CompletionItemKind["Enum"],
-                Keyword = lsp.protocol.CompletionItemKind["Keyword"],
-                Snippet = lsp.protocol.CompletionItemKind["Snippet"],
-                Color = lsp.protocol.CompletionItemKind["Color"],
-                File = lsp.protocol.CompletionItemKind["File"],
-                Reference = lsp.protocol.CompletionItemKind["Reference"],
-                Folder = lsp.protocol.CompletionItemKind["Folder"],
-                EnumMember = lsp.protocol.CompletionItemKind["EnumMember"],
-                Constant = lsp.protocol.CompletionItemKind["Constant"],
-                Struct = lsp.protocol.CompletionItemKind["Struct"],
-                Event = lsp.protocol.CompletionItemKind["Event"],
-                Operator = lsp.protocol.CompletionItemKind["Operator"],
-                TypeParameter = lsp.protocol.CompletionItemKind["TypeParameter"],
-            },
-        },
-        -- FIXME: lsp_signature relies on this function.
-        visible = function()
-            return vim.fn.pumvisible() ~= 0
-        end,
-    }
-
-    vim.cmd(
-        [[packadd cmp-path | lua require('cmp').register_source('path', require('cmp_path').new())]]
-    )
-end
-
 -- }}}
 
 -- Public Functions {{{
@@ -469,16 +377,21 @@ function M.setup_lsp()
     end
 
     local lspconfig = require("lspconfig")
+    local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+
     lsp.set_log_level("error")
 
     if fn.executable("cmake-language-server") == 1 then
-        require("lspconfig").cmake.setup {}
+        require("lspconfig").cmake.setup {
+            capabilities = cmp_capabilities,
+        }
     end
 
     if fn.executable("pyright") == 1 then
         lspconfig.pyright.setup {
             on_attach = setup_without_formatting,
             filetypes = { "python" },
+            capabilities = cmp_capabilities,
             settings = {
                 python = {
                     analysis = {
@@ -500,6 +413,7 @@ function M.setup_lsp()
     if fn.executable("clangd") == 1 then
         local capabilities = lsp.protocol.make_client_capabilities()
         capabilities.offsetEncoding = { "utf-16" }
+        vim.tbl_extend("keep", capabilities, capabilities, cmp_capabilities)
         lspconfig.clangd.setup {
             capabilities = capabilities,
             on_attach = setup,
@@ -521,6 +435,7 @@ function M.setup_lsp()
     if fn.executable("lua-language-server") == 1 then
         lspconfig.lua_ls.setup {
             on_attach = setup_without_formatting,
+            capabilities = cmp_capabilities,
             settings = {
                 Lua = {
                     runtime = { library = api.nvim_list_runtime_paths()[1] },
@@ -534,6 +449,7 @@ function M.setup_lsp()
 
     if fn.executable("ccls") == 1 then
         lspconfig.ccls.setup {
+            capabilities = cmp_capabilities,
             on_attach = setup_without_formatting,
             settings = { index = { threads = 1 } },
         }
@@ -541,6 +457,7 @@ function M.setup_lsp()
 
     if fn.executable("qmlls") == 1 then
         lspconfig.qmlls.setup {
+            capabilities = cmp_capabilities,
             cmd = { "qmlls", "-I", "./qml" },
             on_attach = setup_without_formatting,
         }
@@ -548,6 +465,7 @@ function M.setup_lsp()
 
     if fn.executable("rust-analyzer") == 1 then
         lspconfig.rust_analyzer.setup {
+            capabilities = cmp_capabilities,
             on_attach = setup_without_formatting,
             filetypes = { "rust" },
             settings = {
@@ -565,12 +483,14 @@ function M.setup_lsp()
 
     if fn.executable("gopls") == 1 then
         lspconfig.gopls.setup {
+            capabilities = cmp_capabilities,
             on_attach = setup,
         }
     end
 
     if fn.executable("zls") == 1 then
         lspconfig.zls.setup {
+            capabilities = cmp_capabilities,
             on_attach = setup,
             filetypes = { "zig" },
             cmd = {
@@ -583,6 +503,7 @@ function M.setup_lsp()
 
     if vim.fn.has("osx") == 1 then
         require("lspconfig").sourcekit.setup {
+            capabilities = cmp_capabilities,
             filetypes = { "swift", "objcpp", "objc" },
             on_attach = setup,
         }
@@ -590,18 +511,16 @@ function M.setup_lsp()
 
     if fn.executable("vimls") == 1 then
         lspconfig.vimls.setup {
+            capabilities = cmp_capabilities,
             on_attach = setup_without_formatting,
             filetypes = { "vim" },
         }
     end
 
     if fn.executable("glsl_analyzer") == 1 then
-        lspconfig.glsl_analyzer.setup {}
-    end
-
-    local cmp_exists, _ = pcall(require, "cmp")
-    if not cmp_exists then
-        setup_null_ls_cmp_patch()
+        lspconfig.glsl_analyzer.setup {
+            capabilities = cmp_capabilities,
+        }
     end
 
     local null_ls = require("null-ls")
@@ -687,7 +606,8 @@ function M.setup_lsp()
         debug = vim.fn.expand("$VIMRC_NULL_LS_DEBUG") == "1",
         update_on_insert = false,
         on_attach = setup,
-        sources = nullls_sources
+        sources = nullls_sources,
+        capabilities = cmp_capabilities,
     }
 
     setup_signs()

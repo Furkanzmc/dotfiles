@@ -113,3 +113,18 @@
 [submodule "vim/pack/packages/opt/flutter-tools.nvim"]
 	path = vim/pack/packages/opt/flutter-tools.nvim
 	url = https://github.com/nvim-flutter/flutter-tools.nvim.git
+[submodule "vim/pack/packages/start/nvim-cmp"]
+	path = vim/pack/packages/start/nvim-cmp
+	url = https://github.com/hrsh7th/nvim-cmp.git
+[submodule "vim/pack/packages/start/cmp-buffer"]
+	path = vim/pack/packages/start/cmp-buffer
+	url = https://github.com/hrsh7th/cmp-buffer.git
+[submodule "vim/pack/packages/start/cmp-nvim-lsp"]
+	path = vim/pack/packages/start/cmp-nvim-lsp
+	url = https://github.com/hrsh7th/cmp-nvim-lsp.git
+[submodule "vim/pack/packages/start/cmp-path"]
+	path = vim/pack/packages/start/cmp-path
+	url = https://github.com/hrsh7th/cmp-path.git
+[submodule "vim/pack/packages/start/cmp-cmdline"]
+	path = vim/pack/packages/start/cmp-cmdline
+	url = https://github.com/hrsh7th/cmp-cmdline.git

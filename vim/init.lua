@@ -760,6 +760,32 @@ end
 -- Completion {{{
 
 if vim.o.loadplugins == true then
+    -- Set up nvim-cmp.
+    local cmp = require("cmp")
+
+    cmp.setup {
+        mapping = cmp.mapping.preset.insert {
+            ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+            ["<C-f>"] = cmp.mapping.scroll_docs(4),
+            ["<C-e>"] = cmp.mapping.abort(),
+            -- ["<C-n>"] = cmp.mapping.complete(),
+            -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+            ["<CR>"] = cmp.mapping.confirm { select = true },
+        },
+        completion = {
+            autocomplete = false,
+        },
+        sources = cmp.config.sources({
+            { name = "nvim_lsp" },
+        }, {
+            { name = "buffer" },
+            { name = "path" },
+            { name = "cmdline" },
+        }),
+    }
+end
+
+if false then
     require("sekme").setup {
         completion_key = "<C-n>",
         completion_rkey = "<C-p>",
