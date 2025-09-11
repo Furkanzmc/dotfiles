@@ -8,6 +8,7 @@ vim.filetype.add({
         todo = "todo",
         http = "http",
         mt = "tags",
+        mdc = "markdown",
     },
     filename = {
         ["todo.txt"] = "todo",

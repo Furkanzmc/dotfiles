@@ -539,7 +539,7 @@ function M.setup_lsp()
         }
     end
 
-    if fn.executable("qmlls") == 1 then
+    if fn.expand("$VIMRC_QMLLS_DISABLED") ~= "1" and fn.executable("qmlls") == 1 then
         lspconfig.qmlls.setup {
             cmd = { "qmlls", "-I", "./qml" },
             on_attach = setup_without_formatting,
