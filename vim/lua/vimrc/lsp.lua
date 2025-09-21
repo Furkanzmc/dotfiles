@@ -127,7 +127,12 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     keymap.set("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
-    keymap.set("n", "<leader>gc", "<cmd>lua vim.diagnostic.open_float(0, {scope='cursor'})<CR>", opts)
+    keymap.set(
+        "n",
+        "<leader>gc",
+        "<cmd>lua vim.diagnostic.open_float(0, {scope='cursor'})<CR>",
+        opts
+    )
     keymap.set("n", "<leader>gl", "<cmd>lua vim.diagnostic.setloclist({open=true})<CR>", opts)
 
     if server_capabilities.documentSymbolProvider then
@@ -302,7 +307,7 @@ local function setup_null_ls_cmp_patch()
                 return vim.tbl_keys(bufs)
             end
 
-            require("null-ls.init").register(require("null-ls.helpers").make_builtin({
+            require("null-ls.init").register(require("null-ls.helpers").make_builtin {
                 method = require("null-ls.methods").internal.COMPLETION,
                 filetypes = {},
                 name = name,
@@ -325,22 +330,22 @@ local function setup_null_ls_cmp_patch()
                             }
                         source:complete(params, function(result)
                             if result == nil then
-                                done({ { items = {}, isIncomplete = true } })
+                                done { { items = {}, isIncomplete = true } }
                             elseif result.items == nil then
-                                done({
+                                done {
                                     {
                                         items = result,
                                         isIncomplete = #result == 0,
                                     },
-                                })
+                                }
                             else
-                                done({ result })
+                                done { result }
                             end
                         end)
                     end,
                     async = true,
                 },
-            }))
+            })
         end,
         lsp = {
             CompletionItemKind = {
@@ -468,15 +473,14 @@ function M.setup_lsp()
         setup(client, false)
     end
 
-    local lspconfig = require("lspconfig")
-    lsp.set_log_level("error")
+    lsp.log.set_level(vim.log.levels.ERROR)
 
     if fn.executable("cmake-language-server") == 1 then
-        require("lspconfig").cmake.setup {}
+        lsp.config("cmake", {})
     end
 
     if fn.executable("pyright") == 1 then
-        lspconfig.pyright.setup {
+        lsp.config("pyright", {
             on_attach = setup_without_formatting,
             filetypes = { "python" },
             settings = {
@@ -494,13 +498,13 @@ function M.setup_lsp()
                     },
                 },
             },
-        }
+        })
     end
 
     if fn.executable("clangd") == 1 then
         local capabilities = lsp.protocol.make_client_capabilities()
         capabilities.offsetEncoding = { "utf-16" }
-        lspconfig.clangd.setup {
+        lsp.config("clangd", {
             capabilities = capabilities,
             on_attach = setup,
             cmd = {
@@ -515,11 +519,11 @@ function M.setup_lsp()
                 "--header-insertion-decorators",
                 "-j=1",
             },
-        }
+        })
     end
 
     if fn.executable("lua-language-server") == 1 then
-        lspconfig.lua_ls.setup {
+        lsp.config("lua_ls", {
             on_attach = setup_without_formatting,
             settings = {
                 Lua = {
@@ -529,25 +533,25 @@ function M.setup_lsp()
                     telemetry = { enable = false },
                 },
             },
-        }
+        })
     end
 
     if fn.executable("ccls") == 1 then
-        lspconfig.ccls.setup {
+        lsp.config("ccls", {
             on_attach = setup_without_formatting,
             settings = { index = { threads = 1 } },
-        }
+        })
     end
 
     if fn.expand("$VIMRC_QMLLS_DISABLED") ~= "1" and fn.executable("qmlls") == 1 then
-        lspconfig.qmlls.setup {
+        lsp.config("qmlls", {
             cmd = { "qmlls", "-I", "./qml" },
             on_attach = setup_without_formatting,
-        }
+        })
     end
 
     if fn.executable("rust-analyzer") == 1 then
-        lspconfig.rust_analyzer.setup {
+        lsp.config("rust_analyzer", {
             on_attach = setup_without_formatting,
             filetypes = { "rust" },
             settings = {
@@ -560,17 +564,17 @@ function M.setup_lsp()
                     procMacro = { enable = true },
                 },
             },
-        }
+        })
     end
 
     if fn.executable("gopls") == 1 then
-        lspconfig.gopls.setup {
+        lsp.config("gopls", {
             on_attach = setup,
-        }
+        })
     end
 
     if fn.executable("zls") == 1 then
-        lspconfig.zls.setup {
+        lsp.config("zls", {
             on_attach = setup,
             filetypes = { "zig" },
             cmd = {
@@ -578,25 +582,25 @@ function M.setup_lsp()
                 "--config-path",
                 fn.expand("$HOME") .. "/.dotfiles/vim/zls_config.json",
             },
-        }
+        })
     end
 
     if vim.fn.has("osx") == 1 then
-        require("lspconfig").sourcekit.setup {
+        lsp.config("sourcekit", {
             filetypes = { "swift", "objcpp", "objc" },
             on_attach = setup,
-        }
+        })
     end
 
     if fn.executable("vimls") == 1 then
-        lspconfig.vimls.setup {
+        lsp.config("vimls", {
             on_attach = setup_without_formatting,
             filetypes = { "vim" },
-        }
+        })
     end
 
     if fn.executable("glsl_analyzer") == 1 then
-        lspconfig.glsl_analyzer.setup {}
+        lsp.config("glsl_analyzer", {})
     end
 
     local cmp_exists, _ = pcall(require, "cmp")
@@ -687,7 +691,7 @@ function M.setup_lsp()
         debug = vim.fn.expand("$VIMRC_NULL_LS_DEBUG") == "1",
         update_on_insert = false,
         on_attach = setup,
-        sources = nullls_sources
+        sources = nullls_sources,
     }
 
     setup_signs()
