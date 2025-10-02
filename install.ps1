@@ -19,7 +19,13 @@ Write-Output '[include]' >> ~/.gitconfig
 Write-Output '    path = ~/.dotfiles/gitconfig' >> ~/.gitconfig
 
 New-Item -ItemType Directory -Force -Path "~/.config/alacritty"
-New-Item -Force -ItemType SymbolicLink -Path "$HOME/.config/alacritty/alacritty.yml" -Target "$HOME/.dotfiles/terminals/alacritty.yml"
+
+if ($IsMacOS) {
+    New-Item -Force -ItemType SymbolicLink -Path "$HOME/.config/alacritty/alacritty.yml" -Target "$HOME/.dotfiles/terminals/alacritty_macos.yml"
+}
+else {
+    New-Item -Force -ItemType SymbolicLink -Path "$HOME/.config/alacritty/alacritty.yml" -Target "$HOME/.dotfiles/terminals/alacritty_windows.yml"
+}
 
 if (Test-Path -Path env:FIREFOX_PROFILE_PATH) {
     $profileFolder = Join-Path -Path $env:FIREFOX_PROFILE_PATH -ChildPath chrome
