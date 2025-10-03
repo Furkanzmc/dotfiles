@@ -415,11 +415,42 @@ function M.setup_lsp()
         end
     end)
 
+    local setup = function(client, bufnr, format_enabled)
+        if format_enabled == nil then
+            format_enabled = true
+        end
+
+        client.server_capabilities.documentFormattingProvider = format_enabled
+        if client.server_capabilities.inlayHintProvider == true then
+            require("lsp-endhints").enable()
+        end
+
+        setup_buffer_vars(client, bufnr, format_enabled)
+        set_enabled(bufnr, client, "configured", true)
+        set_handlers(client, bufnr)
+        set_up_keymap(client, bufnr, format_enabled)
+
+        require("lsp_signature").on_attach({
+            bind = true,
+            handler_opts = { border = "none" },
+            toggle_key = "<C-g><C-s>",
+            extra_trigger_chars = { "{", "}" },
+        }, bufnr)
+    end
+
     vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
             local bufnr = args.buf
             local client = vim.lsp.get_client_by_id(args.data.client_id)
-            set_up_keymap(client, bufnr, is_enabled(bufnr, client, "format_enabled"))
+            local format_disabled_servers = {
+                "pyright",
+                "lua_ls",
+                "ccls",
+                "qmlls",
+                "rust_analyzer",
+                "vimls",
+            }
+            setup(client, bufnr, table.index_of(format_disabled_servers, client.name) == -1)
         end,
     })
 
@@ -431,13 +462,18 @@ function M.setup_lsp()
         end,
     })
 
-    vim.diagnostic.config {
+    local diag_config = {
         signs = true,
-        virtual_text = options.get_option_value("lsp_virtual_text"),
+        virtual_text = false,
         underline = false,
         update_in_insert = false,
         severity_sort = false,
     }
+    if options.get_option_value("lsp_virtual_text") then
+        diag_config.virtual_text = { current_line = true }
+    end
+
+    vim.diagnostic.config(diag_config)
 
     options.register_callback("lsp_virtual_text", function()
         vim.diagnostic.config {
@@ -445,43 +481,15 @@ function M.setup_lsp()
         }
     end)
 
-    local setup = function(client, format_enabled)
-        local bufnr = api.nvim_get_current_buf()
-
-        if format_enabled == nil then
-            format_enabled = true
-        end
-
-        setup_buffer_vars(client, bufnr, format_enabled)
-        set_enabled(bufnr, client, "configured", true)
-        set_handlers(client, bufnr)
-
-        if client.server_capabilities.inlayHintProvider == true then
-            require("lsp-endhints").enable()
-        end
-
-        require("lsp_signature").on_attach({
-            bind = true,
-            handler_opts = { border = "none" },
-            toggle_key = "<C-g><C-s>",
-            extra_trigger_chars = { "{", "}" },
-        }, bufnr)
-    end
-
-    local setup_without_formatting = function(client)
-        client.server_capabilities.documentFormattingProvider = false
-        setup(client, false)
-    end
-
     lsp.log.set_level(vim.log.levels.ERROR)
 
     if fn.executable("cmake-language-server") == 1 then
         lsp.config("cmake", {})
+        lsp.enable("cmake")
     end
 
     if fn.executable("pyright") == 1 then
         lsp.config("pyright", {
-            on_attach = setup_without_formatting,
             filetypes = { "python" },
             settings = {
                 python = {
@@ -499,6 +507,7 @@ function M.setup_lsp()
                 },
             },
         })
+        lsp.enable("pyright")
     end
 
     if fn.executable("clangd") == 1 then
@@ -506,7 +515,6 @@ function M.setup_lsp()
         capabilities.offsetEncoding = { "utf-16" }
         lsp.config("clangd", {
             capabilities = capabilities,
-            on_attach = setup,
             cmd = {
                 "clangd",
                 "--background-index",
@@ -520,11 +528,11 @@ function M.setup_lsp()
                 "-j=1",
             },
         })
+        lsp.enable("clangd")
     end
 
     if fn.executable("lua-language-server") == 1 then
         lsp.config("lua_ls", {
-            on_attach = setup_without_formatting,
             settings = {
                 Lua = {
                     runtime = { library = api.nvim_list_runtime_paths()[1] },
@@ -534,25 +542,25 @@ function M.setup_lsp()
                 },
             },
         })
+        lsp.enable("lua_ls")
     end
 
     if fn.executable("ccls") == 1 then
         lsp.config("ccls", {
-            on_attach = setup_without_formatting,
             settings = { index = { threads = 1 } },
         })
+        lsp.enable("ccls")
     end
 
     if fn.expand("$VIMRC_QMLLS_DISABLED") ~= "1" and fn.executable("qmlls") == 1 then
         lsp.config("qmlls", {
             cmd = { "qmlls", "-I", "./qml" },
-            on_attach = setup_without_formatting,
         })
+        lsp.enable("qmlls")
     end
 
     if fn.executable("rust-analyzer") == 1 then
         lsp.config("rust_analyzer", {
-            on_attach = setup_without_formatting,
             filetypes = { "rust" },
             settings = {
                 ["rust-analyzer"] = {
@@ -565,17 +573,16 @@ function M.setup_lsp()
                 },
             },
         })
+        lsp.enable("rust_analyzer")
     end
 
     if fn.executable("gopls") == 1 then
-        lsp.config("gopls", {
-            on_attach = setup,
-        })
+        lsp.config("gopls", {})
+        lsp.enable("gopls")
     end
 
     if fn.executable("zls") == 1 then
         lsp.config("zls", {
-            on_attach = setup,
             filetypes = { "zig" },
             cmd = {
                 "zls",
@@ -583,24 +590,26 @@ function M.setup_lsp()
                 fn.expand("$HOME") .. "/.dotfiles/vim/zls_config.json",
             },
         })
+        lsp.enable("zls")
     end
 
     if vim.fn.has("osx") == 1 then
         lsp.config("sourcekit", {
             filetypes = { "swift", "objcpp", "objc" },
-            on_attach = setup,
         })
+        lsp.enable("sourcekit")
     end
 
     if fn.executable("vimls") == 1 then
         lsp.config("vimls", {
-            on_attach = setup_without_formatting,
             filetypes = { "vim" },
         })
+        lsp.enable("vimls")
     end
 
     if fn.executable("glsl_analyzer") == 1 then
         lsp.config("glsl_analyzer", {})
+        lsp.enable("glsl_analyzer")
     end
 
     local cmp_exists, _ = pcall(require, "cmp")
