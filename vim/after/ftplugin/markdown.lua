@@ -125,6 +125,7 @@ end
 
 vim.cmd[[abbreviate <silent> <buffer> zfeeling@ ❤️📝]]
 vim.cmd[[abbreviate <silent> <buffer> zdream@ 📝😴]]
+vim.cmd[[abbreviate <silent> <buffer> ztime@ ⏳🪵]]
 
 if vim.fn.exists(":RunQML") ~= 2 then
     vim.cmd([[command -buffer -range RunQML :call qml#run()]])
