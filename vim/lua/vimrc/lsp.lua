@@ -400,7 +400,7 @@ function M.setup_lsp()
         return
     end
 
-    if vim.fn.exists(":LspInfo") == 0 then
+    if vim.fn.exists(":LspHover") == 2 then
         return
     end
 
