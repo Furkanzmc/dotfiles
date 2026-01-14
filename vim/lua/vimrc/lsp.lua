@@ -415,8 +415,6 @@ function M.setup_lsp()
         end
     end)
 
-    local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-
     local setup = function(client, bufnr, format_enabled)
         if format_enabled == nil then
             format_enabled = true
@@ -486,16 +484,13 @@ function M.setup_lsp()
     lsp.log.set_level(vim.log.levels.ERROR)
 
     if fn.executable("cmake-language-server") == 1 then
-        lsp.config("cmake", {
-            capabilities = cmp_capabilities,
-        })
+        lsp.config("cmake", {})
         lsp.enable("cmake")
     end
 
     if fn.executable("pyright") == 1 then
         lsp.config("pyright", {
             filetypes = { "python" },
-            capabilities = cmp_capabilities,
             settings = {
                 python = {
                     analysis = {
@@ -517,7 +512,6 @@ function M.setup_lsp()
 
     if fn.executable("clangd") == 1 then
         local capabilities = lsp.protocol.make_client_capabilities()
-        vim.tbl_extend("keep", capabilities, capabilities, cmp_capabilities)
         capabilities.offsetEncoding = { "utf-16" }
         lsp.config("clangd", {
             capabilities = capabilities,
@@ -539,7 +533,6 @@ function M.setup_lsp()
 
     if fn.executable("lua-language-server") == 1 then
         lsp.config("lua_ls", {
-            capabilities = cmp_capabilities,
             settings = {
                 Lua = {
                     runtime = { library = api.nvim_list_runtime_paths()[1] },
@@ -554,7 +547,6 @@ function M.setup_lsp()
 
     if fn.executable("ccls") == 1 then
         lsp.config("ccls", {
-            capabilities = cmp_capabilities,
             settings = { index = { threads = 1 } },
         })
         lsp.enable("ccls")
@@ -562,7 +554,6 @@ function M.setup_lsp()
 
     if fn.expand("$VIMRC_QMLLS_DISABLED") ~= "1" and fn.executable("qmlls") == 1 then
         lsp.config("qmlls", {
-            capabilities = cmp_capabilities,
             cmd = { "qmlls", "-I", "./qml" },
         })
         lsp.enable("qmlls")
@@ -570,7 +561,6 @@ function M.setup_lsp()
 
     if fn.executable("rust-analyzer") == 1 then
         lsp.config("rust_analyzer", {
-            capabilities = cmp_capabilities,
             filetypes = { "rust" },
             settings = {
                 ["rust-analyzer"] = {
@@ -587,15 +577,12 @@ function M.setup_lsp()
     end
 
     if fn.executable("gopls") == 1 then
-        lsp.config("gopls", {
-            capabilities = cmp_capabilities,
-        })
+        lsp.config("gopls", {})
         lsp.enable("gopls")
     end
 
     if fn.executable("zls") == 1 then
         lsp.config("zls", {
-            capabilities = cmp_capabilities,
             filetypes = { "zig" },
             cmd = {
                 "zls",
@@ -608,7 +595,6 @@ function M.setup_lsp()
 
     if vim.fn.has("osx") == 1 then
         lsp.config("sourcekit", {
-            capabilities = cmp_capabilities,
             filetypes = { "swift", "objcpp", "objc" },
         })
         lsp.enable("sourcekit")
@@ -616,24 +602,19 @@ function M.setup_lsp()
 
     if fn.executable("vimls") == 1 then
         lsp.config("vimls", {
-            capabilities = cmp_capabilities,
             filetypes = { "vim" },
         })
         lsp.enable("vimls")
     end
 
     if fn.executable("glsl_analyzer") == 1 then
-        lsp.config("glsl_analyzer", {
-            capabilities = cmp_capabilities,
-        })
+        lsp.config("glsl_analyzer", {})
         lsp.enable("glsl_analyzer")
     end
 
-    if false then
-        local cmp_exists, _ = pcall(require, "cmp")
-        if not cmp_exists then
-            setup_null_ls_cmp_patch()
-        end
+    local cmp_exists, _ = pcall(require, "cmp")
+    if not cmp_exists then
+        setup_null_ls_cmp_patch()
     end
 
     local null_ls = require("null-ls")
@@ -720,7 +701,6 @@ function M.setup_lsp()
         update_on_insert = false,
         on_attach = setup,
         sources = nullls_sources,
-        capabilities = cmp_capabilities,
     }
 
     setup_signs()
