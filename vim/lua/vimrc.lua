@@ -9,7 +9,7 @@ local api = vim.api
 local M = {}
 
 function M.setup_treesitter()
-    if vim.o.loadplugins == false or fn.exists("$VIMRC_TREESITTER_DISABLED") == 1 then
+    if vim.o.loadplugins == false then
         return
     end
 

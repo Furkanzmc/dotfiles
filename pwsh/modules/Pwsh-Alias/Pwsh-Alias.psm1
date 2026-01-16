@@ -24,10 +24,10 @@ Set-Alias -Value Source-Env -Name :
 $env:MANPAGER="nvim -U NORC +Man!"
 if ($IsMacOS) {
     Set-Alias trash rmtrash
-    Set-Alias ls eza
     Set-Alias cat bat
 }
 
+Set-Alias ls eza
 if ($IsWindows) {
     Set-Alias wc Measure-Object
 }
