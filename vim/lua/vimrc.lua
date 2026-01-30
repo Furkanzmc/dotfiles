@@ -30,17 +30,19 @@ function M.setup_treesitter()
         },
     }
 
-    local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
+    if false then
+        local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
 
-    parser_configs.http = {
-        install_info = {
-            url = "https://github.com/NTBBloodbath/tree-sitter-http",
-            files = { "src/parser.c" },
-            branch = "main",
-        },
-    }
+        parser_configs.http = {
+            install_info = {
+                url = "https://github.com/NTBBloodbath/tree-sitter-http",
+                files = { "src/parser.c" },
+                branch = "main",
+            },
+        }
+    end
 
-    local config = require("nvim-treesitter.configs")
+    local config = require("nvim-treesitter")
     config.setup {
         ensure_installed = g.vimrc_treesitter_filetypes,
         highlight = { enable = true },
@@ -55,12 +57,6 @@ function M.setup_treesitter()
             },
         },
         matchup = { enable = true },
-    }
-
-    require("nvim-treesitter.configs").setup {
-        matchup = {
-            enable = true, -- mandatory, false will disable the whole extension
-        },
     }
 
     cmd([[augroup vimrc_plugin_nvim_treesitter_init]])

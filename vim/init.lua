@@ -787,23 +787,38 @@ end
 -- nvim-treesitter {{{
 
 if vim.o.loadplugins == true and g.vimrc_treesitter_filetypes ~= nil then
-    cmd([[augroup vimrc_plugin_nvim_treesitter]])
-    cmd([[au!]])
-    cmd(
-        "au FileType "
-            .. table.concat(g.vimrc_treesitter_filetypes, ",")
-            .. ",qml setlocal foldmethod=expr foldexpr=nvim_treesitter#foldexpr()"
-    )
-    cmd([[augroup END]])
+    local treesitter_filetypes = vim.list_extend({}, g.vimrc_treesitter_filetypes)
+    table.insert(treesitter_filetypes, "qml")
 
-    cmd([[augroup vimrc_plugin_nvim_treesitter_init]])
-    cmd([[au!]])
-    cmd(
-        "au FileType "
-            .. table.concat(g.vimrc_treesitter_filetypes, ",")
-            .. ",qml lua require'vimrc'.setup_treesitter()"
-    )
-    cmd([[augroup END]])
+    local treesitter_fold_group =
+        api.nvim_create_augroup("vimrc_plugin_nvim_treesitter", { clear = true })
+    local treesitter_init_group =
+        api.nvim_create_augroup("vimrc_plugin_nvim_treesitter_init", { clear = true })
+
+    for _, ft in ipairs(treesitter_filetypes) do
+        api.nvim_create_autocmd("FileType", {
+            pattern = ft,
+            callback = function(ev)
+                vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                vim.wo[0][0].foldmethod = "expr"
+                vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                if ft == "qml" then
+                    vim.treesitter.start(ev.buf, "qmljs")
+                else
+                    vim.treesitter.start(ev.buf, ft)
+                end
+            end,
+            group = treesitter_fold_group,
+        })
+
+        api.nvim_create_autocmd("FileType", {
+            pattern = ft,
+            callback = function()
+                require("vimrc").setup_treesitter()
+            end,
+            group = treesitter_init_group,
+        })
+    end
 end
 
 -- }}}
@@ -977,6 +992,11 @@ end
 
 if vim.o.loadplugins == true then
     require("catppuccin").setup {
+        flavour = "auto",
+        background = {
+            light = "latte",
+            dark = "frappe",
+        },
         term_colors = true,
         integrations = {
             cmp = false,
@@ -988,10 +1008,6 @@ if vim.o.loadplugins == true then
                 enabled = false,
                 indentscope_color = "",
             },
-        },
-        background = {
-            light = "latte",
-            dark = "frappe",
         },
         styles = {
             comments = { "italic" },

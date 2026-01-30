@@ -5,10 +5,6 @@ local fn = vim.fn
 local opt_local = vim.opt_local
 local g = vim.g
 local buffers = require("vimrc.buffers")
-local options = nil
-if vim.o.loadplugins == true then
-    options = require("options")
-end
 local M = {}
 
 -- Utility Functions {{{
@@ -105,15 +101,24 @@ local function lsp_dianostics(active, bufnr)
 
     local status = {}
     if lsp_errors > 0 then
-        table.insert(status, color("✖ " .. lsp_errors, active, "StatusLineError", "StatusLineNC", 1))
+        table.insert(
+            status,
+            color("✖ " .. lsp_errors, active, "StatusLineError", "StatusLineNC", 1)
+        )
     end
 
     if lsp_warnings > 0 then
-        table.insert(status, color("‼ " .. lsp_warnings, active, "StatusLineWarning", "StatusLineNC", 1))
+        table.insert(
+            status,
+            color("‼ " .. lsp_warnings, active, "StatusLineWarning", "StatusLineNC", 1)
+        )
     end
 
     if lsp_hints > 0 then
-        table.insert(status, color("⦿ " .. lsp_hints, active, "StatusLineHint", "StatusLineNC", 1))
+        table.insert(
+            status,
+            color("⦿ " .. lsp_hints, active, "StatusLineHint", "StatusLineNC", 1)
+        )
     end
 
     if lsp_info > 0 then
