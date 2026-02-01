@@ -799,12 +799,13 @@ if vim.o.loadplugins == true and g.vimrc_treesitter_filetypes ~= nil then
         api.nvim_create_autocmd("FileType", {
             pattern = ft,
             callback = function(ev)
-                vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-                vim.wo[0][0].foldmethod = "expr"
-                vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                vim.opt_local.foldmethod = "expr"
+
                 if ft == "qml" then
                     vim.treesitter.start(ev.buf, "qmljs")
                 else
+                    vim.opt_local.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
                     vim.treesitter.start(ev.buf, ft)
                 end
             end,
