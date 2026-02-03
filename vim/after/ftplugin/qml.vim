@@ -21,6 +21,7 @@ setlocal errorformat+=%f:%l:%c:\ %t%*[^:]:%m
 setlocal errorformat+=%f:%l:\ %t%*[^:]:%m
 setlocal errorformat+=%m\ (file://%f:%l)
 setlocal errorformat+=%m\ file\ %f\,\ line\ %l
+setlocal errorformat+=qt.qml.binding.removal:%.%#file://%f:%l\ %m
 
 if &loadplugins
     execute "Setlocal completion_timeout=50"
