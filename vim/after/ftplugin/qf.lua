@@ -46,6 +46,20 @@ vim.keymap.set(
     { silent = true, buffer = bufnr }
 )
 
+vim.keymap.set(
+    "n",
+    "[e",
+    [[:call search('error\(:\||\)', 'Wb')<CR>]],
+    { silent = true, buffer = bufnr }
+)
+
+vim.keymap.set(
+    "n",
+    "]e",
+    [[:call search('error\(:\||\)', 'W')<CR>]],
+    { silent = true, buffer = bufnr }
+)
+
 vim.api.nvim_create_autocmd({ "BufLeave" }, {
     buffer = bufnr,
     callback = function(opts)
