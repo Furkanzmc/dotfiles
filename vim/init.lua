@@ -1340,7 +1340,11 @@ api.nvim_create_autocmd({ "VimEnter" }, {
     callback = function(_)
         require("vimrc").create_custom_nvim_server()
         if vim.o.loadplugins == true then
-            cmd([[colorscheme catppuccin]])
+            if opt.background == "dark" then
+                cmd([[colorscheme catppuccin-frappe]])
+            else
+                cmd([[colorscheme catppuccin-latte]])
+            end
         end
     end,
 })
