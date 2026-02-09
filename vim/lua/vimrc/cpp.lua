@@ -8,7 +8,7 @@ local M = {}
 local function setup_cmake_commands(opts)
     local functions = {}
     functions.build_project = function(output_qf)
-        require("firvish.job_control").start_job({
+        require("firvish.job_control").start_job {
             cmd = { "cmake", "--build", opts.build_dir, "--parallel" },
             filetype = "log",
             title = "Build",
@@ -16,11 +16,11 @@ local function setup_cmake_commands(opts)
             output_qf = output_qf,
             is_background_job = true,
             cwd = opts.project_path,
-        })
+        }
     end
 
     functions.run_tests = function(output_qf)
-        require("firvish.job_control").start_job({
+        require("firvish.job_control").start_job {
             cmd = { "ctest", "--output-on-failure" },
             filetype = "log",
             title = "Tests",
@@ -28,7 +28,7 @@ local function setup_cmake_commands(opts)
             output_qf = output_qf,
             is_background_job = true,
             cwd = opts.test_cwd,
-        })
+        }
     end
 
     local configure_opts = { "cmake", "-DCMAKE_BUILD_TYPE=Debug" }
@@ -45,7 +45,7 @@ local function setup_cmake_commands(opts)
             table.extend(cmd, cmake_options)
         end
 
-        require("firvish.job_control").start_job({
+        require("firvish.job_control").start_job {
             cmd = cmd,
             filetype = "log",
             title = "CMake",
@@ -53,7 +53,7 @@ local function setup_cmake_commands(opts)
             output_qf = output_qf,
             is_background_job = true,
             cwd = opts.build_dir,
-        })
+        }
     end
 
     functions.run_project = function(output_qf, args)
@@ -62,7 +62,7 @@ local function setup_cmake_commands(opts)
             table.extend(cmd, args)
         end
 
-        require("firvish.job_control").start_job({
+        require("firvish.job_control").start_job {
             cmd = cmd,
             filetype = "log",
             title = "Run",
@@ -70,7 +70,7 @@ local function setup_cmake_commands(opts)
             output_qf = output_qf,
             is_background_job = true,
             cwd = opts.cwd,
-        })
+        }
     end
 
     _G.cmake_functions = functions
@@ -94,11 +94,11 @@ local function setup_cmake_commands(opts)
     )
 end
 
-function M.swap_source_header()
-    local bufnr = fn.bufnr()
-    local suffixes = string.split(api.nvim_buf_get_option(bufnr, "suffixesadd"), ",")
-
+--- @param bufnr integer
+function M.swap_source_header(bufnr)
+    local suffixes = string.split(api.nvim_get_option_value("suffixesadd", { buf = bufnr }), ",")
     local filename = fn.expand("%:t")
+
     for index, suffix in ipairs(suffixes) do
         local tmp = string.gsub(filename, suffix .. "$", "")
         if filename ~= tmp then
@@ -107,8 +107,7 @@ function M.swap_source_header()
         end
     end
 
-    local status, path_backup = pcall(api.nvim_buf_get_option, bufnr, "path")
-
+    local status, path_backup = pcall(api.nvim_get_option_value, "path", { buf = bufnr })
     if status == false then
         path_backup = ""
     end
@@ -125,7 +124,7 @@ function M.swap_source_header()
         end
     end
 
-    bo.path = path_backup
+    vim.opt_local.path = path_backup
 
     if found == false then
         log.error("cpp", "Cannot swap source/header for " .. fn.expand("%:t"))
@@ -165,14 +164,14 @@ function M.setup_cmake(opts)
     assert(opts.project_path, "project_path is required.")
     assert(opts.build_dir, "build_dir is required.")
 
-    require("vimrc.dap").init({
+    require("vimrc.dap").init {
         language = "cpp",
         name = opts.name,
         program = opts.program,
         cwd = opts.cwd,
         env = opts.env,
         run_in_terminal = opts.run_in_terminal,
-    })
+    }
 
     require("dap").configurations.cpp = {
         {

@@ -61,7 +61,7 @@ let b:vimrc_clangd_lsp_virtual_text_enabled = v:false
 let b:vimrc_null_ls_lsp_signs_enabled = v:true
 let b:vimrc_null_ls_lsp_virtual_text_enabled = v:false
 
-nnoremap <silent> <buffer> <leader>ch :lua require"vimrc.cpp".swap_source_header()<CR>
+nnoremap <silent> <buffer> <leader>ch :lua require"vimrc.cpp".swap_source_header(vim.fn.bufnr())<CR>
 
 " Abbreviations {{{
 
