@@ -1,5 +1,6 @@
 local vim = vim
 local fn = vim.fn
+local fs = vim.fs
 local api = vim.api
 local bo = vim.bo
 local log = require("vimrc.log")
@@ -97,34 +98,22 @@ end
 --- @param bufnr integer
 function M.swap_source_header(bufnr)
     local suffixes = string.split(api.nvim_get_option_value("suffixesadd", { buf = bufnr }), ",")
-    local filename = fn.expand("%:t")
+    local filename = fn.expand("%:t:r")
+    local ext = fn.expand("%:e")
 
-    for index, suffix in ipairs(suffixes) do
-        local tmp = string.gsub(filename, suffix .. "$", "")
-        if filename ~= tmp then
-            filename = tmp
-            table.remove(suffixes, index)
-        end
-    end
-
-    local status, path_backup = pcall(api.nvim_get_option_value, "path", { buf = bufnr })
-    if status == false then
-        path_backup = ""
-    end
-
-    vim.opt_local.path:append(fn.expand("%:h"))
+    suffixes = table.filter(suffixes, function(s)
+        return s ~= "." .. ext
+    end)
 
     local found = false
     for _, suffix in ipairs(suffixes) do
-        local found_file = fn.findfile(filename .. suffix)
-        if found_file ~= "" then
+        local list = fs.find(filename .. suffix)
+        if #list > 0 then
             found = true
-            vim.api.nvim_command("edit " .. found_file)
+            vim.api.nvim_command("edit " .. list[1])
             break
         end
     end
-
-    vim.opt_local.path = path_backup
 
     if found == false then
         log.error("cpp", "Cannot swap source/header for " .. fn.expand("%:t"))
