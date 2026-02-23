@@ -60,11 +60,6 @@ function Cache-Git-Status() {
 }
 
 function Write-Git-Prompt() {
-    if (Test-Path env:PWSH_GIT_PROMPT_DISABLED -ErrorAction SilentlyContinue) {
-        Write-Host " " -NoNewLine
-        return
-    }
-
     $gitDir = &git rev-parse --git-dir
     # Continue if the command succeeded.
     if (! $?) {
@@ -96,6 +91,11 @@ function Write-Git-Prompt() {
     }
     else {
         Write-Host "  $branchName" -ForegroundColor Cyan -NoNewLine
+    }
+
+    if (Test-Path env:PWSH_GIT_PROMPT_DISABLED -ErrorAction SilentlyContinue) {
+        Write-Host " " -NoNewLine
+        return
     }
 
     $gitStatusFile = Join-Path -Path $gitDir -ChildPath status_prompt.json
