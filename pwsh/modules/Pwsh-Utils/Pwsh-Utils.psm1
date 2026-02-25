@@ -635,6 +635,7 @@ function Update-LLVM-Aliases() {
         $version = $version.Split(' ')[1]
         Write-Host -ForegroundColor Blue -Message "Updating aliases for $version..."
 
+        ln -sf /opt/homebrew/Cellar/llvm/$version/bin/lldb /usr/local/bin/
         ln -sf /opt/homebrew/Cellar/llvm/$version/bin/lldb-dap /usr/local/bin/
         ln -sf /opt/homebrew/Cellar/llvm/$version/bin/clang-format /usr/local/bin/
         ln -sf /opt/homebrew/Cellar/llvm/$version/bin/git-clang-format /usr/local/bin/
