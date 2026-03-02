@@ -20,7 +20,7 @@ vim.bo.softtabstop = 4
 
 vim.opt_local.smarttab = false
 vim.wo.linebreak = true
-vim.bo.textwidth = 110
+vim.bo.textwidth = 100
 
 vim.bo.indentexpr = ""
 vim.bo.suffixesadd = ".py"
