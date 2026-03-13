@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh pr *:*)",
+      "Bash(cd *:*)",
+      "Bash(ug *:*)",
+      "Bash(fd *:*)",
+      "Bash(rg *:*)",
+      "Bash(exa *:*)",
+      "Bash(ls *:*)",
+      "Bash(sd *:*)",
+      "Bash(git show *:*)",
+      "Bash(git log *:*)",
+      "Bash(git diff *:*)"
+    ]
+  },
+  "enabledPlugins": {
+    "pyright-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "clangd-lsp@claude-plugins-official": true
+  }
+}
