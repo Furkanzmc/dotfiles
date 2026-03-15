@@ -15,6 +15,7 @@ if vim.o.loadplugins then
 end
 
 local s_buffer_minimal_cache = {}
+local s_minimal_global_cache = nil
 local M = {}
 
 local s_scratch_buffer_count = 1
@@ -38,7 +39,15 @@ local function set_minimal_mode(is_minimal, bufnr)
             laststatus = opt_local.laststatus,
             signcolumn = opt_local.signcolumn,
             tabline = opt_local.tabline,
+            winbar = opt_local.winbar,
         }
+
+        if s_minimal_global_cache == nil then
+            s_minimal_global_cache = {
+                showtabline = vim.o.showtabline,
+            }
+            vim.o.showtabline = 0
+        end
 
         opt_local.relativenumber = false
         opt_local.number = false
@@ -50,6 +59,11 @@ local function set_minimal_mode(is_minimal, bufnr)
         opt_local.laststatus = 0
         opt_local.signcolumn = "no"
         opt_local.tabline = "%#Normal#%T"
+        opt_local.winbar = ""
+
+        if vim.o.loadplugins then
+            require("dropbar.utils.bar").exec("del")
+        end
     else
         local cached_options = s_buffer_minimal_cache[bufnr]
         assert(cached_options ~= nil, "Options cache is not found.")
@@ -62,7 +76,13 @@ local function set_minimal_mode(is_minimal, bufnr)
         opt_local.cursorline = cached_options.cursorline
         opt_local.laststatus = cached_options.laststatus
         opt_local.tabline = cached_options.tabline
+        opt_local.winbar = cached_options.winbar
         s_buffer_minimal_cache[bufnr] = nil
+
+        if s_minimal_global_cache ~= nil and next(s_buffer_minimal_cache) == nil then
+            vim.o.showtabline = s_minimal_global_cache.showtabline
+            s_minimal_global_cache = nil
+        end
     end
 end
 
