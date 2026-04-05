@@ -57,6 +57,12 @@ if src ~= nil and src > 0 then
     vim.opt_local.path:append(value)
 end
 
+local inc, _ = string.find(folder, "include")
+if inc ~= nil and inc > 0 then
+    local value, _ = string.gsub(folder, "(.*)include(.*)", "%1src%2")
+    vim.opt_local.path:append(value)
+end
+
 -- Buffer Variables
 vim.b.vimrc_clangd_lsp_signs_enabled = true
 vim.b.vimrc_clangd_lsp_virtual_text_enabled = false
