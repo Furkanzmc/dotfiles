@@ -50,7 +50,14 @@ if vim.opt_local.omnifunc:get() == "ccomplete#Complete" then
 end
 
 local folder = vim.fn.expand("%:h")
-vim.opt_local.path = "./," .. folder
+if not vim.tbl_contains(vim.opt_local.path:get(), "./") then
+    vim.opt_local.path:append("./")
+end
+
+if not vim.tbl_contains(vim.opt_local.path:get(), folder) then
+    vim.opt_local.path:append(folder)
+end
+
 local src, _ = string.find(folder, "src")
 if src ~= nil and src > 0 then
     local value, _ = string.gsub(folder, "(.*)src(.*)", "%1include%2")
