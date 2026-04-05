@@ -6,13 +6,28 @@
       "Bash(ug *:*)",
       "Bash(fd *:*)",
       "Bash(rg *:*)",
-      "Bash(exa *:*)",
+      "Bash(eza *:*)",
       "Bash(ls *:*)",
       "Bash(sd *:*)",
       "Bash(git show *:*)",
       "Bash(git log *:*)",
-      "Bash(git diff *:*)"
-    ]
+      "Bash(git diff *:*)",
+      "Bash(exa:*)",
+      "Bash(ug:*)",
+      "Bash(fd:*)",
+      "Bash(sd:*)",
+      "Bash(xargs:*)",
+      "Bash(git:*)",
+      "Bash(ug*:*)",
+      "Bash(ug :*)",
+      "Read(~/.claude/plans/)"
+    ],
+    "deny": [
+        "Bash(ls *:*)",
+        "Bash(find *:*)",
+        "Bash(grep *:*)"
+    ],
+    "defaultMode": "default"
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,

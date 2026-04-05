@@ -100,6 +100,7 @@ function M.swap_source_header(bufnr)
     local suffixes = string.split(api.nvim_get_option_value("suffixesadd", { buf = bufnr }), ",")
     local filename = fn.expand("%:t:r")
     local ext = fn.expand("%:e")
+    local path = api.nvim_get_option_value("path", { buf = bufnr })
 
     suffixes = table.filter(suffixes, function(s)
         return s ~= "." .. ext
@@ -107,10 +108,10 @@ function M.swap_source_header(bufnr)
 
     local found = false
     for _, suffix in ipairs(suffixes) do
-        local list = fs.find(filename .. suffix)
-        if #list > 0 then
+        local file = fn.findfile(filename .. suffix, path)
+        if file ~= "" then
             found = true
-            vim.api.nvim_command("edit " .. list[1])
+            vim.api.nvim_command("edit " .. fn.fnamemodify(file, ":p"))
             break
         end
     end
