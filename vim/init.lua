@@ -406,6 +406,8 @@ end
 
 cmd([[cnoreabbrev time Time]])
 cmd([[cnoreabbrev bc Bclose]])
+cmd([[cnoreabbrev g*cpp@ --glob=*.cpp]])
+cmd([[cnoreabbrev g*h@ --glob=*.h]])
 
 cmd(
     [[cnoreabbrev buffs@ <C-R>=luaeval("table.concat(require'vimrc.buffers'.get_buffer_names(), ' ')")<CR>]]
