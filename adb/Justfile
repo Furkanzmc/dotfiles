@@ -1,2 +1,8 @@
 wifi-ip:
     adb shell ip route | awk '{print $9}'
+
+enable-wireless:
+    adb tcpip 3232
+
+cast-wireless ip:
+    scrcpy --tcpip={{ip}}:3232 --stay-awake
