@@ -1,0 +1,2 @@
+wifi-ip:
+    adb shell ip route | awk '{print $9}'
