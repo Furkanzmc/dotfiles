@@ -6,3 +6,6 @@ enable-wireless:
 
 cast-wireless ip:
     scrcpy --tcpip={{ip}}:3232 --stay-awake
+
+cast-wired:
+    scrcpy --stay-awake
