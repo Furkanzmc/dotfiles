@@ -18,8 +18,6 @@ learning.
 - Prefer `const` variables.
 - Prefer immediately invoked lambdas to initialize `const` variables or if the initialization of the
   variable is complicated.
-- Prefer to use `aw_defer` from `<awDefer.h>` for deferred actions to execute at the end of
-the scope.
 - Prefer the anonymous namespace to put static functions and don't use the `static` keyword.
 - Always make sure to handle errors properly or log the error details. No silent failures. A
 function should do what it advertises, so strict assertions for pre-conditions are vital!
@@ -50,8 +48,6 @@ it by value and move it.
   side of the assignment is explicitly typed.
 - If you use an assertion, you cannot handle what the assertion is doing in release builds. You can
   either do an error check or an assertion.
-- When you are adding a new header file in Jam, always make it private (e.g `AWFile Header.h :
-private ; `)
 - When capturing variables in lambdas, always just capture what's needed. Prefer `std::move` when
 appropriate, and be careful about capturing with reference or pointer.
 
