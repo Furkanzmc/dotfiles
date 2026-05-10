@@ -113,3 +113,6 @@
 [submodule "vim/pack/packages/opt/flutter-tools.nvim"]
 	path = vim/pack/packages/opt/flutter-tools.nvim
 	url = https://github.com/nvim-flutter/flutter-tools.nvim.git
+[submodule "vim/pack/packages/start/mkreview.nvim"]
+	path = vim/pack/packages/start/mkreview.nvim
+	url = https://github.com/Furkanzmc/mkreview.nvim.git
