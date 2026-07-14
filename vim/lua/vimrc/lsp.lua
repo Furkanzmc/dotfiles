@@ -58,16 +58,6 @@ end
 
 -- }}}
 
-local function set_handlers(
-    _, --[[ client ]]
-    _ --[[ bufnr ]]
-)
-    lsp.handlers["textDocument/references"] = lsp.with(lsp.handlers["textDocument/references"], {
-        -- Use location list instead of quickfix list
-        loclist = true,
-    })
-end
-
 local function set_up_keymap(client, bufnr, format_enabled)
     local opts = { remap = true, silent = true, buffer = bufnr }
     local server_capabilities = client.server_capabilities
@@ -123,7 +113,7 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     if server_capabilities.referencesProvider then
-        keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+        keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references(nil, {loclist=true})<CR>", opts)
     end
 
     keymap.set("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
@@ -427,7 +417,6 @@ function M.setup_lsp()
 
         setup_buffer_vars(client, bufnr, format_enabled)
         set_enabled(bufnr, client, "configured", true)
-        set_handlers(client, bufnr)
         set_up_keymap(client, bufnr, format_enabled)
 
         require("lsp_signature").on_attach({
