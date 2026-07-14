@@ -15,6 +15,7 @@ function M.setup_treesitter()
 
     assert(fn.exists(":TSInstall") == 0, "TreeSitter is already configured.")
 
+    cmd([[packadd treesitter-parser-registry]])
     cmd([[packadd nvim-treesitter]])
     cmd([[packadd outline.nvim]])
 

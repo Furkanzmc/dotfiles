@@ -41,9 +41,6 @@
 [submodule "vim/pack/packages/opt/nvim-qt"]
 	path = vim/pack/packages/opt/nvim-qt
 	url = https://github.com/Furkanzmc/nvim-qt.git
-[submodule "vim/pack/packages/opt/nvim-treesitter"]
-	path = vim/pack/packages/opt/nvim-treesitter
-	url = https://github.com/nvim-treesitter/nvim-treesitter.git
 [submodule "vim/pack/packages/opt/rest.nvim"]
 	path = vim/pack/packages/opt/rest.nvim
 	url = https://github.com/NTBBloodbath/rest.nvim.git
@@ -116,3 +113,12 @@
 [submodule "vim/pack/packages/start/mkreview.nvim"]
 	path = vim/pack/packages/start/mkreview.nvim
 	url = https://github.com/Furkanzmc/mkreview.nvim.git
+[submodule "vim/pack/packages/opt/ts-install.nvim"]
+	path = vim/pack/packages/opt/ts-install.nvim
+	url = https://github.com/lewis6991/ts-install.nvim.git
+[submodule "vim/pack/packages/opt/nvim-treesitter"]
+	path = vim/pack/packages/opt/nvim-treesitter
+	url = https://github.com/neovim-treesitter/nvim-treesitter.git
+[submodule "vim/pack/packages/opt/treesitter-parser-registry"]
+	path = vim/pack/packages/opt/treesitter-parser-registry
+	url = https://github.com/neovim-treesitter/treesitter-parser-registry.git
