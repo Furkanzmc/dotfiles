@@ -26,6 +26,8 @@ g.loaded_zip = 1
 g.loaded_zipPlugin = 1
 g.loaded_matchit = 1
 g.qf_disable_statusline = 1
+-- Disable the default directory plugin because it messes up with vim-dirvish
+g.loaded_nvim_dir_plugin = 1
 
 opt.runtimepath:append(fn.expand("~/.dotfiles/vim"))
 opt.runtimepath:append(fn.expand("~/.dotfiles/vim/after"))
