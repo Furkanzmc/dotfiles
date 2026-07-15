@@ -159,7 +159,7 @@ function M.clean_trailing_spaces(bufnr)
             )
             if choice == "p" then
                 cmd([[%s/\s\+$//ec]])
-            elseif typing.toboolean(choice) == true then
+            elseif choice == "y" then
                 cmd([[%s/\s\+$//e]])
             end
         end
