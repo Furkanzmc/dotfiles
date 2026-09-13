@@ -71,10 +71,11 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     if server_capabilities.definitionProvider then
-        if options.get_option_value("lsp_tagfunc_enabled") == true then
+        local value = options.get_option_value("lsp_tagfunc_enabled")
+        if value == true then
             set_option("tagfunc", "v:lua.vim.lsp.tagfunc", bufnr)
-        elseif api.nvim_get_option_value("tagfunc", { buf = bufnr }) == "v:lua.vim.lsp.tagfunc" then
-            set_option("tagfunc", "", bufnr)
+        else
+            set_option("tagfunc", nil, bufnr)
         end
     end
 
@@ -113,7 +114,12 @@ local function set_up_keymap(client, bufnr, format_enabled)
     end
 
     if server_capabilities.referencesProvider then
-        keymap.set("n", "<leader>gg", "<cmd>lua vim.lsp.buf.references(nil, {loclist=true})<CR>", opts)
+        keymap.set(
+            "n",
+            "<leader>gg",
+            "<cmd>lua vim.lsp.buf.references(nil, {loclist=true})<CR>",
+            opts
+        )
     end
 
     keymap.set("n", "<leader>ge", "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<CR>", opts)
@@ -183,7 +189,7 @@ local function delete_keymaps(
         del_keymap("n", "<leader>gp", opts)
 
         if options.get_option_value("lsp_tagfunc_enabled") then
-            set_option("tagfunc", "", bufnr)
+            set_option("tagfunc", nil, bufnr)
         end
     end
 
@@ -399,8 +405,10 @@ function M.setup_lsp()
         local buffers = vim.api.nvim_list_bufs()
 
         for _, bufnr in ipairs(buffers) do
-            if not value then
-                set_option("tagfunc", "", bufnr)
+            if value == true then
+                set_option("tagfunc", nil, bufnr)
+            else
+                set_option("tagfunc", "v:lua.vim.lsp.tagfunc", bufnr)
             end
         end
     end)
