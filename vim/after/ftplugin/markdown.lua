@@ -123,9 +123,10 @@ if vim.fn.exists(":ZkBrowse") == 2 then
     end, 10)
 end
 
-vim.cmd[[abbreviate <silent> <buffer> zfeeling@ ❤️📝]]
-vim.cmd[[abbreviate <silent> <buffer> zdream@ 😴📝]]
-vim.cmd[[abbreviate <silent> <buffer> ztime@ ⏳📝]]
+vim.cmd[[abbreviate <silent> <buffer> zfeeling@ ❤️📝<CR><CR>---<CR><CR>#feeling-journal]]
+vim.cmd[[abbreviate <silent> <buffer> zdream@ 😴📝<CR><CR>---<CR><CR>#dream-journal]]
+vim.cmd[[abbreviate <silent> <buffer> ztime@ ⏳📝<CR><CR>---<CR><CR>#time-log]]
+vim.cmd[[abbreviate <silent> <buffer> zhfl@ 💭📝<CR><CR>---<CR><CR>#hfl]]
 
 if vim.fn.exists(":RunQML") ~= 2 then
     vim.cmd([[command -buffer -range RunQML :call qml#run()]])
