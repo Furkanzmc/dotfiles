@@ -263,7 +263,7 @@ function hs.window.center_narrow(win)
     if is_wide then
         f.w = max.w * 0.3
     else
-        f.w = max.w * 0.4
+        f.w = max.w * 0.41
     end
     f.h = max.h
     f.x = max.x + (max.w / 2) - f.w / 2
