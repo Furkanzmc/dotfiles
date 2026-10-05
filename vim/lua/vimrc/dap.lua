@@ -141,6 +141,7 @@ function M.init(opts)
                 request = "launch",
                 name = opts.name,
                 program = opts.program,
+                args = opts.args,
                 symbolSearchPath = opts.cwd,
                 cwd = opts.cwd,
                 debuggerRoot = opts.cwd,

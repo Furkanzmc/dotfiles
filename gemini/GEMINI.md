@@ -9,6 +9,8 @@
 - I want to make use of you so I can learn better, faster, and gain depth of knowledge. So, make
 sure to leave comments in the code, give me instructions, ask me questions so we can facilitate
 learning.
+- When making changes, always use `flutter anaylze` to ensure your changes build correctly. When
+  I confirm that the feature works, commit your changes properly.
 
 ## C++ Coding Conventions
 
