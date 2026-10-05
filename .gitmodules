@@ -115,7 +115,4 @@
 	url = https://github.com/lewis6991/ts-install.nvim.git
 [submodule "vim/pack/packages/opt/nvim-treesitter"]
 	path = vim/pack/packages/opt/nvim-treesitter
-	url = https://github.com/neovim-treesitter/nvim-treesitter.git
-[submodule "vim/pack/packages/opt/treesitter-parser-registry"]
-	path = vim/pack/packages/opt/treesitter-parser-registry
-	url = https://github.com/neovim-treesitter/treesitter-parser-registry.git
+	url = https://github.com/nvim-treesitter/nvim-treesitter.git
