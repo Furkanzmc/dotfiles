@@ -44,9 +44,6 @@
 [submodule "vim/pack/packages/opt/rest.nvim"]
 	path = vim/pack/packages/opt/rest.nvim
 	url = https://github.com/NTBBloodbath/rest.nvim.git
-[submodule "vim/pack/packages/opt/rust.vim"]
-	path = vim/pack/packages/opt/rust.vim
-	url = https://github.com/rust-lang/rust.vim.git
 [submodule "vim/pack/packages/opt/SyntaxRange"]
 	path = vim/pack/packages/opt/SyntaxRange
 	url = https://github.com/vim-scripts/SyntaxRange.git
