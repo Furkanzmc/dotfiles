@@ -5,4 +5,4 @@ end
 vim.bo.cindent = false
 vim.bo.suffixesadd = ".js,.jsx"
 vim.opt_local.cursorcolumn = false
-vim.opt_local.signcolumn = "no"
+vim.opt_local.signcolumn = "yes"

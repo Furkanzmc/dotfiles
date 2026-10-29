@@ -609,6 +609,13 @@ function M.setup_lsp()
         lsp.enable("glsl_analyzer")
     end
 
+    if fn.executable("tsc") == 1 then
+        lsp.config("tsc", {
+            filetypes = { "javascript", "typescript" },
+        })
+        lsp.enable("tsc")
+    end
+
     local cmp_exists, _ = pcall(require, "cmp")
     if not cmp_exists then
         setup_null_ls_cmp_patch()
