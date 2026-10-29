@@ -259,7 +259,7 @@ local function setup_buffer_vars(client, bufnr, format_enabled)
     set_enabled(bufnr, client, "format_enabled", format_enabled)
 
     if not option_exists(bufnr, client, "auto_stop") then
-        set_enabled(bufnr, client, "auto_stop", false)
+        set_enabled(bufnr, client, "auto_stop", true)
     end
 
     if not option_exists(bufnr, client, "shortcuts_set") then
@@ -284,6 +284,130 @@ local function setup_signs()
     vim.cmd([[sign define DiagnosticSignWarn text=‼ texthl=DiagnosticWarn linehl= numhl=]])
     vim.cmd([[sign define DiagnosticSignInfo text=ℹ texthl=DiagnosticInfo linehl= numhl=]])
     vim.cmd([[sign define DiagnosticSignHint text=⦿ texthl=DiagnosticHint linehl= numhl=]])
+end
+
+local s_detach_timer_gen = {}
+local s_lsp_auto_stop_group = nil
+
+local function buf_is_normal(bufnr)
+    local buftype = api.nvim_get_option_value("buftype", { buf = bufnr })
+    return buftype == "" or buftype == "help"
+end
+
+local function buf_visible_in_any_window(bufnr)
+    if not api.nvim_buf_is_valid(bufnr) then
+        return false
+    end
+
+    for _, tab in ipairs(api.nvim_list_tabpages()) do
+        for _, win in ipairs(api.nvim_tabpage_list_wins(tab)) do
+            if api.nvim_win_get_buf(win) == bufnr then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
+local function cancel_lsp_detach_timer(bufnr)
+    s_detach_timer_gen[bufnr] = (s_detach_timer_gen[bufnr] or 0) + 1
+end
+
+local function detach_auto_stop_clients(bufnr)
+    for _, client in ipairs(lsp.get_clients { bufnr = bufnr }) do
+        if is_enabled(bufnr, client, "auto_stop") and lsp.buf_is_attached(bufnr, client.id) then
+            lsp.buf_detach_client(bufnr, client.id)
+        end
+    end
+end
+
+local function maybe_schedule_lsp_detach(bufnr)
+    if not buf_is_normal(bufnr) then
+        return
+    end
+
+    if buf_visible_in_any_window(bufnr) or api.nvim_get_current_buf() == bufnr then
+        return
+    end
+
+    if not M.is_lsp_running(bufnr) then
+        return
+    end
+
+    local gen = (s_detach_timer_gen[bufnr] or 0) + 1
+    s_detach_timer_gen[bufnr] = gen
+    local idle_ms = options.get_option_value("lsp_detach_idle_ms")
+    if type(idle_ms) ~= "number" or idle_ms <= 0 then
+        return
+    end
+
+    vim.defer_fn(function()
+        if s_detach_timer_gen[bufnr] ~= gen then
+            return
+        end
+
+        if not api.nvim_buf_is_valid(bufnr) then
+            return
+        end
+
+        if buf_visible_in_any_window(bufnr) or api.nvim_get_current_buf() == bufnr then
+            return
+        end
+
+        detach_auto_stop_clients(bufnr)
+    end, idle_ms)
+end
+
+local function ensure_lsp_for_buf(bufnr)
+    if not buf_is_normal(bufnr) then
+        return
+    end
+
+    pcall(api.nvim_exec_autocmds, "FileType", {
+        group = "nvim.lsp.enable",
+        buffer = bufnr,
+    })
+
+    pcall(require("null-ls.client").try_add, bufnr)
+end
+
+local function setup_lsp_auto_stop()
+    if s_lsp_auto_stop_group then
+        return
+    end
+
+    s_lsp_auto_stop_group = api.nvim_create_augroup("vimrc_lsp_auto_stop", { clear = true })
+
+    api.nvim_create_autocmd("LspAttach", {
+        group = s_lsp_auto_stop_group,
+        callback = function(args)
+            local bufnr = args.buf
+            local client = lsp.get_client_by_id(args.data.client_id)
+            if client == nil or not is_enabled(bufnr, client, "auto_stop") then
+                return
+            end
+            if api.nvim_get_current_buf() ~= bufnr then
+                lsp.buf_detach_client(bufnr, client.id)
+            end
+        end,
+    })
+
+    api.nvim_create_autocmd("BufEnter", {
+        group = s_lsp_auto_stop_group,
+        callback = function(args)
+            local bufnr = args.buf
+            cancel_lsp_detach_timer(bufnr)
+            ensure_lsp_for_buf(bufnr)
+        end,
+    })
+
+    api.nvim_create_autocmd({ "BufLeave", "BufWinLeave" }, {
+        group = s_lsp_auto_stop_group,
+        callback = function(args)
+            maybe_schedule_lsp_detach(args.buf)
+        end,
+    })
 end
 
 local function setup_null_ls_cmp_patch()
@@ -458,6 +582,8 @@ function M.setup_lsp()
             delete_keymaps(client, bufnr, is_enabled(bufnr, client, "format_enabled"))
         end,
     })
+
+    setup_lsp_auto_stop()
 
     local diag_config = {
         signs = true,

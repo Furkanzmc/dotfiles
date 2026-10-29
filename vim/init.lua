@@ -961,6 +961,14 @@ if vim.o.loadplugins == true then
         description = "Enable virtual text for LSP globally.",
     }
     options.register_option {
+        name = "lsp_detach_idle_ms",
+        default = 30000,
+        type_info = "number",
+        source = "lsp",
+        global = true,
+        description = "Detach LSP from a buffer after this many ms with the buffer not shown in any window.",
+    }
+    options.register_option {
         name = "lsp_completion_buffer_enabled",
         default = true,
         type_info = "boolean",
